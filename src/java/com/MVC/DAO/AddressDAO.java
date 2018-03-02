@@ -1,0 +1,392 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.MVC.DAO;
+
+import com.MVC.Database.DBConnectionFactory;
+import com.MVC.Model.Barangay;
+import com.MVC.Model.CityMun;
+import com.MVC.Model.Province;
+import com.MVC.Model.Region;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author Rey Christian
+ */
+public class AddressDAO {
+
+    public ArrayList<Region> getAllRegions() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Region> regionList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.refregion";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Region r = new Region();
+                r.setRegCode(rs.getInt("regCode"));
+                r.setRegDesc(rs.getString("regDesc"));
+                regionList.add(r);
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return regionList;
+    }
+    
+    public boolean addProvOffice(String branch, int regCode){
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        boolean success = false;
+        try{
+            con.setAutoCommit(false);
+            String query = "INSERT INTO `ref_provOffice` (provOfficeDesc,regCode) VALUES (?,?);";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setString(1, branch);
+            p.setInt(2, regCode);
+            
+            p.executeUpdate();
+            
+            p.close();
+            con.commit();
+            con.close();
+            success = true;
+        }catch(SQLException ex){
+            try{
+                con.rollback();
+            }catch(SQLException ex1){
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null,ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null,ex);
+        }
+        return success;
+    }
+    
+    public boolean editProvOffice(String branch, int regCode, int provOfficeCode){
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        boolean success = false;
+        try{
+            con.setAutoCommit(false);
+            String query = "UPDATE `ref_provOffice` SET provOfficeDesc=?, regCode=? WHERE provOfficeCode=?";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setString(1, branch);
+            p.setInt(2, regCode);
+            p.setInt(3, provOfficeCode);
+            
+            p.executeUpdate();
+            
+            p.close();
+            con.commit();
+            con.close();
+            success = true;
+        }catch(SQLException ex){
+            try{
+                con.rollback();
+            }catch(SQLException ex1){
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null,ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null,ex);
+        }
+        return success;
+    }
+    
+    public ArrayList<Province> getAllProvOffices() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Province> provinceList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.ref_provOffice";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Province p = new Province();
+                p.setProvCode(rs.getInt("provOfficeCode"));
+                p.setProvDesc(rs.getString("provOfficeDesc"));
+                p.setRegCode(rs.getInt("regCode"));
+                provinceList.add(p);
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return provinceList;
+    }
+    
+    public Province getProvOffice(int provOfficeCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        Province p = new Province();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.ref_provOffice WHERE provOfficeCode=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, provOfficeCode);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                p.setProvCode(rs.getInt("provOfficeCode"));
+                p.setProvDesc(rs.getString("provOfficeDesc"));
+                p.setRegCode(rs.getInt("regCode"));
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return p;
+    }
+
+    public ArrayList<Province> getAllProvOfficesRegion(int regionID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Province> provinceList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.ref_provOffice WHERE regCode = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, regionID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Province p = new Province();
+                p.setProvCode(rs.getInt("provOfficeCode"));
+                p.setProvDesc(rs.getString("provOfficeDesc"));
+                provinceList.add(p);
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return provinceList;
+    }
+    
+    
+    public ArrayList<Province> getAllProvinces(int regionID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Province> provinceList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.refprovince WHERE regCode = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, regionID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Province p = new Province();
+                p.setProvCode(rs.getInt("provCode"));
+                p.setProvDesc(rs.getString("provDesc"));
+                provinceList.add(p);
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return provinceList;
+    }
+
+    public ArrayList<CityMun> getAllCityMuns(int provinceID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<CityMun> citymunList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.refcitymun WHERE provCode=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, provinceID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                CityMun cm = new CityMun();
+                cm.setCityMunCode(rs.getInt("cityMunCode"));
+                cm.setCityMunDesc(rs.getString("cityMunDesc"));
+                citymunList.add(cm);
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citymunList;
+    }
+    
+    public ArrayList<Barangay> getAllBarangays(int cityID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Barangay> barangayList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.refbrgy WHERE citymunCode=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, cityID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Barangay b = new Barangay();
+                b.setBrgyCode(rs.getInt("brgyCode"));
+                b.setBrgyDesc(rs.getString("brgyDesc"));
+                barangayList.add(b);
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return barangayList;
+    }
+    
+    public int getBrgyCode(String brgyDesc) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        int id = 0;
+        try {
+            String query = "SELECT * FROM `dar-bms`.refbrgy WHERE `brgyDesc` LIKE ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setString(1, "%"+brgyDesc+"%");
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("brgyCode");
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
+    }
+    
+    public int getCityMunCode(String cityMunDesc) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        int id = 0;
+        try {
+            String query = "SELECT * FROM `dar-bms`.refcitymun WHERE `citymunDesc` LIKE ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setString(1, "%"+cityMunDesc+"%");
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("cityMunCode");
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
+    }
+
+    public int getProvCode(String provDesc) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        int id = 0;
+        try {
+            String query = "SELECT * FROM `dar-bms`.refprovince WHERE `provDesc` LIKE ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setString(1, "%"+provDesc+"%");
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("provCode");
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
+    }
+    
+    public String getRegDesc(int regCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        String desc = "";
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM `dar-bms`.refregion WHERE `regCode`=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1,regCode);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                desc = rs.getString("regDesc");
+            }
+            pstmt.close();
+            con.commit();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return desc;
+    }
+
+    public int getRegCode(String regionDesc) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        int id = 0;
+        try {
+            String query = "SELECT * FROM `dar-bms`.refregion WHERE `regDesc`LIKE ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setString(1, "%"+regionDesc+"%");
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("regCode");
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
+    }
+    
+
+}
