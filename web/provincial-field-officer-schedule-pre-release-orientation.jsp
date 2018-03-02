@@ -137,15 +137,22 @@
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Schedule Pre-release Orientation</h3>
+                                    <div class="col-xs-3 pull-right">
+                                        <input type="text" name="dtn" class="form-control" placeholder="Pre-Release Orientation DTN"/>
+                                    </div>
                                 </div>
-                                <form role="form" method="post" action="SendCAPDEVPlan">
+                                <form role="form" method="post" action="SendSchedulePreRelease">
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-xs-4">
                                                 <div class="form-group">
-                                                    <label for="Activity">Activity</label>
-                                                    <input type="text" value="Pre-release Orientation" disabled />
-                                                    <input type="hidden" value="1" name="activityID">
+                                                    <label for="pointPerson">Point Person</label>
+                                                    <select class="form-control" name="pointPerson">
+                                                        <%for(User u : pointPersons){%>
+                                                        <option value="<%=u.getUserID()%>"><%out.print(u.getFLName());%></option>
+                                                        <%}%>
+                                                    </select>
+
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">
@@ -169,6 +176,7 @@
                                     </div>
                                     <div class="box-footer">
                                         <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
+                                        <input type="hidden" value="1" name="activityID">
                                         <button type="submit" name="manual" class="btn btn-primary pull-right">Submit</button>
                                     </div>
                                 </form>

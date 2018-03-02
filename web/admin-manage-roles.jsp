@@ -44,10 +44,12 @@
                                                 <div class="form-group">
                                                     <label for="role">Role</label>
                                                     <select name="role" class="form-control" id="role" required>
-                                                        <option value=2>Evaluator</option>
-                                                        <option value=3>Inspector</option>
-                                                        <option value=4>Division Chief</option>
-                                                        <option value=5>Director</option>
+                                                        <option value="1">Administrator</option>
+                                                        <option value="2">Point Person</option>
+                                                        <option value="3">Provincial Field Officer</option>
+                                                        <option value="4">Regional Field Officer</option>
+                                                        <option value="5">Central Officer</option>
+                                                        <option value="6">Chief Agrarian Reform Program Officer</option>
                                                     </select>
                                                 </div>
                                             </div>

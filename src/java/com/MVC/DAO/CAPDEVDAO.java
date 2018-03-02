@@ -57,6 +57,41 @@ public class CAPDEVDAO {
         }
         return 0;
     }
+    
+    public int addPreReleaseOrientation(CAPDEVPlan plan) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "INSERT INTO `dar-bms`.`capdev_plans` "
+                    + "(`requestID`, `assignedTo`) "
+                    + "VALUES (?,?);";
+
+            PreparedStatement p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+            p.setInt(1, plan.getRequestID());
+            p.setInt(2, plan.getAssignedTo());
+            p.executeUpdate();
+            
+            ResultSet rs = p.getGeneratedKeys();
+            if (rs.next()) {
+                int n = rs.getInt(1);
+                p.close();
+                con.commit();
+                con.close();
+                return n;
+            }
+            
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
 
     public CAPDEVPlan getCAPDEVPlan(int planID) {
         CAPDEVPlan cp = null;

@@ -2,6 +2,7 @@
 <%@page import="com.MVC.Model.Region;"%>
 <%@page import="com.MVC.Model.Province;"%>
 <%@page import="com.MVC.Model.CityMun;"%>
+<%@page import="com.MVC.Model.User;"%>
 <%@page import="com.MVC.Model.ARBO;"%>
 <%@page import="com.MVC.Model.ARB;"%>
 <%@page import="com.MVC.Model.Crop;"%>
@@ -15,6 +16,7 @@
 <%@page import="com.MVC.DAO.CropDAO;"%>
 <%@page import="com.MVC.DAO.APCPRequestDAO;"%>
 <%@page import="com.MVC.DAO.CAPDEVDAO;"%>
+<%@page import="com.MVC.DAO.UserDAO;"%>
 
 
 <%
@@ -40,6 +42,9 @@
     CAPDEVDAO capdevDAO = new CAPDEVDAO();
     ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
     ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
+    
+    UserDAO uDAO = new UserDAO();
+    ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer)session.getAttribute("provOfficeCode"));
 %>
 
 

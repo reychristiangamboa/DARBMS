@@ -110,7 +110,7 @@
                                                     <label for="role">Role</label>
                                                     <select name="role" class="form-control" id="role" required>
                                                         <option value="1">Administrator</option>
-                                                        <option value="2">Technical Assistant</option>
+                                                        <option value="2">Point Person</option>
                                                         <option value="3">Provincial Field Officer</option>
                                                         <option value="4">Regional Field Officer</option>
                                                         <option value="5">Central Officer</option>

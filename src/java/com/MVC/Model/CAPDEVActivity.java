@@ -20,6 +20,7 @@ public class CAPDEVActivity {
     private Date activityDate;
     private String activityName;
     private String activityDesc;
+    private String activityReportDTN;
     private int active;
     private ArrayList<ARB> arbList = new ArrayList();
 
@@ -55,6 +56,14 @@ public class CAPDEVActivity {
         this.activityDesc = activityDesc;
     }
 
+    public String getActivityReportDTN() {
+        return activityReportDTN;
+    }
+
+    public void setActivityReportDTN(String activityReportDTN) {
+        this.activityReportDTN = activityReportDTN;
+    }
+    
     public int getPlanID() {
         return planID;
     }

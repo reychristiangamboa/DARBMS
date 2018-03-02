@@ -148,6 +148,10 @@
         <servlet-name>SchedulePreRelease</servlet-name>
         <servlet-class>com.MVC.Controller.SchedulePreRelease</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SendSchedulePreRelease</servlet-name>
+        <servlet-class>com.MVC.Controller.SendSchedulePreRelease</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -295,6 +299,10 @@
     <servlet-mapping>
         <servlet-name>SchedulePreRelease</servlet-name>
         <url-pattern>/SchedulePreRelease</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SendSchedulePreRelease</servlet-name>
+        <url-pattern>/SendSchedulePreRelease</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

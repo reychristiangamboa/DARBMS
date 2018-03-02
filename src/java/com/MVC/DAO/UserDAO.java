@@ -153,6 +153,41 @@ public class UserDAO {
         return userList;
     }
     
+    public ArrayList<User> getAllPointPersonProvince(int provOfficeCode) {
+        ArrayList<User> userList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        try {
+            String query = "SELECT * FROM users u JOIN ref_userType t ON u.userType=t.userType WHERE u.provOfficeCode=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, provOfficeCode);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User u = new User();
+                u.setUserID(rs.getInt("userID"));
+                u.setFullName(rs.getString("fullName"));
+                u.setAddress(rs.getString("address"));
+                u.setContactNo(rs.getString("contactNo"));
+                u.setEmail(rs.getString("email"));
+                u.setPassword(rs.getString("password"));
+                u.setUserType(rs.getInt("userType"));
+                u.setUserTypeDesc(rs.getString("userTypeDesc"));
+                u.setActive(rs.getInt("active"));
+                u.setProvOfficeCode(rs.getInt("provOfficeCode"));
+                u.setRegOfficeCode(rs.getInt("regOfficeCode"));
+                userList.add(u);
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return userList;
+    }
+    
     
     public boolean addPersonnel(User u) throws SQLException {
         boolean success = false;
