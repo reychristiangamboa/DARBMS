@@ -52,6 +52,7 @@ public class SendCAPDEVPlan extends BaseServlet {
 
         CAPDEVPlan capdevPlan = new CAPDEVPlan();
         capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
+        capdevPlan.setPlanDTN(request.getParameter("dtn"));
         
         int planID = capdevDAO.addCAPDEVPlan(capdevPlan);
 

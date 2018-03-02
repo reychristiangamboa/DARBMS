@@ -135,18 +135,15 @@
                             </div>
                             <!-- /.box -->
                             <div class="box">
+                                <form role="form" method="post" action="SendCAPDEVPlan">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Create CAPDEV Plan</h3>
                                     <div class="col-xs-3 pull-right">
                                         <input type="text" name="dtn" class="form-control" placeholder="CAPDEV Proposal DTN"/>
-                                       
-                                        
-
                                     </div>
                                 </div>
-                                <form role="form" method="post" action="SendCAPDEVPlan">
+                                
                                     <div class="box-body">
-
                                         <div class="row">
                                             <div class="col-xs-4">
                                                 <label for=""> &nbsp;</label>
