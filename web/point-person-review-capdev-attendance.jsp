@@ -42,7 +42,7 @@
 
                                     <div class="tab-content no-padding">
                                         <!-- Morris chart - Sales -->
-                                        <div class="chart tab-pane active" id="task1" style="position: relative; height: 200px;">
+                                        <div class="chart tab-pane active" id="task1" style="position: relative; height: 300px;">
                                             <div class="box-body">
                                                 <div class="row">
                                                     <div class="col-xs-4">
@@ -69,9 +69,24 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <div class="box-body">
+                                                <div class="row">
+                                                    <div class="col-xs-4">
+                                                        <label for="">Observations</label>
+                                                        <input type="text" class="form-control" >
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <label for="">Recommendations</label>
+                                                        <input type="text" class="form-control" >
+                                                    </div>
+                                                </div>
+                                                <div class="box-footer">
+                                                    <button class="btn btn-success pull-right">Submit</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="chart tab-pane" id="task2" style="position: relative; height: 200px;">
+
+                                        <div class="chart tab-pane" id="task2" style="position: relative; height: 300px;">
                                             <div class="box-body">
                                                 <div class="row">
                                                     <div class="col-xs-4">
@@ -90,23 +105,38 @@
                                                 </div>
                                             </div>
                                             <div class="box-body">
-
                                                 <div class="row">
                                                     <div class="col-xs-4">
                                                         <label for="">Upload Participants</label>
                                                         <input type="file">
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="box-body">
+                                                <div class="row">
+                                                    <div class="col-xs-4">
+                                                        <label for="">Observations</label>
+                                                        <input type="text" class="form-control" >
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-4">
+                                                            <label for="">Recommendations</label>
+                                                            <input type="text" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="box-footer">
+                                                    <button class="btn btn-success pull-right">Submit</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="box-footer">
+                                        <button class="btn btn-success pull-right">Submit</button>
+                                    </div>
                                 </div>
-                                <div class="box-footer">
-                                    <button class="btn btn-success pull-right">Submit</button>
-                                </div>
-                            </div>
-                        </div>   
-                    </div>    
+                            </div>   
+                        </div>    
                 </section>
             </div>
 
