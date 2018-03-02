@@ -98,6 +98,53 @@
                         </div>
                         <!-- /.col -->
                     </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><strong>Approved CAPDEV Proposals</strong></h3>
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>                         
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">             
+                                    <table id="example5" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Loan Reason</th>
+                                                <th>Loan Amount</th>
+                                                <th>Land Area</th>
+                                                <th>Date Requested</th>
+                                                <th>Remarks</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                            <tr>
+
+                                                <td><a href="provincial-field-officer-approved-capdev-proposals.jsp">DLSU</a></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
 
                     <!-- /.row -->
                 </section>
