@@ -206,13 +206,14 @@
                                     </div>
                                 </div>
                             </div>
-                                            
-                            <div class="box-footer ">
-                                <div class="btn-group pull-right">
-                                    <button type="button" onclick="form.action='DisapproveNewAccessing?id=<%out.print(r.getRequestID());%>'" class="btn btn-danger">Disapprove</button>
-                                    <button type="button" onclick="form.action='ApproveNewAccessing?id=<%out.print(r.getRequestID());%>'" class="btn btn-success">Approve</button>
+                            <form method="post">
+                                <div class="box-footer ">
+                                    <div class="btn-group pull-right">
+                                        <button type="submit" onclick="form.action = 'DisapproveNewAccessing?id=<%out.print(r.getRequestID());%>'" class="btn btn-danger">Disapprove</button>
+                                        <button type="submit" onclick="form.action = 'ApproveNewAccessing?id=<%out.print(r.getRequestID());%>'" class="btn btn-success">Approve</button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
 
 

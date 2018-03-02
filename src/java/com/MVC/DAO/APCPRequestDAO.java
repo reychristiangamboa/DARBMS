@@ -38,12 +38,14 @@ public class APCPRequestDAO {
             p.setDouble(3, r.getLoanAmount());
             p.setDouble(4, r.getHectares());
             p.setString(5, r.getRemarks());
-            p.setInt(6, r.getRequestStatus());
-
+            
             Long l = System.currentTimeMillis();
-            Date currDate = new Date(l);
-            p.setDate(6, currDate);
+            Date d = new Date(l);
+            
+            p.setDate(6, d);
             p.setInt(7, userID);
+
+            p.setInt(8, r.getRequestStatus());
 
             p.executeUpdate();
             p.close();

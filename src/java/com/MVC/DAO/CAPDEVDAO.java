@@ -334,13 +334,42 @@ public class CAPDEVDAO {
 
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`ref_activity` (`activityName`, `activityDesc`)"
-                    + "VALUES (?,?);";
+            String query = "INSERT INTO `dar-bms`.`ref_activity` (`activityName`, `activityDesc`) VALUES (?,?);";
             PreparedStatement p = con.prepareStatement(query);
             p.setString(1, cAct.getActivityName());
             p.setString(2, cAct.getActivityDesc());
 
             p.executeUpdate();
+            p.close();
+            success = true;
+            con.commit();
+            con.close();
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
+    }
+    
+    public boolean editCAPDEVActivity(CAPDEVActivity cAct) {
+        boolean success = false;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "UPDATE `dar-bms`.`ref_activity` SET `activityName`=?, `activityDesc`=? WHERE `activityID`=?";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(3, cAct.getActivityID());
+            p.setString(1, cAct.getActivityName());
+            p.setString(2, cAct.getActivityDesc());
+            
+            p.executeUpdate();
+            success = true;
             p.close();
 
             con.commit();

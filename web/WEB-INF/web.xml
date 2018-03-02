@@ -164,6 +164,18 @@
         <servlet-name>ApproveNewAccessing</servlet-name>
         <servlet-class>com.MVC.Controller.ApproveNewAccessing</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DisapproveNewAccessing</servlet-name>
+        <servlet-class>com.MVC.Controller.DisapproveNewAccessing</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddCAPDEVActivity</servlet-name>
+        <servlet-class>com.MVC.Controller.AddCAPDEVActivity</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditCAPDEVActivity</servlet-name>
+        <servlet-class>com.MVC.Controller.EditCAPDEVActivity</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -327,6 +339,18 @@
     <servlet-mapping>
         <servlet-name>ApproveNewAccessing</servlet-name>
         <url-pattern>/ApproveNewAccessing</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DisapproveNewAccessing</servlet-name>
+        <url-pattern>/DisapproveNewAccessing</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCAPDEVActivity</servlet-name>
+        <url-pattern>/AddCAPDEVActivity</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditCAPDEVActivity</servlet-name>
+        <url-pattern>/EditCAPDEVActivity</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

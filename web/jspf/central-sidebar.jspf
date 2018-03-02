@@ -4,11 +4,13 @@
 <%@page import="com.MVC.Model.CityMun;"%>
 <%@page import="com.MVC.Model.ARBO;"%>
 <%@page import="com.MVC.Model.ARB;"%>
+<%@page import="com.MVC.Model.CAPDEVActivity;"%>
 <%@page import="com.MVC.Model.APCPRequest;"%>
 <%@page import="com.MVC.DAO.AddressDAO;"%>
 <%@page import="com.MVC.DAO.ARBODAO;"%>
 <%@page import="com.MVC.DAO.ARBDAO;"%>
 <%@page import="com.MVC.DAO.APCPRequestDAO;"%>
+<%@page import="com.MVC.DAO.CAPDEVDAO;"%>
 
 
 <%
@@ -25,6 +27,8 @@
     
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
     ArrayList<APCPRequest> newAccessingRequests = apcpRequestDAO.getAllRequestsByStatus(6);
+    
+    CAPDEVDAO cDAO = new CAPDEVDAO();
     
 %>
 
@@ -68,6 +72,11 @@
                     <li><a href="central-view-new-requesting-arbo.jsp"><i class="fa fa-eye"></i> View New Requesting ARBOs</a></li>
                     <li><a href="central-view-arbo-profile.jsp"><i class="fa fa-edit"></i>  View Qualification Requests</a></li>
                 </ul>
+            </li>
+            <li>
+                <a href="central-manage-capdev-activities.jsp">
+                    <i class="fa fa-edit"></i> <span> Manage CAPDEV Activities</span>
+                </a>
             </li>
             <li>
                 <a href="edit-profile.jsp">
