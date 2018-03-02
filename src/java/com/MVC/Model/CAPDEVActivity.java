@@ -18,6 +18,8 @@ public class CAPDEVActivity {
     private int planID;
     private int activityID;
     private Date activityDate;
+    private String observations;
+    private String recommendation;
     private String activityName;
     private String activityDesc;
     private String activityReportDTN;
@@ -88,4 +90,21 @@ public class CAPDEVActivity {
         this.activityDate = activityDate;
     }
 
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
+    }
+
+    public String getRecommendation() {
+        return recommendation;
+    }
+
+    public void setRecommendation(String recommendation) {
+        this.recommendation = recommendation;
+    }
+    
+    
 }

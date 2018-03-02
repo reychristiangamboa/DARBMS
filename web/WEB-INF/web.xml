@@ -152,6 +152,18 @@
         <servlet-name>SendSchedulePreRelease</servlet-name>
         <servlet-class>com.MVC.Controller.SendSchedulePreRelease</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RequestLoanAccess</servlet-name>
+        <servlet-class>com.MVC.Controller.RequestLoanAccess</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewNewAccessingARBO</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewNewAccessingARBO</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ApproveNewAccessing</servlet-name>
+        <servlet-class>com.MVC.Controller.ApproveNewAccessing</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -303,6 +315,18 @@
     <servlet-mapping>
         <servlet-name>SendSchedulePreRelease</servlet-name>
         <url-pattern>/SendSchedulePreRelease</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RequestLoanAccess</servlet-name>
+        <url-pattern>/RequestLoanAccess</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewNewAccessingARBO</servlet-name>
+        <url-pattern>/ViewNewAccessingARBO</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ApproveNewAccessing</servlet-name>
+        <url-pattern>/ApproveNewAccessing</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

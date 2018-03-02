@@ -17,13 +17,13 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Rey Christian
+ * @author ijJPN
  */
-public class RequestLoan extends BaseServlet {
+public class RequestLoanAccess extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        
         HttpSession session = request.getSession();
         APCPRequestDAO requestDAO = new APCPRequestDAO();
         APCPRequest apcpRequest = new APCPRequest();
@@ -33,18 +33,20 @@ public class RequestLoan extends BaseServlet {
         apcpRequest.setLoanAmount(Double.parseDouble(request.getParameter("loan")));
         apcpRequest.setLoanReason(request.getParameter("reason"));
         apcpRequest.setRemarks(request.getParameter("remarks"));
-        apcpRequest.setRequestStatus(1);
+        apcpRequest.setRequestStatus(6);
 
         if (requestDAO.requestAPCP(apcpRequest, (Integer)session.getAttribute("userID"))) {
             request.setAttribute("arboID", apcpRequest.getArboID());
-            request.setAttribute("success", "APCP requested!");
+            request.setAttribute("success", "APCP requested access!");
             request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
         } else {
             request.setAttribute("arboID", apcpRequest.getArboID());
-            request.setAttribute("errMessage", "Error in requesting APCP. Try again.");
+            request.setAttribute("errMessage", "Error in requesting access for APCP. Try again.");
             request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
         }
-
+        
     }
+
+    
 
 }

@@ -3,12 +3,12 @@
 <%@page import="com.MVC.Model.Province;"%>
 <%@page import="com.MVC.Model.CityMun;"%>
 <%@page import="com.MVC.Model.ARBO;"%>
-<%@page import="com.MVC.Model.APCPARBO;"%>
 <%@page import="com.MVC.Model.ARB;"%>
+<%@page import="com.MVC.Model.APCPRequest;"%>
 <%@page import="com.MVC.DAO.AddressDAO;"%>
 <%@page import="com.MVC.DAO.ARBODAO;"%>
-<%@page import="com.MVC.DAO.APCPARBODAO;"%>
 <%@page import="com.MVC.DAO.ARBDAO;"%>
+<%@page import="com.MVC.DAO.APCPRequestDAO;"%>
 
 
 <%
@@ -17,13 +17,14 @@
     ArrayList<Region> regionList = addressDAO.getAllRegions();
     
     ARBODAO arboDAO = new ARBODAO();
-    ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs();
+    ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince(1);
+    ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs(1);
     
-    APCPARBODAO apcparboDAO = new APCPARBODAO();
-    ArrayList<APCPARBO> apcparboListProvince = apcparboDAO.getAllAPCPARBOsByProvince((Integer)session.getAttribute("provOfficeCode"));
     
     ARBDAO arbDAO = new ARBDAO();
+    
+    APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+    ArrayList<APCPRequest> newAccessingRequests = apcpRequestDAO.getAllRequestsByStatus(6);
     
 %>
 
@@ -64,7 +65,8 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="central-home.jsp"><i class="fa fa-eye"></i> Home</a></li>
-                    <li><a href="central-create-qualified-arbo.jsp"><i class="fa fa-edit"></i>  View Qualification Requests</a></li>
+                    <li><a href="central-view-new-requesting-arbo.jsp"><i class="fa fa-eye"></i> View New Requesting ARBOs</a></li>
+                    <li><a href="central-view-arbo-profile.jsp"><i class="fa fa-edit"></i>  View Qualification Requests</a></li>
                 </ul>
             </li>
             <li>

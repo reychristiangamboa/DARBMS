@@ -61,7 +61,7 @@ public class Login extends BaseServlet {
                     if (u.getUserType() == 1) {   //  ADMINISTRATOR
                         request.getRequestDispatcher("admin-system-logs.jsp").forward(request, response);
                     } else if (u.getUserType() == 2) {   //  TECHNICAL ASSISTANT
-                        request.getRequestDispatcher("technical-assistant-view-capdev-plans.jsp").forward(request, response);
+                        request.getRequestDispatcher("point-person-view-capdev-plans.jsp").forward(request, response);
                     } else if (u.getUserType() == 3) {   //  PROVINCIAL FIELD OFFICER
                         request.getRequestDispatcher("provincial-field-officer-arbo-list.jsp").forward(request, response);
                     } else if (u.getUserType() == 4) {   //  PROVINCIAL FIELD OFFICER

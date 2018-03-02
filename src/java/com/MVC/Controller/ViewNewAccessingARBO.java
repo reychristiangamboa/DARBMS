@@ -5,8 +5,6 @@
  */
 package com.MVC.Controller;
 
-import com.MVC.DAO.ARBODAO;
-import com.MVC.Model.ARBO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -16,26 +14,17 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Rey Christian
+ * @author ijJPN
  */
-public class SelectARBORequest extends BaseServlet {
+public class ViewNewAccessingARBO extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        ARBODAO dao = new ARBODAO();
         int id = Integer.parseInt(request.getParameter("id"));
-
-        ARBO arbo = dao.getARBOByID(id);
-
-        request.setAttribute("arboID", id);
-
-        if (arbo.getAPCPQualified() == 0) {
-            request.getRequestDispatcher("provincial-field-officer-request-loan-new-applicant.jsp").forward(request, response);
-        } else {
-            request.getRequestDispatcher("provincial-field-officer-request-loan.jsp").forward(request, response);
-        }
-
+        request.setAttribute("requestID", id);
+        request.getRequestDispatcher("central-view-arbo-profile.jsp").forward(request, response);
     }
+
+    
 
 }

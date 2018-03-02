@@ -19,6 +19,8 @@ public class CAPDEVPlan {
     private int pastDueAccountID;
     private int assignedTo;
     private String planDTN;
+    private int createdBy;
+    private int approvedBy;
     private int planStatus;
     private String plantStatusDesc;
     private ArrayList<CAPDEVActivity> activities = new ArrayList();
@@ -63,6 +65,23 @@ public class CAPDEVPlan {
     public void setPlanDTN(String planDTN) {
         this.planDTN = planDTN;
     }
+
+    public int getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(int createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public int getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(int approvedBy) {
+        this.approvedBy = approvedBy;
+    }
+    
     
     public int getPlanStatus() {
         return planStatus;

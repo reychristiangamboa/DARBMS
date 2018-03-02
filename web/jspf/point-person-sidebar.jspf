@@ -54,7 +54,7 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="technical-assistant-review-capdev-attendance.jsp"><i class="fa fa-eye"></i> View CAPDEV Attendance</a></li>                    
+                    <li><a href="point-person-review-capdev-attendance.jsp"><i class="fa fa-eye"></i> View CAPDEV Attendance</a></li>                    
                 </ul>
             </li>
             <li>

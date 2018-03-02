@@ -29,7 +29,7 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/technical-assistant-sidebar.jspf" %>
+            <%@include file="jspf/point-person-sidebar.jspf" %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">

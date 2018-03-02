@@ -31,13 +31,14 @@ public class APCPRequestDAO {
         try {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`apcp_requests` (`arboID`, `loanReason`, `loanAmount`, "
-                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`) VALUES (?, ?, ?, ?, ?, ?, ?);";
+                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`,`requestStatus`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
             p = con.prepareStatement(query);
             p.setInt(1, r.getArboID());
             p.setString(2, r.getLoanReason());
             p.setDouble(3, r.getLoanAmount());
             p.setDouble(4, r.getHectares());
             p.setString(5, r.getRemarks());
+            p.setInt(6, r.getRequestStatus());
 
             Long l = System.currentTimeMillis();
             Date currDate = new Date(l);
@@ -209,6 +210,49 @@ public class APCPRequestDAO {
             Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return r;
+    }
+    
+    public ArrayList<APCPRequest> getAllRequestsByStatus(int statusID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<APCPRequest> apcpRequest = new ArrayList();
+        try {
+            String query = "SELECT * FROM apcp_requests r "
+                            + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                            + "JOIN arbos a ON r.arboID=a.arboID "
+                            + "WHERE r.requestStatus = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, statusID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                APCPRequest r = new APCPRequest();
+                r.setRequestID(rs.getInt("requestID"));
+                r.setArboID(rs.getInt("arboID"));
+                r.setDateApproved(rs.getDate("dateApproved"));
+                r.setApprovedBy(rs.getInt("approvedBy"));
+                r.setDateCleared(rs.getDate("dateCleared"));
+                r.setClearedBy(rs.getInt("clearedBy"));
+                r.setDateEndorsed(rs.getDate("dateEndorsed"));
+                r.setEndorsedBy(rs.getInt("endorsedBy"));
+                r.setDateRequested(rs.getDate("dateRequested"));
+                r.setRequestedTo(rs.getInt("requestedTo"));
+                r.setHectares(rs.getDouble("hectares"));
+                r.setLoanAmount(rs.getDouble("loanAmount"));
+                r.setLoanReason(rs.getString("loanReason"));
+                r.setRemarks(rs.getString("remarks"));
+                r.setRequestStatus(rs.getInt("requestStatus"));
+                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
+                apcpRequest.add(r);
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return apcpRequest;
     }
     
     

@@ -109,7 +109,7 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="provincial-field-officer-create-capdev-proposal.jsp"><i class="fa fa-edit"></i> View Loan Status</a></li>
+                    <li><a href="provincial-field-officer-view-capdev-status.jsp"><i class="fa fa-edit"></i> View CAPDEV Status</a></li>
                 </ul>
             </li>
             <li>

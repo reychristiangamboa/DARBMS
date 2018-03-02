@@ -30,7 +30,7 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/central-sidebar.jspf" %>
+            <%@include file="jspf/provincial-field-officer-sidebar.jspf" %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -47,7 +47,7 @@
                 </section>
 
                 <!-- Main content -->
-<!--                <section class="content">
+                <section class="content">
 
 
 
@@ -60,7 +60,7 @@
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                     </div>                         
                                 </div>
-                                 /.box-header 
+                                <!-- /.box-header -->
                                 <div class="box-body">             
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
@@ -79,7 +79,7 @@
 
                                             <tr>
 
-                                                <td><a href="central-view-arbo-profile.jsp">DLSU</a></td>
+                                                <td><a href="provincial-field-officer-create-capdev-proposal.jsp">DLSU</a></td>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -92,15 +92,15 @@
 
                                     </table>
                                 </div>
-                                 /.box-body 
+                                <!-- /.box-body -->
                             </div>
-                             /.box 
+                            <!-- /.box -->
                         </div>
-                         /.col 
+                        <!-- /.col -->
                     </div>
 
-                     /.row 
-                </section>-->
+                    <!-- /.row -->
+                </section>
                 <!-- /.content -->
 
             </div>

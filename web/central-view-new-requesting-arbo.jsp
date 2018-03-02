@@ -47,10 +47,13 @@
                 </section>
 
                 <!-- Main content -->
-<!--                <section class="content">
-
-
-
+                <section class="content">
+                    <%if (request.getAttribute("errMessage") != null) {%>
+                    <p class="text text-center text-danger"><%=request.getAttribute("errMessage")%></p>
+                    <%}%>
+                    <%if (request.getAttribute("success") != null) {%>
+                    <p class="text text-center text-success"><%=request.getAttribute("success")%></p>
+                    <%}%>
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box">
@@ -60,7 +63,7 @@
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                     </div>                         
                                 </div>
-                                 /.box-header 
+                                <!-- /.box-header -->
                                 <div class="box-body">             
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
@@ -76,31 +79,36 @@
                                         </thead>
 
                                         <tbody>
-
+                                            <%
+                                                for(APCPRequest r : newAccessingRequests){
+                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                            %>
                                             <tr>
-
-                                                <td><a href="central-view-arbo-profile.jsp">DLSU</a></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td><a href="ViewNewAccessingARBO?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                <td><%out.print(r.getHectares() + " hectares");%></td>
+                                                <td><%out.print(f.format(r.getDateRequested()));%></td>
+                                                <td><%out.print(r.getRemarks());%></td>
+                                                <td><%out.print(r.getRequestStatusDesc());%></td>
                                             </tr>
+
+                                            <%}%>
+
 
                                         </tbody>
 
                                     </table>
                                 </div>
-                                 /.box-body 
+                                <!-- /.box-body -->
                             </div>
-                             /.box 
+                            <!-- /.box -->
                         </div>
-                         /.col 
+                        <!-- /.col -->
                     </div>
 
-                     /.row 
-                </section>-->
+                    <!-- /.row -->
+                </section>
                 <!-- /.content -->
 
             </div>

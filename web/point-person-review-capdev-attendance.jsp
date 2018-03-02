@@ -13,7 +13,7 @@
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
             <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/technical-assistant-sidebar.jspf" %>
+            <%@include file="jspf/point-person-sidebar.jspf" %>
 
             <div class="content-wrapper">
                 <section class="content-header">
@@ -42,64 +42,67 @@
 
                                     <div class="tab-content no-padding">
                                         <!-- Morris chart - Sales -->
-                                        <div class="chart tab-pane active" id="task1" style="position: relative; height: 300px;">
+                                        <div class="chart tab-pane active" id="task1" style="position: relative; height: 200px;">
                                             <div class="box-body">
                                                 <div class="row">
                                                     <div class="col-xs-4">
-                                                        <label for="">Date</label>
-                                                        <input type="date" class="form-control" disabled>
+                                                        <label>Date:</label>
+                                                        <div class="input-group date">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input type="text" class="form-control pull-right" id="datepicker"disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <label for="">Activity Report DTN</label>
+                                                        <input type="text" class="form-control" >
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="box-body">
-                                                <table id="example1" class="table table-bordered table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ARB Name</th>
-                                                            <th>Attendance</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td><a href="#">Rey Gamboas</a></td>
-                                                            <td><input type="checkbox"></td>                                                            
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <div class="col-xs-4">
-                                                    <button class="btn btn-success">Submit</button>
+
+                                                <div class="row">
+                                                    <div class="col-xs-4">
+                                                        <label for="">Upload Participants</label>
+                                                        <input type="file">
+                                                    </div>
                                                 </div>
                                             </div>
+
                                         </div>
-                                        <div class="chart tab-pane" id="task2" style="position: relative; height: 300px;"><div class="box-body">
+                                        <div class="chart tab-pane" id="task2" style="position: relative; height: 200px;">
+                                            <div class="box-body">
                                                 <div class="row">
                                                     <div class="col-xs-4">
-                                                        <label for="">Date</label>
-                                                        <input type="date" class="form-control" disabled>
+                                                        <label>Date:</label>
+                                                        <div class="input-group date">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            <input type="text" class="form-control pull-right" id="datepicker"disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-4">
+                                                        <label for="">Activity Report DTN</label>
+                                                        <input type="text" class="form-control" >
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="box-body">
-                                                <table id="example3" class="table table-bordered table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ARB Name</th>
-                                                            <th></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td><a href="#">Rey Gamboas</a></td>
-                                                            <td><input type="check" class="form-control"></td>                                                            
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <div class="col-xs-4">
-                                                    <button class="btn btn-success">Submit</button>
+
+                                                <div class="row">
+                                                    <div class="col-xs-4">
+                                                        <label for="">Upload Participants</label>
+                                                        <input type="file">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="box-footer">
+                                    <button class="btn btn-success pull-right">Submit</button>
                                 </div>
                             </div>
                         </div>   
@@ -117,5 +120,6 @@
         </footer>
     </div>
     <%@include file="jspf/footer.jspf" %>
+
 </body>
 </html>
