@@ -68,33 +68,6 @@ public class Login extends BaseServlet {
                         request.getRequestDispatcher("regional-field-officer-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 5) {   //  PROVINCIAL FIELD OFFICER
                         request.getRequestDispatcher("central-home.jsp").forward(request, response);
-//                if (u.getUserType() == 1) { // APPLICANT
-//                    User us = uDAO.findCompany(u.getUserID());
-//                    session.setAttribute("companyID", us.getCompany().getCompanyID());
-//                    session.setAttribute("companyName", us.getCompany().getCompanyName());
-//                    session.setAttribute("companyUnitNumAndStreet", us.getCompany().getCompanyUnitNumAndStreet());
-//                    session.setAttribute("companyDistrict", us.getCompany().getCompanyDistrict());
-//                    session.setAttribute("companyCity", us.getCompany().getCompanyCity());
-//                    session.setAttribute("companyTelNo", us.getCompany().getCompanyTelNo());
-//                    session.setAttribute("ownerName", us.getCompany().getOwnerName());
-//                    session.setAttribute("ownerUnitNumAndStreet", us.getCompany().getOwnerUnitNumAndStreet());
-//                    session.setAttribute("ownerDistrict", us.getCompany().getOwnerDistrict());
-//                    session.setAttribute("ownerCity", us.getCompany().getOwnerCity());
-//                    session.setAttribute("ownerTelNo", us.getCompany().getOwnerTelNo());
-//                    session.setAttribute("companyAddress", us.getCompany().getCompanyAddress());
-//                    session.setAttribute("ownerAddress", us.getCompany().getOwnerAddress());
-//                    request.getRequestDispatcher("applicant-apply-lto.jsp").forward(request, response);
-//                } else if (u.getUserType() == 2) {  // EVALUATOR 
-//                    request.getRequestDispatcher("evaluator-assigned-applications.jsp").forward(request, response);
-//                } else if (u.getUserType() == 3) {  //  INSPECTOR
-//                    request.getRequestDispatcher("inspector-assigned-applications.jsp").forward(request, response);
-//                } else if (u.getUserType() == 4) {  // DIVISION CHIEF
-//                    request.getRequestDispatcher("division-chief-submitted-applications.jsp").forward(request, response);
-//                } else if (u.getUserType() == 5) {  // DIRECTOR
-//                    request.getRequestDispatcher("director-endorsed-applications.jsp").forward(request, response);
-//                } else if (u.getUserType() == 6) {  // ADMIN
-//                    request.getRequestDispatcher("admin-view-system-logs.jsp").forward(request, response);
-//                }
                     } else {    //  DEACTIVATED ACCOUNTS
                         request.getRequestDispatcher("account-deactivated.jsp").forward(request, response);
                     }

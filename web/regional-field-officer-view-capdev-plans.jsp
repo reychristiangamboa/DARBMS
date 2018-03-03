@@ -55,17 +55,22 @@
 
                 <!-- Main content -->
                 <section class="content">
-                    <%if (request.getAttribute("errMessage") != null) {%>
-                    <p class="text text-center text-danger"><%=request.getAttribute("errMessage")%></p>
-                    <%}%>
-                    <%if (request.getAttribute("success") != null) {%>
-                    <p class="text text-center text-success"><%=request.getAttribute("success")%></p>
+                    <%if(request.getAttribute("success") != null){%>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
+                    </div>
+                    <%}else if(request.getAttribute("errMessage") != null){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                    </div>
                     <%}%>
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Requested</strong></h3>
+                                    <h3 class="box-title"><strong>Pending CAPDEV Proposals</strong></h3>
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                     </div>                         
@@ -76,11 +81,8 @@
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
-                                                <th>Loan Reason</th>
-                                                <th>Loan Amount</th>
-                                                <th>Land Area</th>
-                                                <th>Date Requested</th>
-                                                <th>Remarks</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
@@ -88,78 +90,32 @@
                                         <tbody>
 
                                             <%
-                                                for(APCPRequest r : requestedRequests){
-                                                    ArrayList<CAPDEVPlan> planList = capdevDAO.getPendingRequestCAPDEVPlans(r.getRequestID());
-                                                    for(CAPDEVPlan plan : planList){
-                                                        ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                                for(CAPDEVPlan p : pendingPlans){
+                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
+                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
                                                 <!--WITH CAPDEV-->
-                                                <td><a href="ViewCAPDEVPlan?planID=<%out.print(plan.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-
-                                                <td><%out.print(r.getLoanReason());%></td>
-                                                <td><%out.print(r.getLoanAmount());%></td>
-                                                <td><%out.print(r.getHectares() + " hectares");%></td>
-                                                <td><%out.print(f.format(r.getDateRequested()));%></td>
-                                                <td><%out.print(r.getRemarks());%></td>
-                                                <td><%out.print(r.getRequestStatusDesc());%></td>
+                                                <td><a href="ViewCAPDEVProposal?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><%out.print(p.getActivities().size());%></td>
+                                                <td><%out.print(p.getPlanStatusDesc());%></td>
 
                                             </tr>
                                             <%
-                                                    }
-                                                }                                            
+                                               }
                                             %>
 
                                         </tbody>
-
-                                    </table>
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Cleared</strong></h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                    </div>                         
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
-                                        <thead>
+                                        <tfoot>
                                             <tr>
                                                 <th>ARBO Name</th>
-                                                <th>Loan Reason</th>
-                                                <th>Loan Amount</th>
-                                                <th>Land Area</th>
-                                                <th>Date Cleared</th>
-                                                <th>Remarks</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
                                                 <th>Status</th>
                                             </tr>
-                                        </thead>
 
-                                        <tbody>
-
-                                            <tr>
-                                                <td><a href="modal-default" class="btn"data-toggle="modal" data-target="#modal-default">ARB</a></a></td>
-                                                <td>Internet
-                                                    Explorer 4.0
-                                                </td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                            </tr>
-
-                                        </tbody>
-
+                                        </tfoot>
                                     </table>
                                 </div>
                                 <!-- /.box-body -->
@@ -168,157 +124,7 @@
                         </div>
                         <!-- /.col -->
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Endorsed</strong></h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
-                                    </div>                         
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table id="example3" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>ARBO Name</th>
-                                                <th>Loan Reason</th>
-                                                <th>Loan Amount</th>
-                                                <th>Land Area</th>
-                                                <th>Date Endorsed</th>
-                                                <th>Remarks</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            <tr>
-                                                <td><a>ARB</a></td>
-                                                <td>Internet
-                                                    Explorer 4.0
-                                                </td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                            </tr>
-
-                                        </tbody>
-
-                                    </table>
-
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Approved</strong></h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
-                                    </div>                         
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>ARBO Name</th>
-                                                <th>Loan Reason</th>
-                                                <th>Loan Amount</th>
-                                                <th>Land Area</th>
-                                                <th>Date Approved</th>
-                                                <th>Remarks</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            <tr>
-                                                <td><a href="">ARB</a></td>
-                                                <td>Internet
-                                                    Explorer 4.0
-                                                </td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                            </tr>
-
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Released</strong></h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                    </div>                         
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table id="example6" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>ARBO Name</th>
-                                                <th>Loan Reason</th>
-                                                <th>Loan Amount</th>
-                                                <th>Land Area</th>
-                                                <th>Date Requested</th>
-                                                <th>Date Cleared</th>
-                                                <th>Date Endorsed</th>
-                                                <th>Date Approved</th>
-                                                <th>Remarks</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            <tr>
-                                                <td><a href="">ARB</a></td>
-                                                <td>Internet
-                                                    Explorer 4.0
-                                                </td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                            </tr>
-
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
+                    
 
                     <!-- /.row -->
                 </section>

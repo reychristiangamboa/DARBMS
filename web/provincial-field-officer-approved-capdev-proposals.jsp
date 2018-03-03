@@ -31,6 +31,11 @@
 
             <%@include file="jspf/field-officer-navbar.jspf" %>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf" %>
+            <%
+                CAPDEVPlan p = capdevDAO.getCAPDEVPlan((Integer)request.getAttribute("planID"));
+                APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
+                ARBO a = arboDAO.getARBOByID(r.getArboID());
+            %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -79,45 +84,47 @@
                                                         <div class="col-xs-6">
                                                             <div class="form-group">
                                                                 <label for="">Name of ARBO</label>
-                                                                <input type="text" class="form-control" value="" disabled >
+                                                                <input type="text" class="form-control" value="<%out.print(a.getArboName());%>" disabled >
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-3">
                                                             <div class="form-group">
                                                                 <label for="">No. of ARBs</label>
-                                                                <input type="text" class="form-control" id="" placeholder="" value="" disabled>
+                                                                <input type="text" class="form-control" id="" placeholder="" value="<%out.print(arboDAO.getARBCount(a.getArboID()));%>" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-3">
                                                             <div class="form-group">
                                                                 <label for="">Land Area (Hectares)</label>
-                                                                <input type="text" class="form-control" id="" value="" disabled >
+                                                                <input type="text" class="form-control" id="" value="<%out.print(r.getHectares());%>" disabled >
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-4">
                                                             <label for=''>Loan Amount</label>
-                                                            <input type='text' class="form-control" id='' value="" disabled>
+                                                            <input type='text' class="form-control" id='' value="<%out.print(r.getLoanAmount());%>" disabled>
                                                         </div>
 
                                                         <div class="col-xs-4">
                                                             <div class="form-group">
                                                                 <label for="">Reason for Loan</label>
-                                                                <input type="text" class="form-control" value="" disabled/>
+                                                                <input type="text" class="form-control" value="<%out.print(r.getLoanReason());%>" disabled/>
                                                             </div>
                                                         </div>         
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12">
                                                             <label for=''>Remarks</label>
-                                                            <textarea class="form-control" rows="3" disabled></textarea>
+                                                            <textarea class="form-control" rows="3" disabled><%out.print(r.getRemarks());%></textarea>
                                                         </div>
 
                                                     </div>
                                                 </div> 
                                             </div>
                                             <div class="chart tab-pane" id="info" style="position: relative;">
+
+
                                             </div>
                                             <div class="chart tab-pane" id="history" style="position: relative;">
 
@@ -136,79 +143,46 @@
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">CAPDEV Plan</h3>
-                                    <h5 class="box-title pull-right text-muted">CAPDEV PLAN DTN 123</h5>
+                                    <h5 class="box-title pull-right text-muted">DTN: <%out.print(p.getPlanDTN());%></h5>
                                 </div>
-                                <form role="form" method="post" action="AddARB">
+                                <form role="form" method="post">
                                     <div class="box-body">
                                         <div class="box-body">
                                             <div class="row col-xs-4" style="margin-bottom: 20px;">
                                                 <label>Assign Point Person</label>
-                                                <select name="" class="form-control" id="EL" style="width:100%;" >
-                                                    <option value="1">Jack Daniels</option>
-                                                    <option value="2">San Miguel</option>
+                                                <select name="pointPersonID" class="form-control" style="width:100%;" >
+                                                    <%for(User u : pointPersons){%>
+                                                    <option value="<%=u.getUserID()%>"><%out.print(u.getFullName());%></option>
+                                                    <%}%>
                                                 </select>
                                             </div>
-                                            
+
                                             <table class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>Activity</th>
                                                         <th>Date</th>
                                                         <th>No. of Participants</th>
-
                                                     </tr>
                                                 </thead>
 
                                                 <tbody>
-
+                                                    <%for(CAPDEVActivity activity : p.getActivities()){%>
                                                     <tr>
-                                                        <td><a data-toggle="modal" data-target="#cleared-modal"></a>asdf</td>
-                                                        <td>asdf</td>
-                                                        <td>asdfasdf</td>
+                                                        <td><%out.print(activity.getActivityName());%></td>
+                                                        <td><%out.print(f.format(activity.getActivityDate()));%></td>
+                                                        <td><%out.print(activity.getArbList().size());%></td>
                                                     </tr>
-
-                                                <div class="modal fade" id="cleared-modal">
-                                                    <div class="modal-dialog modal-sm">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span></button>
-                                                                <h4 class="modal-title">Endorse APCP Request</h4>
-                                                            </div>
-
-                                                            <form method="post">
-                                                                <div class="modal-body" id="modalBody">
-                                                                    <div class="row">
-                                                                        <div class="col-xs-12">
-                                                                            <div class="form-group">
-                                                                                <label for="">Loan Tracking Number</label>
-                                                                                <input type="text" name="ltn" class="form-control">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <input type="hidden" name="requestID" value="">
-                                                                    <button type="submit" name="manual" onclick="form.action = 'EndorseAPCPRequest'" class="btn btn-primary pull-right">Submit</button>
-                                                                </div>
-                                                            </form>
-
-                                                        </div>
-                                                        <!--                                            /.modal-content -->
-                                                    </div>
-                                                    <!--                                        /.modal-dialog -->
-                                                </div>
-
-
+                                                    <%}%>
                                                 </tbody>
 
                                             </table>
                                         </div>
                                     </div>
                                     <div class="box-footer">
-                                        <input type="hidden" name="arboID" value="">
                                         <div class="btn-group pull-right">
-                                            <button type="button" class="btn btn-success">Submit</button>
+                                            <input type="hidden" name="planID" value="<%out.print(p.getPlanID());%>">
+                                            <button type="submit" onclick="form.action = 'AssignPointPerson'" class="btn btn-success">Submit</button>
                                         </div>
                                     </div>
                                 </form>

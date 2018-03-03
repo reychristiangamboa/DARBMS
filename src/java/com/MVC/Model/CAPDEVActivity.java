@@ -15,8 +15,9 @@ import com.MVC.Model.ARB;
  */
 public class CAPDEVActivity {
 
-    private int planID;
     private int activityID;
+    private int planID;
+    private int activityType;
     private Date activityDate;
     private String observations;
     private String recommendation;
@@ -50,6 +51,14 @@ public class CAPDEVActivity {
         this.activityName = activityName;
     }
 
+    public int getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(int activityType) {
+        this.activityType = activityType;
+    }
+    
     public String getActivityDesc() {
         return activityDesc;
     }

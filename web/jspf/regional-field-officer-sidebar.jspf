@@ -28,6 +28,7 @@
     ArrayList<Region> regionList = addressDAO.getAllRegions();
     ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRequestedRequestsRegion((Integer)session.getAttribute("regOfficeCode"));
     
+    ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(1,(Integer)session.getAttribute("regOfficeCode"));
     
     
 %>

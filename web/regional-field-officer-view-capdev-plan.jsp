@@ -131,45 +131,38 @@
                                     <h3 class="box-title">CAPDEV Plan</h3>
                                 </div>
                                 <div class="box-body">
-                                    <% for(CAPDEVActivity activity : caList){ %>
-                                    <div class="row">
-                                        <div class="col-xs-4">
-                                            <div class="form-group">
-                                                <label for="">Activity</label>
-                                                <input type="text" class="form-control" value="<%out.print(activity.getActivityName());%>" disabled />
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4">
-                                            <div class="form-group">
-                                                <label>Date</label>
-                                                <div class="input-group date">
-                                                    <div class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </div>
-                                                    <input type="text" class="form-control" value="<%out.print(f.format(activity.getActivityDate()));%>" disabled />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4">
-                                            <div class="form-group">
-                                                <label for="">No. of Participants</label>
-                                                <input type="text" name="noOfParticipants" class="form-control" required disabled>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <%}%>    
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Activity</th>
+                                                <th>Date</th>
+                                                <th>No. of Participants</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <%for(CAPDEVActivity activity : p.getActivities()){%>
+                                            <tr>
+                                                <td><a data-toggle="modal" data-target="#cleared-modal"></a><%out.print(activity.getActivityName());%></td>
+                                                <td><%out.print(f.format(activity.getActivityDate()));%></td>
+                                                <td><%out.print(activity.getArbList().size());%></td>
+                                            </tr>
+                                            <%}%>
+                                        </tbody>
+
+                                    </table>   
                                 </div>
                                 <form method="post">
                                     <div class="box-footer">
                                         <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
                                         <input type="hidden" name="planID" value="<%out.print((Integer)request.getAttribute("planID"));%>">
                                         <div class="btn-group pull-right">
-                                            <button type="submit" name="disapprove" onclick="form.action='DisapproveCAPDEVPlan'" class="btn btn-danger">Disapprove</button>
-                                            <button type="submit" name="approve" onclick="form.action='ApproveCAPDEVPlan'" class="btn btn-success">Approve</button>
+                                            <button type="submit" name="disapprove" onclick="form.action = 'DisapproveCAPDEVProposal'" class="btn btn-danger">Disapprove</button>
+                                            <button type="submit" name="approve" onclick="form.action = 'ApproveCAPDEVProposal'" class="btn btn-success">Approve</button>
                                         </div>
                                     </div>
                                 </form>
-                                
+
                             </div>
                         </div>
                         <!-- /.col -->

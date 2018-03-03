@@ -158,7 +158,7 @@ public class UserDAO {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         try {
-            String query = "SELECT * FROM users u JOIN ref_userType t ON u.userType=t.userType WHERE u.provOfficeCode=?";
+            String query = "SELECT * FROM users u JOIN ref_userType t ON u.userType=t.userType WHERE u.userType=2 AND u.provOfficeCode=?";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, provOfficeCode);
             ResultSet rs = ps.executeQuery();

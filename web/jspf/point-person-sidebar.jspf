@@ -2,20 +2,33 @@
 <%@page import="com.MVC.Model.Region;"%>
 <%@page import="com.MVC.Model.Province;"%>
 <%@page import="com.MVC.Model.CityMun;"%>
+<%@page import="com.MVC.Model.User;"%>
 <%@page import="com.MVC.Model.ARBO;"%>
 <%@page import="com.MVC.Model.ARB;"%>
 <%@page import="com.MVC.Model.Crop;"%>
 <%@page import="com.MVC.Model.APCPRequest;"%>
 <%@page import="com.MVC.Model.CAPDEVPlan;"%>
 <%@page import="com.MVC.Model.CAPDEVActivity;"%>
+<%@page import="com.MVC.Model.PastDueAccount;"%>
 <%@page import="com.MVC.DAO.AddressDAO;"%>
 <%@page import="com.MVC.DAO.ARBODAO;"%>
 <%@page import="com.MVC.DAO.ARBDAO;"%>
 <%@page import="com.MVC.DAO.CropDAO;"%>
 <%@page import="com.MVC.DAO.APCPRequestDAO;"%>
 <%@page import="com.MVC.DAO.CAPDEVDAO;"%>
+<%@page import="com.MVC.DAO.UserDAO;"%>
+
 <%
-  
+    CAPDEVDAO capdevDAO = new CAPDEVDAO();
+    ARBODAO arboDAO = new ARBODAO();
+    ARBDAO arbDAO = new ARBDAO();
+    APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+    UserDAO uDAO = new UserDAO();
+    
+    ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
+    ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
+    
+    ArrayList<CAPDEVPlan> assignedPlans = capdevDAO.getAssignedRequestCAPDEVPlans((Integer)session.getAttribute("userID"));
 %>
 
 <!-- Left side column. contains the logo and sidebar -->
@@ -46,6 +59,11 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
+            <li>
+                <a href="point-person-view-capdev-plans.jsp">
+                    <i class="fa fa-edit"></i> <span> View CAPDEV Plans</span>
+                </a>
+            </li>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-users"></i> <span>ARBOs</span>

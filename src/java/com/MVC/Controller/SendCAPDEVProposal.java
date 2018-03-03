@@ -62,6 +62,8 @@ public class SendCAPDEVProposal extends BaseServlet {
             CAPDEVActivity activity = new CAPDEVActivity();
             ArrayList<ARB> arbList = new ArrayList();
             ArrayList arbHolder = readExcelFile(files[i]);
+            
+            
 
             ArrayList cellStoreArrayList = new ArrayList();
 
@@ -74,8 +76,8 @@ public class SendCAPDEVProposal extends BaseServlet {
                 Logger.getLogger(SendCAPDEVProposal.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            int activityID = Integer.parseInt(activities[i]);
-            activity.setActivityID(activityID);
+            int activityType = Integer.parseInt(activities[i]);
+            activity.setActivityType(activityType);
             activity.setPlanID(planID);
             activity.setActivityDate(activityDate);
 
@@ -87,9 +89,12 @@ public class SendCAPDEVProposal extends BaseServlet {
                 String lN = cellStoreArrayList.get(0).toString();
                 String fN = cellStoreArrayList.get(1).toString();
                 String mN = cellStoreArrayList.get(2).toString();
+                
 
                 int arbID = arbDAO.getARBID(fN, mN, lN);
                 ARB arb = arbDAO.getARBByID(arbID);
+                
+                System.out.println(arb.getFullName());
 
                 arbList.add(arb);
             }
@@ -99,7 +104,6 @@ public class SendCAPDEVProposal extends BaseServlet {
         }
 
         request.setAttribute("success", "CAPDEV plan submitted!");
-        request.setAttribute("requestID", capdevPlan.getRequestID());
         request.getRequestDispatcher("provincial-field-officer-view-capdev-status.jsp").forward(request, response);
     }
 
@@ -107,7 +111,7 @@ public class SendCAPDEVProposal extends BaseServlet {
         ArrayList cellArrayListHolder = new ArrayList();
         try {
 
-            OPCPackage pkg = OPCPackage.open("C:\\Users\\ijJPN2\\Documents\\NetBeansProjects\\DAR-BMS\\" + fileName);
+            OPCPackage pkg = OPCPackage.open(fileName);
             XSSFWorkbook workbook = new XSSFWorkbook(pkg);
             XSSFSheet sheet = workbook.getSheetAt(0);
 

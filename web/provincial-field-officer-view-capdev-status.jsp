@@ -49,7 +49,17 @@
                 <!-- Main content -->
                 <section class="content">
 
-
+                    <%if(request.getAttribute("success") != null){%>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
+                    </div>
+                    <%}else if(request.getAttribute("errMessage") != null){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                    </div>
+                    <%}%>
 
                     <div class="row">
                         <div class="col-xs-12">
@@ -132,7 +142,7 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><%out.print(arbo.getArboName());%></td>
+                                                <td><a href="MonitorCAPDEVAttendance?id=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getPlanDTN());%></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
@@ -171,33 +181,42 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example3" class="table table-bordered table-striped">
+                                    <table id="example5" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
-                                                <th>Loan Reason</th>
-                                                <th>Loan Amount</th>
-                                                <th>Land Area</th>
-                                                <th>Date Requested</th>
-                                                <th>Remarks</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
 
+                                            <%
+                                                for(CAPDEVPlan p : approvedPlans){
+                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
+                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                            %>
                                             <tr>
-
-                                                <td><a href="provincial-field-officer-approved-capdev-proposals.jsp">DLSU</a></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td><a href="ProceedAssignPointPerson?planID=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><%out.print(p.getActivities().size());%></td>
+                                                <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
+                                            <%}%>
 
                                         </tbody>
+
+                                        <tfoot>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>        
+                                            </tr>
+
+                                        </tfoot>
 
                                     </table>
                                 </div>

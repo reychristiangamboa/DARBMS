@@ -176,6 +176,22 @@
         <servlet-name>EditCAPDEVActivity</servlet-name>
         <servlet-class>com.MVC.Controller.EditCAPDEVActivity</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProceedAssignPointPerson</servlet-name>
+        <servlet-class>com.MVC.Controller.ProceedAssignPointPerson</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AssignPointPerson</servlet-name>
+        <servlet-class>com.MVC.Controller.AssignPointPerson</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MonitorCAPDEVAttendance</servlet-name>
+        <servlet-class>com.MVC.Controller.MonitorCAPDEVAttendance</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecordActivityAssessment</servlet-name>
+        <servlet-class>com.MVC.Controller.RecordActivityAssessment</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -351,6 +367,22 @@
     <servlet-mapping>
         <servlet-name>EditCAPDEVActivity</servlet-name>
         <url-pattern>/EditCAPDEVActivity</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProceedAssignPointPerson</servlet-name>
+        <url-pattern>/ProceedAssignPointPerson</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AssignPointPerson</servlet-name>
+        <url-pattern>/AssignPointPerson</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MonitorCAPDEVAttendance</servlet-name>
+        <url-pattern>/MonitorCAPDEVAttendance</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RecordActivityAssessment</servlet-name>
+        <url-pattern>/RecordActivityAssessment</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
