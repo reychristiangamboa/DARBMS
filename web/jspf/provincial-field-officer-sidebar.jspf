@@ -46,7 +46,6 @@
     ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1,(Integer)session.getAttribute("provOfficeCode"));
     ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2,(Integer)session.getAttribute("provOfficeCode"));
     ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3,(Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<CAPDEVPlan> assignedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(4,(Integer)session.getAttribute("provOfficeCode"));
     ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5,(Integer)session.getAttribute("provOfficeCode"));
     
     UserDAO uDAO = new UserDAO();

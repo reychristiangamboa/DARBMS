@@ -87,7 +87,7 @@
                                                             <div class="box-body">
                                                                 <div class="row">
                                                                     <div class="col-xs-4">
-                                                                        
+
                                                                         <label for="">Upload Participants</label>
                                                                         <input type="file" name="file">
                                                                     </div>
@@ -118,7 +118,7 @@
                                                                 <input type="hidden" value="<%=b.getActivityID()%>" name="activityID">
                                                                 <input type="hidden" value="<%=r.getRequestID()%>" name="requestID">
                                                                 <input type="hidden" value="<%=(Integer)request.getAttribute("planID")%>" name="planID">
-                                                                <button class="btn btn-success pull-right" onclick="form.action='RecordActivityAssessment'" >Submit</button>
+                                                                <button class="btn btn-success pull-right" onclick="form.action = 'RecordActivityAssessment'" >Submit</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -126,10 +126,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                                <form method="post"></form>
-                                        <div class="box-footer">
-                                            <button class="btn btn-success pull-right">Submit</button>
-                                        </div>
+                                        <form method="post">
+                                            <div class="box-footer">
+                                                <input type="hidden" value="<%=(Integer)request.getAttribute("planID")%>" name="planID">
+                                                <button class="btn btn-success pull-right" onclick="form.action='SendCAPDEVAssessment'">Submit</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

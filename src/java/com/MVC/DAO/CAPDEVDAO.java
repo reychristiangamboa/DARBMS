@@ -366,6 +366,38 @@ public class CAPDEVDAO {
         }
         return aList;
     }
+    
+    public ArrayList<ARB> getCAPDEVPlanActivityParticipantsAttendance(int activityID, int status) {
+
+        ArrayList<ARB> aList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ARBDAO dao = new ARBDAO();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM capdev_participants p JOIN capdev_activities a ON p.activityID=a.activityID WHERE p.activityID=? AND p.isPresent=?";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, activityID);
+            p.setInt(2, status);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                ARB arb = dao.getARBByID(rs.getInt("arbID"));
+                aList.add(arb);
+            }
+            con.commit();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aList;
+    }
 
     public ArrayList<CAPDEVPlan> getPendingRequestCAPDEVPlans(int requestID) {
 
@@ -824,4 +856,7 @@ public class CAPDEVDAO {
         return success;
     }
 
+    
+    
+    
 }

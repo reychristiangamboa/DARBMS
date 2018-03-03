@@ -70,6 +70,17 @@
 <!-- page script -->
 <script type="text/javascript">
     $(function () {
+        
+        $('#attendance1').DataTable();
+        $('#attendance2').DataTable();
+        $('#attendance3').DataTable();
+        $('#attendance4').DataTable();
+        $('#attendance5').DataTable();
+        $('#attendance6').DataTable();
+        $('#attendance7').DataTable();
+        $('#attendance8').DataTable();
+        $('#attendance9').DataTable();
+        $('#attendance10').DataTable();
         $('#example1').DataTable();
         $('#example3').DataTable();
         $('#example4').DataTable();

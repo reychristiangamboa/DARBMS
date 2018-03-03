@@ -192,6 +192,14 @@
         <servlet-name>RecordActivityAssessment</servlet-name>
         <servlet-class>com.MVC.Controller.RecordActivityAssessment</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SendCAPDEVAssessment</servlet-name>
+        <servlet-class>com.MVC.Controller.SendCAPDEVAssessment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReviewCAPDEVAssessment</servlet-name>
+        <servlet-class>com.MVC.Controller.ReviewCAPDEVAssessment</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -383,6 +391,14 @@
     <servlet-mapping>
         <servlet-name>RecordActivityAssessment</servlet-name>
         <url-pattern>/RecordActivityAssessment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SendCAPDEVAssessment</servlet-name>
+        <url-pattern>/SendCAPDEVAssessment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReviewCAPDEVAssessment</servlet-name>
+        <url-pattern>/ReviewCAPDEVAssessment</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
