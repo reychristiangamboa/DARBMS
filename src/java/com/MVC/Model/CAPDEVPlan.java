@@ -22,7 +22,7 @@ public class CAPDEVPlan {
     private int createdBy;
     private int approvedBy;
     private int planStatus;
-    private String plantStatusDesc;
+    private String planStatusDesc;
     private ArrayList<CAPDEVActivity> activities = new ArrayList();
     
 
@@ -91,12 +91,12 @@ public class CAPDEVPlan {
         this.planStatus = planStatus;
     }
 
-    public String getPlantStatusDesc() {
-        return plantStatusDesc;
+    public String getPlanStatusDesc() {
+        return planStatusDesc;
     }
 
-    public void setPlantStatusDesc(String plantStatusDesc) {
-        this.plantStatusDesc = plantStatusDesc;
+    public void setPlanStatusDesc(String plantStatusDesc) {
+        this.planStatusDesc = plantStatusDesc;
     }
     
     public ArrayList<CAPDEVActivity> getActivities() {

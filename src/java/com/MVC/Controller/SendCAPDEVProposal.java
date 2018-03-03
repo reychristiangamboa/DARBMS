@@ -23,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -33,34 +34,35 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  *
  * @author Rey Christian
  */
-public class SendCAPDEVPlan extends BaseServlet {
+public class SendCAPDEVProposal extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        HttpSession session = request.getSession();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         CAPDEVDAO capdevDAO = new CAPDEVDAO();
-        APCPRequestDAO apcprequestDAO = new APCPRequestDAO();
+        
         ARBDAO arbDAO = new ARBDAO();
 
         String[] activities = request.getParameterValues("activities[]");
         String[] activityDates = request.getParameterValues("activityDates[]");
         String[] files = request.getParameterValues("file[]");
-        
 
         CAPDEVPlan capdevPlan = new CAPDEVPlan();
         capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         capdevPlan.setPlanDTN(request.getParameter("dtn"));
-        
-        int planID = capdevDAO.addCAPDEVPlan(capdevPlan);
+
+        int planID = capdevDAO.addCAPDEVPlan(capdevPlan, (Integer)session.getAttribute("userID"));
 
         for (int i = 0; i < activities.length; i++) {
 
             CAPDEVActivity activity = new CAPDEVActivity();
             ArrayList<ARB> arbList = new ArrayList();
             ArrayList arbHolder = readExcelFile(files[i]);
-            
+
             ArrayList cellStoreArrayList = new ArrayList();
 
             java.sql.Date activityDate = null;
@@ -69,7 +71,7 @@ public class SendCAPDEVPlan extends BaseServlet {
                 java.util.Date parsedActivityDate = sdf.parse(activityDates[i]);
                 activityDate = new java.sql.Date(parsedActivityDate.getTime());
             } catch (ParseException ex) {
-                Logger.getLogger(SendCAPDEVPlan.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SendCAPDEVProposal.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             int activityID = Integer.parseInt(activities[i]);
@@ -78,40 +80,34 @@ public class SendCAPDEVPlan extends BaseServlet {
             activity.setActivityDate(activityDate);
 
             int newlyAddedActivityID = capdevDAO.addCAPDEVPlanActivity(activity);
-            
-            for(int a = 1; a < arbHolder.size(); a++){
-                
+
+            for (int a = 1; a < arbHolder.size(); a++) {
+
                 cellStoreArrayList = (ArrayList) arbHolder.get(a);
                 String lN = cellStoreArrayList.get(0).toString();
                 String fN = cellStoreArrayList.get(1).toString();
                 String mN = cellStoreArrayList.get(2).toString();
-                
+
                 int arbID = arbDAO.getARBID(fN, mN, lN);
                 ARB arb = arbDAO.getARBByID(arbID);
-                
+
                 arbList.add(arb);
             }
 
             capdevDAO.addCAPDEVPlanActivityParticipants(arbList, newlyAddedActivityID);
-            
+
         }
 
-        if (apcprequestDAO.updateRequestStatus(capdevPlan.getRequestID(), 2)) {
-            request.setAttribute("success", "CAPDEV plan submitted!");
-            request.setAttribute("requestID", capdevPlan.getRequestID());
-            request.getRequestDispatcher("provincial-field-officer-create-capdev-proposal.jsp").forward(request, response);
-        } else {
-            request.setAttribute("errMessage", "Error in submitting CAPDEV plan. Try again.");
-            request.setAttribute("requestID", capdevPlan.getRequestID());
-            request.getRequestDispatcher("provincial-field-officer-create-capdev-proposal.jsp").forward(request, response);
-        }
+        request.setAttribute("success", "CAPDEV plan submitted!");
+        request.setAttribute("requestID", capdevPlan.getRequestID());
+        request.getRequestDispatcher("provincial-field-officer-view-capdev-status.jsp").forward(request, response);
     }
-    
+
     public static ArrayList readExcelFile(String fileName) {
         ArrayList cellArrayListHolder = new ArrayList();
         try {
 
-            OPCPackage pkg = OPCPackage.open("C:\\Users\\Rey Christian\\Documents\\NetBeansProjects\\DAR-BMS\\" + fileName);
+            OPCPackage pkg = OPCPackage.open("C:\\Users\\ijJPN2\\Documents\\NetBeansProjects\\DAR-BMS\\" + fileName);
             XSSFWorkbook workbook = new XSSFWorkbook(pkg);
             XSSFSheet sheet = workbook.getSheetAt(0);
 

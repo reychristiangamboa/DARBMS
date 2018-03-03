@@ -18,7 +18,7 @@
             <%@include file="jspf/field-officer-navbar.jspf"%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
             <%
-                APCPRequest r = apcpRequestDAO.getRequestByID(1);
+                APCPRequest r = apcpRequestDAO.getRequestByID((Integer)request.getAttribute("requestID"));
                 ARBO a = arboDAO.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
             %>
@@ -135,11 +135,11 @@
                             </div>
                             <!-- /.box -->
                             <div class="box">
-                                <form role="form" method="post" action="SendCAPDEVPlan">
+                                <form role="form" method="post" action="SendCAPDEVProposal">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Create CAPDEV Plan</h3>
                                     <div class="col-xs-3 pull-right">
-                                        <input type="text" name="dtn" class="form-control" placeholder="CAPDEV Proposal DTN"/>
+                                        <input type="text" name="dtn" class="form-control" placeholder="CAPDEV Proposal DTN" required/>
                                     </div>
                                 </div>
                                 
@@ -191,7 +191,7 @@
                     if (x < max_fields) { //max input box allowed
                         x++; //text box increment
                         $('#count').val(x);
-                        $(wrapper).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity activity : activities){%><option value="<%out.print(activity.getActivityID());%>"><%out.print(activity.getActivityName());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right" id="datepicker"></div></div></div><div class="col-xs-4"><div class="form-group"><label for="">Participants</label><input type="file" name="file[]" /></div></div></div>');
+                        $(wrapper).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity activity : activities){%><option value="<%out.print(activity.getActivityID());%>"><%out.print(activity.getActivityName());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right"></div></div></div><div class="col-xs-4"><div class="form-group"><label for="">Participants</label><input type="file" name="file[]" /></div></div></div>');
                         $('.select2').select2();
                     }
                 });

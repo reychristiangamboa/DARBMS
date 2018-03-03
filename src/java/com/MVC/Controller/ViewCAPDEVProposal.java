@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Rey Christian
  */
-public class ViewCAPDEVPlan extends BaseServlet {
+public class ViewCAPDEVProposal extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

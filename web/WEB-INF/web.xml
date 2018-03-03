@@ -81,20 +81,20 @@
         <servlet-class>com.MVC.Controller.RequestLoan</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CreateCAPDEVPlan</servlet-name>
-        <servlet-class>com.MVC.Controller.CreateCAPDEVPlan</servlet-class>
+        <servlet-name>CreateCAPDEVProposal</servlet-name>
+        <servlet-class>com.MVC.Controller.CreateCAPDEVProposal</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SendCAPDEVPlan</servlet-name>
-        <servlet-class>com.MVC.Controller.SendCAPDEVPlan</servlet-class>
+        <servlet-name>SendCAPDEVProposal</servlet-name>
+        <servlet-class>com.MVC.Controller.SendCAPDEVProposal</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ViewCAPDEVPlan</servlet-name>
-        <servlet-class>com.MVC.Controller.ViewCAPDEVPlan</servlet-class>
+        <servlet-name>ViewCAPDEVProposal</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewCAPDEVProposal</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ApproveCAPDEVPlan</servlet-name>
-        <servlet-class>com.MVC.Controller.ApproveCAPDEVPlan</servlet-class>
+        <servlet-name>ApproveCAPDEVProposal</servlet-name>
+        <servlet-class>com.MVC.Controller.ApproveCAPDEVProposal</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SendFarmPlan</servlet-name>
@@ -257,20 +257,20 @@
         <url-pattern>/RequestLoan</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>CreateCAPDEVPlan</servlet-name>
-        <url-pattern>/CreateCAPDEVPlan</url-pattern>
+        <servlet-name>CreateCAPDEVProposal</servlet-name>
+        <url-pattern>/CreateCAPDEVProposal</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>SendCAPDEVPlan</servlet-name>
-        <url-pattern>/SendCAPDEVPlan</url-pattern>
+        <servlet-name>SendCAPDEVProposal</servlet-name>
+        <url-pattern>/SendCAPDEVProposal</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ViewCAPDEVPlan</servlet-name>
-        <url-pattern>/ViewCAPDEVPlan</url-pattern>
+        <servlet-name>ViewCAPDEVProposal</servlet-name>
+        <url-pattern>/ViewCAPDEVProposal</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ApproveCAPDEVPlan</servlet-name>
-        <url-pattern>/ApproveCAPDEVPlan</url-pattern>
+        <servlet-name>ApproveCAPDEVProposal</servlet-name>
+        <url-pattern>/ApproveCAPDEVProposal</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SendFarmPlan</servlet-name>

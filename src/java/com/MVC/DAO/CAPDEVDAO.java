@@ -25,17 +25,18 @@ import java.util.logging.Logger;
  */
 public class CAPDEVDAO {
 
-    public int addCAPDEVPlan(CAPDEVPlan cp) {
+    public int addCAPDEVPlan(CAPDEVPlan cp, int userID) {
 
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
 
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`capdev_plans` (`requestID`,`planDTN`) VALUES (?,?);";
+            String query = "INSERT INTO `dar-bms`.`capdev_plans` (`requestID`,`planDTN`,`createdBy`) VALUES (?,?,?);";
             PreparedStatement p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setInt(1, cp.getRequestID());
             p.setString(2, cp.getPlanDTN());
+            p.setInt(3, userID);
             p.executeUpdate();
 
             ResultSet rs = p.getGeneratedKeys();
@@ -101,14 +102,21 @@ public class CAPDEVDAO {
 
         try {
             con.setAutoCommit(false);
-            String query = "Select * from `dar-bms`.`capdev_plans` WHERE planID = ?";
+            String query = "Select * from `dar-bms`.`capdev_plans` p JOIN ref_planStatus s ON p.planStatus=s.planStatus WHERE planID = ?";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, planID);
             ResultSet rs = p.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 cp.setPlanID(rs.getInt("planID"));
                 cp.setRequestID(rs.getInt("requestID"));
                 cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                cp.setAssignedTo(rs.getInt("assignedTo"));
+                cp.setPlanStatus(rs.getInt("planStatus"));
+                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
+                cp.setPlanDTN(rs.getString("planDTN"));
+                cp.setCreatedBy(rs.getInt("createdBy"));
+                cp.setApprovedBy(rs.getInt("approvedBy"));
+                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
             }
             con.close();
             con.commit();
@@ -122,6 +130,52 @@ public class CAPDEVDAO {
         }
 
         return cp;
+    }
+    
+    public ArrayList<CAPDEVPlan> getAllProvincialCAPDEVPlanByStatus(int status, int provOfficeCode) {
+        CAPDEVPlan cp = null;
+        ArrayList<CAPDEVPlan> planList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM capdev_plans c "
+                            + "JOIN ref_planStatus ps ON c.planStatus=ps.planStatus "
+                            + "JOIN apcp_requests r ON c.requestID=r.requestID "
+                            + "JOIN ref_requestStatus rs ON r.requestStatus=rs.requestStatus "
+                            + "JOIN arbos a ON r.arboID=a.arboID "
+                            + "WHERE c.planStatus = ? AND a.provOfficeCode = ?";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, status);
+            p.setInt(2, provOfficeCode);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                cp.setPlanID(rs.getInt("planID"));
+                cp.setRequestID(rs.getInt("requestID"));
+                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                cp.setAssignedTo(rs.getInt("assignedTo"));
+                cp.setPlanStatus(rs.getInt("planStatus"));
+                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
+                cp.setPlanDTN(rs.getString("planDTN"));
+                cp.setCreatedBy(rs.getInt("createdBy"));
+                cp.setApprovedBy(rs.getInt("approvedBy"));
+                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
+                planList.add(cp);
+            }
+            con.commit();
+            con.close();
+            
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return planList;
     }
 
     public int addCAPDEVPlanActivity(CAPDEVActivity activity) {

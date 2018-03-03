@@ -16,13 +16,13 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Rey Christian
  */
-public class CreateCAPDEVPlan extends BaseServlet {
+public class CreateCAPDEVProposal extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         request.setAttribute("requestID", id);
-        request.getRequestDispatcher("provincial-field-officer-check-request-document.jsp").forward(request, response);
+        request.getRequestDispatcher("provincial-field-officer-create-capdev-proposal.jsp").forward(request, response);
     }
 
     

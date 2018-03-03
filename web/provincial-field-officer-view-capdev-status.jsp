@@ -77,16 +77,21 @@
 
                                         <tbody>
 
+                                            <%
+                                                for(APCPRequest r : requestedRequests){
+                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                            %>
                                             <tr>
 
-                                                <td><a href="provincial-field-officer-create-capdev-proposal.jsp">DLSU</a></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td><a href="CreateCAPDEVProposal?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                <td><%out.print(r.getHectares() + " hectares");%></td>
+                                                <td><%out.print(f.format(r.getDateRequested()));%></td>
+                                                <td><%out.print(r.getRemarks());%></td>
+                                                <td><%out.print(r.getRequestStatusDesc());%></td>
                                             </tr>
+                                            <%}%>
 
                                         </tbody>
 
@@ -102,7 +107,7 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Approved CAPDEV Proposals</strong></h3>
+                                    <h3 class="box-title"><strong>Pending CAPDEV Proposals</strong></h3>
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                     </div>                         
@@ -110,6 +115,63 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">             
                                     <table id="example5" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                            <%
+                                                for(CAPDEVPlan p : pendingPlans){
+                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
+                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                            %>
+                                            <tr>
+                                                <td><%out.print(arbo.getArboName());%></td>
+                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><%out.print(p.getActivities().size());%></td>
+                                                <td><%out.print(p.getPlanStatusDesc());%></td>
+                                            </tr>
+                                            <%}%>
+
+                                        </tbody>
+
+                                        <tfoot>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>        
+                                            </tr>
+
+                                        </tfoot>
+
+                                    </table>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><strong>Approved CAPDEV Proposals</strong></h3>
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>                         
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">             
+                                    <table id="example3" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>

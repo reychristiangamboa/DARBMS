@@ -5,7 +5,7 @@
  */
 package com.MVC.Controller;
 
-import static com.MVC.Controller.SendCAPDEVPlan.readExcelFile;
+import static com.MVC.Controller.SendCAPDEVProposal.readExcelFile;
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.DAO.ARBDAO;
 import com.MVC.DAO.CAPDEVDAO;

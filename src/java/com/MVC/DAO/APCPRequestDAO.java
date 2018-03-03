@@ -346,35 +346,6 @@ public class APCPRequestDAO {
         return apcpRequest;
     }
     
-    public boolean updateRequestStatus(int requestID, int status){
-        boolean success = false;
-        PreparedStatement p = null;
-        Connection con = null;
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        con = myFactory.getConnection();
-        try {
-            con.setAutoCommit(false);
-            String query = "UPDATE apcp_requests SET `requestStatus`=? WHERE `requestID`=?";
-            p = con.prepareStatement(query);
-            p.setInt(1, status);
-            p.setInt(2, requestID);
-
-            p.executeUpdate();
-            p.close();
-            con.commit();
-            con.close();
-            success = true;
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return success;
-    }
-    
     public boolean sendFarmPlan(Date date, int requestID){
         boolean success = false;
         PreparedStatement p = null;

@@ -136,17 +136,25 @@
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">CAPDEV Plan</h3>
+                                    <h5 class="box-title pull-right text-muted">CAPDEV PLAN DTN 123</h5>
                                 </div>
                                 <form role="form" method="post" action="AddARB">
                                     <div class="box-body">
-                                        <div class="box-body">             
-                                            <table id="example2" class="table table-bordered table-striped">
+                                        <div class="box-body">
+                                            <div class="row col-xs-4" style="margin-bottom: 20px;">
+                                                <label>Assign Point Person</label>
+                                                <select name="" class="form-control" id="EL" style="width:100%;" >
+                                                    <option value="1">Jack Daniels</option>
+                                                    <option value="2">San Miguel</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <table class="table table-bordered table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>Activity</th>
                                                         <th>Date</th>
                                                         <th>No. of Participants</th>
-                                                        <th></th>
 
                                                     </tr>
                                                 </thead>
@@ -157,15 +165,6 @@
                                                         <td><a data-toggle="modal" data-target="#cleared-modal"></a>asdf</td>
                                                         <td>asdf</td>
                                                         <td>asdfasdf</td>
-                                                        <td>
-                                                            
-                                                                <select name="" class="form-control" id="EL" style="width:100%;" >
-                                                                    <option value="1">Jack Daniels</option>
-                                                                    <option value="2">San Miguel</option>
-                                                                </select>
-                                                            
-                                                        </td>
-
                                                     </tr>
 
                                                 <div class="modal fade" id="cleared-modal">
