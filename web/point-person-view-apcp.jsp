@@ -49,157 +49,98 @@
 
                 <!-- Main content -->
                 <section class="content">
+
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Pending CAPDEV Proposals</strong></h3>
+                                    <h3 class="box-title"><strong>For Release</strong></h3>
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                     </div>                         
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>ARBO Name</th>
-                                                <th>Plan DTN</th>
-                                                <th>No. of Activities</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            <%
-                                                for(CAPDEVPlan p : assignedPlans){
-                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
-                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
-                                            %>
-                                            <tr>
-                                                <td><a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
-                                                <td><%out.print(p.getActivities().size());%></td>
-                                                <td><%out.print(p.getPlanStatusDesc());%></td>
-                                            </tr>
-                                            <%}%>
-
-                                        </tbody>
-
-                                        <tfoot>
-                                            <tr>
-                                                <th>ARBO Name</th>
-                                                <th>Plan DTN</th>
-                                                <th>No. of Activities</th>
-                                                <th>Status</th>        
-                                            </tr>
-
-                                        </tfoot>
-
-                                    </table>
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                                            
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Pre-Release Orientation</strong></h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                    </div>                         
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>ARBO Name</th>
-                                                <th>Plan DTN</th>
-                                                <th>No. of Activities</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            <%
-                                                for(CAPDEVPlan p : assignedPROs){
-                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
-                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
-                                            %>
-                                            <tr>
-                                                <td><a href="MonitorPreReleaseAttendance?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
-                                                <td><%out.print(p.getActivities().size());%></td>
-                                                <td><%out.print(p.getPlanStatusDesc());%></td>
-                                            </tr>
-                                            <%}%>
-
-                                        </tbody>
-
-                                        <tfoot>
-                                            <tr>
-                                                <th>ARBO Name</th>
-                                                <th>Plan DTN</th>
-                                                <th>No. of Activities</th>
-                                                <th>Status</th>        
-                                            </tr>
-
-                                        </tfoot>
-
-                                    </table>
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                        <!-- /.col -->
-                    </div>                        
-                                            
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>With Past Due CAPDEV Plans</strong></h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                    </div>                         
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
+                                    <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
                                                 <th>Loan Reason</th>
                                                 <th>Loan Amount</th>
                                                 <th>Land Area</th>
-                                                <th>Date Cleared</th>
+                                                <th>Date Approved</th>
                                                 <th>Remarks</th>
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
-
+                                            <%
+                                                for(APCPRequest r : forReleaseRequests){
+                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                            %>
                                             <tr>
-                                                <td><a href="modal-default" class="btn"data-toggle="modal" data-target="#modal-default">ARB</a></a></td>
-                                                <td>Internet
-                                                    Explorer 4.0
-                                                </td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
+
+                                                <td><a href="point-person-release-apcp.jsp"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                <td><%out.print(r.getHectares() + " hectares");%></td>
+                                                <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                <td><%out.print(r.getRemarks());%></td>
+                                                <td><%out.print(r.getRequestStatusDesc());%></td>
                                             </tr>
+                                            <%}%>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>                    
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><strong>Released</strong></h3>
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>                         
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">             
+                                    <table id="example6" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Loan Reason</th>
+                                                <th>Loan Amount</th>
+                                                <th>Land Area</th>
+                                                <th>Date Released</th>
+                                                <th>Remarks</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <%
+                                                for(APCPRequest r : forReleaseRequests){
+                                                ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                            %>
+                                            <tr>
+
+                                                <td><a href="point-person-release-apcp.jsp"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                <td><%out.print(r.getHectares() + " hectares");%></td>
+                                                <td></td>
+                                                <td><%out.print(r.getRemarks());%></td>
+                                                <td><%out.print(r.getRequestStatusDesc());%></td>
+                                            </tr>
+                                            <%}%>
 
                                         </tbody>
 

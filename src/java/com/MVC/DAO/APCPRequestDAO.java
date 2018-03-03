@@ -444,8 +444,8 @@ public class APCPRequestDAO {
             String query = "UPDATE apcp_requests SET `requestStatus`=? WHERE `requestID`=?";
             p = con.prepareStatement(query);
             
-            p.setInt(1, requestID);
-            p.setInt(2, statusID);
+            p.setInt(1, statusID);
+            p.setInt(2, requestID);
 
             p.executeUpdate();
             p.close();

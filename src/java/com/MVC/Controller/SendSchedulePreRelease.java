@@ -24,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -40,6 +41,8 @@ public class SendSchedulePreRelease extends BaseServlet {
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        
+        HttpSession session = request.getSession();
 
         CAPDEVDAO capdevDAO = new CAPDEVDAO();
         ARBDAO arbDAO = new ARBDAO();
@@ -51,6 +54,9 @@ public class SendSchedulePreRelease extends BaseServlet {
         CAPDEVPlan capdevPlan = new CAPDEVPlan();
         capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         capdevPlan.setAssignedTo(Integer.parseInt(request.getParameter("pointPerson")));
+        capdevPlan.setCreatedBy((Integer)session.getAttribute("userID"));
+        capdevPlan.setPlanDTN(request.getParameter("dtn"));
+        capdevPlan.setPlanStatus(6);
         
         int planID = capdevDAO.addPreReleaseOrientation(capdevPlan);
 
@@ -64,9 +70,9 @@ public class SendSchedulePreRelease extends BaseServlet {
             Logger.getLogger(SendSchedulePreRelease.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        int activityID = Integer.parseInt(request.getParameter("activityID"));
+        int activityType = Integer.parseInt(request.getParameter("activityType"));
         
-        activity.setActivityID(activityID);
+        activity.setActivityType(activityType);
         activity.setPlanID(planID);
         activity.setActivityDate(activityDate);
         
@@ -99,7 +105,7 @@ public class SendSchedulePreRelease extends BaseServlet {
         ArrayList cellArrayListHolder = new ArrayList();
         try {
 
-            OPCPackage pkg = OPCPackage.open("C:\\Users\\ijJPN2\\Documents\\NetBeansProjects\\DAR-BMS\\" + fileName);
+            OPCPackage pkg = OPCPackage.open(fileName);
             XSSFWorkbook workbook = new XSSFWorkbook(pkg);
             XSSFSheet sheet = workbook.getSheetAt(0);
 

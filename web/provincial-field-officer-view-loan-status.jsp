@@ -109,6 +109,8 @@
                         </div>
                         <!-- /.col -->
                     </div>
+                                        
+                    
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box">
@@ -328,6 +330,58 @@
                         </div>
                         <!-- /.col -->
                     </div>
+                                            
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><strong>For Release</strong></h3>
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>                         
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">             
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Loan Reason</th>
+                                                <th>Loan Amount</th>
+                                                <th>Land Area</th>
+                                                <th>Date Requested</th>
+                                                <th>Remarks</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <%
+                                                for(APCPRequest r : forReleaseRequests){
+                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                            %>
+                                            <tr>
+
+                                                <td><a href="#"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                <td><%out.print(r.getHectares() + " hectares");%></td>
+                                                <td><%out.print(f.format(r.getDateRequested()));%></td>
+                                                <td><%out.print(r.getRemarks());%></td>
+                                                <td><%out.print(r.getRequestStatusDesc());%></td>
+                                            </tr>
+                                            <%}%>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>                    
+                                            
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box">

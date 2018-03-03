@@ -200,6 +200,14 @@
         <servlet-name>ReviewCAPDEVAssessment</servlet-name>
         <servlet-class>com.MVC.Controller.ReviewCAPDEVAssessment</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RecordPreReleaseAssessment</servlet-name>
+        <servlet-class>com.MVC.Controller.RecordPreReleaseAssessment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MonitorPreReleaseAttendance</servlet-name>
+        <servlet-class>com.MVC.Controller.MonitorPreReleaseAttendance</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -399,6 +407,14 @@
     <servlet-mapping>
         <servlet-name>ReviewCAPDEVAssessment</servlet-name>
         <url-pattern>/ReviewCAPDEVAssessment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RecordPreReleaseAssessment</servlet-name>
+        <url-pattern>/RecordPreReleaseAssessment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MonitorPreReleaseAttendance</servlet-name>
+        <url-pattern>/MonitorPreReleaseAttendance</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

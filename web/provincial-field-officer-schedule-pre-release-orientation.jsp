@@ -135,13 +135,14 @@
                             </div>
                             <!-- /.box -->
                             <div class="box">
+                                <form role="form" method="post" action="SendSchedulePreRelease">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Schedule Pre-release Orientation</h3>
                                     <div class="col-xs-3 pull-right">
                                         <input type="text" name="dtn" class="form-control" placeholder="Pre-Release Orientation DTN"/>
                                     </div>
                                 </div>
-                                <form role="form" method="post" action="SendSchedulePreRelease">
+                                
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-xs-4">
@@ -149,7 +150,7 @@
                                                     <label for="pointPerson">Point Person</label>
                                                     <select class="form-control" name="pointPerson">
                                                         <%for(User u : pointPersons){%>
-                                                        <option value="<%=u.getUserID()%>"><%out.print(u.getFLName());%></option>
+                                                        <option value="<%=u.getUserID()%>"><%out.print(u.getFullName());%></option>
                                                         <%}%>
                                                     </select>
 
@@ -176,7 +177,7 @@
                                     </div>
                                     <div class="box-footer">
                                         <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
-                                        <input type="hidden" value="1" name="activityID">
+                                        <input type="hidden" value="1" name="activityType">
                                         <button type="submit" name="manual" class="btn btn-primary pull-right">Submit</button>
                                     </div>
                                 </form>
@@ -210,7 +211,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
-                                        <button type="submit" name="manual" onclick="form.action = 'ApproveAPCPRequest'" class="btn btn-primary pull-right">Submit</button>
+                                        <button type="submit" name="manual" onclick="form.action = 'SendSchedulePreRelease'" class="btn btn-primary pull-right">Submit</button>
                                     </div>
                                 </form>
 

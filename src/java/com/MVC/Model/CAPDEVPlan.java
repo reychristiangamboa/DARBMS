@@ -23,6 +23,7 @@ public class CAPDEVPlan {
     private int approvedBy;
     private int planStatus;
     private String planStatusDesc;
+    
     private ArrayList<CAPDEVActivity> activities = new ArrayList();
     
 

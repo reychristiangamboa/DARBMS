@@ -66,12 +66,15 @@ public class CAPDEVDAO {
         try {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`capdev_plans` "
-                    + "(`requestID`, `assignedTo`) "
-                    + "VALUES (?,?);";
+                    + "(`requestID`, `assignedTo`,`createdBy`,`planDTN`, `planStatus`) "
+                    + "VALUES (?,?,?,?,?);";
 
             PreparedStatement p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setInt(1, plan.getRequestID());
             p.setInt(2, plan.getAssignedTo());
+            p.setInt(3, plan.getCreatedBy());
+            p.setString(4, plan.getPlanDTN());
+            p.setInt(5, plan.getPlanStatus());
             p.executeUpdate();
 
             ResultSet rs = p.getGeneratedKeys();
@@ -320,6 +323,7 @@ public class CAPDEVDAO {
                 p.setInt(2, arb.getArbID());
 
                 p.executeUpdate();
+                success = true;
                 p.close();
             }
 
@@ -490,6 +494,47 @@ public class CAPDEVDAO {
         try {
             con.setAutoCommit(false);
             String query = "select * from capdev_plans p join ref_planStatus s on p.planStatus=s.planStatus where p.assignedTo=? AND p.planStatus=4";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, userID);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                CAPDEVPlan cp = new CAPDEVPlan();
+                cp = new CAPDEVPlan();
+                cp.setPlanID(rs.getInt("planID"));
+                cp.setRequestID(rs.getInt("requestID"));
+                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                cp.setAssignedTo(rs.getInt("assignedTo"));
+                cp.setPlanStatus(rs.getInt("planStatus"));
+                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
+                cp.setPlanDTN(rs.getString("planDTN"));
+                cp.setCreatedBy(rs.getInt("createdBy"));
+                cp.setApprovedBy(rs.getInt("approvedBy"));
+                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
+                cpList.add(cp);
+            }
+            con.commit();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cpList;
+    }
+    
+    public ArrayList<CAPDEVPlan> getAssignedPreReleasePlans(int userID) {
+
+        ArrayList<CAPDEVPlan> cpList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "select * from capdev_plans p join ref_planStatus s on p.planStatus=s.planStatus where p.assignedTo=? AND p.planStatus=6";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, userID);
             ResultSet rs = p.executeQuery();
