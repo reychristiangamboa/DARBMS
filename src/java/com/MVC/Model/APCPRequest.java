@@ -6,6 +6,7 @@
 package com.MVC.Model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  *
@@ -32,6 +33,9 @@ public class APCPRequest {
     private Date businessPlanDate;
     private Date bankRequirementsDate;
     private int loanTrackingNo;
+    private ArrayList<PastDueAccount> pastDueAccounts = new ArrayList();
+    private ArrayList<APCPRelease> releases = new ArrayList();
+    private ArrayList<Repayment> repayments = new ArrayList();
 
     public int getRequestID() {
         return requestID;
@@ -192,4 +196,31 @@ public class APCPRequest {
     public void setLoanTrackingNo(int loanTrackingNo) {
         this.loanTrackingNo = loanTrackingNo;
     }
+
+    public ArrayList<PastDueAccount> getPastDueAccounts() {
+        return pastDueAccounts;
+    }
+
+    public void setPastDueAccounts(ArrayList<PastDueAccount> pastDueAccounts) {
+        this.pastDueAccounts = pastDueAccounts;
+    }
+
+    public ArrayList<APCPRelease> getReleases() {
+        return releases;
+    }
+
+    public void setReleases(ArrayList<APCPRelease> releases) {
+        this.releases = releases;
+    }
+
+    public ArrayList<Repayment> getRepayments() {
+        return repayments;
+    }
+
+    public void setRepayments(ArrayList<Repayment> repayments) {
+        this.repayments = repayments;
+    }
+    
+    
+    
 }
