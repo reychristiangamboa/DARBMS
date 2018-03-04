@@ -17,6 +17,7 @@ public class Repayment {
     private int requestID;
     private double amount;
     private Date dateRepayment;
+    private int arbID;
 
     public int getRepaymentID() {
         return repaymentID;
@@ -49,7 +50,13 @@ public class Repayment {
     public void setDateRepayment(Date dateRepayment) {
         this.dateRepayment = dateRepayment;
     }
-    
-        
+
+    public int getArbID() {
+        return arbID;
+    }
+
+    public void setArbID(int arbID) {
+        this.arbID = arbID;
+    }
     
 }

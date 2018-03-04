@@ -208,6 +208,22 @@
         <servlet-name>MonitorPreReleaseAttendance</servlet-name>
         <servlet-class>com.MVC.Controller.MonitorPreReleaseAttendance</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RecordPastDueAccount</servlet-name>
+        <servlet-class>com.MVC.Controller.RecordPastDueAccount</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecordRequestRelease</servlet-name>
+        <servlet-class>com.MVC.Controller.RecordRequestRelease</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecordRepayment</servlet-name>
+        <servlet-class>com.MVC.Controller.RecordRepayment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecordDisbursement</servlet-name>
+        <servlet-class>com.MVC.Controller.RecordDisbursement</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -415,6 +431,22 @@
     <servlet-mapping>
         <servlet-name>MonitorPreReleaseAttendance</servlet-name>
         <url-pattern>/MonitorPreReleaseAttendance</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RecordPastDueAccount</servlet-name>
+        <url-pattern>/RecordPastDueAccount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RecordRequestRelease</servlet-name>
+        <url-pattern>/RecordRequestRelease</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RecordRepayment</servlet-name>
+        <url-pattern>/RecordRepayment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RecordDisbursement</servlet-name>
+        <url-pattern>/RecordDisbursement</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

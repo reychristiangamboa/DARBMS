@@ -550,12 +550,13 @@ public class APCPRequestDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`request_releases` (`requestID`, `releaseAmount`, `releaseDate`) "
-                    + " VALUES (?, ?, ?);";
+            String query = "INSERT INTO `dar-bms`.`request_releases` (`requestID`, `releaseAmount`, `releaseDate`,`releasedBy`) "
+                    + " VALUES (?, ?, ?, ?);";
             p = con.prepareStatement(query);
             p.setInt(1, r.getRequestID());
             p.setDouble(2, r.getReleaseAmount());
             p.setDate(3, r.getReleaseDate());
+            p.setInt(4, r.getReleasedBy());
 
             p.executeUpdate();
             p.close();
@@ -637,12 +638,13 @@ public class APCPRequestDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`repayments` (`requestID`, `amount`,`dateRepayment`) "
-                    + " VALUES (?, ?, ?);";
+            String query = "INSERT INTO `dar-bms`.`repayments` (`requestID`, `amount`,`dateRepayment`,`arbID`) "
+                    + " VALUES (?, ?, ?, ?);";
             p = con.prepareStatement(query);
             p.setInt(1, r.getRequestID());
             p.setDouble(2, r.getAmount());
             p.setDate(3, r.getDateRepayment());
+            p.setInt(4, r.getArbID());
             
             p.executeUpdate();
             p.close();
@@ -675,6 +677,7 @@ public class APCPRequestDAO {
                 r.setRequestID(rs.getInt("requestID"));
                 r.setAmount(rs.getDouble("amount"));
                 r.setDateRepayment(rs.getDate("dateRepayment"));
+                r.setArbID(rs.getInt("arbID"));
                 rList.add(r);
             }
         } catch (SQLException ex) {

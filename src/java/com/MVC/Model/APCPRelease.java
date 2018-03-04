@@ -21,6 +21,7 @@ public class APCPRelease {
     private Date releaseDate;
     private double currentYearReleaseAmount;
     private double totalAmountReleased;
+    private int releasedBy;
 
     public int getReleaseID() {
         return releaseID;
@@ -77,5 +78,15 @@ public class APCPRelease {
     public void setTotalAmountReleased(double totalAmountReleased) {
         this.totalAmountReleased = totalAmountReleased;
     }
+
+    public int getReleasedBy() {
+        return releasedBy;
+    }
+
+    public void setReleasedBy(int releasedBy) {
+        this.releasedBy = releasedBy;
+    }
+    
+    
     
 }
