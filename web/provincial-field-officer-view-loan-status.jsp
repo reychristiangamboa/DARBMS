@@ -69,10 +69,10 @@
                                 <div class="inner">
                                     <h3><%=requestedRequests.size()%></h3>
 
-                                    <p>Requested</p>
+                                    <h4>Requested</h4>
                                 </div>
                                 <div class="icon">
-                                    <i class="fa fa-shopping-cart"></i>
+                                    <i class="fa fa-keyboard-o"></i>
                                 </div>
                             </div>
                             </a>
@@ -80,36 +80,34 @@
                         <!-- ./col -->
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
+                            <a href="#" name="btn2">
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3>53<sup style="font-size: 20px">%</sup></h3>
+                                    <h3><%=clearedRequests.size()%><sup style="font-size: 20px"></sup></h3>
 
-                                    <p>Cleared</p>
+                                    <h4>Cleared</h4>
                                 </div>
                                 <div class="icon">
-                                    <i class="ion ion-stats-bars"></i>
+                                    <i class="fa fa-check-square-o"></i>
                                 </div>
-                                <a href="#" name="btn2" class="small-box-footer">
-                                    More info <i class="fa fa-arrow-circle-right"></i>
-                                </a>
                             </div>
+                            </a>
                         </div>
                         <!-- ./col -->
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
+                            <a href="#" name="btn3">
                             <div class="small-box bg-yellow">
                                 <div class="inner">
-                                    <h3>44</h3>
+                                    <h3><%=endorsedRequests.size()%></h3>
 
-                                    <p>Endorsed</p>
+                                    <h4>Endorsed</h4>
                                 </div>
                                 <div class="icon">
-                                    <i class="ion ion-person-add"></i>
-                                </div>
-                                <a href="#" name="btn3" class="small-box-footer">
-                                    More info <i class="fa fa-arrow-circle-right"></i>
-                                </a>
+                                    <i class="fa fa-upload"></i>
+                                </div>  
                             </div>
+                            </a>
                         </div>
                         <!-- ./col -->
                         <!-- ./col -->
@@ -117,53 +115,50 @@
                     <div class="row">
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
+                            <a href="#" name="btn4">
                             <div class="small-box bg-aqua">
                                 <div class="inner">
-                                    <h3>150</h3>
+                                    <h3><%=approvedRequests.size()%></h3>
 
-                                    <p>Approved</p>
+                                    <h4>Approved</h4>
                                 </div>
                                 <div class="icon">
-                                    <i class="fa fa-shopping-cart"></i>
+                                    <i class="fa fa-thumbs-o-up"></i>
                                 </div>
-                                <a href="#" name="btn4" class="small-box-footer">
-                                    More info <i class="fa fa-arrow-circle-right"></i>
-                                </a>
                             </div>
+                            </a>
                         </div>
                         <!-- ./col -->
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
+                            <a href="#" name="btn5">
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3>53<sup style="font-size: 20px">%</sup></h3>
+                                    <h3><%=forReleaseRequests.size()%><sup style="font-size: 20px"></sup></h3>
 
-                                    <p>For Release</p>
+                                    <h4>For Release</h4>
                                 </div>
                                 <div class="icon">
-                                    <i class="ion ion-stats-bars"></i>
+                                    <i class="fa fa-folder-o"></i>
                                 </div>
-                                <a href="#" name="btn5" class="small-box-footer">
-                                    More info <i class="fa fa-arrow-circle-right"></i>
-                                </a>
                             </div>
+                            </a>        
                         </div>
                         <!-- ./col -->
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
+                            <a href="#" name="btn6">
                             <div class="small-box bg-yellow">
                                 <div class="inner">
-                                    <h3>44</h3>
+                                    <h3><%=releasedRequests.size()%></h3>
 
-                                    <p>Released</p>
+                                    <h4>Released</h4>
                                 </div>
                                 <div class="icon">
-                                    <i class="ion ion-person-add"></i>
+                                    <i class="fa fa-folder-open-o"></i>
                                 </div>
-                                <a href="#" name="btn6" class="small-box-footer">
-                                    More info <i class="fa fa-arrow-circle-right"></i>
-                                </a>
                             </div>
+                           </a>
                         </div>
                         <!-- ./col -->
                     </div>

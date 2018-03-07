@@ -60,9 +60,80 @@
                         <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
                     </div>
                     <%}%>
-
                     <div class="row">
+                        <div class="col-lg-3 col-xs-6" >
+                            <!-- small box -->
+                            <a href="#" name="btn1">
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h3><%=requestedRequests.size()%></h3>
+
+                                        <h4>Requested</h4>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-keyboard-o"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-xs-6" >
+                            <!-- small box -->
+                            <a href="#" name="btn4">
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h3><%=requestedRequests.size()%></h3>
+
+                                        <h4>Pending CAPDEV Proposals</h4>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-hourglass-2"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <a href="#" name="btn2">
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3><%=clearedRequests.size()%><sup style="font-size: 20px"></sup></h3>
+
+                                        <h4>Approved CAPDEV Proposals</h4>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa  fa-thumbs-up"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <a href="#" name="btn3">
+                                <div class="small-box bg-yellow">
+                                    <div class="inner">
+                                        <h3><%=endorsedRequests.size()%></h3>
+
+                                        <h4>Implemented CAPDEV Proposals</h4>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-check-square-o"></i>
+                                    </div>  
+                                </div>
+                            </a>
+                        </div>
+                        <!-- ./col -->
+                        <!-- ./col -->
+                    </div>
+                    <div class="row text-center">
                         <div class="col-xs-12">
+                            <a name="all" href="#">Select All <i class="fa fa-chevron-down"></i></a>
+                        </div>
+                    </div>
+                    <div class="row" id="1" style="display:none;">
+                        <div class="col-xs-12" >
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Requested</strong></h3>
@@ -113,8 +184,8 @@
                         </div>
                         <!-- /.col -->
                     </div>
-                    <div class="row">
-                        <div class="col-xs-12">
+                    <div class="row" id="2" style="display:none;">
+                        <div class="col-xs-12" >
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Pending CAPDEV Proposals</strong></h3>
@@ -170,7 +241,7 @@
                         <!-- /.col -->
                     </div>
 
-                    <div class="row">
+                    <div class="row" id="3" style="display:none;">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -227,8 +298,8 @@
                         <!-- /.col -->
                     </div>
 
-                    <div class="row">
-                        <div class="col-xs-12">
+                    <div class="row" id="4" style="display:none;">
+                        <div class="col-xs-12" >
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Implemented CAPDEV Proposals</strong></h3>
@@ -299,5 +370,95 @@
             </footer>
         </div>
         <%@include file="jspf/footer.jspf" %>
+        <script>
+            $(document).ready(function () {
+                $("a[name='all']").click(function(){
+                    if ($("div[id='1']").css('display') == 'none') {
+                        $("div[id='1']").toggle();
+                    }
+                    if ($("div[id='2']").css('display') == 'none') {
+                        $("div[id='2']").toggle();
+                    }
+                    if ($("div[id='3']").css('display') == 'none') {
+                        $("div[id='3']").toggle();
+                    }
+                    if ($("div[id='4']").css('display') == 'none') {
+                        $("div[id='4']").toggle();
+                    }
+                });
+                $("a[name='btn1']").click(function () {
+                    $("div[id='1']").toggle();
+                    if ($("div[id='2']").css('display') != 'none') {
+                        $("div[id='2']").toggle();
+                    }
+                    if ($("div[id='3']").css('display') != 'none') {
+                        $("div[id='3']").toggle();
+                    }
+                    if ($("div[id='4']").css('display') != 'none') {
+                        $("div[id='4']").toggle();
+                    }
+                    if ($("div[id='5']").css('display') != 'none') {
+                        $("div[id='5']").toggle();
+                    }
+                    if ($("div[id='6']").css('display') != 'none') {
+                        $("div[id='6']").toggle();
+                    }
+                });
+                $("a[name='btn2']").click(function () {
+                    $("div[id='3']").toggle();
+                    if ($("div[id='1']").css('display') != 'none') {
+                        $("div[id='1']").toggle();
+                    }
+                    if ($("div[id='2']").css('display') != 'none') {
+                        $("div[id='2']").toggle();
+                    }
+                    if ($("div[id='4']").css('display') != 'none') {
+                        $("div[id='4']").toggle();
+                    }
+                    if ($("div[id='5']").css('display') != 'none') {
+                        $("div[id='5']").toggle();
+                    }
+                    if ($("div[id='6']").css('display') != 'none') {
+                        $("div[id='6']").toggle();
+                    }
+                });
+                $("a[name='btn3']").click(function () {
+                    $("div[id='4']").toggle();
+                    if ($("div[id='1']").css('display') != 'none') {
+                        $("div[id='1']").toggle();
+                    }
+                    if ($("div[id='2']").css('display') != 'none') {
+                        $("div[id='2']").toggle();
+                    }
+                    if ($("div[id='3']").css('display') != 'none') {
+                        $("div[id='3']").toggle();
+                    }
+                    if ($("div[id='5']").css('display') != 'none') {
+                        $("div[id='5']").toggle();
+                    }
+                    if ($("div[id='6']").css('display') != 'none') {
+                        $("div[id='6']").toggle();
+                    }
+                });
+                $("a[name='btn4']").click(function () {
+                    $("div[id='2']").toggle();
+                    if ($("div[id='1']").css('display') != 'none') {
+                        $("div[id='1']").toggle();
+                    }
+                    if ($("div[id='4']").css('display') != 'none') {
+                        $("div[id='4']").toggle();
+                    }
+                    if ($("div[id='3']").css('display') != 'none') {
+                        $("div[id='3']").toggle();
+                    }
+                    if ($("div[id='5']").css('display') != 'none') {
+                        $("div[id='5']").toggle();
+                    }
+                    if ($("div[id='6']").css('display') != 'none') {
+                        $("div[id='6']").toggle();
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

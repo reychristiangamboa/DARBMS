@@ -22,6 +22,7 @@
                 ARBO a = arboDAO.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
                 ArrayList<APCPRelease> releaseList = apcpRequestDAO.getAllAPCPReleasesByRequest((Integer)request.getAttribute("requestID"));
+                
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -161,7 +162,7 @@
                                             <div class="chart tab-pane active" id="release" style="position: relative;">
                                                 <div class="box-body">
 
-                                                    <table id="example1" class="table table-bordered table-striped">
+                                                    <table id="releaseTable" class="table table-bordered table-striped">
                                                         <thead>
                                                             <tr>
                                                                 <th>Release Amount</th>
@@ -199,7 +200,7 @@
                                             <div class="chart tab-pane" id="repayment" style="position: relative;">
                                                 <div class="box-body">
 
-                                                    <table id="example3" class="table table-bordered table-striped">
+                                                    <table id="repaymentTable" class="table table-bordered table-striped">
                                                         <thead>
                                                             <tr>
                                                                 <th>Repayment Amount</th>
@@ -245,46 +246,55 @@
                                             <div class="chart tab-pane" id="pastdue" style="position: relative;">
                                                 <div class="box-body">
 
-                                                    <table id="example4" class="table table-bordered table-striped">
+                                                    <table id="pastDueTable" class="table table-bordered table-striped">
                                                         <thead>
                                                             <tr>
-                                                                <th>Repayment Amount</th>
-                                                                <th>Repayment Date</th>
-                                                                <th>Repaid By</th>
+                                                                <th>Amount</th>
+                                                                <th>Reason Past Due</th>
+                                                                <th>Other Reason</th>
+                                                                <th>Date</th>
                                                                 <th>Recorded By</th>
                                                             </tr>
                                                         </thead>
 
                                                         <tbody>
                                                             <%
-                                                                for(Repayment repayment : r.getRepayments()){
+                                                                for(PastDueAccount p : r.getPastDueAccounts()){
                                                                     User u = new User(); 
-                                                                    u = uDAO.searchUser(repayment.getRecordedBy());
-                                                                    ARB arb = new ARB();
-                                                                    arb = arbDAO.getARBByID(repayment.getArbID());
+                                                                    u = uDAO.searchUser(p.getRecordedBy());
                                                             %>
                                                             <tr>
-                                                                <td><%out.print(repayment.getAmount());%></td>
-                                                                <td><%out.print(f.format(repayment.getDateRepayment()));%></td>
-                                                                <td><%out.print(arb.getFLName());%></td>
+                                                                <td><%out.print(p.getPastDueAmount());%></td>
+                                                                <td><%out.print(p.getReasonPastDueDesc());%></td>
+                                                                <td><%out.print(p.getOtherReason());%></td>
+
+                                                                <%if(p.getDateSettled() != null){%>
+                                                                <td><%out.print(f.format(p.getDateSettled()));%></td>
+                                                                <%}else{%>
+                                                                <td><%out.print("Unsettled.");%></td>
+                                                                <%}%>
+
                                                                 <td><%out.print(u.getFullName());%></td>
                                                             </tr>
                                                             <%}%>
                                                         </tbody>
 
                                                         <tfoot>
+
                                                             <tr>
-                                                                <th>Repayment Amount</th>
-                                                                <th>Repayment Date</th>
-                                                                <th>Repaid By</th>
+                                                                <th>Amount</th>
+                                                                <th>Reason Past Due</th>
+                                                                <th>Other Reason</th>
+                                                                <th>Date</th>
                                                                 <th>Recorded By</th>
                                                             </tr>
+
                                                         </tfoot>
 
                                                     </table>
                                                 </div>
                                                 <div class="box-footer">
-                                                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-repayment-modal">Add Repayment</button>
+                                                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-pastdue-modal">Add Past Due Account</button>
                                                 </div>
 
                                             </div>
@@ -405,6 +415,57 @@
                                     <div class="modal-footer">
                                         <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
                                         <button type="submit" name="manual" onclick="form.action = 'RecordRepayment'" class="btn btn-primary pull-right">Submit</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                            <!--                                            /.modal-content -->
+                        </div>
+                        <!--                                        /.modal-dialog -->
+                    </div>
+
+                    <div class="modal fade" id="add-pastdue-modal">
+                        <div class="modal-dialog modal-md">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Record Past Due Account</h4>
+                                </div>
+
+                                <form method="post">
+                                    <div class="modal-body" id="modalBody">
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <div class="form-group">
+                                                    <label for="">Amount</label>
+                                                    <input type="text" class="form-control" name="pastDueAmount" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <div class="form-group">
+                                                    <label for="">Reason for Past Due </label>
+                                                    <select class="form-control" name="reasonPastDue" id="">
+                                                        <%for(PastDueAccount p : reasons){%>
+                                                        <option value="<%=p.getReasonPastDue()%>"><%out.print(p.getReasonPastDueDesc());%></option>
+                                                        <%}%>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="">Other Reason</label>
+                                                    <textarea class="form-control" name="otherReason" id="" cols="10" rows="3">N/A</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                                        <button type="submit" name="manual" onclick="form.action = 'RecordPastDueAccount'" class="btn btn-primary pull-right">Submit</button>
                                     </div>
                                 </form>
 

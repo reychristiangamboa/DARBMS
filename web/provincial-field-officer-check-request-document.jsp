@@ -114,7 +114,79 @@
                                                 </div> 
                                             </div>
                                             <div class="chart tab-pane" id="info" style="position: relative;">
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group" id="space" name="space">
+                                                                <label for="space">Name of ARBO</label>
+                                                                <input type="text" class="form-control" value="<%out.print(a.getArboName());%>" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-3">
+                                                            <label for="space">No. of Members</label>
+                                                            <div class="input-group" id="space" name="space">
+                                                                <input type="text" class="form-control" value="<%out.print(arboDAO.getARBCount(a.getArboID()));%>" disabled>
+                                                                <span class="input-group-addon" data-toggle="modal" data-target="#arbs"><i class="fa  fa-users"></i>&nbsp; View ARBO Members</span>
+                                                            </div>
+                                                        </div>
 
+                                                    </div>
+
+
+                                                </div>
+
+                                                <div class="modal fade" id="arbs">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span></button>
+                                                                <h4 class="modal-title">Agrarian Reform Beneficiaries</h4>
+                                                            </div>
+
+
+                                                            <div class="modal-body" id="modalBody">
+                                                                <div class="row">
+                                                                    <div class="col-xs-12">
+                                                                        <table id="arbTable" class="table table-bordered table-striped">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Full Name</th>
+                                                                                    <th>Address</th>
+                                                                                    <th>Crops</th>
+                                                                                </tr>
+                                                                            </thead>
+
+                                                                            <tbody>
+                                                                                <%
+                                                                                    for(ARB arb : arbList){
+                                                                                %>
+                                                                                <tr>
+                                                                                    <td><%out.print(arb.getFullName());%></td>
+                                                                                    <td><%out.print(arb.getFullAddress());%></td>
+                                                                                    <td><%out.print(arb.printAllCrops());%></td>
+                                                                                </tr>
+                                                                                <%}%>
+                                                                            </tbody>
+
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <th>Full Name</th>
+                                                                                    <th>Address</th>
+                                                                                    <th>Crops</th>
+                                                                                </tr>
+                                                                            </tfoot>
+
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <!--                                            /.modal-content -->
+                                                    </div>
+                                                    <!--                                        /.modal-dialog -->
+                                                </div>
 
                                             </div>
                                             <div class="chart tab-pane" id="history" style="position: relative;">

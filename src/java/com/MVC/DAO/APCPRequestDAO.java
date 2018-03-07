@@ -493,7 +493,7 @@ public class APCPRequestDAO {
         try {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`past_due_accounts` (`requestID`, `pastDueAmount`, `reasonPastDue`, `otherReason`, `recordedBy`) "
-                    + " VALUES (?, ?, ?);";
+                    + " VALUES (?, ?, ?, ?, ?);";
             p = con.prepareStatement(query);
             p.setInt(1, pda.getRequestID());
             p.setDouble(2, pda.getPastDueAmount());

@@ -38,7 +38,7 @@
     ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2,(Integer)session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3,(Integer)session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4,(Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<APCPRequest> ReleasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5,(Integer)session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5,(Integer)session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7,(Integer)session.getAttribute("provOfficeCode"));
 
     

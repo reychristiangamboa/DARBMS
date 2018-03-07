@@ -32,14 +32,17 @@ public class RecordPastDueAccount extends BaseServlet {
         pda.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         pda.setPastDueAmount(Double.parseDouble(request.getParameter("pastDueAmount")));
         pda.setReasonPastDue(Integer.parseInt(request.getParameter("reasonPastDue")));
+        pda.setOtherReason(request.getParameter("otherReason"));
         pda.setRecordedBy((Integer)session.getAttribute("userID"));
         
         if(dao.addPastDueAccount(pda)){
+            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
             request.setAttribute("success", "Past Due Account successfully recorded!");
-            request.getRequestDispatcher("").forward(request, response);
+            request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
         }else{
+            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
             request.setAttribute("success", "Error in recording Past Due Account.");
-            request.getRequestDispatcher("").forward(request, response);
+            request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
         }
         
     }

@@ -22,7 +22,6 @@ public class ARBO {
     private int provOfficeCode;
     private String provOfficeCodeDesc;
     private int APCPQualified;
-    private int LinksFarmQualified;
 
     public int getArboID() {
         return arboID;
@@ -105,7 +104,7 @@ public class ARBO {
     }
 
     public String getFullAddress(){
-        return this.arboProvinceDesc + "," + this.arboRegionDesc;
+        return this.arboCityMunDesc + ", " + this.arboProvinceDesc + "," + this.arboRegionDesc;
     }
 
     public int getAPCPQualified() {
@@ -114,14 +113,6 @@ public class ARBO {
 
     public void setAPCPQualified(int APCPQualified) {
         this.APCPQualified = APCPQualified;
-    }
-
-    public int getLinksFarmQualified() {
-        return LinksFarmQualified;
-    }
-
-    public void setLinksFarmQualified(int LinksFarmQualified) {
-        this.LinksFarmQualified = LinksFarmQualified;
     }
     
     

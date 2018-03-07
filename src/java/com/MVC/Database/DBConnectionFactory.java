@@ -12,9 +12,9 @@ package com.MVC.Database;
 import java.sql.Connection;
 
 public abstract class DBConnectionFactory {
-        String url = "jdbc:mysql://localhost:3306/dar-bms";
-        String username = "root";
-        String password = "pass";
+        String url = "jdbc:mysql://localhost:3306/dar-bms?autoReconnect=true&useSSL=false";
+        String username = "dar";
+        String password = "dar-bms";
 
    public static DBConnectionFactory getInstance(){
         return new DBConnectionFactoryImpl();
