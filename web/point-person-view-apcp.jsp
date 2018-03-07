@@ -81,7 +81,7 @@
                                             %>
                                             <tr>
 
-                                                <td><a href="point-person-release-apcp.jsp"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(r.getLoanAmount());%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>

@@ -19,6 +19,8 @@ public class PastDueAccount {
     private Date dateSettled;
     private int reasonPastDue;
     private String reasonPastDueDesc;
+    private String otherReason;
+    private int recordedBy;
     private int active;
 
     public int getPastDueAccountID() {
@@ -67,6 +69,22 @@ public class PastDueAccount {
 
     public void setReasonPastDueDesc(String reasonPastDueDesc) {
         this.reasonPastDueDesc = reasonPastDueDesc;
+    }
+
+    public String getOtherReason() {
+        return otherReason;
+    }
+
+    public void setOtherReason(String otherReason) {
+        this.otherReason = otherReason;
+    }
+
+    public int getRecordedBy() {
+        return recordedBy;
+    }
+
+    public void setRecordedBy(int recordedBy) {
+        this.recordedBy = recordedBy;
     }
 
     public int getActive() {

@@ -245,14 +245,14 @@
                 $('#farmPlanDate').on('change', function (e) {
                     $('#farmPlanButton').removeAttr('disabled');
                 });
-                
+
                 if ($('#businessPlanDate').val() !== null) {
                     $('#businessPlanButton').attr('disabled', 'disabled');
                 }
                 $('#businessPlanDate').on('change', function (e) {
                     $('#businessPlanButton').removeAttr('disabled');
                 });
-                
+
                 if ($('#bankRequirementsDate').val() !== null) {
                     $('#bankRequirementsButton').attr('disabled', 'disabled');
                 }

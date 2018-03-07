@@ -18,6 +18,7 @@ public class Repayment {
     private double amount;
     private Date dateRepayment;
     private int arbID;
+    private int recordedBy;
 
     public int getRepaymentID() {
         return repaymentID;
@@ -58,5 +59,15 @@ public class Repayment {
     public void setArbID(int arbID) {
         this.arbID = arbID;
     }
+
+    public int getRecordedBy() {
+        return recordedBy;
+    }
+
+    public void setRecordedBy(int recordedBy) {
+        this.recordedBy = recordedBy;
+    }
+    
+    
     
 }

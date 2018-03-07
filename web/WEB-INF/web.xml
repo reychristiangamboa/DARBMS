@@ -224,6 +224,14 @@
         <servlet-name>RecordDisbursement</servlet-name>
         <servlet-class>com.MVC.Controller.RecordDisbursement</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>MonitorRelease</servlet-name>
+        <servlet-class>com.MVC.Controller.MonitorRelease</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MonitorDisbursement</servlet-name>
+        <servlet-class>com.MVC.Controller.MonitorDisbursement</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -447,6 +455,14 @@
     <servlet-mapping>
         <servlet-name>RecordDisbursement</servlet-name>
         <url-pattern>/RecordDisbursement</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MonitorRelease</servlet-name>
+        <url-pattern>/MonitorRelease</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MonitorDisbursement</servlet-name>
+        <url-pattern>/MonitorDisbursement</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

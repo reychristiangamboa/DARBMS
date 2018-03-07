@@ -51,10 +51,12 @@ public class RecordRequestRelease extends BaseServlet {
 
         if (dao.addRequestRelease(r)) {
             request.setAttribute("success", "Request Release successfully recorded!");
-            request.getRequestDispatcher("").forward(request, response);
+            request.setAttribute("requestID", r.getRequestID());
+            request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
         } else {
             request.setAttribute("success", "Error in recording Request Release.");
-            request.getRequestDispatcher("").forward(request, response);
+            request.setAttribute("requestID", r.getRequestID());
+            request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
         }
 
     }

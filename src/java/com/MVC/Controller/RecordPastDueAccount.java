@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -23,12 +24,15 @@ public class RecordPastDueAccount extends BaseServlet {
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
+        HttpSession session = request.getSession();
+        
         APCPRequestDAO dao = new APCPRequestDAO();
         PastDueAccount pda = new PastDueAccount();
         
         pda.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         pda.setPastDueAmount(Double.parseDouble(request.getParameter("pastDueAmount")));
         pda.setReasonPastDue(Integer.parseInt(request.getParameter("reasonPastDue")));
+        pda.setRecordedBy((Integer)session.getAttribute("userID"));
         
         if(dao.addPastDueAccount(pda)){
             request.setAttribute("success", "Past Due Account successfully recorded!");

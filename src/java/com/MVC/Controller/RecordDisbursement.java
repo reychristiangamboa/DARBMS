@@ -33,30 +33,37 @@ public class RecordDisbursement extends BaseServlet {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         APCPRequestDAO dao = new APCPRequestDAO();
-        Disbursement d = new Disbursement();
-        
-        d.setReleaseID(Integer.parseInt(request.getParameter("releaseID")));
-        d.setArbID(Integer.parseInt(request.getParameter("arbID")));
-        d.setAmount(Double.parseDouble(request.getParameter("disbursementAmount")));
-        
-        java.sql.Date disbursedDate = null;
 
-        try {
-            java.util.Date parsedDisbursedDate = sdf.parse(request.getParameter("disbursedDate"));
-            disbursedDate = new java.sql.Date(parsedDisbursedDate.getTime());
-        } catch (ParseException ex) {
-            Logger.getLogger(RecordDisbursement.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String[] arbIDs = request.getParameterValues("arbID");
 
-        d.setDateDisbursed(disbursedDate);
-        
-        if (dao.addDisbursement(d)) {
-            request.setAttribute("success", "Disbursement successfully recorded!");
-            request.getRequestDispatcher("").forward(request, response);
-        } else {
-            request.setAttribute("success", "Error in recording Disbursement.");
-            request.getRequestDispatcher("").forward(request, response);
+        for (String arbID : arbIDs) {
+            Disbursement d = new Disbursement();
+
+            d.setArbID(Integer.parseInt(arbID));
+            d.setReleaseID(Integer.parseInt(request.getParameter("releaseID")));
+            d.setDisbursedAmount(Double.parseDouble(request.getParameter("disbursementAmount")));
+            d.setOSBalance(Double.parseDouble(request.getParameter("OSBalance")));
+
+            java.sql.Date disbursedDate = null;
+
+            try {
+                java.util.Date parsedDisbursedDate = sdf.parse(request.getParameter("disbursedDate"));
+                disbursedDate = new java.sql.Date(parsedDisbursedDate.getTime());
+            } catch (ParseException ex) {
+                Logger.getLogger(RecordDisbursement.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            d.setDateDisbursed(disbursedDate);
+            d.setDisbursedBy((Integer)session.getAttribute("userID"));
+
+            dao.addDisbursement(d);
+
         }
+        
+        request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+        request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
+        request.setAttribute("success", "Disbursement successfully recorded!");
+        request.getRequestDispatcher("point-person-monitor-disbursement.jsp").forward(request, response);
 
     }
 

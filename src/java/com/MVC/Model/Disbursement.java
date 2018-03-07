@@ -17,8 +17,10 @@ public class Disbursement {
     private int disbursementID;
     private int releaseID;
     private int arbID;
-    private double amount;
+    private double disbursedAmount;
+    private double OSBalance;
     private Date dateDisbursed;
+    private int disbursedBy;
 
     public int getDisbursementID() {
         return disbursementID;
@@ -44,14 +46,22 @@ public class Disbursement {
         this.arbID = arbID;
     }
 
-    public double getAmount() {
-        return amount;
+    public double getDisbursedAmount() {
+        return disbursedAmount;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setDisbursedAmount(Double amount) {
+        this.disbursedAmount = amount;
     }
 
+    public double getOSBalance() {
+        return OSBalance;
+    }
+
+    public void setOSBalance(double OSBalance) {
+        this.OSBalance = OSBalance;
+    }
+    
     public Date getDateDisbursed() {
         return dateDisbursed;
     }
@@ -59,5 +69,15 @@ public class Disbursement {
     public void setDateDisbursed(Date dateDisbursed) {
         this.dateDisbursed = dateDisbursed;
     }
+
+    public int getDisbursedBy() {
+        return disbursedBy;
+    }
+
+    public void setDisbursedBy(int disbursedBy) {
+        this.disbursedBy = disbursedBy;
+    }
+    
+    
 
 }

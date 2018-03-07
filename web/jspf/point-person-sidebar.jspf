@@ -10,6 +10,10 @@
 <%@page import="com.MVC.Model.CAPDEVPlan;"%>
 <%@page import="com.MVC.Model.CAPDEVActivity;"%>
 <%@page import="com.MVC.Model.PastDueAccount;"%>
+<%@page import="com.MVC.Model.APCPRelease;"%>
+<%@page import="com.MVC.Model.Disbursement;"%>
+<%@page import="com.MVC.Model.PastDueAccount;"%>
+<%@page import="com.MVC.Model.Repayment;"%>
 <%@page import="com.MVC.DAO.AddressDAO;"%>
 <%@page import="com.MVC.DAO.ARBODAO;"%>
 <%@page import="com.MVC.DAO.ARBDAO;"%>
@@ -30,7 +34,7 @@
     
     ArrayList<CAPDEVPlan> assignedPlans = capdevDAO.getAssignedRequestCAPDEVPlans((Integer)session.getAttribute("userID"));
     ArrayList<CAPDEVPlan> assignedPROs = capdevDAO.getAssignedPreReleasePlans((Integer)session.getAttribute("userID"));
-        ArrayList<APCPRequest> ReleasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5,(Integer)session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> ReleasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5,(Integer)session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7,(Integer)session.getAttribute("provOfficeCode"));
 %>
 

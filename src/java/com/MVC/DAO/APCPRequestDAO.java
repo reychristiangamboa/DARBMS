@@ -305,6 +305,9 @@ public class APCPRequestDAO {
                 r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
                 apcpRequest.add(r);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -350,6 +353,9 @@ public class APCPRequestDAO {
                 r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
                 apcpRequest.add(r);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -486,12 +492,14 @@ public class APCPRequestDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`past_due_accounts` (`requestID`, `pastDueAmount`, `reasonPastDue`) "
+            String query = "INSERT INTO `dar-bms`.`past_due_accounts` (`requestID`, `pastDueAmount`, `reasonPastDue`, `otherReason`, `recordedBy`) "
                     + " VALUES (?, ?, ?);";
             p = con.prepareStatement(query);
             p.setInt(1, pda.getRequestID());
             p.setDouble(2, pda.getPastDueAmount());
             p.setInt(3, pda.getReasonPastDue());
+            p.setString(4, pda.getOtherReason());
+            p.setInt(5, pda.getRecordedBy());
 
             p.executeUpdate();
             p.close();
@@ -528,9 +536,14 @@ public class APCPRequestDAO {
                 p.setDateSettled(rs.getDate("dateSettled"));
                 p.setReasonPastDue(rs.getInt("reasonPastDue"));
                 p.setReasonPastDueDesc(rs.getString("reasonPastDueDesc"));
+                p.setOtherReason(rs.getString("otherReason"));
+                p.setRecordedBy(rs.getInt("recordedBy"));
                 p.setActive(rs.getInt("active"));
                 pList.add(p);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -589,9 +602,13 @@ public class APCPRequestDAO {
                 r.setRequestID(rs.getInt("requestID"));
                 r.setReleaseAmount(rs.getDouble("releaseAmount"));
                 r.setReleaseDate(rs.getDate("releaseDate"));
+                r.setReleasedBy(rs.getInt("releasedBy"));
                 r.setDisbursements(getAllDisbursementsByRelease(rs.getInt("releaseID")));
                 rList.add(r);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -617,8 +634,12 @@ public class APCPRequestDAO {
                 r.setRequestID(rs.getInt("requestID"));
                 r.setReleaseAmount(rs.getDouble("releaseAmount"));
                 r.setReleaseDate(rs.getDate("releaseDate"));
+                r.setReleasedBy(rs.getInt("releasedBy"));
                 r.setDisbursements(getAllDisbursementsByRelease(rs.getInt("releaseID")));
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -638,13 +659,14 @@ public class APCPRequestDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`repayments` (`requestID`, `amount`,`dateRepayment`,`arbID`) "
-                    + " VALUES (?, ?, ?, ?);";
+            String query = "INSERT INTO `dar-bms`.`repayments` (`requestID`, `amount`,`repaymentDate`,`arbID`,`recordedBy`) "
+                    + " VALUES (?, ?, ?, ?, ?);";
             p = con.prepareStatement(query);
             p.setInt(1, r.getRequestID());
             p.setDouble(2, r.getAmount());
             p.setDate(3, r.getDateRepayment());
             p.setInt(4, r.getArbID());
+            p.setInt(5, r.getRecordedBy());
             
             p.executeUpdate();
             p.close();
@@ -676,10 +698,14 @@ public class APCPRequestDAO {
                 r.setRepaymentID(rs.getInt("repaymentID"));
                 r.setRequestID(rs.getInt("requestID"));
                 r.setAmount(rs.getDouble("amount"));
-                r.setDateRepayment(rs.getDate("dateRepayment"));
+                r.setDateRepayment(rs.getDate("repaymentDate"));
                 r.setArbID(rs.getInt("arbID"));
+                r.setRecordedBy(rs.getInt("recordedBy"));
                 rList.add(r);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -699,13 +725,15 @@ public class APCPRequestDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`disbursements` (`releaseID`, `arbID`, `amount`,`dateDisbursed`) "
-                    + " VALUES (?, ?, ?, ?);";
+            String query = "INSERT INTO `dar-bms`.`disbursements` (`releaseID`, `arbID`, `disbursedAmount`, `OSBalance`,`dateDisbursed`,`disbursedBy`) "
+                    + " VALUES (?, ?, ?, ?, ?, ?);";
             p = con.prepareStatement(query);
             p.setInt(1, d.getReleaseID());
             p.setInt(2, d.getArbID());
-            p.setDouble(3, d.getAmount());
-            p.setDate(4, d.getDateDisbursed());
+            p.setDouble(3, d.getDisbursedAmount());
+            p.setDouble(4, d.getOSBalance());
+            p.setDate(5, d.getDateDisbursed());
+            p.setInt(6, d.getDisbursedBy());
 
             p.executeUpdate();
             p.close();
@@ -737,10 +765,15 @@ public class APCPRequestDAO {
                 d.setDisbursementID(rs.getInt("disbursementID"));
                 d.setReleaseID(rs.getInt("releaseID"));
                 d.setArbID(rs.getInt("arbID"));
-                d.setAmount(rs.getDouble("amount"));
+                d.setDisbursedAmount(rs.getDouble("disbursedAmount"));
+                d.setOSBalance(rs.getDouble("OSBalance"));
                 d.setDateDisbursed(rs.getDate("dateDisbursed"));
+                d.setDisbursedBy(rs.getInt("disbursedBy"));
                 dList.add(d);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();

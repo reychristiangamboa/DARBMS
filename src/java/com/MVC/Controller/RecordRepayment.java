@@ -31,33 +31,35 @@ public class RecordRepayment extends BaseServlet {
 
         HttpSession session = request.getSession();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
+        String[] arbIDs = request.getParameterValues("arbIDs");
+        System.out.println(arbIDs.length);
         APCPRequestDAO dao = new APCPRequestDAO();
-        Repayment r = new Repayment();
-        
-        r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
-        r.setAmount(Double.parseDouble(request.getParameter("repaymentAmount")));
 
-        java.sql.Date repaymentDate = null;
+        for (String arbID : arbIDs) {
+            Repayment r = new Repayment();
 
-        try {
-            java.util.Date parsedRepaymentDate = sdf.parse(request.getParameter("repaymentDate"));
-            repaymentDate = new java.sql.Date(parsedRepaymentDate.getTime());
-        } catch (ParseException ex) {
-            Logger.getLogger(RecordRepayment.class.getName()).log(Level.SEVERE, null, ex);
+            r.setArbID(Integer.parseInt(arbID));
+            r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
+            r.setAmount(Double.parseDouble(request.getParameter("repaymentAmount")));
+
+            java.sql.Date repaymentDate = null;
+
+            try {
+                java.util.Date parsedRepaymentDate = sdf.parse(request.getParameter("repaymentDate"));
+                repaymentDate = new java.sql.Date(parsedRepaymentDate.getTime());
+            } catch (ParseException ex) {
+                Logger.getLogger(RecordRepayment.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            r.setDateRepayment(repaymentDate);
+            r.setRecordedBy((Integer) session.getAttribute("userID"));
+
+            dao.addRepayment(r);
         }
 
-        r.setDateRepayment(repaymentDate);
-        r.setArbID(Integer.parseInt(request.getParameter("arbID")));
-        
-
-        if (dao.addRepayment(r)) {
-            request.setAttribute("success", "Repayment successfully recorded!");
-            request.getRequestDispatcher("").forward(request, response);
-        } else {
-            request.setAttribute("success", "Error in recording Repayment.");
-            request.getRequestDispatcher("").forward(request, response);
-        }
+        request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+        request.setAttribute("success", "Repayment successfully recorded!");
+        request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
 
     }
 

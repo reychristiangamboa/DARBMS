@@ -2,6 +2,7 @@
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
     $.widget.bridge('uibutton', $.ui.button);
@@ -81,7 +82,14 @@
         $('#attendance8').DataTable();
         $('#attendance9').DataTable();
         $('#attendance10').DataTable();
+        $('#requested').DataTable();
+        $('#cleared').DataTable();
+        $('#endorsed').DataTable();
+        $('#approved').DataTable();
+        $('#forRelease').DataTable();
+        $('#released').DataTable();
         $('#example1').DataTable();
+        $('#example7').DataTable();
         $('#example3').DataTable();
         $('#example4').DataTable();
         $('#example5').DataTable();

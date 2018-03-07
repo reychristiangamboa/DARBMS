@@ -24,6 +24,7 @@
                 background: transparent !important;
             }
         </style>
+        
     </head>
 
     <body class="hold-transition skin-blue sidebar-mini">
@@ -59,8 +60,117 @@
                         <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
                     </div>
                     <%}%>
+
                     <div class="row">
-                        <div class="col-xs-12">
+                        <div class="col-lg-4 col-xs-6" >
+                            <!-- small box -->
+                            <a href="#" name="btn1">
+                            <div class="small-box bg-aqua">
+                                <div class="inner">
+                                    <h3><%=requestedRequests.size()%></h3>
+
+                                    <p>Requested</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-4 col-xs-6">
+                            <!-- small box -->
+                            <div class="small-box bg-green">
+                                <div class="inner">
+                                    <h3>53<sup style="font-size: 20px">%</sup></h3>
+
+                                    <p>Cleared</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="ion ion-stats-bars"></i>
+                                </div>
+                                <a href="#" name="btn2" class="small-box-footer">
+                                    More info <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-4 col-xs-6">
+                            <!-- small box -->
+                            <div class="small-box bg-yellow">
+                                <div class="inner">
+                                    <h3>44</h3>
+
+                                    <p>Endorsed</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="ion ion-person-add"></i>
+                                </div>
+                                <a href="#" name="btn3" class="small-box-footer">
+                                    More info <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <!-- ./col -->
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-xs-6">
+                            <!-- small box -->
+                            <div class="small-box bg-aqua">
+                                <div class="inner">
+                                    <h3>150</h3>
+
+                                    <p>Approved</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </div>
+                                <a href="#" name="btn4" class="small-box-footer">
+                                    More info <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-4 col-xs-6">
+                            <!-- small box -->
+                            <div class="small-box bg-green">
+                                <div class="inner">
+                                    <h3>53<sup style="font-size: 20px">%</sup></h3>
+
+                                    <p>For Release</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="ion ion-stats-bars"></i>
+                                </div>
+                                <a href="#" name="btn5" class="small-box-footer">
+                                    More info <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-4 col-xs-6">
+                            <!-- small box -->
+                            <div class="small-box bg-yellow">
+                                <div class="inner">
+                                    <h3>44</h3>
+
+                                    <p>Released</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="ion ion-person-add"></i>
+                                </div>
+                                <a href="#" name="btn6" class="small-box-footer">
+                                    More info <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                    </div>
+                    <!-- ./col -->
+
+                    <div class="row">
+                        <div class="col-xs-12" id="1" style="display:none;">
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Requested</strong></h3>
@@ -70,7 +180,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example1" class="table table-bordered table-striped">
+                                    <table id="requested" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -109,9 +219,8 @@
                         </div>
                         <!-- /.col -->
                     </div>
-                                        
-                    
-                    <div class="row">
+
+                    <div class="row" id="2" style="display:none;">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -122,7 +231,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
+                                    <table id="cleared" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -193,7 +302,7 @@
                         </div>
                         <!-- /.col -->
                     </div>
-                    <div class="row">
+                    <div class="row" id="3" style="display:none;">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -204,7 +313,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example3" class="table table-bordered table-striped">
+                                    <table id="endorsed" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -279,7 +388,7 @@
                         </div>
                         <!-- /.col -->
                     </div>
-                    <div class="row">
+                    <div class="row" id="4" style="display:none;">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -290,7 +399,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
+                                    <table id="approved" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -330,8 +439,8 @@
                         </div>
                         <!-- /.col -->
                     </div>
-                                            
-                    <div class="row">
+
+                    <div class="row" id="5" style="display:none;">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -342,7 +451,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example1" class="table table-bordered table-striped">
+                                    <table id="forRelease" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -357,12 +466,15 @@
 
                                         <tbody>
                                             <%
+                                               
                                                 for(APCPRequest r : forReleaseRequests){
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                                    
                                             %>
+
                                             <tr>
 
-                                                <td><a href="#"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><a href="#"><%out.print(arbo.getArboName());%> </a></td>
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(r.getLoanAmount());%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
@@ -381,8 +493,8 @@
                         </div>
                         <!-- /.col -->
                     </div>                    
-                                            
-                    <div class="row">
+
+                    <div class="row" id="6" style="display:none;">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -393,7 +505,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example6" class="table table-bordered table-striped">
+                                    <table id="released" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -452,5 +564,117 @@
             </footer>
         </div>
         <%@include file="jspf/footer.jspf" %>
+        <script>
+            $(document).ready(function () {
+                $("a[name='btn1']").click(function () {
+                    $("div[id='1']").toggle();
+                    if ($("div[id='2']").css('display') != 'none') {
+                        $("div[id='2']").toggle();
+                    }
+                    if ($("div[id='3']").css('display') != 'none') {
+                        $("div[id='3']").toggle();
+                    }
+                    if ($("div[id='4']").css('display') != 'none') {
+                        $("div[id='4']").toggle();
+                    }
+                    if ($("div[id='5']").css('display') != 'none') {
+                        $("div[id='5']").toggle();
+                    }
+                    if ($("div[id='6']").css('display') != 'none') {
+                        $("div[id='6']").toggle();
+                    }
+                });
+                $("a[name='btn2']").click(function () {
+                    $("div[id='2']").toggle();
+                    if ($("div[id='1']").css('display') != 'none') {
+                        $("div[id='1']").toggle();
+                    }
+                    if ($("div[id='3']").css('display') != 'none') {
+                        $("div[id='3']").toggle();
+                    }
+                    if ($("div[id='4']").css('display') != 'none') {
+                        $("div[id='4']").toggle();
+                    }
+                    if ($("div[id='5']").css('display') != 'none') {
+                        $("div[id='5']").toggle();
+                    }
+                    if ($("div[id='6']").css('display') != 'none') {
+                        $("div[id='6']").toggle();
+                    }
+                });
+                $("a[name='btn3']").click(function () {
+                    $("div[id='3']").toggle();
+                    if ($("div[id='1']").css('display') != 'none') {
+                        $("div[id='1']").toggle();
+                    }
+                    if ($("div[id='2']").css('display') != 'none') {
+                        $("div[id='2']").toggle();
+                    }
+                    if ($("div[id='4']").css('display') != 'none') {
+                        $("div[id='4']").toggle();
+                    }
+                    if ($("div[id='5']").css('display') != 'none') {
+                        $("div[id='5']").toggle();
+                    }
+                    if ($("div[id='6']").css('display') != 'none') {
+                        $("div[id='6']").toggle();
+                    }
+                });
+                $("a[name='btn4']").click(function () {
+                    $("div[id='4']").toggle();
+                    if ($("div[id='1']").css('display') != 'none') {
+                        $("div[id='1']").toggle();
+                    }
+                    if ($("div[id='2']").css('display') != 'none') {
+                        $("div[id='2']").toggle();
+                    }
+                    if ($("div[id='3']").css('display') != 'none') {
+                        $("div[id='3']").toggle();
+                    }
+                    if ($("div[id='5']").css('display') != 'none') {
+                        $("div[id='5']").toggle();
+                    }
+                    if ($("div[id='6']").css('display') != 'none') {
+                        $("div[id='6']").toggle();
+                    }
+                });
+                $("a[name='btn5']").click(function () {
+                    $("div[id='5']").toggle();
+                    if ($("div[id='1']").css('display') != 'none') {
+                        $("div[id='1']").toggle();
+                    }
+                    if ($("div[id='2']").css('display') != 'none') {
+                        $("div[id='2']").toggle();
+                    }
+                    if ($("div[id='3']").css('display') != 'none') {
+                        $("div[id='3']").toggle();
+                    }
+                    if ($("div[id='4']").css('display') != 'none') {
+                        $("div[id='4']").toggle();
+                    }
+                    if ($("div[id='6']").css('display') != 'none') {
+                        $("div[id='6']").toggle();
+                    }
+                });
+                $("a[name='btn6']").click(function () {
+                    $("div[id='6']").toggle();
+                    if ($("div[id='1']").css('display') != 'none') {
+                        $("div[id='1']").toggle();
+                    }
+                    if ($("div[id='2']").css('display') != 'none') {
+                        $("div[id='2']").toggle();
+                    }
+                    if ($("div[id='3']").css('display') != 'none') {
+                        $("div[id='3']").toggle();
+                    }
+                    if ($("div[id='5']").css('display') != 'none') {
+                        $("div[id='5']").toggle();
+                    }
+                    if ($("div[id='4']").css('display') != 'none') {
+                        $("div[id='4']").toggle();
+                    }
+                });
+            });
+        </script>
     </body>
 </html>
