@@ -78,7 +78,7 @@ public class ImportARB extends BaseServlet {
                 String[] dateArr = excelDate.split("-");
 
                 int val = getValOfMonth(dateArr[1]);
-                String finalDate = val + "/" + dateArr[0] + "/" + dateArr[2];
+                String finalDate = dateArr[2] + "-" + val + "-" + dateArr[0];
 
                 try {
                     java.util.Date parsedMemberDate = sdf.parse(finalDate);
@@ -117,7 +117,7 @@ public class ImportARB extends BaseServlet {
                         String[] dateArr2 = excelDate2.split("-");
 
                         int val2 = getValOfMonth(dateArr2[1]);
-                        String finalDate2 = val2 + "/" + dateArr[0] + "/" + dateArr[2];
+                        String finalDate2 = dateArr[2] + "-" + val2 + "-" + dateArr[0];
 
                         try {
                             java.util.Date parsedBirthday = sdf.parse(finalDate2);

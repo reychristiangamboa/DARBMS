@@ -232,6 +232,22 @@
         <servlet-name>MonitorDisbursement</servlet-name>
         <servlet-class>com.MVC.Controller.MonitorDisbursement</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ImportRelease</servlet-name>
+        <servlet-class>com.MVC.Controller.ImportRelease</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ImportRepayment</servlet-name>
+        <servlet-class>com.MVC.Controller.ImportRepayment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ImportDisbursement</servlet-name>
+        <servlet-class>com.MVC.Controller.ImportDisbursement</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ImportPastDueAccount</servlet-name>
+        <servlet-class>com.MVC.Controller.ImportPastDueAccount</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -463,6 +479,22 @@
     <servlet-mapping>
         <servlet-name>MonitorDisbursement</servlet-name>
         <url-pattern>/MonitorDisbursement</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportRelease</servlet-name>
+        <url-pattern>/ImportRelease</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportRepayment</servlet-name>
+        <url-pattern>/ImportRepayment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportDisbursement</servlet-name>
+        <url-pattern>/ImportDisbursement</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportPastDueAccount</servlet-name>
+        <url-pattern>/ImportPastDueAccount</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

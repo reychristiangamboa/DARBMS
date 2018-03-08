@@ -54,7 +54,7 @@ public class RecordRequestRelease extends BaseServlet {
             request.setAttribute("requestID", r.getRequestID());
             request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
         } else {
-            request.setAttribute("success", "Error in recording Request Release.");
+            request.setAttribute("errMessage", "Error in recording Request Release.");
             request.setAttribute("requestID", r.getRequestID());
             request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
         }

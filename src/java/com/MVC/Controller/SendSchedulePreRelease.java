@@ -41,7 +41,7 @@ public class SendSchedulePreRelease extends BaseServlet {
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        
+
         HttpSession session = request.getSession();
 
         CAPDEVDAO capdevDAO = new CAPDEVDAO();
@@ -54,10 +54,10 @@ public class SendSchedulePreRelease extends BaseServlet {
         CAPDEVPlan capdevPlan = new CAPDEVPlan();
         capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         capdevPlan.setAssignedTo(Integer.parseInt(request.getParameter("pointPerson")));
-        capdevPlan.setCreatedBy((Integer)session.getAttribute("userID"));
+        capdevPlan.setCreatedBy((Integer) session.getAttribute("userID"));
         capdevPlan.setPlanDTN(request.getParameter("dtn"));
         capdevPlan.setPlanStatus(6);
-        
+
         int planID = capdevDAO.addPreReleaseOrientation(capdevPlan);
 
         CAPDEVActivity activity = new CAPDEVActivity();
@@ -71,33 +71,33 @@ public class SendSchedulePreRelease extends BaseServlet {
         }
 
         int activityType = Integer.parseInt(request.getParameter("activityType"));
-        
+
         activity.setActivityType(activityType);
         activity.setPlanID(planID);
         activity.setActivityDate(activityDate);
-        
-        int newlyAddedActivityID = capdevDAO.addCAPDEVPlanActivity(activity);
-        
-        for(int a = 1; a < arbHolder.size(); a++){
-                
-                cellStoreArrayList = (ArrayList) arbHolder.get(a);
-                String lN = cellStoreArrayList.get(0).toString();
-                String fN = cellStoreArrayList.get(1).toString();
-                String mN = cellStoreArrayList.get(2).toString();
-                
-                int arbID = arbDAO.getARBID(fN, mN, lN);
-                ARB arb = arbDAO.getARBByID(arbID);
-                
-                arbList.add(arb);
-            }
 
-            if(capdevDAO.addCAPDEVPlanActivityParticipants(arbList, newlyAddedActivityID)){
-                request.setAttribute("success", "Pre-release orientation scheduled!");
-                request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
-            }else{
-                request.setAttribute("errMessage", "Error in scheduling pre-release orientation.");
-                request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
-            }
+        int newlyAddedActivityID = capdevDAO.addCAPDEVPlanActivity(activity);
+
+        for (int a = 1; a < arbHolder.size(); a++) {
+
+            cellStoreArrayList = (ArrayList) arbHolder.get(a);
+            String lN = cellStoreArrayList.get(0).toString();
+            String fN = cellStoreArrayList.get(1).toString();
+            String mN = cellStoreArrayList.get(2).toString();
+            
+            int arbID = arbDAO.getARBID(fN, mN, lN);
+            ARB arb = arbDAO.getARBByID(arbID);
+
+            arbList.add(arb);
+        }
+
+        if (capdevDAO.addCAPDEVPlanActivityParticipants(arbList, newlyAddedActivityID)) {
+            request.setAttribute("success", "Pre-release orientation scheduled!");
+            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+        } else {
+            request.setAttribute("errMessage", "Error in scheduling pre-release orientation.");
+            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+        }
 
     }
 

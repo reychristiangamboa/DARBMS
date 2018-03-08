@@ -181,7 +181,11 @@
                                     </div>
 
                                     <div class="box-footer">
-                                        <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-disbursement-modal">Add Disbursement</button>
+                                        <div class="pull-right">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-disbursements-modal">Import Disbursements</button>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-disbursement-modal">Add Disbursement</button>
+                                        </div>
+
                                     </div>
                                 </div>
                                 <!-- /.box-body -->
@@ -261,6 +265,40 @@
                                         <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
                                         <input type="hidden" name="releaseID" value="<%=release.getReleaseID()%>">
                                         <button type="submit" name="manual" onclick="form.action = 'RecordDisbursement'" class="btn btn-primary pull-right">Submit</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                            <!--                                            /.modal-content -->
+                        </div>
+                        <!--                                        /.modal-dialog -->
+                    </div>
+
+                    <div class="modal fade" id="import-disbursements-modal">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Import Disbursements</h4>
+                                </div>
+
+                                <form method="post">
+                                    <div class="modal-body" id="modalBody">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="">Import File</label>
+                                                    <input type="file" class="form-control" name="file" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                                        <input type="hidden" name="releaseID" value="<%=release.getReleaseID()%>">
+                                        <button type="submit" name="manual" onclick="form.action = 'ImportDisbursement'" class="btn btn-primary pull-right">Submit</button>
                                     </div>
                                 </form>
 

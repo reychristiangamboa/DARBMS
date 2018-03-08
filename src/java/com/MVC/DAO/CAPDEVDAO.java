@@ -824,7 +824,8 @@ public class CAPDEVDAO {
             }
             con.commit();
             con.close();
-
+            rs.close();
+            p.close();
         } catch (Exception ex) {
             try {
                 con.rollback();
@@ -834,6 +835,35 @@ public class CAPDEVDAO {
             Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return paList;
+    }
+    
+    public int getPastDueReasonByDesc(String reason){
+        ArrayList<PastDueAccount> paList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        int id = 0;
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM `dar-bms`.ref_reasonPastDue WHERE reasonPastDueDesc=?;";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setString(1, reason);
+            ResultSet rs = p.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("reasonPastDue");
+            }
+            con.commit();
+            con.close();
+            rs.close();
+            p.close();
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
     }
 
     public boolean recordAssessment(CAPDEVActivity ca) {

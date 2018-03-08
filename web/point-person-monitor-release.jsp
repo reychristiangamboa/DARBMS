@@ -194,7 +194,10 @@
                                                     </table>
                                                 </div>
                                                 <div class="box-footer">
-                                                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-release-modal">Add Release</button>
+                                                    <div class="pull-right">
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-release-modal">Import Releases</button>
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-release-modal">Add Release</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="chart tab-pane" id="repayment" style="position: relative;">
@@ -239,7 +242,10 @@
                                                     </table>
                                                 </div>
                                                 <div class="box-footer">
-                                                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-repayment-modal">Add Repayment</button>
+                                                    <div class="pul-right">
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-repayment-modal">Import Repayments</button>
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-repayment-modal">Add Repayment</button>
+                                                    </div>
                                                 </div>
 
                                             </div>
@@ -294,7 +300,10 @@
                                                     </table>
                                                 </div>
                                                 <div class="box-footer">
-                                                    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-pastdue-modal">Add Past Due Account</button>
+                                                    <div class="pull-right">
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-pastdue-modal">Import Past Due Accounts</button>
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-pastdue-modal">Add Past Due Account</button>
+                                                    </div>
                                                 </div>
 
                                             </div>
@@ -343,6 +352,39 @@
                                     <div class="modal-footer">
                                         <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
                                         <button type="submit" onclick="form.action = 'RecordRequestRelease'" class="btn btn-primary pull-right">Submit</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                            <!--                                            /.modal-content -->
+                        </div>
+                        <!--                                        /.modal-dialog -->
+                    </div>
+
+                    <div class="modal fade" id="import-release-modal">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Import Releases</h4>
+                                </div>
+
+                                <form method="post">
+                                    <div class="modal-body" id="modalBody">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="">Import File</label>
+                                                    <input type="file" class="form-control" name="file" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                                        <button type="submit" name="manual" onclick="form.action = 'ImportRelease'" class="btn btn-primary pull-right">Submit</button>
                                     </div>
                                 </form>
 
@@ -424,6 +466,39 @@
                         <!--                                        /.modal-dialog -->
                     </div>
 
+                    <div class="modal fade" id="import-repayment-modal">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Import Repayments</h4>
+                                </div>
+
+                                <form method="post">
+                                    <div class="modal-body" id="modalBody">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="">Import File</label>
+                                                    <input type="file" class="form-control" name="file" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                                        <button type="submit" name="manual" onclick="form.action = 'ImportRepayment'" class="btn btn-primary pull-right">Submit</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                            <!--                                            /.modal-content -->
+                        </div>
+                        <!--                                        /.modal-dialog -->
+                    </div>
+
                     <div class="modal fade" id="add-pastdue-modal">
                         <div class="modal-dialog modal-md">
                             <div class="modal-content">
@@ -466,6 +541,38 @@
                                     <div class="modal-footer">
                                         <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
                                         <button type="submit" name="manual" onclick="form.action = 'RecordPastDueAccount'" class="btn btn-primary pull-right">Submit</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                            <!--                                            /.modal-content -->
+                        </div>
+                        <!--                                        /.modal-dialog -->
+                    </div>
+                    <div class="modal fade" id="import-pastdue-modal">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Import Past Due Accounts</h4>
+                                </div>
+
+                                <form method="post">
+                                    <div class="modal-body" id="modalBody">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="">Import File</label>
+                                                    <input type="file" class="form-control" name="file" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                                        <button type="submit" name="manual" onclick="form.action = 'ImportPastDueAccount'" class="btn btn-primary pull-right">Submit</button>
                                     </div>
                                 </form>
 

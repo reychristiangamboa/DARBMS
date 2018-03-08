@@ -6,6 +6,7 @@
 package com.MVC.Controller;
 
 import com.MVC.DAO.APCPRequestDAO;
+import com.MVC.DAO.ARBDAO;
 import com.MVC.Model.Disbursement;
 import com.MVC.Model.Repayment;
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class RecordDisbursement extends BaseServlet {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         APCPRequestDAO dao = new APCPRequestDAO();
+        
 
         String[] arbIDs = request.getParameterValues("arbID");
 
