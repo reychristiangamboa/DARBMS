@@ -71,7 +71,7 @@
                                             <li><a href="#history" data-toggle="tab">CAPDEV History</a></li>
                                         </ul>
 
-                                          <%@include file="jspf/arboInfo.jspf"%>
+                                        <%@include file="jspf/arboInfo.jspf"%>
                                     </div>
                                     <hr>        
                                 </div>
@@ -81,13 +81,13 @@
                             <!-- /.box -->
                             <div class="box">
                                 <form role="form" method="post" action="SendCAPDEVProposal">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Create CAPDEV Plan</h3>
-                                    <div class="col-xs-3 pull-right">
-                                        <input type="text" name="dtn" class="form-control" placeholder="CAPDEV Proposal DTN" required/>
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Create CAPDEV Plan</h3>
+                                        <div class="col-xs-3 pull-right">
+                                            <input type="text" name="dtn" class="form-control" placeholder="CAPDEV Proposal DTN" required/>
+                                        </div>
                                     </div>
-                                </div>
-                                
+
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-xs-4">
@@ -126,6 +126,20 @@
         </div>
         <%@include file="jspf/footer.jspf" %>
         <script>
+            var ctx = $('#barCanvas').get(0).getContext('2d');
+            <%
+                    Chart bar = new Chart();
+                    String json = bar.getBarChartEducation(arbList);
+            %>
+            new Chart(ctx, <%out.print(json);%>);
+
+            var ctx3 = $('#pieCanvas').get(0).getContext('2d');
+            <%
+                    Chart pie = new Chart();
+                    String json3 = pie.getPieChartGender(arbList);
+            %>
+            new Chart(ctx3, <%out.print(json3);%>);
+
             $(document).ready(function () {
                 var max_fields = 9; //maximum input boxes allowed
                 var wrapper = $(".input_fields_wrap"); //Fields wrapper

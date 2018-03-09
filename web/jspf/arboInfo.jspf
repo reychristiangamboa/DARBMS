@@ -2,45 +2,91 @@
 <div class="tab-content no-padding">
     <!-- Morris chart - Sales -->
     <div class="chart tab-pane active" id="request" style="position: relative;">
+        <% User u1 = new User(); %>
+        <% User u2 = new User(); %>
+        <% User u3 = new User(); %>
+        <% User u4 = new User(); %>
+        <% ArrayList<CAPDEVActivity> activityHistory = capdevDAO.getCAPDEVActivityHistoryByRequest(r.getRequestID());%>
         <div class="box-body">
-
-            <div class="row">
-                <div class="col-xs-6">
-                    <div class="form-group">
-                        <label for="">Name of ARBO</label>
-                        <input type="text" class="form-control" value="<%out.print(a.getArboName());%>" disabled >
-                    </div>
-                </div>
-                <div class="col-xs-3">
-                    <div class="form-group">
-                        <label for="">No. of ARBs</label>
-                        <input type="text" class="form-control" id="" placeholder="" value="<%out.print(arboDAO.getARBCount(a.getArboID()));%>" disabled>
-                    </div>
-                </div>
-                <div class="col-xs-3">
-                    <div class="form-group">
-                        <label for="">Land Area (Hectares)</label>
-                        <input type="text" class="form-control" id="" value="<%out.print(r.getHectares());%>" disabled >
-                    </div>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-xs-4">
                     <label for=''>Loan Amount</label>
-                    <input type='text' class="form-control" id='' value="<%out.print(r.getLoanAmount());%>" disabled>
+                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type='text' class="form-control" id='' value="<%out.print(r.getLoanAmount());%>" disabled>
                 </div>
 
                 <div class="col-xs-4">
                     <div class="form-group">
                         <label for="">Reason for Loan</label>
-                        <input type="text" class="form-control" value="<%out.print(r.getLoanReason());%>" disabled/>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(r.getLoanReason());%>" disabled/>
                     </div>
                 </div>         
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="">Status</label>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%=r.getRequestStatusDesc()%>" disabled/>
+                    </div>
+                </div>         
+            </div>
+            <div class='row'>
+                <div class='col-xs-3'>
+                    <div class="form-group">
+                        <label for="">Date Requested</label>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<% if(r.getDateRequested() != null){ out.print(f.format(r.getDateRequested()));}%>" disabled/>
+                    </div>
+                </div>
+                <div class='col-xs-3'>
+                    <div class="form-group">
+                        <label for="">Requested To</label>
+                        <% u1 = uDAO.searchUser(r.getRequestedTo()); %>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%=u1.getFullName()%>" disabled/>
+                    </div>
+                </div>
+                <div class='col-xs-3'>
+                    <div class="form-group">
+                        <label for="">Date Cleared</label>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<% if(r.getDateCleared() != null){ out.print(f.format(r.getDateCleared()));}else{out.print("N/A");}%>" disabled/>
+                    </div>
+                </div>
+                <div class='col-xs-3'>
+                    <div class="form-group">
+                        <label for="">Cleared By</label>
+                        <% if(r.getClearedBy() > 0){u2 = uDAO.searchUser(r.getClearedBy());} %>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%if(r.getClearedBy() > 0){ out.print(u2.getFullName());}else{out.print("N/A");}%>" disabled/>
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-3'>
+                    <div class="form-group">
+                        <label for="">Date Endorsed</label>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<% if(r.getDateEndorsed() != null){ out.print(f.format(r.getDateEndorsed()));}else{out.print("N/A");}%>" disabled/>
+                    </div>
+                </div>
+                <div class='col-xs-3'>
+                    <div class="form-group">
+                        <label for="">Endorsed By</label>
+                        <% if(r.getEndorsedBy() > 0){u3 = uDAO.searchUser(r.getEndorsedBy());} %>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%if(r.getEndorsedBy() > 0){ out.print(u3.getFullName());}else{out.print("N/A");}%>" disabled/>
+                    </div>
+                </div>
+                <div class='col-xs-3'>
+                    <div class="form-group">
+                        <label for="">Date Approved</label>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<% if(r.getDateApproved() != null){ out.print(f.format(r.getDateApproved()));}else{out.print("N/A");}%>" disabled/>
+                    </div>
+                </div>
+                <div class='col-xs-3'>
+                    <div class="form-group">
+                        <label for="">Approved By</label>
+                        <% if(r.getApprovedBy() > 0){u4 = uDAO.searchUser(r.getApprovedBy()); }%>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%if(r.getApprovedBy() > 0){  out.print(u4.getFullName());}else{out.print("N/A");}%>" disabled/>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col-xs-12">
                     <label for=''>Remarks</label>
-                    <textarea class="form-control" rows="3" disabled><%out.print(r.getRemarks());%></textarea>
+                    <textarea style='border-left: none; border-right: none; border-top: none; background: none;' class="form-control" rows="3" disabled><%out.print(r.getRemarks());%></textarea>
                 </div>
 
             </div>
@@ -52,18 +98,35 @@
                 <div class="col-xs-4">
                     <div class="form-group" id="space" name="space">
                         <label for="space">Name of ARBO</label>
-                        <input type="text" class="form-control" value="<%out.print(a.getArboName());%>" disabled>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(a.getArboName());%>" disabled>
                     </div>
                 </div>
-                <div class="col-xs-3">
+                <div class="col-xs-4">
                     <label for="space">No. of Members</label>
                     <div class="input-group" id="space" name="space">
-                        <input type="text" class="form-control" value="<%out.print(arboDAO.getARBCount(a.getArboID()));%>" disabled>
-                        <span class="input-group-addon" data-toggle="modal" data-target="#arbs"><i class="fa  fa-users"></i>&nbsp; View ARBO Members</span>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(arboDAO.getARBCount(a.getArboID()));%>" disabled>
+                        <span class="input-group-addon" style='border:none; background: none;' data-toggle="modal" data-target="#arbs" ><a href="#"><i class="fa  fa-users"></i>&nbsp; View ARBO Members</a></span>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="">Land Area (Hectares)</label>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" id="" value="<%out.print(r.getHectares());%>" disabled >
                     </div>
                 </div>
 
             </div>
+
+            <div class="row">
+                <div class="col-xs-5">
+                    <canvas data-toggle='modal' data-target='#arbs' id="pieCanvas" style="height:350px"></canvas>
+                </div>
+
+                <div class="col-xs-7">
+                    <canvas id="barCanvas" style="height:700px"></canvas>
+                </div>
+            </div>
+
 
 
         </div>
@@ -123,7 +186,103 @@
 
     </div>
     <div class="chart tab-pane" id="history" style="position: relative;">
+        <div class="row" style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; " >
+            <div class="box" >
+                <div class="col-xs-12" style="margin:10px;" >
+                    <ul class="timeline">
+
+                        <% for(CAPDEVActivity activity : activityHistory){ %>
+                        <li class="time-label">
+                            <span class="bg-green">
+                                <%out.print(f.format(activity.getActivityDate()));%>
+                            </span>
+                        </li>
+                        <li>
+                            <!-- for loop for plans -->
+                            <i class="fa fa-clipboard bg-green"></i>
+                            <div class="timeline-item">
+                                <!--                                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+                                <h3 class="timeline-header"><a href="#" data-toggle='modal' data-target='#activity<%out.print(activity.getActivityID());%>'><%out.print(activity.getActivityName());%></a></h3>
+                            </div>
+                        </li>
+
+                        <div class="modal fade" id="activity<%out.print(activity.getActivityID());%>">
+                            <div class="modal-dialog modal-md">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">Activity Details</h4>
+                                    </div>
 
 
+                                    <div class="modal-body" id="modalBody">
+
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label for="">Activity Title</label>
+                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getActivityName());%>" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <div class="form-group">
+                                                    <label for="">Activity Description</label>
+                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getActivityDesc());%>" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label for="">Activity Date</label>
+                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(f.format(activity.getActivityDate()));%>" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label for="">No. of Participants</label>
+                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getArbList().size());%>" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="">Observations</label>
+                                                    <textarea id="" cols="30" rows="3" class="form-control" disabled><%if(activity.getObservations() != null){out.print(activity.getObservations());}else{out.print("N/A");};%></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="">Recommendation</label>
+                                                    <textarea id="" cols="30" rows="3" class="form-control" disabled><%if(activity.getRecommendation() != null){out.print(activity.getRecommendation());}else{out.print("N/A");};%></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="pull-right">
+                                            <button type='button' class="btn btn-default">Cancel</button>
+                                            <button type='button' class="btn btn-primary">View More</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!--                                            /.modal-content -->
+                            </div>
+                            <!--                                        /.modal-dialog -->
+                        </div>
+                        <% } %>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>

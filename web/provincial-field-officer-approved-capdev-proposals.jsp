@@ -149,5 +149,22 @@
             </footer>
         </div>
         <%@include file="jspf/footer.jspf" %>
+        
+            <script>
+            var ctx = $('#barCanvas').get(0).getContext('2d');
+            <%
+                    Chart bar = new Chart();
+                    String json = bar.getBarChartEducation(arbList);
+            %>
+            new Chart(ctx, <%out.print(json);%>);
+
+            var ctx3 = $('#pieCanvas').get(0).getContext('2d');
+            <%
+                    Chart pie = new Chart();
+                    String json3 = pie.getPieChartGender(arbList);
+            %>
+            new Chart(ctx3, <%out.print(json3);%>);
+
+        </script>
     </body>
 </html>

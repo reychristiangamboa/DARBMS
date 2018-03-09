@@ -31,15 +31,10 @@ public class FilterProvRefresh extends BaseServlet {
             String valajax = request.getParameter("valajax");
             provinceList = addressDAO.getAllProvOfficesRegion(Integer.parseInt(valajax));
 
-            response.getWriter().write("<label for='provinceDrop'>Province</label>");
-            response.getWriter().write("<select multiple='multiple' class='select2 form-control' name='province' id='provinceDrop' style='width: 100%'>");
-            
             for (int j = 0; j < provinceList.size(); j++) {
                 response.getWriter().write("<option value=" + provinceList.get(j).getProvCode() + ">" + provinceList.get(j).getProvDesc() + "</option>");
             }
-            
-            response.getWriter().write("</select>");
-
+        
         }
     }
 

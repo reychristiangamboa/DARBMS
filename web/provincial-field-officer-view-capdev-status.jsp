@@ -81,15 +81,17 @@
                                                 <div class="form-group">
                                                     <label>View:</label>
                                                     <select class="form-control" onchange="chg()" id="filterDrop">
-                                                        <option value="1">All</option>
+                                                        <option value="1" selected>All</option>
                                                         <option value="2">Per Province</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-6">
                                                 <div class="form-group">
-                                                    <div class="form-group" id="provinceDiv">
-
+                                                    <div class="form-group">
+                                                        <label for='provinceDrop'>Province</label>
+                                                        <select  id="provinceDrop" multiple class='select2 form-control' name='province' style='width: 100%' disabled>
+                                                        </select>
                                                     </div>
                                                     <!-- /.input group -->
                                                 </div>
@@ -423,12 +425,24 @@
         <script>
 
             function chg() {
+                
+//                var filterDrop = document.getElementById('filterDrop');
+//                var provinceDrop = document.getElementById('provinceDrop');
+//                
+//                alert(filterDrop.value);
+//                if(filterDrop.value === 1 && provinceDrop.disabled = false){
+//                    provinceDrop.disabled = true;
+//                }else{
+////                    provinceDrop.removeAttribute('disabled');
+//                    provinceDrop.disabled = false;
+//                }
+                
                 var filterVal = document.getElementById('filterDrop').value;
-
+                
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
-                        document.getElementById('provinceDiv').innerHTML = xhttp.responseText;
+                        document.getElementById('provinceDrop').innerHTML = xhttp.responseText;
                     }
                 };
                 xhttp.open("GET", "FilterProvRefresh?valajax=" + filterVal, true);
@@ -437,9 +451,17 @@
 
 
             $(document).ready(function () {
-
-                $('.select2 .form-control').select2();
-
+                
+                $('#filterDrop').on('change', function(e){
+                    e.preventDefault();
+                    $('#provinceDrop').removeAttr('disabled');
+                   if($('#filterDrop').val() === 1 && $('#provinceDrop').attr('disabled')){
+                       $('#provinceDrop').attr('disabled');
+                   }else{
+                       $('#provinceDrop').removeAttr('disabled');
+                   } 
+                });
+                
                 $("a[name='all']").click(function () {
                     if ($("div[id='1']").css('display') == 'none') {
                         $("div[id='1']").toggle();

@@ -13,8 +13,6 @@
     </head>
     <body>
         <div class="wrapper">
-            <%@include file="jspf/admin-navbar.jspf"%>
-            <%@include file="jspf/admin-sidebar.jspf"%>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
@@ -83,7 +81,7 @@
                                 </div>
                                 <div class="box-body">
                                     <div class="chart">
-                                        <canvas id="lineChart" style="height:250px"></canvas>
+                                        <canvas id="lineCanvas" style="height:250px"></canvas>
                                     </div>
                                 </div>
                                 <!-- /.box-body -->
@@ -103,7 +101,7 @@
                                 </div>
                                 <div class="box-body" id="bar">
                                     <div class="chart">
-                                        <canvas id="barChart" style="height:230px"></canvas>
+                                        <canvas id="barCanvas" style="height:230px"></canvas>
                                     </div>
                                 </div>
                                 <!-- /.box-body -->
@@ -114,16 +112,6 @@
                         <!-- /.col (RIGHT) -->
                     </div>
                     <!-- /.row -->
-
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <form action="">
-                                    <textarea name="" id="" cols="30" rows="10" class="form-control">Putangina mo!</textarea>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
 
                 </section>
                 <!-- /.content -->
@@ -336,7 +324,7 @@
                 //-------------
                 var barChartCanvas = $('#barChart').get(0).getContext('2d')
                 var barChart = new Chart(barChartCanvas)
-                var barChartData = areaChartData
+                var barChartData = areaChartData;
                 barChartData.datasets[1].fillColor = '#00a65a'
                 barChartData.datasets[1].strokeColor = '#00a65a'
                 barChartData.datasets[1].pointColor = '#00a65a'
