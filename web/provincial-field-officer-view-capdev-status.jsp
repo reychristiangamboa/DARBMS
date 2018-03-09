@@ -61,6 +61,56 @@
                     </div>
                     <%}%>
                     <div class="row">
+                        <div class="col-xs-8">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Filter</h3>
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
+                                    </div>  
+                                </div>
+                                <!-- /.box-header -->
+
+
+                                <div class="box-body"> 
+
+                                    <div class="row">
+
+                                        <div class="col-xs-12">
+                                            <div class="col-xs-6">
+                                                <div class="form-group">
+                                                    <label>View:</label>
+                                                    <select class="form-control" onchange="chg()" id="filterDrop">
+                                                        <option value="1">All</option>
+                                                        <option value="2">Per Province</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <div class="form-group">
+                                                    <div class="form-group" id="provinceDiv">
+
+                                                    </div>
+                                                    <!-- /.input group -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.box-body -->
+
+
+
+                                </div>
+                                <div class="box-footer">
+                                    <div class= "pull-right">
+                                        <a class="btn btn-primary" href="">Filter</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-3 col-xs-6" >
                             <!-- small box -->
                             <a href="#" name="btn1">
@@ -371,8 +421,26 @@
         </div>
         <%@include file="jspf/footer.jspf" %>
         <script>
+
+            function chg() {
+                var filterVal = document.getElementById('filterDrop').value;
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        document.getElementById('provinceDiv').innerHTML = xhttp.responseText;
+                    }
+                };
+                xhttp.open("GET", "FilterProvRefresh?valajax=" + filterVal, true);
+                xhttp.send();
+            }
+
+
             $(document).ready(function () {
-                $("a[name='all']").click(function(){
+
+                $('.select2 .form-control').select2();
+
+                $("a[name='all']").click(function () {
                     if ($("div[id='1']").css('display') == 'none') {
                         $("div[id='1']").toggle();
                     }

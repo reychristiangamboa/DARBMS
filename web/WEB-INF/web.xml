@@ -248,6 +248,10 @@
         <servlet-name>ImportPastDueAccount</servlet-name>
         <servlet-class>com.MVC.Controller.ImportPastDueAccount</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FilterProvRefresh</servlet-name>
+        <servlet-class>com.MVC.Controller.FilterProvRefresh</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -495,6 +499,10 @@
     <servlet-mapping>
         <servlet-name>ImportPastDueAccount</servlet-name>
         <url-pattern>/ImportPastDueAccount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterProvRefresh</servlet-name>
+        <url-pattern>/FilterProvRefresh</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

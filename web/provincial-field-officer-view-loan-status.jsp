@@ -24,7 +24,7 @@
                 background: transparent !important;
             }
         </style>
-        
+
     </head>
 
     <body class="hold-transition skin-blue sidebar-mini">
@@ -62,51 +62,110 @@
                     <%}%>
 
                     <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Filter</h3>
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
+                                    </div>  
+                                </div>
+                                <!-- /.box-header -->
+
+
+                                <div class="box-body"> 
+
+                                    <div class="row">
+
+                                        <div class="col-xs-12">
+                                            <div class="form-group col-xs-6">
+                                                <label>View:</label>
+                                                <select class="form-control">
+                                                    <option>All</option>
+                                                    <option>Per Province</option>
+                                                 
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-xs-6">
+                                                <div class="form-group">
+                                                    <label>Provinces: </label>
+                                                    <select multiple class="select2 form-control ">
+                                                        <option>option 1</option>
+                                                        <option>option 2</option>
+                                                        <option>option 3</option>
+                                                        <option>option 4</option>
+                                                        <option>option 5</option>
+                                                    </select>
+                                                </div>
+                                                <div class="input-group">
+                                                    <!--<div class="input-group-addon">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </div>-->
+                                                </div>
+                                                <!-- /.input group -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.box-body -->
+
+
+
+                                </div>
+                                <div class="box-footer">
+                                    <div class= "pull-right">
+                                        <a class="btn btn-primary" href="">Filter</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-4 col-xs-6" >
                             <!-- small box -->
                             <a href="#" name="btn1">
-                            <div class="small-box bg-aqua">
-                                <div class="inner">
-                                    <h3><%=requestedRequests.size()%></h3>
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h3><%=requestedRequests.size()%></h3>
 
-                                    <h4>Requested</h4>
+                                        <h4>Requested</h4>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-keyboard-o"></i>
+                                    </div>
                                 </div>
-                                <div class="icon">
-                                    <i class="fa fa-keyboard-o"></i>
-                                </div>
-                            </div>
                             </a>
                         </div>
                         <!-- ./col -->
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn2">
-                            <div class="small-box bg-green">
-                                <div class="inner">
-                                    <h3><%=clearedRequests.size()%><sup style="font-size: 20px"></sup></h3>
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3><%=clearedRequests.size()%><sup style="font-size: 20px"></sup></h3>
 
-                                    <h4>Cleared</h4>
+                                        <h4>Cleared</h4>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-check-square-o"></i>
+                                    </div>
                                 </div>
-                                <div class="icon">
-                                    <i class="fa fa-check-square-o"></i>
-                                </div>
-                            </div>
                             </a>
                         </div>
                         <!-- ./col -->
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn3">
-                            <div class="small-box bg-yellow">
-                                <div class="inner">
-                                    <h3><%=endorsedRequests.size()%></h3>
+                                <div class="small-box bg-yellow">
+                                    <div class="inner">
+                                        <h3><%=endorsedRequests.size()%></h3>
 
-                                    <h4>Endorsed</h4>
+                                        <h4>Endorsed</h4>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-upload"></i>
+                                    </div>  
                                 </div>
-                                <div class="icon">
-                                    <i class="fa fa-upload"></i>
-                                </div>  
-                            </div>
                             </a>
                         </div>
                         <!-- ./col -->
@@ -116,56 +175,56 @@
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn4">
-                            <div class="small-box bg-aqua">
-                                <div class="inner">
-                                    <h3><%=approvedRequests.size()%></h3>
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h3><%=approvedRequests.size()%></h3>
 
-                                    <h4>Approved</h4>
+                                        <h4>Approved</h4>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-thumbs-o-up"></i>
+                                    </div>
                                 </div>
-                                <div class="icon">
-                                    <i class="fa fa-thumbs-o-up"></i>
-                                </div>
-                            </div>
                             </a>
                         </div>
                         <!-- ./col -->
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn5">
-                            <div class="small-box bg-green">
-                                <div class="inner">
-                                    <h3><%=forReleaseRequests.size()%><sup style="font-size: 20px"></sup></h3>
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3><%=forReleaseRequests.size()%><sup style="font-size: 20px"></sup></h3>
 
-                                    <h4>For Release</h4>
+                                        <h4>For Release</h4>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-folder-o"></i>
+                                    </div>
                                 </div>
-                                <div class="icon">
-                                    <i class="fa fa-folder-o"></i>
-                                </div>
-                            </div>
                             </a>        
                         </div>
                         <!-- ./col -->
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn6">
-                            <div class="small-box bg-yellow">
-                                <div class="inner">
-                                    <h3><%=releasedRequests.size()%></h3>
+                                <div class="small-box bg-yellow">
+                                    <div class="inner">
+                                        <h3><%=releasedRequests.size()%></h3>
 
-                                    <h4>Released</h4>
+                                        <h4>Released</h4>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-folder-open-o"></i>
+                                    </div>
                                 </div>
-                                <div class="icon">
-                                    <i class="fa fa-folder-open-o"></i>
-                                </div>
-                            </div>
-                           </a>
+                            </a>
                         </div>
                         <!-- ./col -->
                     </div>
                     <!-- ./col -->
 
-                    <div class="row">
-                        <div class="col-xs-12" id="1" style="display:none;">
+                    <div class="row"  id="1" style="display:none;">
+                        <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Requested</strong></h3>

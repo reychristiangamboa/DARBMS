@@ -83,7 +83,7 @@
                                 </div>
                                 <div class="box-body">
                                     <div class="chart">
-                                        <canvas id="lineCanvas" style="height:250px"></canvas>
+                                        <canvas id="lineChart" style="height:250px"></canvas>
                                     </div>
                                 </div>
                                 <!-- /.box-body -->
@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="box-body" id="bar">
                                     <div class="chart">
-                                        <canvas id="barCanvas" style="height:230px"></canvas>
+                                        <canvas id="barChart" style="height:230px"></canvas>
                                     </div>
                                 </div>
                                 <!-- /.box-body -->

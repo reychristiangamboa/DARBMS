@@ -71,62 +71,7 @@
                                             <li><a href="#history" data-toggle="tab">CAPDEV History</a></li>
                                         </ul>
 
-                                        <div class="tab-content no-padding">
-                                            <!-- Morris chart - Sales -->
-                                            <div class="chart tab-pane active" id="request" style="position: relative;">
-                                                <div class="box-body">
-
-                                                    <div class="row">
-                                                        <div class="col-xs-6">
-                                                            <div class="form-group">
-                                                                <label for="">Name of ARBO</label>
-                                                                <input type="text" class="form-control" value="<%out.print(a.getArboName());%>" disabled >
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-3">
-                                                            <div class="form-group">
-                                                                <label for="">No. of ARBs</label>
-                                                                <input type="text" class="form-control" id="" placeholder="" value="<%out.print(arboDAO.getARBCount(a.getArboID()));%>" disabled>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-3">
-                                                            <div class="form-group">
-                                                                <label for="">Land Area (Hectares)</label>
-                                                                <input type="text" class="form-control" id="" value="<%out.print(r.getHectares());%>" disabled >
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-xs-4">
-                                                            <label for=''>Loan Amount</label>
-                                                            <input type='text' class="form-control" id='' value="<%out.print(r.getLoanAmount());%>" disabled>
-                                                        </div>
-
-                                                        <div class="col-xs-4">
-                                                            <div class="form-group">
-                                                                <label for="">Reason for Loan</label>
-                                                                <input type="text" class="form-control" value="<%out.print(r.getLoanReason());%>" disabled/>
-                                                            </div>
-                                                        </div>         
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-xs-12">
-                                                            <label for=''>Remarks</label>
-                                                            <textarea class="form-control" rows="3" disabled><%out.print(r.getRemarks());%></textarea>
-                                                        </div>
-
-                                                    </div>
-                                                </div> 
-                                            </div>
-                                            <div class="chart tab-pane" id="info" style="position: relative;">
-
-
-                                            </div>
-                                            <div class="chart tab-pane" id="history" style="position: relative;">
-
-
-                                            </div>
-                                        </div>
+                                          <%@include file="jspf/arboInfo.jspf"%>
                                     </div>
                                     <hr>        
                                 </div>
