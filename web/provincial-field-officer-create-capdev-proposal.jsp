@@ -103,7 +103,9 @@
                                     </div>
                                     <div class="box-footer">
                                         <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
-                                        <input type="hidden" id="count" name="count">
+                                        <%if((Integer)request.getAttribute("pastDueID") != null){%>
+                                        <input type="hidden" name="pastDueID" value="<%out.print((Integer)request.getAttribute("pastDueID"));%>">
+                                        <%}%>
                                         <button type="submit" name="manual" class="btn btn-primary pull-right">Submit</button>
                                     </div>
                                 </form>

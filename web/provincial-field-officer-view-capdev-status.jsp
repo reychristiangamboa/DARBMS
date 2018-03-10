@@ -60,58 +60,7 @@
                         <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
                     </div>
                     <%}%>
-                    <div class="row">
-                        <div class="col-xs-8">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Filter</h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
-                                    </div>  
-                                </div>
-                                <!-- /.box-header -->
-
-
-                                <div class="box-body"> 
-
-                                    <div class="row">
-
-                                        <div class="col-xs-12">
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <label>View:</label>
-                                                    <select class="form-control" onchange="chg()" id="filterDrop">
-                                                        <option value="1" selected>All</option>
-                                                        <option value="2">Per Province</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <div class="form-group">
-                                                        <label for='provinceDrop'>Province</label>
-                                                        <select  id="provinceDrop" multiple class='select2 form-control' name='province' style='width: 100%' disabled>
-                                                        </select>
-                                                    </div>
-                                                    <!-- /.input group -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /.box-body -->
-
-
-
-                                </div>
-                                <div class="box-footer">
-                                    <div class= "pull-right">
-                                        <a class="btn btn-primary" href="">Filter</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                    </div>
+                    
                     <div class="row">
                         <div class="col-lg-3 col-xs-6" >
                             <!-- small box -->
@@ -134,7 +83,7 @@
                             <a href="#" name="btn4">
                                 <div class="small-box bg-aqua">
                                     <div class="inner">
-                                        <h3><%=requestedRequests.size()%></h3>
+                                        <h3><%=pendingPlans.size()%></h3>
 
                                         <h4>Pending CAPDEV Proposals</h4>
                                     </div>
@@ -150,7 +99,7 @@
                             <a href="#" name="btn2">
                                 <div class="small-box bg-green">
                                     <div class="inner">
-                                        <h3><%=clearedRequests.size()%><sup style="font-size: 20px"></sup></h3>
+                                        <h3><%=approvedPlans.size()%><sup style="font-size: 20px"></sup></h3>
 
                                         <h4>Approved CAPDEV Proposals</h4>
                                     </div>
@@ -166,7 +115,7 @@
                             <a href="#" name="btn3">
                                 <div class="small-box bg-yellow">
                                     <div class="inner">
-                                        <h3><%=endorsedRequests.size()%></h3>
+                                        <h3><%=implementedPlans.size()%></h3>
 
                                         <h4>Implemented CAPDEV Proposals</h4>
                                     </div>
@@ -424,30 +373,7 @@
         <%@include file="jspf/footer.jspf" %>
         <script>
 
-            function chg() {
-                
-//                var filterDrop = document.getElementById('filterDrop');
-//                var provinceDrop = document.getElementById('provinceDrop');
-//                
-//                alert(filterDrop.value);
-//                if(filterDrop.value === 1 && provinceDrop.disabled = false){
-//                    provinceDrop.disabled = true;
-//                }else{
-////                    provinceDrop.removeAttribute('disabled');
-//                    provinceDrop.disabled = false;
-//                }
-                
-                var filterVal = document.getElementById('filterDrop').value;
-                
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function () {
-                    if (xhttp.readyState === 4 && xhttp.status === 200) {
-                        document.getElementById('provinceDrop').innerHTML = xhttp.responseText;
-                    }
-                };
-                xhttp.open("GET", "FilterProvRefresh?valajax=" + filterVal, true);
-                xhttp.send();
-            }
+            
 
 
             $(document).ready(function () {

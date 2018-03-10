@@ -127,7 +127,7 @@
 
                                         <tbody>
                                             <%
-                                                for(APCPRequest r : forReleaseRequests){
+                                                for(APCPRequest r : ReleasedRequests){
                                                 ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>

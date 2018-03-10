@@ -61,65 +61,7 @@
                     </div>
                     <%}%>
 
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Filter</h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
-                                    </div>  
-                                </div>
-                                <!-- /.box-header -->
-
-
-                                <div class="box-body"> 
-
-                                    <div class="row">
-
-                                        <div class="col-xs-12">
-                                            <div class="form-group col-xs-6">
-                                                <label>View:</label>
-                                                <select class="form-control">
-                                                    <option>All</option>
-                                                    <option>Per Province</option>
-                                                 
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-xs-6">
-                                                <div class="form-group">
-                                                    <label>Provinces: </label>
-                                                    <select multiple class="select2 form-control ">
-                                                        <option>option 1</option>
-                                                        <option>option 2</option>
-                                                        <option>option 3</option>
-                                                        <option>option 4</option>
-                                                        <option>option 5</option>
-                                                    </select>
-                                                </div>
-                                                <div class="input-group">
-                                                    <!--<div class="input-group-addon">
-                                                        <i class="fa fa-calendar"></i>
-                                                    </div>-->
-                                                </div>
-                                                <!-- /.input group -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /.box-body -->
-
-
-
-                                </div>
-                                <div class="box-footer">
-                                    <div class= "pull-right">
-                                        <a class="btn btn-primary" href="">Filter</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                    </div>
+                    
                     <div class="row">
                         <div class="col-lg-4 col-xs-6" >
                             <!-- small box -->

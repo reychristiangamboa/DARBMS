@@ -7,6 +7,7 @@ package com.MVC.Controller;
 
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.Model.APCPRelease;
+import com.MVC.Model.APCPRequest;
 import com.MVC.Model.PastDueAccount;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -34,6 +35,9 @@ public class RecordRequestRelease extends BaseServlet {
 
         APCPRequestDAO dao = new APCPRequestDAO();
         APCPRelease r = new APCPRelease();
+        APCPRequest req = dao.getRequestByID(Integer.parseInt(request.getParameter("requestID")));
+        boolean success = false;
+        
         r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         r.setReleaseAmount(Double.parseDouble(request.getParameter("releaseAmount")));
 
@@ -48,6 +52,10 @@ public class RecordRequestRelease extends BaseServlet {
 
         r.setReleaseDate(releaseDate);
         r.setReleasedBy((Integer)session.getAttribute("userID"));
+        
+        if(!dao.requestHasRelease(req)){
+            dao.updateRequestStatus(req.getRequestID(), 5);
+        }
 
         if (dao.addRequestRelease(r)) {
             request.setAttribute("success", "Request Release successfully recorded!");

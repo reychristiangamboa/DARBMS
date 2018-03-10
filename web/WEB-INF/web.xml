@@ -252,6 +252,18 @@
         <servlet-name>FilterProvRefresh</servlet-name>
         <servlet-class>com.MVC.Controller.FilterProvRefresh</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FilterCAPDEVProposals</servlet-name>
+        <servlet-class>com.MVC.Controller.FilterCAPDEVProposals</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShowAllCAPDEVProposals</servlet-name>
+        <servlet-class>com.MVC.Controller.ShowAllCAPDEVProposals</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SettlePastDueAccount</servlet-name>
+        <servlet-class>com.MVC.Controller.SettlePastDueAccount</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -503,6 +515,18 @@
     <servlet-mapping>
         <servlet-name>FilterProvRefresh</servlet-name>
         <url-pattern>/FilterProvRefresh</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterCAPDEVProposals</servlet-name>
+        <url-pattern>/FilterCAPDEVProposals</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowAllCAPDEVProposals</servlet-name>
+        <url-pattern>/ShowAllCAPDEVProposals</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SettlePastDueAccount</servlet-name>
+        <url-pattern>/SettlePastDueAccount</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

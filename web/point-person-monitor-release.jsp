@@ -71,7 +71,7 @@
                                         <!-- Tabs within a box -->
                                         <ul class="nav nav-tabs pull-left">
                                             <li class="active"><a href="#request" data-toggle="tab">Request Information</a></li>
-                                            <li><a href="#profile" data-toggle="tab">ARBO Profile</a></li>
+                                            <li><a href="#info" data-toggle="tab">ARBO Profile</a></li>
                                             <li><a href="#history" data-toggle="tab">CAPDEV History</a></li>
                                         </ul>
                                         <%@include file="jspf/arboInfo.jspf"%>
@@ -214,7 +214,7 @@
                                                                     u = uDAO.searchUser(p.getRecordedBy());
                                                             %>
                                                             <tr>
-                                                                <td><%out.print(p.getPastDueAmount());%></td>
+                                                                <td><a href="#" data-toggle="modal" data-target="#pastDueModal<%out.print(p.getPastDueAccountID());%>"><%out.print(p.getPastDueAmount());%></a></td>
                                                                 <td><%out.print(p.getReasonPastDueDesc());%></td>
                                                                 <td><%out.print(p.getOtherReason());%></td>
 
@@ -226,7 +226,74 @@
 
                                                                 <td><%out.print(u.getFullName());%></td>
                                                             </tr>
-                                                            <%}%>
+
+
+                                                        <div class="modal fade" id="pastDueModal<%out.print(p.getPastDueAccountID());%>">
+                                                            <div class="modal-dialog modal-md">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span></button>
+                                                                        <h4 class="modal-title">Past Due Account Details</h4>
+                                                                    </div>
+
+
+                                                                    <div class="modal-body" id="modalBody">
+                                                                        <div class="row">
+                                                                            <div class="col-xs-12">
+                                                                                <div class="col-xs-6">
+                                                                                    <div class="form-group">
+                                                                                        <label for="">Amount</label>
+                                                                                        <input type="text" class="form-control" value="<%=p.getPastDueAmount()%>" disabled>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-xs-6">
+                                                                                    <form method="post">
+                                                                                        <div class="form-group">
+                                                                                            <label for="">Date Settled</label>
+                                                                                            <div class="input-group">
+                                                                                                <input type="date" class="form-control" name="dateSettled" <%if(p.getDateSettled() != null){ %> value="<%out.print(p.getDateSettled());%>"<%}%>>
+                                                                                                <input type="hidden" name="pastDueAccountID" value="<%=p.getPastDueAccountID()%>">
+                                                                                                <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                                                                                                <span class="input-group-btn">
+                                                                                                    <button class="btn btn-primary" onclick="form.action = 'SettlePastDueAccount'">Settle</button>
+                                                                                                </span>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-xs-12">
+                                                                                <div class="col-xs-6">
+                                                                                    <div class="form-group">
+                                                                                        <label for="">Reason for Past Due</label>
+                                                                                        <input type="text" class="form-control" value="<%=p.getReasonPastDueDesc()%>" disabled>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-xs-6">
+                                                                                    <label for="">Other Reason for Past Due</label>
+                                                                                    <textarea class="form-control" name="otherReason" id="" cols="10" rows="3" disabled><%out.print(p.getOtherReason());%></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <form method="post">
+                                                                        <div class="modal-footer">
+                                                                            <input type="hidden" name="id" value="<%=r.getRequestID()%>">
+                                                                            <input type="hidden" name="pastDueID" value="<%=p.getPastDueAccountID()%>">
+                                                                            <button type="submit" onclick="form.action = 'CreateCAPDEVProposal'" class="btn btn-primary pull-right">Create CAPDEV Proposal</button>
+                                                                        </div>
+                                                                    </form>
+
+                                                                </div>
+                                                                <!--                                            /.modal-content -->
+                                                            </div>
+                                                            <!--                                        /.modal-dialog -->
+                                                        </div>
+
+                                                        <%}%>
                                                         </tbody>
 
                                                         <tfoot>

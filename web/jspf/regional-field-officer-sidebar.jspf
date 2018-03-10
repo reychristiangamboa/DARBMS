@@ -29,6 +29,9 @@
     ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRequestedRequestsRegion((Integer)session.getAttribute("regOfficeCode"));
     
     ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(1,(Integer)session.getAttribute("regOfficeCode"));
+    ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(2,(Integer)session.getAttribute("regOfficeCode"));
+    ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(3,(Integer)session.getAttribute("regOfficeCode"));
+    ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(5,(Integer)session.getAttribute("regOfficeCode"));
     
     
 %>
@@ -70,7 +73,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="regional-field-officer-home.jsp"><i class="fa fa-eye"></i> Home</a></li>
-                    <li><a href="regional-field-officer-view-capdev-plans.jsp"><i class="fa fa-edit"></i>View Training Proposals</a></li>
+                    <li><a href="regional-field-officer-view-capdev-proposals.jsp"><i class="fa fa-edit"></i>View Training Proposals</a></li>
                 </ul>
             </li>
             <li>

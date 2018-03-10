@@ -18,13 +18,12 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Christopher Jorge
+ * @author Rey Christian
  */
-public class FilterProvRefresh extends BaseServlet {
+public class ShowAllCAPDEVProposals extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
         HttpSession session = request.getSession();
         AddressDAO addressDAO = new AddressDAO();
         ArrayList<Province> provinceList = new ArrayList();
@@ -39,7 +38,5 @@ public class FilterProvRefresh extends BaseServlet {
         
         }
     }
-
-    
 
 }

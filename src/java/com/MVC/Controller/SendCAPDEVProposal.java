@@ -52,10 +52,20 @@ public class SendCAPDEVProposal extends BaseServlet {
         String[] files = request.getParameterValues("file[]");
 
         CAPDEVPlan capdevPlan = new CAPDEVPlan();
+        
+        
         capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         capdevPlan.setPlanDTN(request.getParameter("dtn"));
+        
+        int planID = 0;
 
-        int planID = capdevDAO.addCAPDEVPlan(capdevPlan, (Integer)session.getAttribute("userID"));
+        if (request.getParameter("pastDueID") != null) {
+            capdevPlan.setPastDueAccountID(Integer.parseInt(request.getParameter("pastDueID")));
+            planID = capdevDAO.addCAPDEVPlanForPastDue(capdevPlan, (Integer)session.getAttribute("userID"));
+        }else{
+            planID = capdevDAO.addCAPDEVPlan(capdevPlan, (Integer)session.getAttribute("userID"));
+        }
+        
 
         for (int i = 0; i < activities.length; i++) {
 
@@ -63,8 +73,6 @@ public class SendCAPDEVProposal extends BaseServlet {
             ArrayList<ARB> arbList = new ArrayList();
             ArrayList arbHolder = readExcelFile(files[i]);
             
-            
-
             ArrayList cellStoreArrayList = new ArrayList();
 
             java.sql.Date activityDate = null;

@@ -98,14 +98,22 @@
                 <div class="col-xs-4">
                     <div class="form-group" id="space" name="space">
                         <label for="space">Name of ARBO</label>
-                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(a.getArboName());%>" disabled>
+                        <div class="input-group">
+                            <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(a.getArboName());%>" disabled>    
+                            <span class="input-group-btn">
+                                <button class="btn btn-link"><i class="fa fa-users"></i> View Profile</button>
+                            </span>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-xs-4">
                     <label for="space">No. of Members</label>
-                    <div class="input-group" id="space" name="space">
+                    <div class="input-group">
                         <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(arboDAO.getARBCount(a.getArboID()));%>" disabled>
-                        <span class="input-group-addon" style='border:none; background: none;' data-toggle="modal" data-target="#arbs" ><a href="#"><i class="fa  fa-users"></i>&nbsp; View ARBO Members</a></span>
+                        <span class="input-group-btn">
+                            <button class="btn btn-link" data-toggle="modal" data-target="#arbs"><i class="fa fa-users"></i> View Members</button>
+                        </span>
                     </div>
                 </div>
                 <div class="col-xs-4">
@@ -119,10 +127,12 @@
 
             <div class="row">
                 <div class="col-xs-5">
+                    <label for="">Gender</label>
                     <canvas data-toggle='modal' data-target='#arbs' id="pieCanvas" style="height:350px"></canvas>
                 </div>
 
                 <div class="col-xs-7">
+                    <label for="">Educational Level</label>
                     <canvas id="barCanvas" style="height:700px"></canvas>
                 </div>
             </div>
