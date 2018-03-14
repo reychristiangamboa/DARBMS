@@ -22,6 +22,7 @@ public class Evaluation {
     private String evaluationDTN;
     private double rating;
     private int evaluationType;
+    private int evaluatedBy;
     private String evaluationTypeDesc;
     private ArrayList<QuestionRating> questionRatings = new ArrayList();
 
@@ -95,6 +96,14 @@ public class Evaluation {
 
     public void setEvaluationTypeDesc(String evaluationTypeDesc) {
         this.evaluationTypeDesc = evaluationTypeDesc;
+    }
+
+    public int getEvaluatedBy() {
+        return evaluatedBy;
+    }
+
+    public void setEvaluatedBy(int evaluatedBy) {
+        this.evaluatedBy = evaluatedBy;
     }
 
     public ArrayList<QuestionRating> getQuestionRatings() {

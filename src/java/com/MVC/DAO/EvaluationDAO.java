@@ -182,6 +182,7 @@ public class EvaluationDAO {
                 e.setEvaluationEndDate(rs.getDate("evaluationEndDate"));
                 e.setEvaluationDTN(rs.getString("evaluationDTN"));
                 e.setRating(rs.getDouble("rating"));
+                e.setEvaluatedBy(rs.getInt("evaluatedBy"));
                 e.setEvaluationType(rs.getInt("evaluationType"));
                 e.setEvaluationTypeDesc(rs.getString("questionTypeDesc"));
                 evaluations.add(e);
@@ -221,6 +222,7 @@ public class EvaluationDAO {
                 e.setEvaluationEndDate(rs.getDate("evaluationEndDate"));
                 e.setEvaluationDTN(rs.getString("evaluationDTN"));
                 e.setRating(rs.getDouble("rating"));
+                e.setEvaluatedBy(rs.getInt("evaluatedBy"));
                 e.setEvaluationType(rs.getInt("evaluationType"));
                 e.setEvaluationTypeDesc(rs.getString("questionTypeDesc"));
                 e.setQuestionRatings(getQuestionRatingsByEvaluationID(rs.getInt("evaluationID")));

@@ -67,55 +67,79 @@
                     </div>
                     <%}%>
 
-<!--                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Filter</h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
-                                    </div>  
-                                </div>
-                                 /.box-header 
-
-                                <form method="post">
-                                    <div class="box-body"> 
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <div class="col-xs-6">
-                                                    <div class="form-group">
-                                                        <label>View:</label>
-                                                        <select class="form-control" id="filterDrop" onchange="chg()">
-                                                            <option value="1">All</option>
-                                                            <option value="2">Per Province</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6">
-                                                    <div class="form-group">
-                                                        <label for='provinceDrop'>Province</label>
-                                                        <select  id="provinceDrop" multiple class='select2 form-control' onchange="chg2()" name='province' style='width: 100%' disabled>
-                                                        </select>
-                                                    </div>
-                                                     /.input group 
-                                                </div>
-                                            </div>
-                                        </div>
-                                         /.box-body 
-                                    </div>
-
-                                    <div class="box-footer">
-                                        <div class= "pull-right">
-                                            <button type="submit" class="btn btn-primary" onclick="form.action = 'FilterCAPDEVProposals'">Filter</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                             /.col 
-                        </div>
-                    </div>-->
 
                     <div class="row">
+                        <div class="col-lg-3 col-xs-6" >
+                            <!-- small box -->
+                            <a href="#" name="btn1">
+                                <div class="small-box bg-yellow">
+                                    <div class="inner">
+                                        <h3><%=pendingPlans.size()%></h3>
+
+                                        <h4>Pending </h4>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-spinner"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <a href="#" name="btn2">
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h3><%=approvedPlans.size()%></h3>
+
+                                        <h4>Approved </h4>
+
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-thumbs-o-up"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <a href="#" name="btn3">
+                                <div class="small-box bg-red">
+                                    <div class="inner">
+                                        <h3><%=disapprovedPlans.size()%></h3>
+
+                                        <h4>Disapproved </h4>
+
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-ban"></i>
+                                    </div>  
+                                </div>
+                            </a>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <a href="#" name="btn4">
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3><%=implementedPlans.size()%></h3>
+
+                                        <h4>Implemented </h4>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa  fa-check-square-o"></i>
+                                    </div>  
+                                </div>
+                            </a>
+                        </div>
+                        <!-- ./col -->
+                        <!-- ./col -->
+                    </div>
+
+
+                    <div class="row" id="1" style="display:none;">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -126,13 +150,14 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example1" class="table table-bordered table-striped">
+                                    <table id="apcp1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
+                                                <th>Type</th>
                                             </tr>
                                         </thead>
 
@@ -149,6 +174,7 @@
                                                 <td><%out.print(p.getPlanDTN());%></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
+                                                <td><%out.print(p.getPlanStatusDesc());%></td>
 
                                             </tr>
                                             <%
@@ -162,6 +188,7 @@
                                                 <th>Plan DTN</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
+                                                <th>Type</th>
                                             </tr>
 
                                         </tfoot>
@@ -174,46 +201,183 @@
                         <!-- /.col -->
                     </div>
 
-                    <div class="row">
+                    <div class="row" id="2" style="display:none;">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>With Past Due CAPDEV Proposals</strong></h3>
+                                    <h3 class="box-title"><strong>Approved CAPDEV Proposals</strong></h3>
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                     </div>                         
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
+                                    <table id="apcp2" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
-                                                <th>Loan Reason</th>
-                                                <th>Loan Amount</th>
-                                                <th>Land Area</th>
-                                                <th>Date Cleared</th>
-                                                <th>Remarks</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
                                                 <th>Status</th>
+                                                <th>Type</th>
                                             </tr>
                                         </thead>
 
-                                        <tbody>
+                                        <tbody id="proposals">
 
+                                            <%
+                                                for(CAPDEVPlan p : pendingPlans){
+                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
+                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                            %>
                                             <tr>
-                                                <td><a href="modal-default" class="btn"data-toggle="modal" data-target="#modal-default">ARB</a></a></td>
-                                                <td>Internet
-                                                    Explorer 4.0
-                                                </td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
+                                                <!--WITH CAPDEV-->
+                                                <td><a href="ViewCAPDEVProposal?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><%out.print(p.getActivities().size());%></td>
+                                                <td><%out.print(p.getPlanStatusDesc());%></td>
+                                                <td><%out.print(p.getPlanStatusDesc());%></td>
+
                                             </tr>
+                                            <%
+                                               }
+                                            %>
 
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>
+                                                <th>Type</th>
+                                            </tr>
 
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+
+                    <div class="row" id="3" style="display:none;">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><strong>Disapproved CAPDEV Proposals</strong></h3>
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>                         
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">             
+                                    <table id="apcp3" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>
+                                                <th>Type</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="proposals">
+
+                                            <%
+                                                for(CAPDEVPlan p : pendingPlans){
+                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
+                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                            %>
+                                            <tr>
+                                                <!--WITH CAPDEV-->
+                                                <td><a href="ViewCAPDEVProposal?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><%out.print(p.getActivities().size());%></td>
+                                                <td><%out.print(p.getPlanStatusDesc());%></td>
+                                                <td><%out.print(p.getPlanStatusDesc());%></td>
+
+                                            </tr>
+                                            <%
+                                               }
+                                            %>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>
+                                                <th>Type</th>
+                                            </tr>
+
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+
+                    <div class="row" id="4" style="display:none;">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><strong>Implemented CAPDEV Proposals</strong></h3>
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>                         
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">             
+                                    <table id="capdev3" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>
+                                                <th>Type</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="proposals">
+
+                                            <%
+                                                for(CAPDEVPlan p : pendingPlans){
+                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
+                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                            %>
+                                            <tr>
+                                                <!--WITH CAPDEV-->
+                                                <td><a href="ViewCAPDEVProposal?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><%out.print(p.getActivities().size());%></td>
+                                                <td><%out.print(p.getPlanStatusDesc());%></td>
+                                                <td><%out.print(p.getPlanStatusDesc());%></td>
+
+                                            </tr>
+                                            <%
+                                               }
+                                            %>
+
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>
+                                                <th>Type</th>
+                                            </tr>
+
+                                        </tfoot>
                                     </table>
                                 </div>
                                 <!-- /.box-body -->
@@ -246,80 +410,183 @@
         <!-- /.content-wrapper -->
 
         <%@include file="jspf/footer.jspf" %>
-
+        <script>
+            $(document).ready(function () {
+            $("a[name='btn1']").click(function () {
+            $("div[id='1']").toggle();
+            if ($("div[id='2']").css('display') != 'none') {
+            $("div[id='2']").toggle();
+            }
+            if ($("div[id='3']").css('display') != 'none') {
+            $("div[id='3']").toggle();
+            }
+            if ($("div[id='4']").css('display') != 'none') {
+            $("div[id='4']").toggle();
+            }
+            if ($("div[id='5']").css('display') != 'none') {
+            $("div[id='5']").toggle();
+            }
+            if ($("div[id='6']").css('display') != 'none') {
+            $("div[id='6']").toggle();
+            }
+            });
+            $("a[name='btn2']").click(function () {
+            $("div[id='2']").toggle();
+            if ($("div[id='1']").css('display') != 'none') {
+            $("div[id='1']").toggle();
+            }
+            if ($("div[id='3']").css('display') != 'none') {
+            $("div[id='3']").toggle();
+            }
+            if ($("div[id='4']").css('display') != 'none') {
+            $("div[id='4']").toggle();
+            }
+            if ($("div[id='5']").css('display') != 'none') {
+            $("div[id='5']").toggle();
+            }
+            if ($("div[id='6']").css('display') != 'none') {
+            $("div[id='6']").toggle();
+            }
+            });
+            $("a[name='btn3']").click(function () {
+            $("div[id='3']").toggle();
+            if ($("div[id='1']").css('display') != 'none') {
+            $("div[id='1']").toggle();
+            }
+            if ($("div[id='2']").css('display') != 'none') {
+            $("div[id='2']").toggle();
+            }
+            if ($("div[id='4']").css('display') != 'none') {
+            $("div[id='4']").toggle();
+            }
+            if ($("div[id='5']").css('display') != 'none') {
+            $("div[id='5']").toggle();
+            }
+            if ($("div[id='6']").css('display') != 'none') {
+            $("div[id='6']").toggle();
+            }
+            });
+            $("a[name='btn4']").click(function () {
+            $("div[id='4']").toggle();
+            if ($("div[id='1']").css('display') != 'none') {
+            $("div[id='1']").toggle();
+            }
+            if ($("div[id='2']").css('display') != 'none') {
+            $("div[id='2']").toggle();
+            }
+            if ($("div[id='3']").css('display') != 'none') {
+            $("div[id='3']").toggle();
+            }
+            if ($("div[id='5']").css('display') != 'none') {
+            $("div[id='5']").toggle();
+            }
+            if ($("div[id='6']").css('display') != 'none') {
+            $("div[id='6']").toggle();
+            }
+            });
+            $("a[name='btn5']").click(function () {
+            $("div[id='5']").toggle();
+            if ($("div[id='1']").css('display') != 'none') {
+            $("div[id='1']").toggle();
+            }
+            if ($("div[id='2']").css('display') != 'none') {
+            $("div[id='2']").toggle();
+            }
+            if ($("div[id='3']").css('display') != 'none') {
+            $("div[id='3']").toggle();
+            }
+            if ($("div[id='4']").css('display') != 'none') {
+            $("div[id='4']").toggle();
+            }
+            if ($("div[id='6']").css('display') != 'none') {
+            $("div[id='6']").toggle();
+            }
+            });
+            $("a[name='btn6']").click(function () {
+            $("div[id='6']").toggle();
+            if ($("div[id='1']").css('display') != 'none') {
+            $("div[id='1']").toggle();
+            }
+            if ($("div[id='2']").css('display') != 'none') {
+            $("div[id='2']").toggle();
+            }
+            if ($("div[id='3']").css('display') != 'none') {
+            $("div[id='3']").toggle();
+            }
+            if ($("div[id='5']").css('display') != 'none') {
+            $("div[id='5']").toggle();
+            }
+            if ($("div[id='4']").css('display') != 'none') {
+            $("div[id='4']").toggle();
+            }
+            });
+            });
+        </script>
         <script type="text/javascript">
 
             function chg() {
 
-                var filterDrop = document.getElementById('filterDrop');
-                var provinceDrop = document.getElementById('provinceDrop');
-
-                if (provinceDrop.disabled === true) {
-                    var filterVal = document.getElementById('filterDrop').value;
-
-                    provinceDrop.disabled = false;
-
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function () {
-                        if (xhttp.readyState === 4 && xhttp.status === 200) {
-                            document.getElementById('provinceDrop').innerHTML = xhttp.responseText;
-                        }
-                    };
-                    xhttp.open("GET", "FilterProvRefresh?valajax=" + filterVal, true);
-                    xhttp.send();
-
-                } else {
-                    provinceDrop.innerHTML = "";
-                    provinceDrop.disabled = true;
-                }
+            var filterDrop = document.getElementById('filterDrop');
+            var provinceDrop = document.getElementById('provinceDrop');
+            if (provinceDrop.disabled === true) {
+            var filterVal = document.getElementById('filterDrop').value;
+            provinceDrop.disabled = false;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+            if (xhttp.readyState === 4 && xhttp.status === 200) {
+            document.getElementById('provinceDrop').innerHTML = xhttp.responseText;
+            }
+            };
+            xhttp.open("GET", "FilterProvRefresh?valajax=" + filterVal, true);
+            xhttp.send();
+            } else {
+            provinceDrop.innerHTML = "";
+            provinceDrop.disabled = true;
+            }
 
 
             }
-            
+
             $(document).ready(function()){
-                var filterDrop = document.getElementById('filterDrop');
-                var 
-                if(filterDrop.value === 1){
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function () {
-                        if (xhttp.readyState === 4 && xhttp.status === 200) {
-                            document.getElementById('provinceDrop').innerHTML = xhttp.responseText;
-                        }
-                    };
-                    xhttp.open("GET", "ShowAllCAPDEVProposals?valajax=" + filterDrop.value, true);
-                    xhttp.send();
-                }
-                
+            var filterDrop = document.getElementById('filterDrop');
+            var
+                    if (filterDrop.value === 1){
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+            if (xhttp.readyState === 4 && xhttp.status === 200) {
+            document.getElementById('provinceDrop').innerHTML = xhttp.responseText;
             }
-            
+            };
+            xhttp.open("GET", "ShowAllCAPDEVProposals?valajax=" + filterDrop.value, true);
+            xhttp.send();
+            }
+
+            }
+
             function chg2() {
 
-                var values = $('#provinceDrop').val();
+            var values = $('#provinceDrop').val();
 //
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function () {
-                    if (xhttp.readyState === 4 && xhttp.status === 200) {
-                        document.getElementById('proposals').innerHTML = xhttp.responseText;
-                    }
-                };
-
-                var url = "FilterCAPDEVProposals?";
-
-                for (i = 0; i < values.length; i++) {
-                    if (i === 0) {
-                        url += "valajax=" + values[i];
-                    } else {
-                        url += "&valajax=" + values[i];
-                    }
-                }
-
-                xhttp.open("GET", url, true);
-                xhttp.send();
-
-
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+            if (xhttp.readyState === 4 && xhttp.status === 200) {
+            document.getElementById('proposals').innerHTML = xhttp.responseText;
             }
-            
-            
+            };
+            var url = "FilterCAPDEVProposals?";
+            for (i = 0; i < values.length; i++) {
+            if (i === 0) {
+            url += "valajax=" + values[i];
+            } else {
+            url += "&valajax=" + values[i];
+            }
+            }
+
+            xhttp.open("GET", url, true);
+            xhttp.send();
+            }
+
+
         </script>
     </body>
 </html>
