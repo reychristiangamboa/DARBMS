@@ -6,6 +6,7 @@
 package com.MVC.Model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,13 +16,14 @@ public class Evaluation {
     
     private int evaluationID;
     private int arbID;
-    private Date evalutaionDate;
+    private Date evaluationDate;
     private Date evaluationStartDate;
     private Date evaluationEndDate;
     private String evaluationDTN;
-    private double apcpRating;
-    private double capdevRating;
-    private double arbRating;
+    private double rating;
+    private int evaluationType;
+    private String evaluationTypeDesc;
+    private ArrayList<QuestionRating> questionRatings = new ArrayList();
 
     public int getEvaluationID() {
         return evaluationID;
@@ -39,12 +41,12 @@ public class Evaluation {
         this.arbID = arbID;
     }
 
-    public Date getEvalutaionDate() {
-        return evalutaionDate;
+    public Date getEvaluationDate() {
+        return evaluationDate;
     }
 
-    public void setEvalutaionDate(Date evalutaionDate) {
-        this.evalutaionDate = evalutaionDate;
+    public void setEvaluationDate(Date evaluationDate) {
+        this.evaluationDate = evaluationDate;
     }
 
     public Date getEvaluationStartDate() {
@@ -71,28 +73,38 @@ public class Evaluation {
         this.evaluationDTN = evaluationDTN;
     }
 
-    public double getApcpRating() {
-        return apcpRating;
+    public double getRating() {
+        return rating;
     }
 
-    public void setApcpRating(double apcpRating) {
-        this.apcpRating = apcpRating;
+    public void setRating(double apcpRating) {
+        this.rating = apcpRating;
     }
 
-    public double getCapdevRating() {
-        return capdevRating;
+    public int getEvaluationType() {
+        return evaluationType;
     }
 
-    public void setCapdevRating(double capdevRating) {
-        this.capdevRating = capdevRating;
+    public void setEvaluationType(int evaluationType) {
+        this.evaluationType = evaluationType;
     }
 
-    public double getArbRating() {
-        return arbRating;
+    public String getEvaluationTypeDesc() {
+        return evaluationTypeDesc;
     }
 
-    public void setArbRating(double arbRating) {
-        this.arbRating = arbRating;
+    public void setEvaluationTypeDesc(String evaluationTypeDesc) {
+        this.evaluationTypeDesc = evaluationTypeDesc;
     }
+
+    public ArrayList<QuestionRating> getQuestionRatings() {
+        return questionRatings;
+    }
+
+    public void setQuestionRatings(ArrayList<QuestionRating> questionRatings) {
+        this.questionRatings = questionRatings;
+    }
+    
+    
     
 }

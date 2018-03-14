@@ -64,7 +64,7 @@
 <!-- page script -->
 <script type="text/javascript">
     $(function () {
-        
+
         $('#attendance1').DataTable();
         $('#attendance2').DataTable();
         $('#attendance3').DataTable();
@@ -75,21 +75,21 @@
         $('#attendance8').DataTable();
         $('#attendance9').DataTable();
         $('#attendance10').DataTable();
-        
+
         $('#arbTable').DataTable();
-        
+
         $('#requested').DataTable();
         $('#cleared').DataTable();
         $('#endorsed').DataTable();
         $('#approved').DataTable();
         $('#released').DataTable();
         $('#forRelease').DataTable();
-        
+
         $('#releaseTable').DataTable();
         $('#repaymentTable').DataTable();
         $('#pastDueTable').DataTable();
-        
-        
+
+
         $('#example1').DataTable();
         $('#example7').DataTable();
         $('#example3').DataTable();

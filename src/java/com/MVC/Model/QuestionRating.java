@@ -14,7 +14,8 @@ public class QuestionRating {
     private int questionRatingID;
     private int evaluationID;
     private int questionID;
-    private int rating;
+    private double rating;
+    private Question question;
 
     public int getQuestionRatingID() {
         return questionRatingID;
@@ -40,13 +41,23 @@ public class QuestionRating {
         this.questionID = questionID;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+    
+    
     
     
     
