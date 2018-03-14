@@ -67,7 +67,7 @@
                     </div>
                     <%}%>
 
-                    <div class="row">
+<!--                    <div class="row">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -76,7 +76,7 @@
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
                                     </div>  
                                 </div>
-                                <!-- /.box-header -->
+                                 /.box-header 
 
                                 <form method="post">
                                     <div class="box-body"> 
@@ -97,11 +97,11 @@
                                                         <select  id="provinceDrop" multiple class='select2 form-control' onchange="chg2()" name='province' style='width: 100%' disabled>
                                                         </select>
                                                     </div>
-                                                    <!-- /.input group -->
+                                                     /.input group 
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- /.box-body -->
+                                         /.box-body 
                                     </div>
 
                                     <div class="box-footer">
@@ -111,9 +111,9 @@
                                     </div>
                                 </form>
                             </div>
-                            <!-- /.col -->
+                             /.col 
                         </div>
-                    </div>
+                    </div>-->
 
                     <div class="row">
                         <div class="col-xs-12">
