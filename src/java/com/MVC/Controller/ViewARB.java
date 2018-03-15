@@ -5,10 +5,12 @@
  */
 package com.MVC.Controller;
 
-import com.MVC.DAO.ARBODAO;
-import com.MVC.Model.ARBO;
+import com.MVC.DAO.ARBDAO;
+import com.MVC.Model.ARB;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,21 +18,20 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Rey Christian
  */
-public class ViewARBO extends BaseServlet {
+public class ViewARB extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
+        ARBDAO dao = new ARBDAO();
         int id = Integer.parseInt(request.getParameter("id"));
+        ARB arb = dao.getARBByID(id);
         
-        ARBODAO arboDAO = new ARBODAO();
-        ARBO arbo = new ARBO();
-        arbo = arboDAO.getARBOByID(id);
-        
-        request.setAttribute("arbo", arbo);
-        request.getRequestDispatcher("arbo-profile.jsp").forward(request, response);
+        request.setAttribute("arb", arb);
+        request.getRequestDispatcher("arb-profile.jsp").forward(request, response);
         
     }
 
     
+
 }

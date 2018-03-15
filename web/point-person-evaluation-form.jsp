@@ -16,7 +16,11 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/provincial-field-officer-sidebar.jspf" %>
+            <%@include file="jspf/point-person-sidebar.jspf" %>
+            <%
+            Evaluation e = eDAO.getEvaluationByID((Integer)request.getAttribute("evaluationID"));
+            ArrayList<Question> questions = eDAO.getAllQuestionsByType(e.getEvaluationType());
+            %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -34,11 +38,16 @@
 
                 <!-- Main content -->
                 <section class="content">
-                    <%if (request.getAttribute("errMessage") != null) {%>
-                    <p class="text text-center text-danger"><%=request.getAttribute("errMessage")%></p>
-                    <%}%>
-                    <%if (request.getAttribute("success") != null) {%>
-                    <p class="text text-center text-success"><%=request.getAttribute("success")%></p>
+                    <%if(request.getAttribute("success") != null){%>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
+                    </div>
+                    <%}else if(request.getAttribute("errMessage") != null){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                    </div>
                     <%}%>
                     <div class='row'>
                         <div class='col-xs-6'>
@@ -73,8 +82,7 @@
 
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Create ARBO</strong></h3>
-
+                                    <h3 class="box-title"><strong><%out.print(e.getEvaluationTypeDesc());%> Evaluation</strong></h3>
                                 </div>
                                 <!--                                 /.box-header -->
                                 <form role="form" method="post" action="AddARBO">
@@ -94,28 +102,24 @@
                                                     </thead>
 
                                                     <tbody>
-                                                        <%
-                                                            for(APCPRequest r : requestedRequests){
-                                                                ARBO arbo = arboDAO.getARBOByID(r.getArboID());
-                                                        %>
+                                                        <%for(Question q : questions){%>
                                                         <tr>
-                                                            <td>Okay na ba?</td>
+                                                            <td><%out.print(q.getQuestion());%></td>
                                                             <td>   
-                                                                <input type="radio" name="r3" class="iradio_flat-green" value="1">
+                                                                <input type="radio" name="r3" class="form-control" value="1">
                                                             </td>
                                                             <td>   
-                                                                <input type="radio" name="r3" class="flat-red"  value="2">
+                                                                <input type="radio" name="r3" class="form-control"  value="2">
                                                             </td>
                                                             <td>   
-                                                                <input type="radio" name="r3" class="flat-red"  value="3">
+                                                                <input type="radio" name="r3" class="form-control"  value="3">
                                                             </td>
                                                             <td>   
-                                                                <input type="radio" name="r3" class="flat-red"  value="4">
+                                                                <input type="radio" name="r3" class="form-control"  value="4">
                                                             </td>
                                                             <td>   
-                                                                <input type="radio" name="r3" class="flat-red"  value="5">
+                                                                <input type="radio" name="r3" class="form-control"  value="5">
                                                             </td>
-
                                                         </tr>
                                                         <%}%>
                                                     </tbody>
@@ -125,7 +129,8 @@
                                         </div>
                                     </div>
                                     <div class="box-footer">
-                                        <button type="submit" name="manual" class="btn btn-primary pull-right">Submit</button>
+                                        <input type="hidden" name="evaluationID" value="<%=e.getEvaluationID()%>">
+                                        <button type="submit" onclick="form.action='ProcessEvaluation'" class="btn btn-primary pull-right">Submit</button>
                                     </div>
                                 </form>
                             </div>

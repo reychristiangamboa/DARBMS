@@ -6,6 +6,8 @@
 <%@page import="com.MVC.Model.ARBO;"%>
 <%@page import="com.MVC.Model.ARB;"%>
 <%@page import="com.MVC.Model.Crop;"%>
+<%@page import="com.MVC.Model.Evaluation;"%>
+<%@page import="com.MVC.Model.Question;"%>
 <%@page import="com.MVC.Model.APCPRequest;"%>
 <%@page import="com.MVC.Model.CAPDEVPlan;"%>
 <%@page import="com.MVC.Model.CAPDEVActivity;"%>
@@ -18,6 +20,7 @@
 <%@page import="com.MVC.DAO.ARBODAO;"%>
 <%@page import="com.MVC.DAO.ARBDAO;"%>
 <%@page import="com.MVC.DAO.CropDAO;"%>
+<%@page import="com.MVC.DAO.EvaluationDAO;"%>
 <%@page import="com.MVC.DAO.APCPRequestDAO;"%>
 <%@page import="com.MVC.DAO.CAPDEVDAO;"%>
 <%@page import="com.MVC.DAO.UserDAO;"%>
@@ -28,6 +31,7 @@
     ARBDAO arbDAO = new ARBDAO();
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
     UserDAO uDAO = new UserDAO();
+    EvaluationDAO eDAO = new EvaluationDAO();
     
     ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
     ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();

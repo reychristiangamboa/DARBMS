@@ -60,13 +60,13 @@ public class Login extends BaseServlet {
 
                     if (u.getUserType() == 1) {   //  ADMINISTRATOR
                         request.getRequestDispatcher("admin-system-logs.jsp").forward(request, response);
-                    } else if (u.getUserType() == 2) {   //  TECHNICAL ASSISTANT
+                    } else if (u.getUserType() == 2) {   //  POINT PERSON
                         request.getRequestDispatcher("point-person-view-capdev-plans.jsp").forward(request, response);
                     } else if (u.getUserType() == 3) {   //  PROVINCIAL FIELD OFFICER
                         request.getRequestDispatcher("provincial-field-officer-arbo-list.jsp").forward(request, response);
-                    } else if (u.getUserType() == 4) {   //  PROVINCIAL FIELD OFFICER
+                    } else if (u.getUserType() == 4) {   //  REGIONAL FIELD OFFICER
                         request.getRequestDispatcher("regional-field-officer-home.jsp").forward(request, response);
-                    } else if (u.getUserType() == 5) {   //  PROVINCIAL FIELD OFFICER
+                    } else if (u.getUserType() == 5) {   //  CENTRAL OFFICER
                         request.getRequestDispatcher("central-home.jsp").forward(request, response);
                     } else {    //  DEACTIVATED ACCOUNTS
                         request.getRequestDispatcher("account-deactivated.jsp").forward(request, response);

@@ -28,7 +28,20 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
+            <%if((Integer)session.getAttribute("userType") == 2){%>
+            <%@include file="jspf/point-person-sidebar.jspf" %>
+            <%}else if((Integer)session.getAttribute("userType") == 3){%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
+            <%}else if((Integer)session.getAttribute("userType") == 4){%>
+            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
+            <%}else if((Integer)session.getAttribute("userType") == 5){%>
+            <%@include file="jspf/central-sidebar.jspf"%>
+            <%}%>
+            
+            <%
+                ARBO arbo = (ARBO)request.getAttribute("arbo");
+                ARBODAO dao = new ARBODAO();
+            %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -37,11 +50,11 @@
                     <h1>
                         User Profile
                     </h1>
-                    <ol class="breadcrumb">
+<!--                    <ol class="breadcrumb">
                         <li><a href="/DAR-BMS/pages/tables/FO-Homepage.html"><i class="fa fa-dashboard"></i> Home</a></li>
                         <li><a href="/DAR-BMS/pages/tables/FO-ARBO-ARBList.html">(ARBO Name) Beneficiary List</a></li>
                         <li class="active">ARB Profile</li>
-                    </ol>
+                    </ol>-->
                 </section>
 
                 <!-- Main content -->
@@ -53,7 +66,7 @@
                             <!-- Profile Image -->
                             <div class="box box-primary">
                                 <div class="box-body box-profile">
-                                    <h3 class="profile-username text-center">Chris Org</h3>
+                                    <h3 class="profile-username text-center"><%=arbo.getArboName()%></h3>
                                     <p class="text-muted text-center">Agrarian Reform Beneficiary Organization</p>
 
                                     <ul class="list-group list-group-unbordered">
@@ -68,7 +81,7 @@
                                             </p>
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Members</b> <a class="pull-right">543</a>
+                                            <b>Members</b> <a class="pull-right"><%=dao.getARBCount(arbo.getArboID())%></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -89,7 +102,7 @@
                                     </p>
                                     <hr>
                                     <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
-                                    <p class="text-muted">Region I - Somewhere in the Philippines</p>
+                                    <p class="text-muted"><%=arbo.getFullAddress()%></p>
                                 </div>
                                 <!-- /.box-body -->
                             </div>

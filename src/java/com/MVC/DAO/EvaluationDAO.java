@@ -37,7 +37,7 @@ public class EvaluationDAO {
             p.setString(1, q.getQuestion());
             p.setDouble(2, q.getWeight());
             p.setInt(3, q.getQuestionType());
-            
+
             p.executeUpdate();
             p.close();
 
@@ -55,8 +55,8 @@ public class EvaluationDAO {
         }
         return success;
     }
-    
-    public Question getQuestionByID(int questionID){
+
+    public Question getQuestionByID(int questionID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         Question q = new Question();
@@ -68,7 +68,7 @@ public class EvaluationDAO {
             pstmt.setInt(1, questionID);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                
+
                 q.setQuestionID(rs.getInt("questionID"));
                 q.setQuestion(rs.getString("question"));
                 q.setWeight(rs.getDouble("weight"));
@@ -87,7 +87,7 @@ public class EvaluationDAO {
         }
         return q;
     }
-    
+
     public ArrayList<Question> getAllQuestionsByType(int type) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -120,7 +120,7 @@ public class EvaluationDAO {
         }
         return questions;
     }
-    
+
     public int addEvaluation(Evaluation e) {
         PreparedStatement p = null;
         Connection con = null;
@@ -139,7 +139,7 @@ public class EvaluationDAO {
             p.setString(5, e.getEvaluationDTN());
             p.setDouble(6, e.getRating());
             p.setInt(7, e.getEvaluationType());
-            
+
             p.executeUpdate();
             ResultSet rs = p.getGeneratedKeys();
 
@@ -161,7 +161,74 @@ public class EvaluationDAO {
         }
         return 0;
     }
-    
+
+    public boolean setEvaluationRating(double rating, int id) {
+        PreparedStatement p = null;
+        Connection con = null;
+        boolean success = false;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        con = myFactory.getConnection();
+        try {
+            con.setAutoCommit(false);
+            String query = "UPDATE `evaluations` SET rating=? WHERE evaluationID=?";
+            p = con.prepareStatement(query);
+            p.setDouble(1, rating);
+            p.setInt(2, id);
+            p.executeUpdate();
+            success = true;
+
+            p.close();
+            con.commit();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(EvaluationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(EvaluationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
+    }
+
+    public Evaluation getEvaluationByID(int id) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        Evaluation e = new Evaluation();
+        try {
+            String query = "SELECT * FROM `evaluations` e "
+                    + "JOIN `ref_questionType` t ON e.evaluationType=t.questionType "
+                    + "WHERE e.evaluationID=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                e.setEvaluationID(rs.getInt("evaluationID"));
+                e.setArbID(rs.getInt("arbID"));
+                e.setEvaluationDate(rs.getDate("evaluationDate"));
+                e.setEvaluationStartDate(rs.getDate("evaluationStartDate"));
+                e.setEvaluationEndDate(rs.getDate("evaluationEndDate"));
+                e.setEvaluationDTN(rs.getString("evaluationDTN"));
+                e.setRating(rs.getDouble("rating"));
+                e.setEvaluatedBy(rs.getInt("evaluatedBy"));
+                e.setEvaluationType(rs.getInt("evaluationType"));
+                e.setEvaluationTypeDesc(rs.getString("questionTypeDesc"));
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(EvaluationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(EvaluationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return e;
+    }
+
     public ArrayList<Evaluation> getEvaluationPerARBID(int arbID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -200,7 +267,7 @@ public class EvaluationDAO {
         }
         return evaluations;
     }
-    
+
     public ArrayList<Evaluation> getEvaluationPerARBIDByType(int arbID, int type) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -241,7 +308,7 @@ public class EvaluationDAO {
         }
         return evaluations;
     }
-    
+
     public boolean addQuestionRating(QuestionRating r) {
         boolean success = false;
         PreparedStatement p = null;
@@ -258,7 +325,7 @@ public class EvaluationDAO {
             p.setInt(1, r.getEvaluationID());
             p.setInt(2, r.getQuestionID());
             p.setDouble(3, r.getRating());
-            
+
             p.executeUpdate();
             p.close();
 
@@ -276,7 +343,7 @@ public class EvaluationDAO {
         }
         return success;
     }
-    
+
     public ArrayList<QuestionRating> getQuestionRatingsByEvaluationID(int evaluationID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -292,7 +359,7 @@ public class EvaluationDAO {
                 QuestionRating r = new QuestionRating();
                 r.setEvaluationID(rs.getInt("evaluationID"));
                 r.setQuestionID(rs.getInt("questionID"));
-                r.setRating(rs.getDouble("rating"));
+                r.setRating(rs.getInt("rating"));
                 r.setQuestion(getQuestionByID(rs.getInt("questionID")));
                 qrs.add(r);
             }

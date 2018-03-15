@@ -42,20 +42,30 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
+            <%if((Integer)session.getAttribute("userType") == 2){%>
+            <%@include file="jspf/point-person-sidebar.jspf" %>
+            <%}else if((Integer)session.getAttribute("userType") == 3){%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
+            <%}else if((Integer)session.getAttribute("userType") == 4){%>
+            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
+            <%}else if((Integer)session.getAttribute("userType") == 5){%>
+            <%@include file="jspf/central-sidebar.jspf"%>
+            <%}%>
+
+            <%
+                ARB arb = (ARB)request.getAttribute("arb");
+                ARBODAO dao = new ARBODAO();
+                ARBO arbo = dao.getARBOByID(arb.getArboID());
+            %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        User Profile
+                        ARB Profile
                     </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="/DAR-BMS/pages/tables/FO-Homepage.html"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li><a href="/DAR-BMS/pages/tables/FO-ARBO-ARBList.html">(ARBO Name) Beneficiary List</a></li>
-                        <li class="active">ARB Profile</li>
-                    </ol>
+
                 </section>
 
                 <!-- Main content -->
@@ -67,7 +77,7 @@
                             <!-- Profile Image -->
                             <div class="box box-primary">
                                 <div class="box-body box-profile">
-                                    <h3 class="profile-username text-center">Christopher Jorge P. Francisco</h3>
+                                    <h3 class="profile-username text-center"><%=arb.getFullName()%></h3>
                                     <div class="rate center-block">
                                         <span class="fa fa-star checked" style></span>
                                         <span class="fa fa-star checked"></span>
@@ -75,50 +85,60 @@
                                         <span class="fa fa-star"></span>
                                         <span class="fa fa-star"></span>
                                     </div>
-                                    <p class="text-muted text-center">Agrarian Reform Beneficiary</p>
+                                    <p class="text-center"><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%=arbo.getArboName()%></a></p>
 
                                     <ul class="list-group list-group-unbordered">
                                         <li class="list-group-item">
-                                            <b>Sex</b> <a class="pull-right">Male</a>
+                                            <b>Sex</b> 
+                                            <a class="pull-right">
+                                                <%
+                                                    if(arb.getGender().equals("M")){
+                                                        out.print("Male");    
+                                                    }else if(arb.getGender().equals("F")){
+                                                        out.print("Female");    
+                                                    }
+                                                %>
+                                            </a>
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Member Since</b> <a class="pull-right">June 7, 1998</a>
+                                            <b>Member Since</b> <a class="pull-right"><%out.print(f.format(arb.getMemberSince()));%></a>
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Land Area</b> <a class="pull-right">3 Hectares</a>
+                                            <b>Land Area</b> <a class="pull-right"><%out.print(arb.getLandArea());%> Hectares</a>
                                         </li>
                                         <li class="list-group-item">
                                             <b>Crops</b> <a class="pull-right">543</a>
                                         </li>
                                         <li class="list-group-item">
-
-                                            <b>Dependents</b> <a class="pull-right" data-toggle="modal" data-target="#modal-default">3</a>
+                                            <%if(arb.getDependents().size() > 0){%>
+                                            <b>Dependents</b> <a class="pull-right" data-toggle="modal" data-target="#dependents"><%=arb.getDependents().size()%></a>
+                                            <%}else{%>
+                                            <b>Dependents</b> <a class="pull-right">N/A</a>
+                                            <%}%>
                                         </li>
                                     </ul>
-
-                                    <a href="#" class="btn btn-primary btn-block"><b>Alive</b></a>
                                 </div>
                                 <!-- /.box-body -->
-                                <div class="modal fade" id="modal-default">
+                                <div class="modal fade" id="add-evaluation">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span></button>
-                                                <h4 class="modal-title">Default Modal</h4>
+                                                <h4 class="modal-title">Add Evaluation</h4>
                                             </div>
-                                            <div class="modal-body">
-                                                <form>
+                                            <form>
+                                                <div class="modal-body">
+
                                                     <div class="row">
                                                         <div class="col-xs-6">
                                                             <div class="form-group">
                                                                 <label>Date:</label>
-
                                                                 <div class="input-group date">
                                                                     <div class="input-group-addon">
                                                                         <i class="fa fa-calendar"></i>
                                                                     </div>
-                                                                    <input type="text" class="form-control pull-right" id="datepicker">
+                                                                    <input type="date" name="evaluationDate" class="form-control pull-right" id="datepicker">
                                                                 </div>
                                                                 <!-- /.input group -->
                                                             </div>
@@ -142,28 +162,31 @@
                                                         <div class="col-xs-6">
                                                             <div class="form-group">
                                                                 <label>DTN</label>
-                                                                <input type="text" class="form-control pull-right" id="datepicker">
+                                                                <input type="text" name="dtn" class="form-control pull-right">
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-6">
                                                             <div class="form-group">
                                                                 <label>Type</label>
-                                                                <select class="form-control select2" style="width: 100%;">
+                                                                <select name="type" class="form-control select2" style="width: 100%;">
                                                                     <option selected="selected">Select</option>
-                                                                    <option>ARB</option>
-                                                                    <option>APCP</option>
-                                                                    <option>CAPDEV</option>
-                                                                    <option>LINKSFARM</option>
+                                                                    <option value="1">ARB</option>
+                                                                    <option value="2">APCP</option>
+                                                                    <option value="3">CAPDEV</option>
+                                                                    <option value="4">LINKSFARM</option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </form>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                <a class="btn btn-primary" href="point-person-evaluation-form.jsp">Submit</a>
-                                            </div>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <div class="pull-right">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary" onclick="form.action = 'AddEvaluation?id=<%out.print(arb.getArbID());%>'" href="point-person-evaluation-form.jsp">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
                                         <!-- /.modal-content -->
                                     </div>
@@ -180,28 +203,26 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">
-                                    <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
+                                    <strong><i class="fa fa-book margin-r-5"></i> Educational Attainment</strong>
 
                                     <p class="text-muted">
-                                        High School Diploma, TESDA Graduate
+                                        <%=arb.getEducationLevelDesc()%>
                                     </p>
 
                                     <hr>
 
-                                    <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+                                    <strong><i class="fa fa-map-marker margin-r-5"></i> Address</strong>
 
-                                    <p class="text-muted">Region I - Somewhere in the Philippines</p>
+                                    <p class="text-muted"><%=arb.getFullAddress()%></p>
 
                                     <hr>
 
                                     <strong><i class="fa fa-file-text-o margin-r-5"></i> Crops</strong>
 
                                     <p>
-                                        <span class="label label-danger">RICE</span>
-                                        <span class="label label-success">POTATO</span>
-                                        <span class="label label-info">SUGAR CANES</span>
-                                        <span class="label label-warning">CARROTS</span>
-                                        <span class="label label-primary">CABBAGE</span>
+                                        <%for(Crop c : arb.getCrops()){%>
+                                        <span class="label label-success"><%=c.getCropTypeDesc()%></span>
+                                        <%}%>
                                     </p>
                                 </div>
                                 <!-- /.box-body -->
@@ -258,9 +279,11 @@
                                         <!-- /.tab-content -->
                                     </div>
                                     <!-- /.nav-tabs-custom -->
+                                    <%if((Integer)session.getAttribute("userType") == 2){%>
                                     <div class="box-footer">
-                                        <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal-default">Add Evaluation</button>
+                                        <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation">Add Evaluation</button>
                                     </div>
+                                    <%}%>
                                 </div>
                             </div>
 
@@ -722,5 +745,29 @@
         </div>
         <!-- ./wrapper -->
         <%@include file="jspf/footer.jspf" %>
+        <script>
+            $(function () {
+                $('#daterange-btn').daterangepicker(
+                        {
+                            ranges: {
+                                'Today': [moment(), moment()],
+                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                            },
+                            startDate: moment().subtract(29, 'days'),
+                            endDate: moment()
+                        },
+                        function (start, end) {
+                            $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                        }
+                );
+
+
+            });
+        </script>
+
     </body>
 </html>

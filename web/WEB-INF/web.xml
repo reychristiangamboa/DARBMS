@@ -264,6 +264,18 @@
         <servlet-name>SettlePastDueAccount</servlet-name>
         <servlet-class>com.MVC.Controller.SettlePastDueAccount</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewARB</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewARB</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddEvaluation</servlet-name>
+        <servlet-class>com.MVC.Controller.AddEvaluation</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProcessEvaluation</servlet-name>
+        <servlet-class>com.MVC.Controller.ProcessEvaluation</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -527,6 +539,18 @@
     <servlet-mapping>
         <servlet-name>SettlePastDueAccount</servlet-name>
         <url-pattern>/SettlePastDueAccount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewARB</servlet-name>
+        <url-pattern>/ViewARB</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddEvaluation</servlet-name>
+        <url-pattern>/AddEvaluation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProcessEvaluation</servlet-name>
+        <url-pattern>/ProcessEvaluation</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
