@@ -68,6 +68,9 @@ public class ARBDAO {
             } else {
                 return null;
             }
+            pstmt.close();
+            rs.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -123,6 +126,70 @@ public class ARBDAO {
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
                 arbList.add(arb);
             }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return arbList;
+    }
+    
+     public ArrayList<ARB> getAllARBsOfARBOs(ArrayList<ARBO> arboList) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<ARB> arbList = new ArrayList();
+        try {
+            
+            String query = "SELECT * FROM `dar-bms`.arbs a "
+                    + "JOIN `dar-bms`.ref_educationLevel e ON a.educationLevel=e.educationLevel "
+                    + "JOIN `dar-bms`.ref_arbStatus s ON a.arbStatus=s.arbStatus "
+                    + "JOIN `dar-bms`.refbrgy b ON a.brgyCode=b.brgyCode "
+                    + "JOIN `dar-bms`.refcitymun c ON a.cityMunCode=c.citymunCode "
+                    + "JOIN `dar-bms`.refprovince p ON a.provCode=p.provCode "
+                    + "JOIN `dar-bms`.refregion r ON a.regCode=r.regCode "
+                    + "WHERE `arboID`=?";
+        for(ARBO arbo : arboList){
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, arbo.getArboID());
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ARB arb = new ARB();
+                arb.setArbID(rs.getInt("arbID"));
+                arb.setArboID(rs.getInt("arboID"));
+                arb.setFirstName(rs.getString("firstName"));
+                arb.setMiddleName(rs.getString("middleName"));
+                arb.setLastName(rs.getString("lastName"));
+                arb.setMemberSince(rs.getDate("memberSince"));
+                arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
+                arb.setBrgyCode(rs.getInt("brgyCode"));
+                arb.setBrgyDesc(rs.getString("brgyDesc"));
+                arb.setCityMunCode(rs.getInt("cityMunCode"));
+                arb.setCityMunDesc(rs.getString("citymunDesc"));
+                arb.setProvCode(rs.getInt("provCode"));
+                arb.setProvDesc(rs.getString("provDesc"));
+                arb.setRegCode(rs.getInt("regCode"));
+                arb.setRegDesc(rs.getString("regDesc"));
+                arb.setGender(rs.getString("gender"));
+                arb.setEducationLevel(rs.getInt("educationLevel"));
+                arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
+                arb.setLandArea(rs.getDouble("landArea"));
+                arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
+                arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
+                arb.setArbRating(rs.getDouble("arbRating"));
+                arb.setArbStatus(rs.getInt("arbStatus"));
+                arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
+                arbList.add(arb);
+            }
+            pstmt.close();
+            rs.close();
+        }
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -152,6 +219,9 @@ public class ARBDAO {
                 c.setCropTypeDesc(rs.getString("cropTypeDesc"));
                 cropList.add(c);
             }
+            pstmt.close();
+            rs.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -183,6 +253,9 @@ public class ARBDAO {
                 d.setEducationLevelDesc(rs.getString("educationLevelDesc"));
                 dependentList.add(d);
             }
+            pstmt.close();
+            rs.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -195,7 +268,7 @@ public class ARBDAO {
     }
 
     public int addARB(ARB arb) {
-        PreparedStatement p = null;
+        PreparedStatement pstmt = null;
         Connection con = null;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         con = myFactory.getConnection();
@@ -204,28 +277,29 @@ public class ARBDAO {
             String query = "INSERT INTO `dar-bms`.`arbs` (`arboID`, `arboRepresentative`, `firstName`, `middleName`, "
                     + "`lastName`, `memberSince`,`arbUnitNumStreet`,`brgyCode`,`cityMunCode`,`provCode`,`regCode`, "
                     + "`gender`, `educationLevel`, `landArea`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-            p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-            p.setInt(1, arb.getArboID());
-            p.setInt(2, arb.getArboRepresentative());
-            p.setString(3, arb.getFirstName());
-            p.setString(4, arb.getMiddleName());
-            p.setString(5, arb.getLastName());
-            p.setDate(6, arb.getMemberSince());
-            p.setString(7, arb.getArbUnitNumStreet());
-            p.setInt(8, arb.getBrgyCode());
-            p.setInt(9, arb.getCityMunCode());
-            p.setInt(10, arb.getProvCode());
-            p.setInt(11, arb.getRegCode());
-            p.setString(12, arb.getGender());
-            p.setInt(13, arb.getEducationLevel());
-            p.setDouble(14, arb.getLandArea());
+            pstmt = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+            pstmt.setInt(1, arb.getArboID());
+            pstmt.setInt(2, arb.getArboRepresentative());
+            pstmt.setString(3, arb.getFirstName());
+            pstmt.setString(4, arb.getMiddleName());
+            pstmt.setString(5, arb.getLastName());
+            pstmt.setDate(6, arb.getMemberSince());
+            pstmt.setString(7, arb.getArbUnitNumStreet());
+            pstmt.setInt(8, arb.getBrgyCode());
+            pstmt.setInt(9, arb.getCityMunCode());
+            pstmt.setInt(10, arb.getProvCode());
+            pstmt.setInt(11, arb.getRegCode());
+            pstmt.setString(12, arb.getGender());
+            pstmt.setInt(13, arb.getEducationLevel());
+            pstmt.setDouble(14, arb.getLandArea());
 
-            p.executeUpdate();
-            ResultSet rs = p.getGeneratedKeys();
+            pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
 
             if (rs.next()) {
                 int n = rs.getInt(1);
-                p.close();
+                pstmt.close();
+                rs.close();
                 con.commit();
                 con.close();
                 return n;
@@ -244,7 +318,7 @@ public class ARBDAO {
 
     public boolean addCrops(int arbID, ArrayList<Crop> cropList) {
         boolean success = false;
-        PreparedStatement p = null;
+        PreparedStatement pstmt = null;
         Connection con = null;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         con = myFactory.getConnection();
@@ -253,13 +327,13 @@ public class ARBDAO {
             String query = "INSERT INTO `dar-bms`.`crops` (`arbID`, `cropTag`,`startDate`,`endDate`) VALUES (?, ?, ?, ?);";
 
             for (Crop crop : cropList) {
-                p = con.prepareStatement(query);
-                p.setInt(1, arbID);
-                p.setInt(2, crop.getCropType());
-                p.setDate(3, crop.getStartDate());
-                p.setDate(4, crop.getEndDate());
-                p.executeUpdate();
-                p.close();
+                pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, arbID);
+                pstmt.setInt(2, crop.getCropType());
+                pstmt.setDate(3, crop.getStartDate());
+                pstmt.setDate(4, crop.getEndDate());
+                pstmt.executeUpdate();
+                pstmt.close();
             }
 
             con.commit();

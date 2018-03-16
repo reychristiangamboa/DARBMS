@@ -16,6 +16,10 @@ import be.ceau.chart.dataset.BarDataset;
 import be.ceau.chart.dataset.LineDataset;
 import be.ceau.chart.dataset.PieDataset;
 import java.util.ArrayList;
+import com.MVC.DAO.CropDAO;
+import com.MVC.Model.Crop;
+import java.sql.Date;
+import java.util.Calendar;
 
 /**
  *
@@ -67,6 +71,111 @@ public class Chart {
         return new BarChart(data).toJson();
     }
 
+    public String getCropHistory(ArrayList<ARB> arbList) {
+        CropDAO dao = new CropDAO();
+        Crop c = new Crop();
+        ArrayList<Crop> crops = c.getExistingCrops(arbList);
+        ArrayList<String> dates = new ArrayList();
+
+        long l = System.currentTimeMillis();
+        Date d = new Date(l);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(d);
+        int year = calendar.get(Calendar.YEAR);
+        String lastYear = Integer.toString(year - 1);;
+        String thisYear = Integer.toString(year);;
+        String nextYear = Integer.toString(year + 1);;
+        int month = calendar.get(Calendar.MONTH);
+        CropDAO cDAO = new CropDAO();
+
+        if (month >= 7) { // if current month is JULY onwards
+            dates.add(thisYear + "-07-31");
+            dates.add(thisYear + "-08-31");
+            dates.add(thisYear + "-09-30");
+            dates.add(thisYear + "-10-31");
+            dates.add(thisYear + "-11-30");
+            dates.add(thisYear + "-12-31");
+            dates.add(nextYear + "-01-31");
+            dates.add(nextYear + "-02-28");
+            dates.add(nextYear + "-03-31");
+            dates.add(nextYear + "-04-30");
+            dates.add(nextYear + "-05-31");
+            dates.add(nextYear + "-06-30");
+        } else {
+            dates.add(lastYear + "-07-31");
+            dates.add(lastYear + "-08-31");
+            dates.add(lastYear + "-09-30");
+            dates.add(lastYear + "-10-31");
+            dates.add(lastYear + "-11-30");
+            dates.add(lastYear + "-12-31");
+            dates.add(thisYear + "-01-31");
+            dates.add(thisYear + "-02-28");
+            dates.add(thisYear + "-03-31");
+            dates.add(thisYear + "-04-30");
+            dates.add(thisYear + "-05-31");
+            dates.add(thisYear + "-06-30");
+        }
+
+        LineData data = new LineData();
+
+        for (Crop arbC : crops) {
+            LineDataset dataset = new LineDataset();
+            dataset.setBackgroundColor(Color.random());
+            for (String date : dates) {
+                dataset.addData(cDAO.getCountOfCropsByMonth(arbC, date));
+            }
+            data.addDataset(dataset);
+
+        }
+        ArrayList<String> stringLabels = new ArrayList();
+        stringLabels.add("July");
+        stringLabels.add("August");
+        stringLabels.add("September");
+        stringLabels.add("October");
+        stringLabels.add("November");
+        stringLabels.add("December");
+        stringLabels.add("January");
+        stringLabels.add("February");
+        stringLabels.add("March");
+        stringLabels.add("April");
+        stringLabels.add("May");
+        stringLabels.add("June");
+
+//        ArrayList<Double> doubleFigures = new ArrayList();
+//        doubleFigures.add(5.3);
+//        doubleFigures.add(4.6);
+//        doubleFigures.add(6.9);
+//        doubleFigures.add(6.9);
+//
+//        ArrayList<Double> doubleFigures2 = new ArrayList();
+//        doubleFigures2.add(9.4);
+//        doubleFigures2.add(8.1);
+//        doubleFigures2.add(3.1);
+//        doubleFigures2.add(3.1);
+//
+//        
+//        
+//
+//        LineDataset dataset = new LineDataset();
+//        dataset.setLabel("DATASET");
+//        for (int i = 0; i < doubleFigures.size(); i++) {
+//            dataset.addData(doubleFigures.get(i));
+//            dataset.addPointBackgroundColor(Color.LIGHT_BLUE);
+//            dataset.setBorderColor(Color.LIGHT_BLUE);
+//        }
+//        dataset.setBorderWidth(2);
+//
+//        LineData data = new LineData();
+//        for (int j = 0; j < stringLabels.size(); j++) {
+//            data.addLabel(stringLabels.get(j));
+//        }
+//
+//        data.addDataset(dataset);
+//        data.addDataset(dataset2);
+//        return new LineChart(data).toJson();
+        return new LineChart(data).toJson();
+    }
+
     public String getLineChart() {
         ArrayList<Double> doubleFigures = new ArrayList();
         doubleFigures.add(5.3);
@@ -77,11 +186,13 @@ public class Chart {
         doubleFigures2.add(9.4);
         doubleFigures2.add(8.1);
         doubleFigures2.add(3.1);
+        doubleFigures2.add(3.1);
 
         ArrayList<String> stringLabels = new ArrayList();
         stringLabels.add("January");
         stringLabels.add("February");
         stringLabels.add("March");
+        stringLabels.add("June");
 
         LineDataset dataset = new LineDataset();
         dataset.setLabel("DATASET");
@@ -151,6 +262,46 @@ public class Chart {
                 dataMale.add(arbGender.get(i));
             } else if (arbGender.get(i).getGender().equalsIgnoreCase("F")) {
                 dataFemale.add(arbGender.get(i));
+            }
+        }
+        ArrayList<Integer> doubleFigures = new ArrayList();
+        doubleFigures.add(dataMale.size());
+        doubleFigures.add(dataFemale.size());
+
+        ArrayList<String> stringLabels = new ArrayList();
+        stringLabels.add("Male");
+        stringLabels.add("Female");
+
+        PieDataset dataset = new PieDataset();
+        dataset.setLabel("DATASET");
+        for (int i = 0; i < doubleFigures.size(); i++) {
+            dataset.addData(doubleFigures.get(i));
+            dataset.addBackgroundColor(Color.AQUA);
+            dataset.addBackgroundColor(Color.PINK);
+
+        }
+        dataset.setBorderWidth(2);
+
+        PieData data = new PieData();
+        for (int j = 0; j < stringLabels.size(); j++) {
+            data.addLabel(stringLabels.get(j));
+        }
+
+        data.addDataset(dataset);
+
+        return new PieChart(data).toJson();
+    }
+
+    public String getPieChartARBMun(ArrayList<ARB> arbMun) {
+
+        ArrayList<ARB> dataMale = new ArrayList();
+        ArrayList<ARB> dataFemale = new ArrayList();
+
+        for (int i = 0; i < arbMun.size(); i++) {
+            if (arbMun.get(i).getGender().equalsIgnoreCase("M")) {
+                dataMale.add(arbMun.get(i));
+            } else if (arbMun.get(i).getGender().equalsIgnoreCase("F")) {
+                dataFemale.add(arbMun.get(i));
             }
         }
         ArrayList<Integer> doubleFigures = new ArrayList();
@@ -295,7 +446,7 @@ public class Chart {
         datasetsElementaryGradEduc.setLabel("Elementary Graduate");
         for (int i = 0; i < elementaryGradEduc.size(); i++) {
             datasetsElementaryGradEduc.addData(elementaryGradEduc.get(i));
-            datasetsElementaryGradEduc.addBackgroundColor(Color.AQUA);
+            datasetsElementaryGradEduc.addBackgroundColor(Color.GREEN);
         }
         datasetsElementaryGradEduc.setBorderWidth(2);
 
@@ -303,7 +454,7 @@ public class Chart {
         datasetsHsLevelEduc.setLabel("High School Level");
         for (int i = 0; i < hsLevelEduc.size(); i++) {
             datasetsHsLevelEduc.addData(hsLevelEduc.get(i));
-            datasetsHsLevelEduc.addBackgroundColor(Color.AQUA);
+            datasetsHsLevelEduc.addBackgroundColor(Color.AZURE);
         }
         datasetsHsLevelEduc.setBorderWidth(2);
 
@@ -311,7 +462,7 @@ public class Chart {
         datasetsHsGradEduc.setLabel("High School Graduate");
         for (int i = 0; i < hsGradEduc.size(); i++) {
             datasetsHsGradEduc.addData(hsGradEduc.get(i));
-            datasetsHsGradEduc.addBackgroundColor(Color.AQUA);
+            datasetsHsGradEduc.addBackgroundColor(Color.BLACK);
         }
         datasetsHsGradEduc.setBorderWidth(2);
 
@@ -319,15 +470,15 @@ public class Chart {
         datasetsCollegeLevelEduc.setLabel("College Level");
         for (int i = 0; i < collegeLevelEduc.size(); i++) {
             datasetsCollegeLevelEduc.addData(collegeLevelEduc.get(i));
-            datasetsCollegeLevelEduc.addBackgroundColor(Color.AQUA);
+            datasetsCollegeLevelEduc.addBackgroundColor(Color.BROWN);
         }
         datasetsCollegeLevelEduc.setBorderWidth(2);
-        
+
         BarDataset datasetsCollegeGradEduc = new BarDataset();
         datasetsCollegeGradEduc.setLabel("College Graduate");
         for (int i = 0; i < collegeGradEduc.size(); i++) {
             datasetsCollegeGradEduc.addData(collegeGradEduc.get(i));
-            datasetsCollegeGradEduc.addBackgroundColor(Color.AQUA);
+            datasetsCollegeGradEduc.addBackgroundColor(Color.CRIMSON);
         }
         datasetsCollegeGradEduc.setBorderWidth(2);
 
@@ -335,15 +486,15 @@ public class Chart {
         datasetsGradsStudEduc.setLabel("Graduate Studies");
         for (int i = 0; i < gradsStudEduc.size(); i++) {
             datasetsGradsStudEduc.addData(gradsStudEduc.get(i));
-            datasetsGradsStudEduc.addBackgroundColor(Color.AQUA);
+            datasetsGradsStudEduc.addBackgroundColor(Color.GOLD);
         }
         datasetsGradsStudEduc.setBorderWidth(2);
-        
+
         BarDataset datasetsVocationalEduc = new BarDataset();
         datasetsVocationalEduc.setLabel("Vocational");
         for (int i = 0; i < vocationalEduc.size(); i++) {
             datasetsVocationalEduc.addData(vocationalEduc.get(i));
-            datasetsVocationalEduc.addBackgroundColor(Color.AQUA);
+            datasetsVocationalEduc.addBackgroundColor(Color.DARK_KHAKI);
         }
         datasetsVocationalEduc.setBorderWidth(2);
 
