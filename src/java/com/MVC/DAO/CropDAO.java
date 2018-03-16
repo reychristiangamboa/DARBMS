@@ -53,20 +53,25 @@ public class CropDAO {
         Connection con = myFactory.getConnection();
         ArrayList<Crop> cropList = new ArrayList();
         try {
-            String query = "SELECT * FROM crops WHERE arbID=?;";
+            String query = "SELECT * FROM crops c JOIN ref_croptype t ON c.cropTag=t.cropType WHERE c.arbID=? GROUP BY c.cropTag, c.arbID ";
 
             for (ARB arb : arbList) {
                 PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, arb.getArbID());
                 ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     Crop c = new Crop();
-                    c.setCropType(rs.getInt("cropType"));
+                    c.setArbID(rs.getInt("arbID"));
+                    c.setCropType(rs.getInt("cropTag"));
                     c.setCropTypeDesc(rs.getString("cropTypeDesc"));
-
-                    cropList.add(c);
+                    c.setStartDate(rs.getDate("startDate"));
+                    c.setEndDate(rs.getDate("endDate"));
+                    if(!checkIfCropExist(cropList, c)){
+                        cropList.add(c);
+                    }
                 }
+                pstmt.close();
             }
-
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -78,23 +83,29 @@ public class CropDAO {
         return cropList;
     }
 
-    public int getCountOfCropsByMonth(Crop c, String d) {
+    public boolean checkIfCropExist(ArrayList<Crop> list, Crop c) {
+        for(Crop C : list){
+            if(c.getCropType() == C.getCropType()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public double getCountOfCropsByMonth(Crop c, String d) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<Crop> cropList = new ArrayList();
-        int count = 0;
+        double count = 0;
         try {
             String query = "SELECT * FROM crops "
                     + "WHERE `cropTag` = ? "
-                    + "AND ? "
-                    + "between ? "
-                    + "AND ?;";
+                    + "AND " + "'" + d + "'"
+                    + " between `startDate` "
+                    + "AND `endDate`;";
 
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, c.getCropType());
-            pstmt.setString(2, d);
-            pstmt.setDate(3, c.getStartDate());
-            pstmt.setDate(4, c.getEndDate());
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 count++;

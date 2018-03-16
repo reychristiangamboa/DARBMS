@@ -37,10 +37,13 @@
             <%}else if((Integer)session.getAttribute("userType") == 5){%>
             <%@include file="jspf/central-sidebar.jspf"%>
             <%}%>
-            
+
             <%
                 ARBO arbo = (ARBO)request.getAttribute("arbo");
                 ARBODAO dao = new ARBODAO();
+                ARBDAO dao2 = new ARBDAO();
+                CropDAO dao3 = new CropDAO();
+                ArrayList<ARB> arbListARBO = dao2.getAllARBsARBO(arbo.getArboID());
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -48,13 +51,8 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        User Profile
+                        ARBO Profile
                     </h1>
-<!--                    <ol class="breadcrumb">
-                        <li><a href="/DAR-BMS/pages/tables/FO-Homepage.html"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li><a href="/DAR-BMS/pages/tables/FO-ARBO-ARBList.html">(ARBO Name) Beneficiary List</a></li>
-                        <li class="active">ARB Profile</li>
-                    </ol>-->
                 </section>
 
                 <!-- Main content -->
@@ -73,11 +71,11 @@
                                         <li class="list-group-item">
                                             <b>Crops</b>
                                             <p>
-                                                <span class="label label-danger">RICE</span>
-                                                <span class="label label-success">POTATO</span>
-                                                <span class="label label-info">SUGAR CANES</span>
-                                                <span class="label label-warning">CARROTS</span>
-                                                <span class="label label-primary">CABBAGE</span>
+                                                <%
+                                                for(Crop c : dao3.getAllCropsByProvince(arbListARBO)){
+                                                %>
+                                                <span class="label label-success"><%out.print(c.getCropTypeDesc());%></span>
+                                                <%}%>
                                             </p>
                                         </li>
                                         <li class="list-group-item">
@@ -131,31 +129,57 @@
 
                                         <div class="tab-content">
                                             <div class="active tab-pane" id="gender">
-                                                <div class="box-body">
-                                                    <canvas id="pieCanvas" style="height:250px"></canvas>
+                                                <div class="row">
+                                                    <div class="col-xs-2"></div>
+                                                    <div class="col-xs-8">
+                                                        <div class="box-body">
+                                                            <canvas id="pieCanvas" style="height:150px"></canvas>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-2"></div>
                                                 </div>
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="educ">
                                                 <div class="box-body" id="bar">
-                                                    <div class="chart">
-                                                        <canvas id="barCanvas" style="height:230px"></canvas>
+                                                    <div class="row">
+                                                        <div class="col-xs-2"></div>
+                                                        <div class="col-xs-8">
+                                                            <div class="chart">
+                                                                <canvas id="barCanvas" style="height:230px"></canvas>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-2"></div>
                                                     </div>
+
                                                 </div>
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="citymun">
                                                 <div class="active tab-pane" id="gender">
-                                                    <div class="box-body">
-                                                        <canvas id="pieCanvas" style="height:250px"></canvas>
+                                                    <div class="row">
+                                                        <div class="col-xs-2"></div>
+                                                        <div class="col-xs-8">
+                                                            <div class="box-body">
+                                                                <canvas id="pieCanvas" style="height:250px"></canvas>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-2"></div>
                                                     </div>
+
                                                 </div>
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="crop">
                                                 <div class="box-body">
-                                                    <div class="chart">
-                                                        <canvas id="lineCanvas" style="height:250px"></canvas>
+                                                    <div class="row">
+                                                        <div class="col-xs-2"></div>
+                                                        <div class="col-xs-8">
+                                                            <div class="chart">
+                                                                <canvas id="lineCanvas" style="height:250px"></canvas>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-2"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -523,5 +547,29 @@
         </div>
         <!-- ./wrapper -->
         <%@include file="jspf/footer.jspf" %>
+        <script>
+            $(function () {
+                var ctx = $('#barCanvas').get(0).getContext('2d');
+            <%
+            Chart bar = new Chart();
+            String json = bar.getBarChartEducation(arbListARBO);
+            %>
+                new Chart(ctx, <%out.print(json);%>);
+
+                var ctx2 = $('#lineCanvas').get(0).getContext('2d');
+            <%
+            Chart line = new Chart();
+            String json2 = line.getCropHistory(arbListARBO);
+            %>
+                new Chart(ctx2, <%out.print(json2);%>);
+
+                var ctx3 = $('#pieCanvas').get(0).getContext('2d');
+            <%
+            Chart pie = new Chart();
+            String json3 = pie.getPieChartGender(arbListARBO);
+            %>
+                new Chart(ctx3, <%out.print(json3);%>);
+            });
+        </script>
     </body>
 </html>

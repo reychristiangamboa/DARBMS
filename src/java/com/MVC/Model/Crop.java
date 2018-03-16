@@ -14,11 +14,20 @@ import java.util.ArrayList;
  */
 public class Crop {
 
+    private int arbID;
     private int cropType;
     private String cropTypeDesc;
     private Date startDate;
     private Date endDate;
-    private ArrayList<Crop> existingCrops;
+    private ArrayList<Crop> existingCrops = new ArrayList();
+
+    public int getArbID() {
+        return arbID;
+    }
+
+    public void setArbID(int arbID) {
+        this.arbID = arbID;
+    }
 
     public int getCropType() {
         return cropType;
@@ -50,27 +59,6 @@ public class Crop {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public ArrayList<Crop> getExistingCrops(ArrayList<ARB> arbList) {
-        for (ARB a : arbList) {
-            for (Crop c : a.getCrops()) {
-                if (!existingCrops.isEmpty()) {
-                    for (Crop c1 : existingCrops) {
-                        if (c.getCropType() != c1.getCropType()) {
-                            existingCrops.add(c);
-                        }
-                    }
-                } else{
-                    existingCrops.add(c);
-                }
-            }
-        }
-        return existingCrops;
-    }
-
-    public void setExistingCrops(ArrayList<Crop> exisitingCrops) {
-        this.existingCrops = exisitingCrops;
     }
 
 }

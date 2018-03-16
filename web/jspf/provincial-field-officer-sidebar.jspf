@@ -34,6 +34,7 @@
     ARBDAO arbDAO = new ARBDAO();
     
     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
+
     
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
     ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1,(Integer)session.getAttribute("provOfficeCode"));

@@ -67,13 +67,13 @@
                                         <div class="tab-content">
                                             <div class="active tab-pane" id="gender">
                                                 <div class="row">
-                                                    <div class="col-xs-2"></div>
-                                                    <div class="col-xs-8">
+                                                    <div class="col-xs-3"></div>
+                                                    <div class="col-xs-6">
                                                         <div class="box-body">
                                                             <canvas id="pieCanvas"></canvas>
                                                         </div>  
                                                     </div>
-                                                    <div class="col-xs-2"></div>
+                                                    <div class="col-xs-3"></div>
                                                 </div>
 
                                             </div>
@@ -102,8 +102,14 @@
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="crop">
                                                 <div class="box-body">
-                                                    <div class="chart">
-                                                        <canvas id="lineCanvas" style="height:250px"></canvas>
+                                                    <div class="row">
+                                                        <div class="col-xs-2"></div>
+                                                        <div class="col-xs-8">
+                                                            <div class="chart">
+                                                                <canvas id="lineCanvas" style="height:250px"></canvas>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-2"></div>
                                                     </div>
                                                 </div>
                                             </div>

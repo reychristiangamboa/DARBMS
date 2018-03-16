@@ -74,7 +74,7 @@ public class Chart {
     public String getCropHistory(ArrayList<ARB> arbList) {
         CropDAO dao = new CropDAO();
         Crop c = new Crop();
-        ArrayList<Crop> crops = c.getExistingCrops(arbList);
+        ArrayList<Crop> crops = dao.getAllCropsByProvince(arbList);
         ArrayList<String> dates = new ArrayList();
 
         long l = System.currentTimeMillis();
@@ -82,9 +82,11 @@ public class Chart {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(d);
         int year = calendar.get(Calendar.YEAR);
-        String lastYear = Integer.toString(year - 1);;
-        String thisYear = Integer.toString(year);;
-        String nextYear = Integer.toString(year + 1);;
+        
+        String lastYear = Integer.toString(year - 1);
+        String thisYear = Integer.toString(year);
+        String nextYear = Integer.toString(year + 1);
+        
         int month = calendar.get(Calendar.MONTH);
         CropDAO cDAO = new CropDAO();
 
@@ -119,12 +121,16 @@ public class Chart {
         LineData data = new LineData();
 
         for (Crop arbC : crops) {
+            
             LineDataset dataset = new LineDataset();
-            dataset.setBackgroundColor(Color.random());
+            dataset.setBorderColor(Color.random());
+            dataset.setBackgroundColor(Color.TRANSPARENT);
+            dataset.setLabel(arbC.getCropTypeDesc());
             for (String date : dates) {
                 dataset.addData(cDAO.getCountOfCropsByMonth(arbC, date));
             }
             data.addDataset(dataset);
+            
 
         }
         ArrayList<String> stringLabels = new ArrayList();
@@ -140,39 +146,11 @@ public class Chart {
         stringLabels.add("April");
         stringLabels.add("May");
         stringLabels.add("June");
+        
+        for(String label : stringLabels){
+            data.addLabel(label);
+        }
 
-//        ArrayList<Double> doubleFigures = new ArrayList();
-//        doubleFigures.add(5.3);
-//        doubleFigures.add(4.6);
-//        doubleFigures.add(6.9);
-//        doubleFigures.add(6.9);
-//
-//        ArrayList<Double> doubleFigures2 = new ArrayList();
-//        doubleFigures2.add(9.4);
-//        doubleFigures2.add(8.1);
-//        doubleFigures2.add(3.1);
-//        doubleFigures2.add(3.1);
-//
-//        
-//        
-//
-//        LineDataset dataset = new LineDataset();
-//        dataset.setLabel("DATASET");
-//        for (int i = 0; i < doubleFigures.size(); i++) {
-//            dataset.addData(doubleFigures.get(i));
-//            dataset.addPointBackgroundColor(Color.LIGHT_BLUE);
-//            dataset.setBorderColor(Color.LIGHT_BLUE);
-//        }
-//        dataset.setBorderWidth(2);
-//
-//        LineData data = new LineData();
-//        for (int j = 0; j < stringLabels.size(); j++) {
-//            data.addLabel(stringLabels.get(j));
-//        }
-//
-//        data.addDataset(dataset);
-//        data.addDataset(dataset2);
-//        return new LineChart(data).toJson();
         return new LineChart(data).toJson();
     }
 
