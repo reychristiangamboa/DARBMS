@@ -139,13 +139,13 @@ public class ARBDAO {
         }
         return arbList;
     }
-    
-     public ArrayList<ARB> getAllARBsOfARBOs(ArrayList<ARBO> arboList) {
+
+    public ArrayList<ARB> getAllARBsOfARBOs(ArrayList<ARBO> arboList) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<ARB> arbList = new ArrayList();
         try {
-            
+
             String query = "SELECT * FROM `dar-bms`.arbs a "
                     + "JOIN `dar-bms`.ref_educationLevel e ON a.educationLevel=e.educationLevel "
                     + "JOIN `dar-bms`.ref_arbStatus s ON a.arbStatus=s.arbStatus "
@@ -154,41 +154,41 @@ public class ARBDAO {
                     + "JOIN `dar-bms`.refprovince p ON a.provCode=p.provCode "
                     + "JOIN `dar-bms`.refregion r ON a.regCode=r.regCode "
                     + "WHERE `arboID`=?";
-        for(ARBO arbo : arboList){
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, arbo.getArboID());
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                ARB arb = new ARB();
-                arb.setArbID(rs.getInt("arbID"));
-                arb.setArboID(rs.getInt("arboID"));
-                arb.setFirstName(rs.getString("firstName"));
-                arb.setMiddleName(rs.getString("middleName"));
-                arb.setLastName(rs.getString("lastName"));
-                arb.setMemberSince(rs.getDate("memberSince"));
-                arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
-                arb.setBrgyCode(rs.getInt("brgyCode"));
-                arb.setBrgyDesc(rs.getString("brgyDesc"));
-                arb.setCityMunCode(rs.getInt("cityMunCode"));
-                arb.setCityMunDesc(rs.getString("citymunDesc"));
-                arb.setProvCode(rs.getInt("provCode"));
-                arb.setProvDesc(rs.getString("provDesc"));
-                arb.setRegCode(rs.getInt("regCode"));
-                arb.setRegDesc(rs.getString("regDesc"));
-                arb.setGender(rs.getString("gender"));
-                arb.setEducationLevel(rs.getInt("educationLevel"));
-                arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
-                arb.setLandArea(rs.getDouble("landArea"));
-                arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
-                arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
-                arb.setArbRating(rs.getDouble("arbRating"));
-                arb.setArbStatus(rs.getInt("arbStatus"));
-                arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
-                arbList.add(arb);
+            for (ARBO arbo : arboList) {
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, arbo.getArboID());
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    ARB arb = new ARB();
+                    arb.setArbID(rs.getInt("arbID"));
+                    arb.setArboID(rs.getInt("arboID"));
+                    arb.setFirstName(rs.getString("firstName"));
+                    arb.setMiddleName(rs.getString("middleName"));
+                    arb.setLastName(rs.getString("lastName"));
+                    arb.setMemberSince(rs.getDate("memberSince"));
+                    arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
+                    arb.setBrgyCode(rs.getInt("brgyCode"));
+                    arb.setBrgyDesc(rs.getString("brgyDesc"));
+                    arb.setCityMunCode(rs.getInt("cityMunCode"));
+                    arb.setCityMunDesc(rs.getString("citymunDesc"));
+                    arb.setProvCode(rs.getInt("provCode"));
+                    arb.setProvDesc(rs.getString("provDesc"));
+                    arb.setRegCode(rs.getInt("regCode"));
+                    arb.setRegDesc(rs.getString("regDesc"));
+                    arb.setGender(rs.getString("gender"));
+                    arb.setEducationLevel(rs.getInt("educationLevel"));
+                    arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
+                    arb.setLandArea(rs.getDouble("landArea"));
+                    arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
+                    arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
+                    arb.setArbRating(rs.getDouble("arbRating"));
+                    arb.setArbStatus(rs.getInt("arbStatus"));
+                    arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
+                    arbList.add(arb);
+                }
+                pstmt.close();
+                rs.close();
             }
-            pstmt.close();
-            rs.close();
-        }
             con.close();
         } catch (SQLException ex) {
             try {
@@ -200,8 +200,8 @@ public class ARBDAO {
         }
         return arbList;
     }
-    
-    public ArrayList<Crop> getAllARBCrops(int arbID){
+
+    public ArrayList<Crop> getAllARBCrops(int arbID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<Crop> cropList = new ArrayList();
@@ -232,8 +232,8 @@ public class ARBDAO {
         }
         return cropList;
     }
-    
-    public ArrayList<Dependent> getAllARBDependents(int arbID){
+
+    public ArrayList<Dependent> getAllARBDependents(int arbID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<Dependent> dependentList = new ArrayList();
@@ -339,7 +339,7 @@ public class ARBDAO {
             con.commit();
             con.close();
             success = true;
-            
+
         } catch (Exception ex) {
             try {
                 con.rollback();
@@ -350,7 +350,7 @@ public class ARBDAO {
         }
         return success;
     }
-    
+
     public boolean addDependents(int arbID, ArrayList<Dependent> dependentList) {
         boolean success = false;
         PreparedStatement p = null;
@@ -374,7 +374,7 @@ public class ARBDAO {
             con.commit();
             con.close();
             success = true;
-            
+
         } catch (Exception ex) {
             try {
                 con.rollback();
@@ -432,7 +432,7 @@ public class ARBDAO {
         }
         return id;
     }
-    
+
     public int getARBID(String fN, String mN, String lN) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -456,5 +456,104 @@ public class ARBDAO {
             Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return id;
+    }
+
+    public ArrayList<ARB> getAllARBsByCityMun(int cityMun) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<ARB> arbList = new ArrayList();
+        try {
+            String query = "SELECT * FROM `dar-bms`.arbs a "
+                    + "JOIN `dar-bms`.ref_educationLevel e ON a.educationLevel=e.educationLevel "
+                    + "JOIN `dar-bms`.ref_arbStatus s ON a.arbStatus=s.arbStatus "
+                    + "JOIN `dar-bms`.refbrgy b ON a.brgyCode=b.brgyCode "
+                    + "JOIN `dar-bms`.refcitymun c ON a.cityMunCode=c.citymunCode "
+                    + "JOIN `dar-bms`.refprovince p ON a.provCode=p.provCode "
+                    + "JOIN `dar-bms`.refregion r ON a.regCode=r.regCode "
+                    + "WHERE a.cityMunCode=?;";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, cityMun);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ARB arb = new ARB();
+                arb.setArbID(rs.getInt("arbID"));
+                arb.setArboID(rs.getInt("arboID"));
+                arb.setFirstName(rs.getString("firstName"));
+                arb.setMiddleName(rs.getString("middleName"));
+                arb.setLastName(rs.getString("lastName"));
+                arb.setMemberSince(rs.getDate("memberSince"));
+                arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
+                arb.setBrgyCode(rs.getInt("brgyCode"));
+                arb.setBrgyDesc(rs.getString("brgyDesc"));
+                arb.setCityMunCode(rs.getInt("cityMunCode"));
+                arb.setCityMunDesc(rs.getString("citymunDesc"));
+                arb.setProvCode(rs.getInt("provCode"));
+                arb.setProvDesc(rs.getString("provDesc"));
+                arb.setRegCode(rs.getInt("regCode"));
+                arb.setRegDesc(rs.getString("regDesc"));
+                arb.setGender(rs.getString("gender"));
+                arb.setEducationLevel(rs.getInt("educationLevel"));
+                arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
+                arb.setLandArea(rs.getDouble("landArea"));
+                arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
+                arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
+                arb.setArbRating(rs.getDouble("arbRating"));
+                arb.setArbStatus(rs.getInt("arbStatus"));
+                arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
+                arbList.add(arb);
+            }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return arbList;
+    }
+
+    public ArrayList<Integer> getARBCityMun(ArrayList<ARB> arbList) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Integer> arbProvList = new ArrayList();
+        int cityMunCode = 0;
+        try {
+            String query = "SELECT cityMunCode FROM `dar-bms`.arbs  WHERE arbID=?;";
+            for (ARB a : arbList) {
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, a.getArbID());
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    cityMunCode = rs.getInt("cityMunCode");
+                    if (!checkIfCityMunExist(arbProvList, cityMunCode)) {
+                        arbProvList.add(cityMunCode);
+                    }
+                }
+                pstmt.close();
+                rs.close();
+            }
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return arbProvList;
+    }
+
+    public boolean checkIfCityMunExist(ArrayList<Integer> list, int c) {
+        for (int C : list) {
+            if (C == c) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -270,45 +270,7 @@ public class Chart {
         return new PieChart(data).toJson();
     }
 
-    public String getPieChartARBMun(ArrayList<ARB> arbMun) {
 
-        ArrayList<ARB> dataMale = new ArrayList();
-        ArrayList<ARB> dataFemale = new ArrayList();
-
-        for (int i = 0; i < arbMun.size(); i++) {
-            if (arbMun.get(i).getGender().equalsIgnoreCase("M")) {
-                dataMale.add(arbMun.get(i));
-            } else if (arbMun.get(i).getGender().equalsIgnoreCase("F")) {
-                dataFemale.add(arbMun.get(i));
-            }
-        }
-        ArrayList<Integer> doubleFigures = new ArrayList();
-        doubleFigures.add(dataMale.size());
-        doubleFigures.add(dataFemale.size());
-
-        ArrayList<String> stringLabels = new ArrayList();
-        stringLabels.add("Male");
-        stringLabels.add("Female");
-
-        PieDataset dataset = new PieDataset();
-        dataset.setLabel("DATASET");
-        for (int i = 0; i < doubleFigures.size(); i++) {
-            dataset.addData(doubleFigures.get(i));
-            dataset.addBackgroundColor(Color.AQUA);
-            dataset.addBackgroundColor(Color.PINK);
-
-        }
-        dataset.setBorderWidth(2);
-
-        PieData data = new PieData();
-        for (int j = 0; j < stringLabels.size(); j++) {
-            data.addLabel(stringLabels.get(j));
-        }
-
-        data.addDataset(dataset);
-
-        return new PieChart(data).toJson();
-    }
 
     public String getBarChartEducation(ArrayList<ARB> arbEducChart) {
         int noGrade = 0;

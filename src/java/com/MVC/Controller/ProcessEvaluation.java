@@ -5,7 +5,9 @@
  */
 package com.MVC.Controller;
 
+import com.MVC.DAO.ARBDAO;
 import com.MVC.DAO.EvaluationDAO;
+import com.MVC.Model.ARB;
 import com.MVC.Model.Evaluation;
 import com.MVC.Model.Question;
 import com.MVC.Model.QuestionRating;
@@ -28,29 +30,31 @@ public class ProcessEvaluation extends BaseServlet {
 
         EvaluationDAO eDAO = new EvaluationDAO();
         Evaluation e = eDAO.getEvaluationByID(Integer.parseInt(request.getParameter("evaluationID")));
-        String[] ratingsStr = request.getParameterValues("r3");
-
+        
+        ARBDAO dao = new ARBDAO();
+        ARB arb = dao.getARBByID(e.getArbID());
+        
         ArrayList<Question> questions = eDAO.getAllQuestionsByType(e.getEvaluationType());
         ArrayList<Double> ratings = new ArrayList();
 
-        for (int i = 0; i < questions.size(); i++) {
+        for (Question q : questions) {
             QuestionRating qr = new QuestionRating();
             qr.setEvaluationID(e.getEvaluationID());
-            qr.setQuestionID(questions.get(i).getQuestionID());
-            
-            if(ratingsStr[i].equals("1")){
+            qr.setQuestionID(q.getQuestionID());
+            String ratingsStr = request.getParameter(Integer.toString(q.getQuestionID()));
+            if(ratingsStr.equals("1")){
                 qr.setRating(1);
-            }else if(ratingsStr[i].equals("2")){
+            }else if(ratingsStr.equals("2")){
                 qr.setRating(2);
-            }else if(ratingsStr[i].equals("3")){
+            }else if(ratingsStr.equals("3")){
                 qr.setRating(3);
-            }else if(ratingsStr[i].equals("4")){
+            }else if(ratingsStr.equals("4")){
                 qr.setRating(4);
-            }else if(ratingsStr[i].equals("5")){
+            }else if(ratingsStr.equals("5")){
                 qr.setRating(5);
             }
             
-            double finRating = questions.get(i).getWeight() * qr.getRating();
+            double finRating = q.getWeight() * qr.getRating();
 
             eDAO.addQuestionRating(qr);
             ratings.add(finRating);
@@ -59,12 +63,12 @@ public class ProcessEvaluation extends BaseServlet {
         double rating = calculateAverage(ratings);
         
         if(eDAO.setEvaluationRating(rating, e.getEvaluationID())){
-            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-            request.setAttribute("success", "Past Due Account successfully recorded!");
+            request.setAttribute("arb", arb);
+            request.setAttribute("success", arb.getFLName() + " successfully evaluated!");
             request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
         }else{
-            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-            request.setAttribute("success", "Past Due Account successfully recorded!");
+            request.setAttribute("arb", arb);
+            request.setAttribute("errMessage", "Error in evaluating " + arb.getFLName() + ".");
             request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
         }
     }

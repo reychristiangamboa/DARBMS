@@ -34,7 +34,7 @@
                         <small>Region I</small>
                     </h1>
                     <ol class="breadcrumb">
-                        <li><a href="field-officer-arbo-list.jsp"><i class="fa fa-dashboard"></i> Home</a></li>
+                        
                     </ol>
 
                 </section>
@@ -139,8 +139,10 @@
                                                 </div>
                                                 <div class="box-footer">
                                                     <div class="pull-right">
+                                                        <%if((Integer)session.getAttribute("userType")==2){%>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-release-modal">Import Releases</button>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-release-modal">Add Release</button>
+                                                        <%}%>
                                                     </div>
                                                 </div>
                                             </div>
@@ -186,9 +188,11 @@
                                                     </table>
                                                 </div>
                                                 <div class="box-footer">
-                                                    <div class="pul-right">
+                                                    <div class="pull-right">
+                                                        <%if((Integer)session.getAttribute("userType")==2){%>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-repayment-modal">Import Repayments</button>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-repayment-modal">Add Repayment</button>
+                                                        <%}%>
                                                     </div>
                                                 </div>
 
@@ -312,8 +316,10 @@
                                                 </div>
                                                 <div class="box-footer">
                                                     <div class="pull-right">
+                                                        <%if((Integer)session.getAttribute("userType")==2){%>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-pastdue-modal">Import Past Due Accounts</button>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-pastdue-modal">Add Past Due Account</button>
+                                                    <%}%>
                                                     </div>
                                                 </div>
 

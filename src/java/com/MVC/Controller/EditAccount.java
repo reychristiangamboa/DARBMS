@@ -21,28 +21,32 @@ public class EditAccount extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession();
-        
+
         User u = new User();
         UserDAO uDAO = new UserDAO();
-        
+
         u.setEmail(request.getParameter("email"));
         u.setPassword(request.getParameter("password"));
         int userID = (Integer) session.getAttribute("userID");
-        
-        if(!request.getParameter("confirmPassword").equalsIgnoreCase(request.getParameter("password"))){
+
+        if (!request.getParameter("confirmPassword").equalsIgnoreCase(request.getParameter("password"))) {
             request.setAttribute("errMessage", "Passwords do no match. Try again");
             request.getRequestDispatcher("edit-profile.jsp").forward(request, response);
         }
-        
-        if(uDAO.editAccount(u, userID)){
-            request.setAttribute("success", "Personal information successfully updated!");
+
+        if (uDAO.editAccount(u, userID)) {
+
+            session.setAttribute("email", u.getEmail());
+            session.setAttribute("password", u.getPassword());
+
+            request.setAttribute("success", "Account successfully updated!");
             request.getRequestDispatcher("edit-profile.jsp").forward(request, response);
-        }else{
-            request.setAttribute("errMessage", "Error in updating your personal information. Try again.");
+        } else {
+            request.setAttribute("errMessage", "Error in updating your account. Try again.");
             request.getRequestDispatcher("edit-profile.jsp").forward(request, response);
         }
     }
-    
+
 }

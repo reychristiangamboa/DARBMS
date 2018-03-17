@@ -49,64 +49,64 @@ public class AddressDAO {
         }
         return regionList;
     }
-    
-    public boolean addProvOffice(String branch, int regCode){
+
+    public boolean addProvOffice(String branch, int regCode) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         boolean success = false;
-        try{
+        try {
             con.setAutoCommit(false);
             String query = "INSERT INTO `ref_provOffice` (provOfficeDesc,regCode) VALUES (?,?);";
             PreparedStatement p = con.prepareStatement(query);
             p.setString(1, branch);
             p.setInt(2, regCode);
-            
+
             p.executeUpdate();
-            
+
             p.close();
             con.commit();
             con.close();
             success = true;
-        }catch(SQLException ex){
-            try{
+        } catch (SQLException ex) {
+            try {
                 con.rollback();
-            }catch(SQLException ex1){
-                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null,ex);
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null,ex);
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return success;
     }
-    
-    public boolean editProvOffice(String branch, int regCode, int provOfficeCode){
+
+    public boolean editProvOffice(String branch, int regCode, int provOfficeCode) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         boolean success = false;
-        try{
+        try {
             con.setAutoCommit(false);
             String query = "UPDATE `ref_provOffice` SET provOfficeDesc=?, regCode=? WHERE provOfficeCode=?";
             PreparedStatement p = con.prepareStatement(query);
             p.setString(1, branch);
             p.setInt(2, regCode);
             p.setInt(3, provOfficeCode);
-            
+
             p.executeUpdate();
-            
+
             p.close();
             con.commit();
             con.close();
             success = true;
-        }catch(SQLException ex){
-            try{
+        } catch (SQLException ex) {
+            try {
                 con.rollback();
-            }catch(SQLException ex1){
-                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null,ex);
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null,ex);
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return success;
     }
-    
+
     public ArrayList<Province> getAllProvOffices() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -133,7 +133,7 @@ public class AddressDAO {
         }
         return provinceList;
     }
-    
+
     public Province getProvOffice(int provOfficeCode) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -186,8 +186,7 @@ public class AddressDAO {
         }
         return provinceList;
     }
-    
-    
+
     public ArrayList<Province> getAllProvinces(int regionID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -231,6 +230,9 @@ public class AddressDAO {
                 cm.setCityMunDesc(rs.getString("cityMunDesc"));
                 citymunList.add(cm);
             }
+            pstmt.close();
+            rs.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -241,7 +243,39 @@ public class AddressDAO {
         }
         return citymunList;
     }
-    
+
+    public ArrayList<CityMun> getAllCityMunsByID(ArrayList<Integer> cityMunCodeList) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<CityMun> citymunList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.refcitymun WHERE cityMunCode=?";
+            for (int cityMunCode : cityMunCodeList) {
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, cityMunCode);
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    CityMun cm = new CityMun();
+                    cm.setCityMunCode(rs.getInt("cityMunCode"));
+                    cm.setCityMunDesc(rs.getString("cityMunDesc"));
+                    citymunList.add(cm);
+                }
+                pstmt.close();
+                rs.close();
+            }
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citymunList;
+    }
+
     public ArrayList<Barangay> getAllBarangays(int cityID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -268,7 +302,7 @@ public class AddressDAO {
         }
         return barangayList;
     }
-    
+
     public int getBrgyCode(String brgyDesc) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -276,7 +310,7 @@ public class AddressDAO {
         try {
             String query = "SELECT * FROM `dar-bms`.refbrgy WHERE `brgyDesc` LIKE ?";
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "%"+brgyDesc+"%");
+            pstmt.setString(1, "%" + brgyDesc + "%");
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 id = rs.getInt("brgyCode");
@@ -291,7 +325,7 @@ public class AddressDAO {
         }
         return id;
     }
-    
+
     public int getCityMunCode(String cityMunDesc) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -299,7 +333,7 @@ public class AddressDAO {
         try {
             String query = "SELECT * FROM `dar-bms`.refcitymun WHERE `citymunDesc` LIKE ?";
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "%"+cityMunDesc+"%");
+            pstmt.setString(1, "%" + cityMunDesc + "%");
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 id = rs.getInt("cityMunCode");
@@ -322,7 +356,7 @@ public class AddressDAO {
         try {
             String query = "SELECT * FROM `dar-bms`.refprovince WHERE `provDesc` LIKE ?";
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "%"+provDesc+"%");
+            pstmt.setString(1, "%" + provDesc + "%");
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 id = rs.getInt("provCode");
@@ -337,7 +371,7 @@ public class AddressDAO {
         }
         return id;
     }
-    
+
     public String getRegDesc(int regCode) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -346,7 +380,7 @@ public class AddressDAO {
             con.setAutoCommit(false);
             String query = "SELECT * FROM `dar-bms`.refregion WHERE `regCode`=?";
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1,regCode);
+            pstmt.setInt(1, regCode);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 desc = rs.getString("regDesc");
@@ -372,7 +406,7 @@ public class AddressDAO {
         try {
             String query = "SELECT * FROM `dar-bms`.refregion WHERE `regDesc`LIKE ?";
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "%"+regionDesc+"%");
+            pstmt.setString(1, "%" + regionDesc + "%");
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 id = rs.getInt("regCode");
@@ -387,6 +421,5 @@ public class AddressDAO {
         }
         return id;
     }
-    
 
 }

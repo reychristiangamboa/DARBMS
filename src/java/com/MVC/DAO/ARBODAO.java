@@ -47,6 +47,7 @@ public class ARBODAO {
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
+                arbo.setAPCPQualified(rs.getInt("APCPQualified"));
             } else {
                 return null;
             }
@@ -154,6 +155,7 @@ public class ARBODAO {
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
+                arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arboList.add(arbo);
             }
         } catch (SQLException ex) {
@@ -193,6 +195,7 @@ public class ARBODAO {
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
+                arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arboList.add(arbo);
             }
         } catch (SQLException ex) {
@@ -232,6 +235,46 @@ public class ARBODAO {
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
+                arbo.setAPCPQualified(rs.getInt("APCPQualified"));
+                arboList.add(arbo);
+            }
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return arboList;
+    }
+    public ArrayList<ARBO> getAllARBOsByCityMun(int cityMun) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<ARBO> arboList = new ArrayList();
+        try {
+            String query = "SELECT * FROM arbos a "
+                    + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
+                    + "JOIN refprovince p ON c.provCode=p.provCode "
+                    + "JOIN refregion r ON c.regCode=r.regCode "
+                    + "JOIN ref_provoffice po ON a.provOfficeCode=po.provOfficeCode "
+                    + "WHERE a.arboCityMun=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, cityMun);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ARBO arbo = new ARBO();
+                arbo.setArboID(rs.getInt("arboID"));
+                arbo.setArboName(rs.getString("arboName"));
+                arbo.setArboCityMun(rs.getInt("arboCityMun"));
+                arbo.setArboCityMunDesc(rs.getString("cityMunDesc"));
+                arbo.setArboProvince(rs.getInt("arboProvince"));
+                arbo.setArboProvinceDesc(rs.getString("provOfficeDesc"));
+                arbo.setArboRegion(rs.getInt("arboRegion"));
+                arbo.setArboRegionDesc(rs.getString("regDesc"));
+                arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
+                arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
+                arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arboList.add(arbo);
             }
         } catch (SQLException ex) {

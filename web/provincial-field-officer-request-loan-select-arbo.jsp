@@ -4,6 +4,8 @@
     Author     : Rey Christian
 --%>
 
+<%@page import="java.util.Calendar"%>
+<%@page import="java.sql.Date"%>
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <!DOCTYPE html>
 <html>
@@ -44,12 +46,13 @@
                                 <div class="box-body">             
                                     <table id="example3" class="table table-bordered table-striped">
                                         <thead>
+
                                             <tr>
                                                 <th>ARBO Name</th>
                                                 <th>No. of <br> Members</th>
                                                 <th>Total Approved <br> Amount</th>
                                                 <th>Cumulative <br> Releases</th>
-                                                <th>"Insert Current Year" Release</th>
+                                                <th><%out.print(year);%> Release</th>
                                                 <th>Date Released</th>
                                                 <th>O/S Balance</th>
                                                 <th>Past Due <br> Amount</th>
@@ -59,11 +62,23 @@
 
                                         <tbody>
                                             <%
-                                                for(ARBO arbo : qualifiedARBOs){
-                                                    if(!capdevDAO.checkPastDueAccount(arbo.getArboID())){
+                                                for (ARBO arbo : qualifiedARBOs) {
+                                                    if (!capdevDAO.checkPastDueAccount(arbo.getArboID())) {
                                             %>
-<!--                                            INSERT TRs HERE-->
-                                            <%}}%>
+                                            <tr>
+                                                <td><a href="SelectARBORequest?id=<%out.print(arbo.getArboID());%>"> <%=arbo.getArboName()%></a></td>
+                                                <td><%=arbDAO.getAllARBsARBO(arbo.getArboID()).size()%></td>
+                                                <td><%-- total requested amount --%> </td>
+                                                <td><%-- cumulative amount --%> </td>
+                                                <td><%-- current year release --%> </td>
+                                                <td><%-- date released --%> </td>
+                                                <td><%-- O/S Balance --%> </td>
+                                                <td><%-- Past Due Amount --%> </td>
+                                                <td><%-- Reason for Past Due --%> </td>
+
+                                            </tr>
+                                            <%}%>
+                                            <%}%>
                                         </tbody>
 
                                     </table>
@@ -75,7 +90,7 @@
                         <!-- /.col -->
                     </div>
                     <!-- /.row -->
-                     <div class="row">
+                    <div class="row">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -93,14 +108,15 @@
                                         </thead>
 
                                         <tbody>
-                                            <%for(ARBO arbo : arboListProvince){%>
+                                            <%for (ARBO arbo : arboListProvince) {%>
+                                            <%if (arbo.getAPCPQualified() == 0) {%>
                                             <tr>
-                                                <td><a href="SelectARBORequest?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td>Internet
-                                                    Explorer 4.0
-                                                </td>
+                                                <td><a href="SelectARBORequest?id=<%out.print(arbo.getArboID());%>"> <%out.print(arbo.getArboName());%></a></td>
+                                                <td>Internet Explorer 4.0</td>
                                                 <td>Win 95+</td>
                                             </tr>
+
+                                            <%}%>
                                             <%}%>
                                         </tbody>
 

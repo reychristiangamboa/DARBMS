@@ -7,6 +7,7 @@
 <%@page import="com.MVC.Model.ARB;"%>
 <%@page import="com.MVC.Model.Crop;"%>
 <%@page import="com.MVC.Model.APCPRequest;"%>
+<%@page import="com.MVC.Model.APCPRelease;"%>
 <%@page import="com.MVC.Model.CAPDEVPlan;"%>
 <%@page import="com.MVC.Model.CAPDEVActivity;"%>
 <%@page import="com.MVC.Model.PastDueAccount;"%>
@@ -22,40 +23,42 @@
 <%
     CropDAO cropDAO = new CropDAO();
     ArrayList<Crop> allCrops = cropDAO.getAllCrops();
-   
+
+    APCPRelease apcpRelease = new APCPRelease();
+    
     AddressDAO addressDAO = new AddressDAO();
     ArrayList<Region> regionList = addressDAO.getAllRegions();
-    
+
     ARBODAO arboDAO = new ARBODAO();
-    ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs((Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<ARBO> qualifiedARBOs = arboDAO.getAllQualifiedARBOs((Integer)session.getAttribute("provOfficeCode"));
-    
+    ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<ARBO> qualifiedARBOs = arboDAO.getAllQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
+
     ARBDAO arbDAO = new ARBDAO();
-    
+
     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
+    ArrayList<CityMun> cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
 
-    
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
-    ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1,(Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2,(Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3,(Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4,(Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5,(Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7,(Integer)session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7, (Integer) session.getAttribute("provOfficeCode"));
 
-    
     CAPDEVDAO capdevDAO = new CAPDEVDAO();
     ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
     ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
-    
-    ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1,(Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2,(Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3,(Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5,(Integer)session.getAttribute("provOfficeCode"));
-    
+
+    ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
+
     UserDAO uDAO = new UserDAO();
-    ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer)session.getAttribute("provOfficeCode"));
+    ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.getAttribute("provOfficeCode"));
 %>
 
 
@@ -70,7 +73,7 @@
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-                <p><%out.print((String)session.getAttribute("fullName"));%></p>
+                <p><%out.print((String) session.getAttribute("fullName"));%></p>
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
         </div>
@@ -88,6 +91,11 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
+            <li>
+                <a href="provincial-field-officer-home.jsp">
+                    <i class="fa fa-dashboard"></i> <span> Dashboard</span>
+                </a>
+            </li>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-users"></i> <span>ARBOs</span>
@@ -121,7 +129,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="provincial-field-officer-view-capdev-status.jsp"><i class="fa fa-edit"></i> View CAPDEV Status</a></li>
-                  
+
                 </ul>
             </li>
             <li>

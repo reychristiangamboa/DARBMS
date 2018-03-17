@@ -221,6 +221,8 @@ public class APCPRequest {
         this.repayments = repayments;
     }
     
-    
+    public double getProgressBarWidth(double val1, double val2){
+        return (val1/val2)*100;
+    }
     
 }

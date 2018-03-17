@@ -42,10 +42,10 @@ public class APCPRequestDAO {
             p.setDouble(3, r.getLoanAmount());
             p.setDouble(4, r.getHectares());
             p.setString(5, r.getRemarks());
-            
+
             Long l = System.currentTimeMillis();
             Date d = new Date(l);
-            
+
             p.setDate(6, d);
             p.setInt(7, userID);
 
@@ -66,8 +66,8 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
-    public boolean clearRequest(int requestID, int userID){
+
+    public boolean clearRequest(int requestID, int userID) {
         boolean success = false;
         PreparedStatement p = null;
         Connection con = null;
@@ -77,10 +77,10 @@ public class APCPRequestDAO {
             con.setAutoCommit(false);
             String query = "UPDATE apcp_requests SET `dateCleared`=?, `clearedBy`=?, `requestStatus`=2 WHERE `requestID`=?";
             p = con.prepareStatement(query);
-            
+
             Long l = System.currentTimeMillis();
             Date d = new Date(l);
-            
+
             p.setDate(1, d);
             p.setInt(2, userID);
             p.setInt(3, requestID);
@@ -100,8 +100,8 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
-    public boolean endorseRequest(int requestID, int userID, int ltn){
+
+    public boolean endorseRequest(int requestID, int userID, int ltn) {
         boolean success = false;
         PreparedStatement p = null;
         Connection con = null;
@@ -112,10 +112,10 @@ public class APCPRequestDAO {
             String query = "UPDATE apcp_requests SET `dateEndorsed`=?, "
                     + "`endorsedBy`=?, `loanTrackingNo`=?, `requestStatus`=3 WHERE `requestID`=?";
             p = con.prepareStatement(query);
-            
+
             Long l = System.currentTimeMillis();
             Date d = new Date(l);
-            
+
             p.setDate(1, d);
             p.setInt(2, userID);
             p.setInt(3, ltn);
@@ -136,8 +136,8 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
-    public boolean approveRequest(int requestID, int userID, Date date){
+
+    public boolean approveRequest(int requestID, int userID, Date date) {
         boolean success = false;
         PreparedStatement p = null;
         Connection con = null;
@@ -148,10 +148,10 @@ public class APCPRequestDAO {
             String query = "UPDATE apcp_requests SET `dateApproved`=?, "
                     + "`approvedBy`=?, `requestStatus`=4 WHERE `requestID`=?";
             p = con.prepareStatement(query);
-            
+
             Long l = System.currentTimeMillis();
             Date d = new Date(l);
-            
+
             p.setDate(1, date);
             p.setInt(2, userID);
             p.setInt(3, requestID);
@@ -171,17 +171,16 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
-    
+
     public APCPRequest getRequestByID(int requestID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         APCPRequest r = new APCPRequest();
         try {
             String query = "SELECT * FROM apcp_requests r "
-                            + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                            + "JOIN arbos a ON r.arboID=a.arboID "
-                            + "WHERE r.requestID = ?";
+                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN arbos a ON r.arboID=a.arboID "
+                    + "WHERE r.requestID = ?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, requestID);
             ResultSet rs = pstmt.executeQuery();
@@ -220,16 +219,16 @@ public class APCPRequestDAO {
         }
         return r;
     }
-    
+
     public ArrayList<APCPRequest> getAllRequestsByStatus(int statusID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<APCPRequest> apcpRequest = new ArrayList();
         try {
             String query = "SELECT * FROM apcp_requests r "
-                            + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                            + "JOIN arbos a ON r.arboID=a.arboID "
-                            + "WHERE r.requestStatus = ?";
+                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN arbos a ON r.arboID=a.arboID "
+                    + "WHERE r.requestStatus = ?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, statusID);
             ResultSet rs = pstmt.executeQuery();
@@ -266,8 +265,6 @@ public class APCPRequestDAO {
         }
         return apcpRequest;
     }
-    
-    
 
     public ArrayList<APCPRequest> getAllProvincialRequestsByStatus(int statusID, int provinceID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -275,9 +272,9 @@ public class APCPRequestDAO {
         ArrayList<APCPRequest> apcpRequest = new ArrayList();
         try {
             String query = "SELECT * FROM apcp_requests r "
-                            + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                            + "JOIN arbos a ON r.arboID=a.arboID "
-                            + "WHERE r.requestStatus = ? AND a.provOfficeCode = ?";
+                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN arbos a ON r.arboID=a.arboID "
+                    + "WHERE r.requestStatus = ? AND a.provOfficeCode = ?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, statusID);
             pstmt.setInt(2, provinceID);
@@ -297,6 +294,7 @@ public class APCPRequestDAO {
                 r.setHectares(rs.getDouble("hectares"));
                 r.setLoanAmount(rs.getDouble("loanAmount"));
                 r.setLoanReason(rs.getString("loanReason"));
+                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
                 r.setRemarks(rs.getString("remarks"));
                 r.setRequestStatus(rs.getInt("requestStatus"));
                 r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
@@ -318,18 +316,16 @@ public class APCPRequestDAO {
         }
         return apcpRequest;
     }
-    
-    
-    
+
     public ArrayList<APCPRequest> getAllRequestedRequestsRegion(int regionID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<APCPRequest> apcpRequest = new ArrayList();
         try {
             String query = "SELECT * FROM apcp_requests r "
-                            + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                            + "JOIN arbos a ON r.arboID=a.arboID "
-                            + "WHERE r.requestStatus <= 3 AND a.arboRegion = ?";
+                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN arbos a ON r.arboID=a.arboID "
+                    + "WHERE r.requestStatus <= 3 AND a.arboRegion = ?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, regionID);
             ResultSet rs = pstmt.executeQuery();
@@ -368,8 +364,8 @@ public class APCPRequestDAO {
         }
         return apcpRequest;
     }
-    
-    public boolean sendFarmPlan(Date date, int requestID){
+
+    public boolean sendFarmPlan(Date date, int requestID) {
         boolean success = false;
         PreparedStatement p = null;
         Connection con = null;
@@ -397,8 +393,8 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
-    public boolean sendBusinessPlan(Date date, int requestID){
+
+    public boolean sendBusinessPlan(Date date, int requestID) {
         boolean success = false;
         PreparedStatement p = null;
         Connection con = null;
@@ -426,8 +422,8 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
-    public boolean sendBankRequirements(Date date, int requestID){
+
+    public boolean sendBankRequirements(Date date, int requestID) {
         boolean success = false;
         PreparedStatement p = null;
         Connection con = null;
@@ -455,8 +451,8 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
-    public boolean updateRequestStatus(int requestID, int statusID){
+
+    public boolean updateRequestStatus(int requestID, int statusID) {
         boolean success = false;
         PreparedStatement p = null;
         Connection con = null;
@@ -466,7 +462,7 @@ public class APCPRequestDAO {
             con.setAutoCommit(false);
             String query = "UPDATE apcp_requests SET `requestStatus`=? WHERE `requestID`=?";
             p = con.prepareStatement(query);
-            
+
             p.setInt(1, statusID);
             p.setInt(2, requestID);
 
@@ -485,7 +481,7 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
+
     public boolean addPastDueAccount(PastDueAccount pda) {
         boolean success = false;
         PreparedStatement p = null;
@@ -518,7 +514,7 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
+
     public ArrayList<PastDueAccount> getAllPastDueAccountsByRequest(int requestID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -556,7 +552,7 @@ public class APCPRequestDAO {
         }
         return pList;
     }
-    
+
     public boolean settlePastDueAccount(PastDueAccount pda) {
         boolean success = false;
         PreparedStatement p = null;
@@ -584,7 +580,7 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
+
     public boolean addRequestRelease(APCPRelease r) {
         boolean success = false;
         PreparedStatement p = null;
@@ -616,8 +612,8 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
-    public boolean requestHasRelease(APCPRequest r){
+
+    public boolean requestHasRelease(APCPRequest r) {
         boolean success = false;
         PreparedStatement p = null;
         Connection con = null;
@@ -630,9 +626,9 @@ public class APCPRequestDAO {
             p.setInt(1, r.getRequestID());
 
             ResultSet rs = p.executeQuery();
-            if(rs.getInt("requestID") > 0){
+            if (rs.getInt("requestID") > 0) {
                 success = true;
-            }else{
+            } else {
                 success = false;
             }
             p.close();
@@ -649,7 +645,7 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
+
     public ArrayList<APCPRelease> getAllAPCPReleasesByRequest(int requestID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -682,7 +678,7 @@ public class APCPRequestDAO {
         }
         return rList;
     }
-    
+
     public APCPRelease getAPCPReleaseByID(int releaseID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -713,7 +709,7 @@ public class APCPRequestDAO {
         }
         return r;
     }
-    
+
     public boolean addRepayment(Repayment r) {
         boolean success = false;
         PreparedStatement p = null;
@@ -730,7 +726,7 @@ public class APCPRequestDAO {
             p.setDate(3, r.getDateRepayment());
             p.setInt(4, r.getArbID());
             p.setInt(5, r.getRecordedBy());
-            
+
             p.executeUpdate();
             p.close();
             con.commit();
@@ -746,7 +742,7 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
+
     public ArrayList<Repayment> getAllRepaymentsByRequest(int requestID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -779,7 +775,7 @@ public class APCPRequestDAO {
         }
         return rList;
     }
-    
+
     public boolean addDisbursement(Disbursement d) {
         boolean success = false;
         PreparedStatement p = null;
@@ -813,7 +809,7 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
+
     public ArrayList<Disbursement> getAllDisbursementsByRelease(int releaseID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -847,18 +843,17 @@ public class APCPRequestDAO {
         }
         return dList;
     }
-    
+
     // FOR REPORTS
-    
     public ArrayList<APCPRequest> getAllProvincialRequests(int provinceID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<APCPRequest> apcpRequest = new ArrayList();
         try {
             String query = "SELECT * FROM apcp_requests r "
-                            + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                            + "JOIN arbos a ON r.arboID=a.arboID "
-                            + "WHERE a.provOfficeCode = ?";
+                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN arbos a ON r.arboID=a.arboID "
+                    + "WHERE a.provOfficeCode = ?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, provinceID);
             ResultSet rs = pstmt.executeQuery();
@@ -898,16 +893,16 @@ public class APCPRequestDAO {
         }
         return apcpRequest;
     }
-    
+
     public ArrayList<APCPRequest> getAllRequestsRegion(int regionID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<APCPRequest> apcpRequest = new ArrayList();
         try {
             String query = "SELECT * FROM apcp_requests r "
-                            + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                            + "JOIN arbos a ON r.arboID=a.arboID "
-                            + "WHERE a.arboRegion = ?";
+                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN arbos a ON r.arboID=a.arboID "
+                    + "WHERE a.arboRegion = ?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, regionID);
             ResultSet rs = pstmt.executeQuery();
@@ -946,15 +941,15 @@ public class APCPRequestDAO {
         }
         return apcpRequest;
     }
-    
+
     public ArrayList<APCPRequest> getAllRequests() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<APCPRequest> apcpRequest = new ArrayList();
         try {
             String query = "SELECT * FROM apcp_requests r "
-                            + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                            + "JOIN arbos a ON r.arboID=a.arboID";
+                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN arbos a ON r.arboID=a.arboID";
             PreparedStatement pstmt = con.prepareStatement(query);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -992,6 +987,60 @@ public class APCPRequestDAO {
         }
         return apcpRequest;
     }
-    
-    
+
+    public double getSumOfReleasesByRequestId(int requestID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        double sum = 0;
+        try {
+            String query = "SELECT SUM(releaseAmount) FROM request_releases WHERE requestID=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, requestID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                sum = rs.getDouble("SUM(releaseAmount)");
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sum;
+    }
+
+    public double getYearlySumOfReleasesByRequestId(ArrayList<APCPRequest> apcpRequestList, int year) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        double sum = 0;
+        try {
+            String query = "SELECT SUM(releaseAmount) FROM request_releases WHERE requestID=? AND YEAR(releaseDate)=?";
+            for (APCPRequest r : apcpRequestList) {
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, r.getRequestID());
+                pstmt.setInt(2, year);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    sum += rs.getDouble("SUM(releaseAmount)");
+                }
+                rs.close();
+                pstmt.close();
+            }
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sum;
+    }
+
 }

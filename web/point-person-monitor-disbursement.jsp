@@ -34,7 +34,7 @@
                         <small>Region I</small>
                     </h1>
                     <ol class="breadcrumb">
-                        <li><a href="field-officer-arbo-list.jsp"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><i class="fa fa-caret-left"></i> Go Back</a></li>
                     </ol>
 
                 </section>

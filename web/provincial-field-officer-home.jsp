@@ -60,7 +60,7 @@
                                         <ul class="nav nav-tabs">
                                             <li class="active"><a href="#gender" data-toggle="tab">ARB Per Gender</a></li>
                                             <li><a href="#educ" data-toggle="tab">ARB Education Level</a></li>
-                                            <li><a href="#citymun" data-toggle="tab">ARB Per City Municipality</a></li>
+                                            <li><a href="#citymun" data-toggle="tab">ARBO Per City Municipality</a></li>
                                             <li><a href="#crop" data-toggle="tab">Crops History</a></li>
                                         </ul>
 
@@ -71,11 +71,58 @@
                                                     <div class="col-xs-6">
                                                         <div class="box-body">
                                                             <canvas id="pieCanvas"></canvas>
-                                                        </div>  
+                                                            <div class="row text-center">
+                                                                <a class="btn btn-submit" data-toggle="modal" data-target="#modalPie">View More</a>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                     <div class="col-xs-3"></div>
                                                 </div>
 
+                                            </div>
+                                            <div class="modal fade" id="modalPie">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title"></h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <table class="table table-bordered table-striped modTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ARBO Name</th>
+                                                                        <th>No. of Members</th>
+
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    </tr>
+
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th>ARBO Name</th>
+                                                                        <th>City Mun ID</th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="educ">
@@ -85,18 +132,122 @@
                                                         <div class="col-xs-8">
                                                             <div class="chart">
                                                                 <canvas id="barCanvas" style="height:230px"></canvas>
+                                                                <div class="row text-center">
+                                                                    <a class="btn btn-submit" data-toggle="modal" data-target="#modalBar">View More</a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-2"></div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="modal fade" id="modalBar">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title"></h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <table class="table table-bordered table-striped modTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ARBO Name</th>
+                                                                        <th>No. of Members</th>
+
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    </tr>
+
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th>ARBO Name</th>
+                                                                        <th>City Mun ID</th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="citymun">
-                                                <div class="active tab-pane" id="gender">
-                                                    <div class="box-body">
-                                                        <canvas id="pieCanvas" style="height:250px"></canvas>
+                                                <div class="box-body">
+                                                    <%
+                                                        for (CityMun cm : cityMunList) {
+                                                            ArrayList<ARBO> arboListCityMun = arboDAO.getAllARBOsByCityMun(cm.getCityMunCode());
+                                                    %>
+                                                    <div class="active tab-pane" >
+                                                        <div class="col-lg-2 col-xs-6" data-toggle="modal" data-target="#modal-default<%out.print(cm.getCityMunCode());%>">
+                                                            <!-- small box -->
+                                                            <div class="small-box bg-yellow">
+                                                                <div class="inner">
+                                                                    <h3><%out.print(arboListCityMun.size());%></h3>
+
+                                                                    <p><%=cm.getCityMunDesc()%></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal fade" id="modal-default<%out.print(cm.getCityMunCode());%>">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span></button>
+                                                                        <h4 class="modal-title"><%out.print(cm.getCityMunDesc());%></h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
+
+                                                                        <table class="table table-bordered table-striped modTable">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>ARBO Name</th>
+                                                                                    <th>No. of Members</th>
+
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <%
+                                                                                    for (ARBO arbo : arboListCityMun) { %>
+                                                                                <tr>
+                                                                                    <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>" class="btn btn-link"><%out.print(arbo.getArboName());%></a></td>
+                                                                                    <td><%out.print(arboDAO.getARBCount(arbo.getArboID()));%></td>
+                                                                                </tr>
+                                                                                <%}%>
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <th>ARBO Name</th>
+                                                                                    <th>City Mun ID</th>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /.modal-content -->
+                                                            </div>
+                                                            <!-- /.modal-dialog -->
+                                                        </div>
                                                     </div>
+                                                    <%}%>
                                                 </div>
                                             </div>
                                             <!-- /.tab-pane -->
@@ -107,11 +258,57 @@
                                                         <div class="col-xs-8">
                                                             <div class="chart">
                                                                 <canvas id="lineCanvas" style="height:250px"></canvas>
+                                                                <div class="row text-center">
+                                                                    <a class="btn btn-submit" data-toggle="modal" data-target="#modalLine">View More</a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-2"></div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="modal fade" id="modalLine">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title"></h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <table class="table table-bordered table-striped modTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ARBO Name</th>
+                                                                        <th>No. of Members</th>
+
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                    </tr>
+
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th>ARBO Name</th>
+                                                                        <th>City Mun ID</th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
                                             </div>
                                             <!-- /.tab-pane -->
                                         </div>
@@ -136,9 +333,7 @@
                                     <div class="nav-tabs-custom">
                                         <ul class="nav nav-tabs">
                                             <li class="active"><a href="#release" data-toggle="tab">Release Line</a></li>
-                                            <li><a href="#pend" data-toggle="tab">Pending Requests</a></li>
-                                            <li><a href="#disbursement" data-toggle="tab">Disbursements</a></li>
-                                            <li><a href="#repayment" data-toggle="tab">Repayments</a></li>
+                                            <li><a href="#pend" data-toggle="tab">Past-Due Requests</a></li>
                                         </ul>
                                         <div class="tab-content">
                                             <div class="active tab-pane" id="release">
@@ -146,45 +341,40 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Loan <br>Tracking No.</th>
+                                                            <th>Name of ARBO</th>
                                                             <th>Last Release Date</th>
                                                             <th>Progress</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        <%
+                                                            for(APCPRequest r : releasedRequests){
+                                                                ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                                            
+                                                        %>
                                                         <tr>
-                                                            <td>1</td>
-                                                            <td>April 1, 2011
-                                                            </td>
-                                                            <td>
+                                                            <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%=r.getLoanTrackingNo()%></a></td>
+                                                            <td><%=arbo.getArboName()%></td>
+                                                            <td><%=f.format(r.getReleases().get(r.getReleases().size()-1).getReleaseDate())%></td>
+                                                            <td  width=50%>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                                                        40% Complete (success)
+                                                                    <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: <%out.print(r.getProgressBarWidth(apcpRequestDAO.getSumOfReleasesByRequestId(r.getRequestID()), r.getLoanAmount()));%>%">
+                                                                        <strong><i>&#8369</i><%=apcpRequestDAO.getSumOfReleasesByRequestId(r.getRequestID())%> / <i>&#8369</i><%=r.getLoanAmount()%></strong>
                                                                     </div> 
                                                                 </div> 
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <td>2</td>
-                                                            <td>June 2, 2010
-                                                            </td>
-                                                            <td>
-                                                                <div class="progress">
-                                                                    <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                                                        <span class="sr-only">40% Complete (success)</span>
-                                                                    </div>                                           
-                                                                </div>
-                                                            </td>
-                                                        </tr>
+                                                        <%}%>
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
                                                             <th>Loan <br>Tracking No.</th>
+                                                            <th>Name of ARBO</th>
                                                             <th>Last Release Date</th>
                                                             <th>Progress</th>
                                                         </tr>
                                                     </tfoot>
                                                 </table>   
-
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="pend">
@@ -192,6 +382,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Request ID</th>
+                                                            <th>Name of ARBO</th>
                                                             <th>Loan Request</th>
                                                             <th>Loan Amount</th>
                                                             <th>Status</th>
@@ -201,8 +392,8 @@
                                                     <tbody>
                                                         <tr>
                                                             <td>1</td>
-                                                            <td>April 1, 2011
-                                                            </td>
+                                                            <td>Rey ARBO</td>
+                                                            <td>April 1, 2011</td>
                                                             <td>
                                                                 10100000
                                                             </td>
@@ -218,6 +409,7 @@
                                                     <tfoot>
                                                         <tr>
                                                             <th>Request ID</th>
+                                                            <th>Name of ARBO</th>
                                                             <th>Loan Request</th>
                                                             <th>Loan Amount</th>
                                                             <th>Status</th>
@@ -227,117 +419,19 @@
                                                 </table>  
                                             </div>
                                             <!-- /.tab-pane -->
-                                            <div class="tab-pane" id="disbursement">
-                                                <div class="box-body">
-                                                    <canvas id="pieCanvas" style="height:250px"></canvas>
-                                                </div>
-                                            </div>
-                                            <!-- /.tab-pane -->
-                                            <div class="tab-pane" id="repayment" style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
-                                                <ul class="timeline timeline-inverse">
-                                                    <!-- timeline time label -->
-                                                    <li class="time-label">
-                                                        <span class="bg-red">
-                                                            INTERVENTION: RICE TRAINING 101
-                                                        </span>
-                                                    </li>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-envelope bg-blue"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
-
-                                                            <div class="timeline-body">
-                                                                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                                                                weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                                                                jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                                                                quora plaxo ideeli hulu weebly balihoo...
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-primary btn-xs">Read more</a>
-                                                                <a class="btn btn-danger btn-xs">Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-user bg-aqua"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
-
-                                                            <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
-                                                            </h3>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-comments bg-yellow"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
-
-                                                            <div class="timeline-body">
-                                                                Take me to your leader!
-                                                                Switzerland is small and neutral!
-                                                                We are more like Germany, ambitious and misunderstood!
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-warning btn-flat btn-xs">View comment</a>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline time label -->
-                                                    <li class="time-label">
-                                                        <span class="bg-green">
-                                                            3 Jan. 2014
-                                                        </span>
-                                                    </li>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-camera bg-purple"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
-
-                                                            <div class="timeline-body">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-clock-o bg-gray"></i>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <!-- /.tab-pane -->
+                                  
                                         </div>
                                         <!-- /.tab-content -->
                                     </div>
                                     <!-- /.nav-tabs-custom -->
                                     <div class="box-footer">
                                         <div class="row">
+                                            
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
-                                                    <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span>
-                                                    <h5 class="description-header">$35,210.43</h5>
-                                                    <span class="description-text">TOTAL REVENUE</span>
+                                                    
+                                                    <h5 class="description-header"><i>&#8369 </i><%=apcpRequestDAO.getYearlySumOfReleasesByRequestId(provincialRequests,year)%></h5>
+                                                    <span class="description-text">TOTAL YEARLY RELEASED AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
@@ -345,8 +439,8 @@
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
                                                     <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                                                    <h5 class="description-header">$10,390.90</h5>
-                                                    <span class="description-text">TOTAL COST</span>
+                                                    <h5 class="description-header"><i>&#8369</i>10,390.90</h5>
+                                                    <span class="description-text">TOTAL ACCUMULATED RELEASED AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
@@ -354,8 +448,8 @@
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
                                                     <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 20%</span>
-                                                    <h5 class="description-header">$24,813.53</h5>
-                                                    <span class="description-text">TOTAL PROFIT</span>
+                                                    <h5 class="description-header"><i>&#8369</i>24,813.53</h5>
+                                                    <span class="description-text">TOTAL REQUESTED AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
@@ -363,8 +457,8 @@
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block">
                                                     <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> 18%</span>
-                                                    <h5 class="description-header">1200</h5>
-                                                    <span class="description-text">GOAL COMPLETIONS</span>
+                                                    <h5 class="description-header"><i>&#8369</i>1200</h5>
+                                                    <span class="description-text">TOTAL PAST DUE AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
@@ -379,7 +473,6 @@
 
 
                             <!-- /.col -->
-
                         </div>
                         <!-- /.col -->
                         <div class=" col-xs-6">
@@ -392,141 +485,158 @@
                                         <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
-                                <div clas="row  color-palette-set">
-                                    <div class="col-lg-4 col-xs-6">
-                                        <!-- small box -->
-                                        <div class="small-box bg-green-gradient color-palette">
-                                            <div class="inner">
-                                                <h3>44</h3>
-
-                                                <p>Requested</p>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="fa fa-keyboard-o"></i>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-xs-6">
-                                        <!-- small box -->
-                                        <div class="small-box bg-green-active color-palette">
-                                            <div class="inner">
-                                                <h3>44</h3>
-
-                                                <p>Cleared</p>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="fa fa-check-square-o"></i>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-xs-6">
-                                        <!-- small box -->
-                                        <div class="small-box bg-green">
-                                            <div class="inner">
-                                                <h3>44</h3>
-
-                                                <p>Endorsed</p>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="fa fa-upload"></i>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div clas="row">
-                                    <div class="col-lg-4 col-xs-6">
-                                        <!-- small box -->
-                                        <div class="small-box bg-yellow">
-                                            <div class="inner">
-                                                <h3>44</h3>
-
-                                                <p>Approved</p>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="fa fa-thumbs-o-up"></i>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-xs-6">
-                                        <!-- small box -->
-                                        <div class="small-box bg-red">
-                                            <div class="inner">
-                                                <h3>44</h3>
-
-                                                <p>For Release</p>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="fa fa-folder-o"></i>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-xs-6">
-                                        <!-- small box -->
-                                        <div class="small-box bg-green">
-                                            <div class="inner">
-                                                <h3>44</h3>
-
-                                                <p>Released</p>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="fa fa-folder-open-o"></i>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-
-
                                 <div class="box-body" >
+                                    <div clas="row  color-palette-set">
+                                        <div class="col-lg-4 col-xs-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-green-gradient color-palette">
+                                                <div class="inner">
+                                                    <h3><%out.print(requestedRequests.size());%></h3>
 
+                                                    <p>Requested</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fa fa-keyboard-o"></i>
+                                                </div>
 
-                                    <table id="example6" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Request ID</th>
-                                                <th>Loan Request</th>
-                                                <th>Loan Amount</th>
-                                                <th>Status</th>
-                                                <th>Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>April 1, 2011
-                                                </td>
-                                                <td>
-                                                    10100000
-                                                </td>
-                                                <td>
-                                                    <span class="label label-danger">RICE</span>
-                                                </td>
-                                                <td>
-                                                    April 1, 2011
-                                                </td>
-                                            </tr>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-xs-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-green-active color-palette">
+                                                <div class="inner">
+                                                    <h3><%out.print(clearedRequests.size());%></h3>
 
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th>Request ID</th>
-                                                <th>Loan Request</th>
-                                                <th>Loan Amount</th>
-                                                <th>Status</th>
-                                                <th>Date</th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>  
+                                                    <p>Cleared</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fa fa-check-square-o"></i>
+                                                </div>
 
-                                    <!-- /.tab-pane -->
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-xs-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-green">
+                                                <div class="inner">
+                                                    <h3><%out.print(endorsedRequests.size());%></h3>
 
+                                                    <p>Endorsed</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fa fa-upload"></i>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div clas="row">
+                                        <div class="col-lg-4 col-xs-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-yellow">
+                                                <div class="inner">
+                                                    <h3><%out.print(approvedRequests.size());%></h3>
+
+                                                    <p>Approved</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fa fa-thumbs-o-up"></i>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-xs-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-red">
+                                                <div class="inner">
+                                                    <h3><%out.print(forReleaseRequests.size());%></h3>
+
+                                                    <p>For Release</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fa fa-folder-o"></i>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-xs-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-green">
+                                                <div class="inner">
+                                                    <h3><%out.print(releasedRequests.size());%></h3>
+
+                                                    <p>Released</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fa fa-folder-open-o"></i>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <table id="example6" class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ARBO Name</th>
+                                                        <th>Loan Reason</th>
+                                                        <th>Loan Amount</th>
+                                                        <th>Land Area</th>
+                                                        <th>Date</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <%
+                                                        for (APCPRequest r : provincialRequests) {
+                                                            ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                                    %>
+                                                    <tr>
+                                                        <td><%out.print(arbo.getArboName());%></td>
+                                                        <td><%out.print(r.getLoanReason());%></td>
+                                                        <td><%out.print(r.getLoanAmount());%></td>
+                                                        <td><%out.print(r.getHectares() + " hectares");%></td>
+
+                                                        <%if (r.getRequestStatus() == 1) {%>
+                                                        <td><%out.print(f.format(r.getDateRequested()));%></td>
+                                                        <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                            <%} else if (r.getRequestStatus() == 2) {%>
+                                                        <td><%out.print(f.format(r.getDateCleared()));%></td>
+                                                        <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                            <%} else if (r.getRequestStatus() == 3) {%>
+                                                        <td><%out.print(f.format(r.getDateEndorsed()));%></td>
+                                                        <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                            <%} else if (r.getRequestStatus() == 4) {%>
+                                                        <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                        <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                            <%} else if (r.getRequestStatus() == 5) {%>
+                                                        <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                        <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                            <%} else if (r.getRequestStatus() == 7) {%>
+                                                        <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                        <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                            <%}%>
+
+                                                    </tr>
+                                                    <%}%>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>ARBO Name</th>
+                                                        <th>Loan Reason</th>
+                                                        <th>Loan Amount</th>
+                                                        <th>Land Area</th>
+                                                        <th>Date</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>  
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -541,70 +651,70 @@
                                         <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
-                                <div clas="row">
-                                    <div class="col-lg-3 col-xs-6">
-                                        <!-- small box -->
-                                        <div class="small-box bg-yellow">
-                                            <div class="inner">
-                                                <h3>44</h3>
 
-                                                <p>Requested</p>
-                                            </div>
-                                            <div class="icon" >
-                                                <i class="fa fa-keyboard-o"></i>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-xs-6">
-                                        <!-- small box -->
-                                        <div class="small-box bg-red">
-                                            <div class="inner">
-                                                <h3>44</h3>
-
-                                                <p>Pending</p>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="fa fa-hourglass-2"></i>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-xs-6">
-                                        <!-- small box -->
-                                        <div class="small-box bg-green">
-                                            <div class="inner">
-                                                <h3>44</h3>
-
-                                                <p>Approved</p>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="fa  fa-thumbs-up"></i>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-xs-6">
-                                        <!-- small box -->
-                                        <div class="small-box bg-aqua">
-                                            <div class="inner">
-                                                <h3>44</h3>
-
-                                                <p>Implemented</p>
-                                            </div>
-                                            <div class="icon">
-                                                <i class="fa fa-check-square-o"></i>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
 
 
 
                                 <div class="box-body" >
 
+                                    <div clas="row">
+                                        <div class="col-lg-3 col-xs-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-yellow">
+                                                <div class="inner">
+                                                    <h3><%out.print(requestedRequests.size());%></h3>
 
+                                                    <p>Requested</p>
+                                                </div>
+                                                <div class="icon" >
+                                                    <i class="fa fa-keyboard-o"></i>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-xs-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-red">
+                                                <div class="inner">
+                                                    <h3><%out.print(pendingPlans.size());%></h3>
+
+                                                    <p>Pending</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fa fa-hourglass-2"></i>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-xs-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-green">
+                                                <div class="inner">
+                                                    <h3><%out.print(approvedPlans.size());%></h3>
+
+                                                    <p>Approved</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fa  fa-thumbs-up"></i>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-xs-6">
+                                            <!-- small box -->
+                                            <div class="small-box bg-aqua">
+                                                <div class="inner">
+                                                    <h3><%out.print(implementedPlans.size());%></h3>
+
+                                                    <p>Implemented</p>
+                                                </div>
+                                                <div class="icon">
+                                                    <i class="fa fa-check-square-o"></i>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                     <table id="example5" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
@@ -651,47 +761,48 @@
                         </div>
                     </div>
 
+                </section>
 
             </div>
+
+            <footer class="main-footer">
+                <div class="pull-right hidden-xs">
+                    <b>Version</b> 2.4.0
+                </div>
+                <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
+                reserved.
+            </footer>
             <!-- /.row -->
 
-        </section>
-        <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>Version</b> 2.4.0
+
+            <!-- /.content -->
         </div>
-        <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-        reserved.
-    </footer>
-</div>
-<!-- ./wrapper -->
-<%@include file="jspf/footer.jspf" %>
-<script type="text/javascript">
-    $(function () {
-        var ctx = $('#barCanvas').get(0).getContext('2d');
-    <%
-            Chart bar = new Chart();
-            String json = bar.getBarChartEducation(arbListProvince);
-    %>
-        new Chart(ctx, <%out.print(json);%>);
+        <!-- /.content-wrapper -->
+        <!-- ./wrapper -->
+        <%@include file="jspf/footer.jspf" %>
+        <script type="text/javascript">
+            $(function () {
+                var ctx = $('#barCanvas').get(0).getContext('2d');
+            <%
+                Chart bar = new Chart();
+                String json = bar.getBarChartEducation(arbListProvince);
+            %>
+                new Chart(ctx, <%out.print(json);%>);
 
-        var ctx2 = $('#lineCanvas').get(0).getContext('2d');
-    <%
-            Chart line = new Chart();
-            String json2 = line.getCropHistory(arbListProvince);
-    %>
-        new Chart(ctx2, <%out.print(json2);%>);
+                var ctx2 = $('#lineCanvas').get(0).getContext('2d');
+            <%
+                Chart line = new Chart();
+                String json2 = line.getCropHistory(arbListProvince);
+            %>
+                new Chart(ctx2, <%out.print(json2);%>);
 
-        var ctx3 = $('#pieCanvas').get(0).getContext('2d');
-    <%
-            Chart pie = new Chart();
-            String json3 = pie.getPieChartGender(arbListProvince);
-    %>
-        new Chart(ctx3, <%out.print(json3);%>);
-    });
-</script>
-</body>
+                var ctx3 = $('#pieCanvas').get(0).getContext('2d');
+            <%
+                Chart pie = new Chart();
+                String json3 = pie.getPieChartGender(arbListProvince);
+            %>
+                new Chart(ctx3, <%out.print(json3);%>);
+            });
+        </script>
+    </body>
 </html>

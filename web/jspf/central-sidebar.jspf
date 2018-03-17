@@ -11,6 +11,7 @@
 <%@page import="com.MVC.DAO.ARBDAO;"%>
 <%@page import="com.MVC.DAO.APCPRequestDAO;"%>
 <%@page import="com.MVC.DAO.CAPDEVDAO;"%>
+<%@page import="com.MVC.DAO.UserDAO;"%>
 
 
 <%
@@ -28,7 +29,8 @@
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
     ArrayList<APCPRequest> newAccessingRequests = apcpRequestDAO.getAllRequestsByStatus(6);
     
-    CAPDEVDAO cDAO = new CAPDEVDAO();
+    CAPDEVDAO capdevDAO = new CAPDEVDAO();
+    UserDAO uDAO = new UserDAO();
     
 %>
 

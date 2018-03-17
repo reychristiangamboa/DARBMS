@@ -98,6 +98,7 @@
         $('#capdev3').DataTable();
 
 
+        $('.table.table-bordered.table-striped.modTable').DataTable();
         $('#example1').DataTable();
         $('#example8').DataTable();
         $('#example7').DataTable();

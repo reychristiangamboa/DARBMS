@@ -240,7 +240,7 @@ public class UserDAO {
             p.setString(2, u.getAddress());
             p.setString(3, u.getContactNo());
             p.setInt(4, userID);
-            
+            p.executeUpdate();
             p.close();
             con.commit();
             con.close();
@@ -268,7 +268,7 @@ public class UserDAO {
             p.setString(1, u.getEmail());
             p.setString(2, u.getPassword()) ;
             p.setInt(3, userID);
-            
+            p.executeUpdate();
             p.close();
             con.commit();
             con.close();

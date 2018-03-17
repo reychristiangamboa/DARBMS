@@ -42,18 +42,18 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
-            <%if((Integer)session.getAttribute("userType") == 2){%>
+            <%if ((Integer) session.getAttribute("userType") == 2) {%>
             <%@include file="jspf/point-person-sidebar.jspf" %>
-            <%}else if((Integer)session.getAttribute("userType") == 3){%>
+            <%} else if ((Integer) session.getAttribute("userType") == 3) {%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
-            <%}else if((Integer)session.getAttribute("userType") == 4){%>
+            <%} else if ((Integer) session.getAttribute("userType") == 4) {%>
             <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
-            <%}else if((Integer)session.getAttribute("userType") == 5){%>
+            <%} else if ((Integer) session.getAttribute("userType") == 5) {%>
             <%@include file="jspf/central-sidebar.jspf"%>
             <%}%>
 
             <%
-                ARB arb = (ARB)request.getAttribute("arb");
+                ARB arb = (ARB) request.getAttribute("arb");
                 ARBODAO dao = new ARBODAO();
                 ARBO arbo = dao.getARBOByID(arb.getArboID());
             %>
@@ -70,7 +70,17 @@
 
                 <!-- Main content -->
                 <section class="content">
-
+                    <%if (request.getAttribute("success") != null) {%>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String) request.getAttribute("success"));%></h4>
+                    </div>
+                    <%} else if (request.getAttribute("errMessage") != null) {%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String) request.getAttribute("errMessage"));%></h4>
+                    </div>
+                    <%}%>
                     <div class="row">
                         <div class="col-md-3">
 
@@ -92,10 +102,10 @@
                                             <b>Sex</b> 
                                             <a class="pull-right">
                                                 <%
-                                                    if(arb.getGender().equals("M")){
-                                                        out.print("Male");    
-                                                    }else if(arb.getGender().equals("F")){
-                                                        out.print("Female");    
+                                                    if (arb.getGender().equals("M")) {
+                                                        out.print("Male");
+                                                    } else if (arb.getGender().equals("F")) {
+                                                        out.print("Female");
                                                     }
                                                 %>
                                             </a>
@@ -110,9 +120,9 @@
                                             <b>Crops</b> <a class="pull-right">543</a>
                                         </li>
                                         <li class="list-group-item">
-                                            <%if(arb.getDependents().size() > 0){%>
+                                            <%if (arb.getDependents().size() > 0) {%>
                                             <b>Dependents</b> <a class="pull-right" data-toggle="modal" data-target="#dependents"><%=arb.getDependents().size()%></a>
-                                            <%}else{%>
+                                            <%} else {%>
                                             <b>Dependents</b> <a class="pull-right">N/A</a>
                                             <%}%>
                                         </li>
@@ -127,7 +137,7 @@
                                                     <span aria-hidden="true">&times;</span></button>
                                                 <h4 class="modal-title">Add Evaluation</h4>
                                             </div>
-                                            <form>
+                                            <form method="post">
                                                 <div class="modal-body">
 
                                                     <div class="row">
@@ -145,7 +155,7 @@
                                                         </div>
                                                         <div class="col-xs-6">
                                                             <div class="form-group">
-                                                                <label>Date range button:</label>
+                                                                <label>Evaluation Quarter:</label>
 
                                                                 <div class="input-group">
                                                                     <button type="button" class="btn btn-default pull-right" id="daterange-btn">
@@ -182,8 +192,9 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <div class="pull-right">
+                                                        <input type="hidden" id="start" name="start"><input type="hidden" id="end" name="end" >
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary" onclick="form.action = 'AddEvaluation?id=<%out.print(arb.getArbID());%>'" href="point-person-evaluation-form.jsp">Submit</button>
+                                                        <button type="submit" class="btn btn-primary" onclick="form.action = 'AddEvaluation?id=<%out.print(arb.getArbID());%>'">Submit</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -220,7 +231,7 @@
                                     <strong><i class="fa fa-file-text-o margin-r-5"></i> Crops</strong>
 
                                     <p>
-                                        <%for(Crop c : arb.getCrops()){%>
+                                        <%for (Crop c : arb.getCrops()) {%>
                                         <span class="label label-success"><%=c.getCropTypeDesc()%></span>
                                         <%}%>
                                     </p>
@@ -279,7 +290,7 @@
                                         <!-- /.tab-content -->
                                     </div>
                                     <!-- /.nav-tabs-custom -->
-                                    <%if((Integer)session.getAttribute("userType") == 2){%>
+                                    <%if ((Integer) session.getAttribute("userType") == 2) {%>
                                     <div class="box-footer">
                                         <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation">Add Evaluation</button>
                                     </div>
@@ -750,18 +761,16 @@
                 $('#daterange-btn').daterangepicker(
                         {
                             ranges: {
-                                'Today': [moment(), moment()],
-                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                                'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+                                'Past Quarter': [moment().subtract(1, 'quarter').startOf('quarter'), moment().subtract(1, 'quarter').endOf('quarter')],
                             },
                             startDate: moment().subtract(29, 'days'),
                             endDate: moment()
                         },
                         function (start, end) {
                             $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                            $('#start').val(start.format('YYYY-MM-DD'));
+                            $('#end').val(end.format('YYYY-MM-DD'));
                         }
                 );
 

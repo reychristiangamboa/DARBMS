@@ -1,3 +1,5 @@
+<%@page import="java.util.Calendar"%>
+<%@page import="java.sql.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.MVC.Model.Chart"%>
 <meta charset="utf-8">
@@ -50,5 +52,11 @@
     }
 
     SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+
+    Long l = System.currentTimeMillis();
+    Date currDate = new Date(l);
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(currDate);
+    int year = cal.get(Calendar.YEAR);
 
 %>

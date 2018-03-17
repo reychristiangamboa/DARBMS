@@ -129,16 +129,15 @@ public class EvaluationDAO {
         try {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`evaluations` (`arbID`, `evaluationDate`, `evaluationStartDate`, "
-                    + "`evaluationEndDate`, `evaluationDTN`, `rating`, `evaluationType`) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?);";
+                    + "`evaluationEndDate`, `evaluationDTN`, `evaluationType`) "
+                    + "VALUES (?, ?, ?, ?, ?, ?);";
             p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setInt(1, e.getArbID());
             p.setDate(2, e.getEvaluationDate());
             p.setDate(3, e.getEvaluationStartDate());
             p.setDate(4, e.getEvaluationEndDate());
             p.setString(5, e.getEvaluationDTN());
-            p.setDouble(6, e.getRating());
-            p.setInt(7, e.getEvaluationType());
+            p.setInt(6, e.getEvaluationType());
 
             p.executeUpdate();
             ResultSet rs = p.getGeneratedKeys();

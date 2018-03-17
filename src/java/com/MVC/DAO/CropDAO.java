@@ -37,6 +37,9 @@ public class CropDAO {
                 c.setCropTypeDesc(rs.getString("cropTypeDesc"));
                 cropList.add(c);
             }
+            pstmt.close();
+            rs.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -71,7 +74,9 @@ public class CropDAO {
                     }
                 }
                 pstmt.close();
+                rs.close();
             }
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();

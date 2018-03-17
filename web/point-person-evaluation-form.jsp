@@ -106,19 +106,19 @@
                                                         <tr>
                                                             <td><%out.print(q.getQuestion());%></td>
                                                             <td>   
-                                                                <input type="radio" name="r3" class="form-control" value="1">
+                                                                <input type="radio" name="<%out.print(q.getQuestionID());%>" value="1">
                                                             </td>
                                                             <td>   
-                                                                <input type="radio" name="r3" class="form-control"  value="2">
+                                                                <input type="radio" name="<%out.print(q.getQuestionID());%>"  value="2">
                                                             </td>
                                                             <td>   
-                                                                <input type="radio" name="r3" class="form-control"  value="3">
+                                                                <input type="radio" name="<%out.print(q.getQuestionID());%>"  value="3">
                                                             </td>
                                                             <td>   
-                                                                <input type="radio" name="r3" class="form-control"  value="4">
+                                                                <input type="radio" name="<%out.print(q.getQuestionID());%>"  value="4">
                                                             </td>
                                                             <td>   
-                                                                <input type="radio" name="r3" class="form-control"  value="5">
+                                                                <input type="radio" name="<%out.print(q.getQuestionID());%>"  value="5">
                                                             </td>
                                                         </tr>
                                                         <%}%>

@@ -24,9 +24,9 @@
             <%@include file="jspf/field-officer-navbar.jspf"%>
             <%@include file="jspf/central-sidebar.jspf"%>
             <%
-                            APCPRequest r = apcpRequestDAO.getRequestByID((Integer)request.getAttribute("requestID"));
-                            ARBO a = arboDAO.getARBOByID(r.getArboID());
-                            ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
+                APCPRequest r = apcpRequestDAO.getRequestByID((Integer) request.getAttribute("requestID"));
+                ARBO a = arboDAO.getARBOByID(r.getArboID());
+                ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -55,7 +55,7 @@
                                 <li><a href="#history" data-toggle="tab">CAPDEV History</a></li>
                             </ul>
 
-                            <%@include file="jspf/arbInfo.jspf"%>
+                            <%@include file="jspf/arboInfo.jspf"%>
                             <form method="post">
                                 <div class="box-footer ">
                                     <div class="btn-group pull-right">
@@ -88,15 +88,15 @@
         <script>
             var ctx = $('#barCanvas').get(0).getContext('2d');
             <%
-                    Chart bar = new Chart();
-                    String json = bar.getBarChartEducation(arbList);
+                Chart bar = new Chart();
+                String json = bar.getBarChartEducation(arbList);
             %>
             new Chart(ctx, <%out.print(json);%>);
 
             var ctx3 = $('#pieCanvas').get(0).getContext('2d');
             <%
-                    Chart pie = new Chart();
-                    String json3 = pie.getPieChartGender(arbList);
+                Chart pie = new Chart();
+                String json3 = pie.getPieChartGender(arbList);
             %>
             new Chart(ctx3, <%out.print(json3);%>);
 
