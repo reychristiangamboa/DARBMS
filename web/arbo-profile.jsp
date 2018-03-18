@@ -43,7 +43,13 @@
                 ARBODAO dao = new ARBODAO();
                 ARBDAO dao2 = new ARBDAO();
                 CropDAO dao3 = new CropDAO();
+                CAPDEVDAO capdevDAO2 = new CAPDEVDAO();
+                APCPRequestDAO dao4 = new APCPRequestDAO();
                 ArrayList<ARB> arbListARBO = dao2.getAllARBsARBO(arbo.getArboID());
+                ArrayList<APCPRequest> arboRequest = dao4.getAllARBORequests(arbo.getArboID());
+                ArrayList<APCPRequest> arboReleasedRequest = dao4.getAllARBORequestsByStatus(5, arbo.getArboID());
+                ArrayList<CAPDEVActivity> activityHistory = capdevDAO2.getAPCPCAPDEVActivityHistoryByARBO(arbo.getArboID());
+                ArrayList<Repayment> repaymentHistory = dao4.getRepaymentHistoryByARBO(arbo.getArboID());
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -326,6 +332,7 @@
                                             <li><a href="#pend" data-toggle="tab">Pending Requests</a></li>
                                             <li><a href="#disbursement" data-toggle="tab">Disbursements</a></li>
                                             <li><a href="#repayment" data-toggle="tab">Repayments</a></li>
+                                            <li><a href="#pastDue" data-toggle="tab">Past Due</a></li>
                                         </ul>
                                         <div class="tab-content">
                                             <div class="active tab-pane" id="release">
@@ -333,85 +340,102 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Loan <br>Tracking No.</th>
+
                                                             <th>Last Release Date</th>
                                                             <th>Progress</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        <%
+                                                            for (APCPRequest r : arboReleasedRequest) {
+                                                        %>
                                                         <tr>
-                                                            <td>1</td>
-                                                            <td>April 1, 2011
-                                                            </td>
-                                                            <td>
+                                                            <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%=r.getLoanTrackingNo()%></a></td>
+
+                                                            <td><%=f.format(r.getReleases().get(r.getReleases().size() - 1).getReleaseDate())%></td>
+                                                            <td  width=50%>
                                                                 <div class="progress">
-                                                                    <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                                                        40% Complete (success)
+                                                                    <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: <%out.print(r.getProgressBarWidth(dao4.getSumOfReleasesByRequestId(r.getRequestID()), r.getLoanAmount()));%>%">
+                                                                        <strong><i>&#8369</i><%=dao4.getSumOfReleasesByRequestId(r.getRequestID())%> / <i>&#8369</i><%=r.getLoanAmount()%></strong>
                                                                     </div> 
                                                                 </div> 
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <td>2</td>
-                                                            <td>June 2, 2010
-                                                            </td>
-                                                            <td>
-                                                                <div class="progress">
-                                                                    <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                                                        <span class="sr-only">40% Complete (success)</span>
-                                                                    </div>                                           
-                                                                </div>
-                                                            </td>
-                                                        </tr>
+                                                        <%}%>
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
                                                             <th>Loan <br>Tracking No.</th>
+
                                                             <th>Last Release Date</th>
                                                             <th>Progress</th>
                                                         </tr>
                                                     </tfoot>
                                                 </table>   
-
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="pend">
-                                                <table id="example3" class="table table-bordered table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Request ID</th>
-                                                            <th>Loan Request</th>
-                                                            <th>Loan Amount</th>
-                                                            <th>Status</th>
-                                                            <th>Date</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>April 1, 2011
-                                                            </td>
-                                                            <td>
-                                                                10100000
-                                                            </td>
-                                                            <td>
-                                                                <span class="label label-danger">RICE</span>
-                                                            </td>
-                                                            <td>
-                                                                April 1, 2011
-                                                            </td>
-                                                        </tr>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <table id="example6" class="table table-bordered table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Request ID</th>
+                                                                    <th>Loan Reason</th>
+                                                                    <th>Loan Amount</th>
+                                                                    <th>Land Area</th>
+                                                                    <th>Date</th>
+                                                                    <th>Status</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <%
 
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <th>Request ID</th>
-                                                            <th>Loan Request</th>
-                                                            <th>Loan Amount</th>
-                                                            <th>Status</th>
-                                                            <th>Date</th>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>  
+                                                                    for (APCPRequest r : arboRequest) {
+                                                                %>
+                                                                <tr>
+                                                                    <td><%out.print(r.getRequestID());%></td>
+                                                                    <td><%out.print(r.getLoanReason());%></td>
+                                                                    <td><%out.print(r.getLoanAmount());%></td>
+                                                                    <td><%out.print(r.getHectares() + " hectares");%></td>
+
+                                                                    <%if (r.getRequestStatus() == 1) {%>
+                                                                    <td><%out.print(f.format(r.getDateRequested()));%></td>
+                                                                    <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                                        <%} else if (r.getRequestStatus() == 2) {%>
+                                                                    <td><%out.print(f.format(r.getDateCleared()));%></td>
+                                                                    <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                                        <%} else if (r.getRequestStatus() == 3) {%>
+                                                                    <td><%out.print(f.format(r.getDateEndorsed()));%></td>
+                                                                    <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                                        <%} else if (r.getRequestStatus() == 4) {%>
+                                                                    <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                                    <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                                        <%} else if (r.getRequestStatus() == 5) {%>
+                                                                    <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                                    <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                                        <%} else if (r.getRequestStatus() == 7) {%>
+                                                                    <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                                    <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                                        <%}%>
+
+                                                                </tr>
+                                                                <%}%>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th>Request ID</th>
+                                                                    <th>Loan Reason</th>
+                                                                    <th>Loan Amount</th>
+                                                                    <th>Land Area</th>
+                                                                    <th>Date</th>
+                                                                    <th>Status</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>  
+                                                    </div>
+                                                </div>
+
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="disbursement">
@@ -421,99 +445,40 @@
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="repayment" style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
-                                                <ul class="timeline timeline-inverse">
-                                                    <!-- timeline time label -->
-                                                    <li class="time-label">
-                                                        <span class="bg-red">
-                                                            INTERVENTION: RICE TRAINING 101
-                                                        </span>
-                                                    </li>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-envelope bg-blue"></i>
+                                                <ul class="timeline">
 
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+                                                    <%System.out.println(repaymentHistory.size());
+                                                        System.out.println(arbo.getArboID());
+                                                        for (Repayment repayment : repaymentHistory) { %>
 
-                                                            <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
-
-                                                            <div class="timeline-body">
-                                                                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                                                                weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                                                                jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                                                                quora plaxo ideeli hulu weebly balihoo...
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-primary btn-xs">Read more</a>
-                                                                <a class="btn btn-danger btn-xs">Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-user bg-aqua"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
-
-                                                            <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
-                                                            </h3>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-comments bg-yellow"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
-
-                                                            <div class="timeline-body">
-                                                                Take me to your leader!
-                                                                Switzerland is small and neutral!
-                                                                We are more like Germany, ambitious and misunderstood!
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-warning btn-flat btn-xs">View comment</a>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline time label -->
                                                     <li class="time-label">
                                                         <span class="bg-green">
-                                                            3 Jan. 2014
+                                                            <%out.print(f.format(repayment.getDateRepayment()));%>
                                                         </span>
                                                     </li>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
                                                     <li>
-                                                        <i class="fa fa-camera bg-purple"></i>
-
+                                                        <!-- for loop for plans -->
+                                                        <i class="fa fa-money bg-green"></i>
                                                         <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
-
+                                                            <!--                                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+                                                            <h3 class="timeline-header"><i>&#8369</i><%=repayment.getAmount()%></h3>
                                                             <div class="timeline-body">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
+                                                                
+                                                                <i class="fa  fa-user"></i>&nbsp;<%=dao2.getARBByID(repayment.getArbID()).getFullName()%>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <!-- END timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-clock-o bg-gray"></i>
-                                                    </li>
+
+                                                    <% }%>
                                                 </ul>
                                             </div>
                                             <!-- /.tab-pane -->
+
+                                            <div class="tab-pane" id="pastDue">
+                                                <div class="box-body">
+                                                    <canvas id="pieCanvas" style="height:250px"></canvas>
+                                                </div>
+                                            </div>
                                         </div>
                                         <!-- /.tab-content -->
                                     </div>
@@ -527,113 +492,135 @@
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
-                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
                                 <div class="box-body" >
                                     <div class="nav-tabs-custom">
                                         <ul class="nav nav-tabs">
-                                            <li class="active"><a href="#timeline" data-toggle="tab">Timeline</a></li>
+                                            <li class="active"><a href="#apcpCapdev" data-toggle="tab">APCP CAPDEV</a></li>
+                                            <li><a href="#linksfarmCapdev" data-toggle="tab">LINKSFARM CAPDEV</a></li>
 
                                         </ul>
+                                        <div class="tab-content"  style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
+                                            <div class="active tab-pane" id="apcpCapdev">
+                                                <div class="col-xs-12" style="margin:10px;" >
+                                                    <ul class="timeline">
 
-                                        <div class="tab-content" style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
-                                            <div class="active tab-pane" id="timeline">
-                                                <ul class="timeline timeline-inverse">
-                                                    <!-- timeline time label -->
-                                                    <li class="time-label">
-                                                        <span class="bg-red">
-                                                            INTERVENTION: RICE TRAINING 101
-                                                        </span>
-                                                    </li>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-envelope bg-blue"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
-
-                                                            <div class="timeline-body">
-                                                                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                                                                weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                                                                jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                                                                quora plaxo ideeli hulu weebly balihoo...
+                                                        <% for (CAPDEVActivity activity : activityHistory) { %>
+                                                        <li class="time-label">
+                                                            <span class="bg-green">
+                                                                <%out.print(f.format(activity.getActivityDate()));%>
+                                                            </span>
+                                                        </li>
+                                                        <li>
+                                                            <!-- for loop for plans -->
+                                                            <i class="fa fa-clipboard bg-green"></i>
+                                                            <div class="timeline-item">
+                                                                <!--                                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+                                                                <h3 class="timeline-header"><a href="#" data-toggle='modal' data-target='#activity<%out.print(activity.getActivityID());%>'><%out.print(activity.getActivityName());%></a></h3>
                                                             </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-primary btn-xs">Read more</a>
-                                                                <a class="btn btn-danger btn-xs">Delete</a>
+                                                        </li>
+
+                                                        <div class="modal fade" id="activity<%out.print(activity.getActivityID());%>">
+                                                            <div class="modal-dialog modal-md">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span></button>
+                                                                        <h4 class="modal-title">Activity Details</h4>
+                                                                    </div>
+
+
+                                                                    <div class="modal-body" id="modalBody">
+
+                                                                        <div class="row">
+                                                                            <div class="col-xs-4">
+                                                                                <div class="form-group">
+                                                                                    <label for="">Activity Title</label>
+                                                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getActivityName());%>" disabled>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-xs-8">
+                                                                                <div class="form-group">
+                                                                                    <label for="">Activity Description</label>
+                                                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getActivityDesc());%>" disabled>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-xs-4">
+                                                                                <div class="form-group">
+                                                                                    <label for="">Activity Date</label>
+                                                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(f.format(activity.getActivityDate()));%>" disabled>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-xs-4">
+                                                                                <div class="form-group">
+                                                                                    <label for="">No. of Participants</label>
+                                                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getArbList().size());%>" disabled>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-xs-12">
+                                                                                <div class="form-group">
+                                                                                    <label for="">Observations</label>
+                                                                                    <textarea id="" cols="30" rows="3" class="form-control" disabled><%if (activity.getObservations() != null) {
+                                                                                            out.print(activity.getObservations());
+                                                                                        } else {
+                                                                                            out.print("N/A");
+                                                                                        };%></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-xs-12">
+                                                                                <div class="form-group">
+                                                                                    <label for="">Recommendation</label>
+                                                                                    <textarea id="" cols="30" rows="3" class="form-control" disabled><%if (activity.getRecommendation() != null) {
+                                                                                            out.print(activity.getRecommendation());
+                                                                                        } else {
+                                                                                            out.print("N/A");
+                                                                                        };%></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <div class="pull-right">
+                                                                            <button type='button' class="btn btn-default">Cancel</button>
+                                                                            <button type='button' class="btn btn-primary">View More</button>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <!--                                            /.modal-content -->
                                                             </div>
+                                                            <!--                                        /.modal-dialog -->
                                                         </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-user bg-aqua"></i>
+                                                        <% }%>
+                                                    </ul>
 
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
+                                                </div>
 
-                                                            <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
-                                                            </h3>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-comments bg-yellow"></i>
 
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
-
-                                                            <div class="timeline-body">
-                                                                Take me to your leader!
-                                                                Switzerland is small and neutral!
-                                                                We are more like Germany, ambitious and misunderstood!
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-warning btn-flat btn-xs">View comment</a>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline time label -->
-                                                    <li class="time-label">
-                                                        <span class="bg-green">
-                                                            3 Jan. 2014
-                                                        </span>
-                                                    </li>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-camera bg-purple"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
-
-                                                            <div class="timeline-body">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-clock-o bg-gray"></i>
-                                                    </li>
-                                                </ul>
                                             </div>
-                                            <!-- /.tab-pane -->
 
+                                            <div class="tab-pane" id="linksfarmCapdev">
+
+                                                <div class="col-xs-12" style="margin:10px;" >
+                                                    lol
+
+                                                </div>
+
+
+                                            </div>
                                         </div>
+
+
                                         <!-- /.tab-content -->
                                     </div>
                                     <!-- /.nav-tabs-custom -->

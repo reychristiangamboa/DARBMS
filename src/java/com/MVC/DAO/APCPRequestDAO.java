@@ -8,6 +8,7 @@ package com.MVC.DAO;
 import com.MVC.Database.DBConnectionFactory;
 import com.MVC.Model.APCPRelease;
 import com.MVC.Model.APCPRequest;
+import com.MVC.Model.CAPDEVActivity;
 import com.MVC.Model.Disbursement;
 import com.MVC.Model.PastDueAccount;
 import com.MVC.Model.Repayment;
@@ -266,6 +267,57 @@ public class APCPRequestDAO {
         return apcpRequest;
     }
 
+    public ArrayList<APCPRequest> getAllARBORequestsByStatus(int statusID, int arboID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<APCPRequest> apcpRequest = new ArrayList();
+        try {
+            String query = "SELECT * FROM apcp_requests r "
+                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN arbos a ON r.arboID=a.arboID "
+                    + "WHERE r.requestStatus = ? AND r.arboID = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, statusID);
+            pstmt.setInt(2, arboID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                APCPRequest r = new APCPRequest();
+                r.setRequestID(rs.getInt("requestID"));
+                r.setArboID(rs.getInt("arboID"));
+                r.setDateApproved(rs.getDate("dateApproved"));
+                r.setApprovedBy(rs.getInt("approvedBy"));
+                r.setDateCleared(rs.getDate("dateCleared"));
+                r.setClearedBy(rs.getInt("clearedBy"));
+                r.setDateEndorsed(rs.getDate("dateEndorsed"));
+                r.setEndorsedBy(rs.getInt("endorsedBy"));
+                r.setDateRequested(rs.getDate("dateRequested"));
+                r.setRequestedTo(rs.getInt("requestedTo"));
+                r.setHectares(rs.getDouble("hectares"));
+                r.setLoanAmount(rs.getDouble("loanAmount"));
+                r.setLoanReason(rs.getString("loanReason"));
+                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
+                r.setRemarks(rs.getString("remarks"));
+                r.setRequestStatus(rs.getInt("requestStatus"));
+                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
+                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
+                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
+                r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
+                apcpRequest.add(r);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return apcpRequest;
+    }
+
     public ArrayList<APCPRequest> getAllProvincialRequestsByStatus(int statusID, int provinceID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -387,9 +439,9 @@ public class APCPRequestDAO {
             try {
                 con.rollback();
             } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return success;
     }
@@ -416,9 +468,9 @@ public class APCPRequestDAO {
             try {
                 con.rollback();
             } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return success;
     }
@@ -445,9 +497,9 @@ public class APCPRequestDAO {
             try {
                 con.rollback();
             } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return success;
     }
@@ -553,7 +605,7 @@ public class APCPRequestDAO {
         }
         return pList;
     }
-    
+
     public ArrayList<PastDueAccount> getAllUnsettledPastDueAccountsByRequest(int requestID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -933,6 +985,55 @@ public class APCPRequestDAO {
         return apcpRequest;
     }
 
+    public ArrayList<APCPRequest> getAllARBORequests(int arboID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<APCPRequest> apcpRequest = new ArrayList();
+        try {
+            String query = "SELECT * FROM apcp_requests r "
+                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN arbos a ON r.arboID=a.arboID "
+                    + "WHERE a.arboID = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, arboID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                APCPRequest r = new APCPRequest();
+                r.setRequestID(rs.getInt("requestID"));
+                r.setArboID(rs.getInt("arboID"));
+                r.setDateApproved(rs.getDate("dateApproved"));
+                r.setApprovedBy(rs.getInt("approvedBy"));
+                r.setDateCleared(rs.getDate("dateCleared"));
+                r.setClearedBy(rs.getInt("clearedBy"));
+                r.setDateEndorsed(rs.getDate("dateEndorsed"));
+                r.setEndorsedBy(rs.getInt("endorsedBy"));
+                r.setDateRequested(rs.getDate("dateRequested"));
+                r.setRequestedTo(rs.getInt("requestedTo"));
+                r.setHectares(rs.getDouble("hectares"));
+                r.setLoanAmount(rs.getDouble("loanAmount"));
+                r.setLoanReason(rs.getString("loanReason"));
+                r.setRemarks(rs.getString("remarks"));
+                r.setRequestStatus(rs.getInt("requestStatus"));
+                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
+                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
+                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
+                r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
+                apcpRequest.add(r);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return apcpRequest;
+    }
+
     public ArrayList<APCPRequest> getAllRequestsRegion(int regionID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -1081,7 +1182,7 @@ public class APCPRequestDAO {
         }
         return sum;
     }
-    
+
     public double getSumOfAccumulatedReleasesByRequestId(ArrayList<APCPRequest> apcpRequestList) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -1109,7 +1210,7 @@ public class APCPRequestDAO {
         }
         return sum;
     }
-    
+
     public double getTotalRequestedAmount(ArrayList<APCPRequest> apcpRequestList) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -1137,7 +1238,7 @@ public class APCPRequestDAO {
         }
         return sum;
     }
-    
+
     public double getTotalPastDueAmount(ArrayList<APCPRequest> apcpRequestList) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -1164,6 +1265,44 @@ public class APCPRequestDAO {
             Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return sum;
+    }
+
+    public ArrayList<Repayment> getRepaymentHistoryByARBO(int arboID) {
+
+        ArrayList<Repayment> repayment = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM `dar-bms`.apcp_requests a "
+                    + "JOIN repayments r ON a.requestID=r.requestID "
+                    + "WHERE a.arboID=?;";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, arboID);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                Repayment r = new Repayment();
+                r.setAmount(rs.getInt("amount"));
+                r.setArbID(rs.getInt("arbID"));
+                r.setRepaymentID(rs.getInt("repaymentID"));
+                r.setRecordedBy(rs.getInt("recordedBy"));
+                r.setRequestID(rs.getInt("requestID"));
+                r.setDateRepayment(rs.getDate("repaymentDate"));
+                repayment.add(r);
+            }
+            con.commit();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return repayment;
     }
 
 }

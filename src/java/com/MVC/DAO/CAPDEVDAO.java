@@ -482,6 +482,48 @@ public class CAPDEVDAO {
         return caList;
     }
 
+    public ArrayList<CAPDEVActivity> getAPCPCAPDEVActivityHistoryByARBO(int arboID) {
+
+        ArrayList<CAPDEVActivity> caList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM `dar-bms`.capdev_activities a "
+                    + "JOIN ref_activity r ON a.activityType=r.activityType "
+                    + "JOIN capdev_plans p ON a.planID=p.planID "
+                    + "JOIN apcp_requests ap ON ap.requestID=p.requestID "
+                    + "WHERE ap.arboID=? AND a.active=1;";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, arboID);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                CAPDEVActivity ca = new CAPDEVActivity();
+                ca.setActivityID(rs.getInt("activityID"));
+                ca.setActivityType(rs.getInt("activityType"));
+                ca.setPlanID(rs.getInt("planID"));
+                ca.setActivityName(rs.getString("activityName"));
+                ca.setActivityDate(rs.getDate("activityDate"));
+                ca.setActivityDesc(rs.getString("activityDesc"));
+                ca.setObservations(rs.getString("observations"));
+                ca.setRecommendation(rs.getString("recommendation"));
+                ca.setArbList(getCAPDEVPlanActivityParticipants(rs.getInt("activityID")));
+                caList.add(ca);
+            }
+            con.commit();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return caList;
+    }
     public boolean addCAPDEVPlanActivityParticipants(ArrayList<ARB> arbList, int activityID) {
         boolean success = false;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();

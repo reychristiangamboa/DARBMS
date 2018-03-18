@@ -303,6 +303,39 @@ public class Chart {
         
         return new PieChart(data).toJson();
     }
+    
+    public String getPieChartDisbursement(ArrayList<APCPRequest> unsettledProvincialRequests) {
+        CAPDEVDAO dao = new CAPDEVDAO();
+        APCPRequestDAO dao2 = new APCPRequestDAO();
+        ArrayList<PastDueAccount> reasons = dao.getAllPastDueReasons();
+        ArrayList<String> stringLabels = new ArrayList();
+        PieData data = new PieData();
+        PieDataset datasetReasons = new PieDataset();
+
+        for (PastDueAccount reason : reasons) {
+            int count = 0;
+            stringLabels.add(reason.getReasonPastDueDesc());
+            for (APCPRequest r : unsettledProvincialRequests) {
+                ArrayList<PastDueAccount> unsettled = dao2.getAllUnsettledPastDueAccountsByRequest(r.getRequestID());
+                for (PastDueAccount pda : unsettled) {
+                    if (pda.getReasonPastDue() == reason.getReasonPastDue()) {
+                        count++;
+                    }
+                }
+            }
+            datasetReasons.addData(count);
+            datasetReasons.addBackgroundColor(Color.random());
+            datasetReasons.setBorderWidth(2);
+        }
+        
+        data.addDataset(datasetReasons);
+        for(String l : stringLabels){
+            data.addLabel(l);
+        }
+        
+        
+        return new PieChart(data).toJson();
+    }
 
     public String getBarChartEducation(ArrayList<ARB> arbEducChart) {
         int noGrade = 0;

@@ -18,6 +18,7 @@ public class CAPDEVActivity {
     private int activityID;
     private int planID;
     private int activityType;
+    private int activityCategory;
     private Date activityDate;
     private String observations;
     private String recommendation;
