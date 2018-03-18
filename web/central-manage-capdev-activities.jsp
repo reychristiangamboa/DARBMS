@@ -15,7 +15,7 @@
             <%@include file="jspf/field-officer-navbar.jspf" %>
             <%@include file="jspf/central-sidebar.jspf" %>
 
-            <% ArrayList<CAPDEVActivity> activityList = cDAO.getCAPDEVActivities(); %>
+            <% ArrayList<CAPDEVActivity> activityList = capdevDAO.getCAPDEVActivities(); %>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->

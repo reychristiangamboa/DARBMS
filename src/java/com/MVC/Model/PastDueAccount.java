@@ -21,6 +21,7 @@ public class PastDueAccount {
     private String reasonPastDueDesc;
     private String otherReason;
     private int recordedBy;
+    private Date dateRecorded;
     private int active;
 
     public int getPastDueAccountID() {
@@ -85,6 +86,14 @@ public class PastDueAccount {
 
     public void setRecordedBy(int recordedBy) {
         this.recordedBy = recordedBy;
+    }
+
+    public Date getDateRecorded() {
+        return dateRecorded;
+    }
+
+    public void setDateRecorded(Date dateRecorded) {
+        this.dateRecorded = dateRecorded;
     }
 
     public int getActive() {

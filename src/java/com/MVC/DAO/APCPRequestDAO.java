@@ -490,14 +490,15 @@ public class APCPRequestDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`past_due_accounts` (`requestID`, `pastDueAmount`, `reasonPastDue`, `otherReason`, `recordedBy`) "
-                    + " VALUES (?, ?, ?, ?, ?);";
+            String query = "INSERT INTO `dar-bms`.`past_due_accounts` (`requestID`, `pastDueAmount`, `reasonPastDue`, `otherReason`, `recordedBy`, `recordedDate`) "
+                    + " VALUES (?, ?, ?, ?, ?, ?);";
             p = con.prepareStatement(query);
             p.setInt(1, pda.getRequestID());
             p.setDouble(2, pda.getPastDueAmount());
             p.setInt(3, pda.getReasonPastDue());
             p.setString(4, pda.getOtherReason());
             p.setInt(5, pda.getRecordedBy());
+            p.setDate(6, pda.getDateRecorded());
 
             p.executeUpdate();
             p.close();
@@ -523,6 +524,44 @@ public class APCPRequestDAO {
             String query = "SELECT * FROM past_due_accounts p "
                     + "JOIN ref_reasonPastDue r ON p.reasonPastDue=r.reasonPastDue "
                     + "WHERE p.requestID=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, requestID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                PastDueAccount p = new PastDueAccount();
+                p.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                p.setRequestID(rs.getInt(("requestID")));
+                p.setPastDueAmount(rs.getDouble("pastDueAmount"));
+                p.setDateSettled(rs.getDate("dateSettled"));
+                p.setReasonPastDue(rs.getInt("reasonPastDue"));
+                p.setReasonPastDueDesc(rs.getString("reasonPastDueDesc"));
+                p.setOtherReason(rs.getString("otherReason"));
+                p.setRecordedBy(rs.getInt("recordedBy"));
+                p.setActive(rs.getInt("active"));
+                pList.add(p);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pList;
+    }
+    
+    public ArrayList<PastDueAccount> getAllUnsettledPastDueAccountsByRequest(int requestID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<PastDueAccount> pList = new ArrayList();
+        try {
+            String query = "SELECT * FROM past_due_accounts p "
+                    + "JOIN ref_reasonPastDue r ON p.reasonPastDue=r.reasonPastDue "
+                    + "WHERE p.requestID=? AND dateSettled IS NULL";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, requestID);
             ResultSet rs = pstmt.executeQuery();
@@ -1027,6 +1066,90 @@ public class APCPRequestDAO {
                 ResultSet rs = pstmt.executeQuery();
                 if (rs.next()) {
                     sum += rs.getDouble("SUM(releaseAmount)");
+                }
+                rs.close();
+                pstmt.close();
+            }
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sum;
+    }
+    
+    public double getSumOfAccumulatedReleasesByRequestId(ArrayList<APCPRequest> apcpRequestList) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        double sum = 0;
+        try {
+            String query = "SELECT SUM(releaseAmount) FROM request_releases WHERE requestID=?";
+            for (APCPRequest r : apcpRequestList) {
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, r.getRequestID());
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    sum += rs.getDouble("SUM(releaseAmount)");
+                }
+                rs.close();
+                pstmt.close();
+            }
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sum;
+    }
+    
+    public double getTotalRequestedAmount(ArrayList<APCPRequest> apcpRequestList) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        double sum = 0;
+        try {
+            String query = "SELECT SUM(loanAmount) FROM apcp_requests WHERE requestID=?";
+            for (APCPRequest r : apcpRequestList) {
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, r.getRequestID());
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    sum += rs.getDouble("SUM(loanAmount)");
+                }
+                rs.close();
+                pstmt.close();
+            }
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sum;
+    }
+    
+    public double getTotalPastDueAmount(ArrayList<APCPRequest> apcpRequestList) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        double sum = 0;
+        try {
+            String query = "SELECT SUM(pastDueAmount) FROM past_due_accounts WHERE requestID=? AND dateSettled IS NULL";
+            for (APCPRequest r : apcpRequestList) {
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, r.getRequestID());
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    sum += rs.getDouble("SUM(pastDueAmount)");
                 }
                 rs.close();
                 pstmt.close();

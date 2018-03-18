@@ -52,7 +52,6 @@
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
-                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
                                 <div class="box-body">
@@ -326,14 +325,13 @@
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
-                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
                                 <div class="box-body">
                                     <div class="nav-tabs-custom">
                                         <ul class="nav nav-tabs">
                                             <li class="active"><a href="#release" data-toggle="tab">Release Line</a></li>
-                                            <li><a href="#pend" data-toggle="tab">Past-Due Requests</a></li>
+                                            <li><a href="#pastDue" data-toggle="tab">Past-Due Requests</a></li>
                                         </ul>
                                         <div class="tab-content">
                                             <div class="active tab-pane" id="release">
@@ -348,14 +346,14 @@
                                                     </thead>
                                                     <tbody>
                                                         <%
-                                                            for(APCPRequest r : releasedRequests){
+                                                            for (APCPRequest r : releasedRequests) {
                                                                 ARBO arbo = arboDAO.getARBOByID(r.getArboID());
-                                                            
+
                                                         %>
                                                         <tr>
                                                             <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%=r.getLoanTrackingNo()%></a></td>
                                                             <td><%=arbo.getArboName()%></td>
-                                                            <td><%=f.format(r.getReleases().get(r.getReleases().size()-1).getReleaseDate())%></td>
+                                                            <td><%=f.format(r.getReleases().get(r.getReleases().size() - 1).getReleaseDate())%></td>
                                                             <td  width=50%>
                                                                 <div class="progress">
                                                                     <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: <%out.print(r.getProgressBarWidth(apcpRequestDAO.getSumOfReleasesByRequestId(r.getRequestID()), r.getLoanAmount()));%>%">
@@ -377,60 +375,76 @@
                                                 </table>   
                                             </div>
                                             <!-- /.tab-pane -->
-                                            <div class="tab-pane" id="pend">
-                                                <table id="example3" class="table table-bordered table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Request ID</th>
-                                                            <th>Name of ARBO</th>
-                                                            <th>Loan Request</th>
-                                                            <th>Loan Amount</th>
-                                                            <th>Status</th>
-                                                            <th>Date</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>Rey ARBO</td>
-                                                            <td>April 1, 2011</td>
-                                                            <td>
-                                                                10100000
-                                                            </td>
-                                                            <td>
-                                                                <span class="label label-danger">RICE</span>
-                                                            </td>
-                                                            <td>
-                                                                April 1, 2011
-                                                            </td>
-                                                        </tr>
+                                            <div class="tab-pane" id="pastDue">
+                                                <div class ="row">
+                                                    <div class="col-xs-3"></div>
+                                                    <div class="col-xs-6">
+                                                        <div class="box-body">
+                                                            <canvas id="pieCanvasPastDue"></canvas>
+                                                            <div class="row text-center">
+                                                                <a class="btn btn-submit" data-toggle="modal" data-target="#modalPiePastDue">View More</a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal fade" id="modalPiePastDue">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span></button>
+                                                                        <h4 class="modal-title"></h4>
+                                                                    </div>
+                                                                    <div class="modal-body">
 
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <th>Request ID</th>
-                                                            <th>Name of ARBO</th>
-                                                            <th>Loan Request</th>
-                                                            <th>Loan Amount</th>
-                                                            <th>Status</th>
-                                                            <th>Date</th>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>  
+                                                                        <table class="table table-bordered table-striped modTable">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>ARBO Name</th>
+                                                                                    <th>No. of Members</th>
+
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+
+                                                                                <tr>
+                                                                                    <td></td>
+                                                                                    <td></td>
+                                                                                </tr>
+
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <th>ARBO Name</th>
+                                                                                    <th>City Mun ID</th>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- /.modal-content -->
+                                                            </div>
+                                                            <!-- /.modal-dialog -->
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-3"></div>
+                                                </div>
                                             </div>
                                             <!-- /.tab-pane -->
-                                  
+
                                         </div>
                                         <!-- /.tab-content -->
                                     </div>
                                     <!-- /.nav-tabs-custom -->
                                     <div class="box-footer">
                                         <div class="row">
-                                            
+
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
-                                                    
-                                                    <h5 class="description-header"><i>&#8369 </i><%=apcpRequestDAO.getYearlySumOfReleasesByRequestId(provincialRequests,year)%></h5>
+
+                                                    <h5 class="description-header"><i>&#8369 </i><%=apcpRequestDAO.getYearlySumOfReleasesByRequestId(provincialRequests, year)%></h5>
                                                     <span class="description-text">TOTAL YEARLY RELEASED AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
@@ -438,8 +452,7 @@
                                             <!-- /.col -->
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
-                                                    <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                                                    <h5 class="description-header"><i>&#8369</i>10,390.90</h5>
+                                                    <h5 class="description-header"><i>&#8369</i><%=apcpRequestDAO.getSumOfAccumulatedReleasesByRequestId(provincialRequests)%></h5>
                                                     <span class="description-text">TOTAL ACCUMULATED RELEASED AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
@@ -447,8 +460,7 @@
                                             <!-- /.col -->
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
-                                                    <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 20%</span>
-                                                    <h5 class="description-header"><i>&#8369</i>24,813.53</h5>
+                                                    <h5 class="description-header"><i>&#8369</i><%=apcpRequestDAO.getTotalRequestedAmount(provincialRequests)%></h5>
                                                     <span class="description-text">TOTAL REQUESTED AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
@@ -456,8 +468,7 @@
                                             <!-- /.col -->
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block">
-                                                    <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> 18%</span>
-                                                    <h5 class="description-header"><i>&#8369</i>1200</h5>
+                                                    <h5 class="description-header"><i>&#8369</i><%=apcpRequestDAO.getTotalPastDueAmount(provincialRequests)%></h5>
                                                     <span class="description-text">TOTAL PAST DUE AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
@@ -482,7 +493,6 @@
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
-                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
                                 <div class="box-body" >
@@ -648,7 +658,6 @@
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
-                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
 
@@ -802,6 +811,15 @@
                 String json3 = pie.getPieChartGender(arbListProvince);
             %>
                 new Chart(ctx3, <%out.print(json3);%>);
+                
+                var ctx4 = $('#pieCanvasPastDue').get(0).getContext('2d');
+            <%
+                Chart pie2 = new Chart();
+                String json4 = pie2.getPieChartPastDue(provincialRequests);
+            %>
+                new Chart(ctx4, <%out.print(json4);%>);
+                
+                
             });
         </script>
     </body>

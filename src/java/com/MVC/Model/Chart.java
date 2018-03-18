@@ -15,6 +15,8 @@ import be.ceau.chart.data.PieData;
 import be.ceau.chart.dataset.BarDataset;
 import be.ceau.chart.dataset.LineDataset;
 import be.ceau.chart.dataset.PieDataset;
+import com.MVC.DAO.APCPRequestDAO;
+import com.MVC.DAO.CAPDEVDAO;
 import java.util.ArrayList;
 import com.MVC.DAO.CropDAO;
 import com.MVC.Model.Crop;
@@ -82,11 +84,11 @@ public class Chart {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(d);
         int year = calendar.get(Calendar.YEAR);
-        
+
         String lastYear = Integer.toString(year - 1);
         String thisYear = Integer.toString(year);
         String nextYear = Integer.toString(year + 1);
-        
+
         int month = calendar.get(Calendar.MONTH);
         CropDAO cDAO = new CropDAO();
 
@@ -121,7 +123,7 @@ public class Chart {
         LineData data = new LineData();
 
         for (Crop arbC : crops) {
-            
+
             LineDataset dataset = new LineDataset();
             dataset.setBorderColor(Color.random());
             dataset.setBackgroundColor(Color.TRANSPARENT);
@@ -130,7 +132,6 @@ public class Chart {
                 dataset.addData(cDAO.getCountOfCropsByMonth(arbC, date));
             }
             data.addDataset(dataset);
-            
 
         }
         ArrayList<String> stringLabels = new ArrayList();
@@ -146,8 +147,8 @@ public class Chart {
         stringLabels.add("April");
         stringLabels.add("May");
         stringLabels.add("June");
-        
-        for(String label : stringLabels){
+
+        for (String label : stringLabels) {
             data.addLabel(label);
         }
 
@@ -235,11 +236,11 @@ public class Chart {
         ArrayList<ARB> dataMale = new ArrayList();
         ArrayList<ARB> dataFemale = new ArrayList();
 
-        for (int i = 0; i < arbGender.size(); i++) {
-            if (arbGender.get(i).getGender().equalsIgnoreCase("M")) {
-                dataMale.add(arbGender.get(i));
-            } else if (arbGender.get(i).getGender().equalsIgnoreCase("F")) {
-                dataFemale.add(arbGender.get(i));
+        for (ARB arb : arbGender) {
+            if (arb.getGender().equalsIgnoreCase("M")) {
+                dataMale.add(arb);
+            } else if (arb.getGender().equalsIgnoreCase("F")) {
+                dataFemale.add(arb);
             }
         }
         ArrayList<Integer> doubleFigures = new ArrayList();
@@ -270,7 +271,38 @@ public class Chart {
         return new PieChart(data).toJson();
     }
 
+    public String getPieChartPastDue(ArrayList<APCPRequest> unsettledProvincialRequests) {
+        CAPDEVDAO dao = new CAPDEVDAO();
+        APCPRequestDAO dao2 = new APCPRequestDAO();
+        ArrayList<PastDueAccount> reasons = dao.getAllPastDueReasons();
+        ArrayList<String> stringLabels = new ArrayList();
+        PieData data = new PieData();
+        PieDataset datasetReasons = new PieDataset();
 
+        for (PastDueAccount reason : reasons) {
+            int count = 0;
+            stringLabels.add(reason.getReasonPastDueDesc());
+            for (APCPRequest r : unsettledProvincialRequests) {
+                ArrayList<PastDueAccount> unsettled = dao2.getAllUnsettledPastDueAccountsByRequest(r.getRequestID());
+                for (PastDueAccount pda : unsettled) {
+                    if (pda.getReasonPastDue() == reason.getReasonPastDue()) {
+                        count++;
+                    }
+                }
+            }
+            datasetReasons.addData(count);
+            datasetReasons.addBackgroundColor(Color.random());
+            datasetReasons.setBorderWidth(2);
+        }
+        
+        data.addDataset(datasetReasons);
+        for(String l : stringLabels){
+            data.addLabel(l);
+        }
+        
+        
+        return new PieChart(data).toJson();
+    }
 
     public String getBarChartEducation(ArrayList<ARB> arbEducChart) {
         int noGrade = 0;

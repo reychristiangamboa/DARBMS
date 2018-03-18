@@ -18,11 +18,11 @@
             <%@include file="jspf/field-officer-navbar.jspf"%>
             <%@include file="jspf/point-person-sidebar.jspf"%>
             <%
-                APCPRequest r = apcpRequestDAO.getRequestByID((Integer)request.getAttribute("requestID"));
+                APCPRequest r = apcpRequestDAO.getRequestByID((Integer) request.getAttribute("requestID"));
                 ARBO a = arboDAO.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
-                ArrayList<APCPRelease> releaseList = apcpRequestDAO.getAllAPCPReleasesByRequest((Integer)request.getAttribute("requestID"));
-                
+                ArrayList<APCPRelease> releaseList = apcpRequestDAO.getAllAPCPReleasesByRequest((Integer) request.getAttribute("requestID"));
+
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -34,7 +34,7 @@
                         <small>Region I</small>
                     </h1>
                     <ol class="breadcrumb">
-                        
+
                     </ol>
 
                 </section>
@@ -42,15 +42,15 @@
 
                 <!-- Main content -->
                 <section class="content">
-                    <%if(request.getAttribute("success") != null){%>
+                    <%if (request.getAttribute("success") != null) {%>
                     <div class="alert alert-success alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String) request.getAttribute("success"));%></h4>
                     </div>
-                    <%}else if(request.getAttribute("errMessage") != null){%>
+                    <%} else if (request.getAttribute("errMessage") != null) {%>
                     <div class="alert alert-danger alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String) request.getAttribute("errMessage"));%></h4>
                     </div>
                     <%}%>
                     <div class="row">
@@ -117,8 +117,8 @@
 
                                                         <tbody>
                                                             <%
-                                                                for(APCPRelease release : releaseList){
-                                                                    User u = new User(); 
+                                                                for (APCPRelease release : releaseList) {
+                                                                    User u = new User();
                                                                     u = uDAO.searchUser(release.getReleasedBy());
                                                             %>
                                                             <tr>
@@ -139,7 +139,7 @@
                                                 </div>
                                                 <div class="box-footer">
                                                     <div class="pull-right">
-                                                        <%if((Integer)session.getAttribute("userType")==2){%>
+                                                        <%if ((Integer) session.getAttribute("userType") == 2) {%>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-release-modal">Import Releases</button>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-release-modal">Add Release</button>
                                                         <%}%>
@@ -161,8 +161,8 @@
 
                                                         <tbody>
                                                             <%
-                                                                for(Repayment repayment : r.getRepayments()){
-                                                                    User u = new User(); 
+                                                                for (Repayment repayment : r.getRepayments()) {
+                                                                    User u = new User();
                                                                     u = uDAO.searchUser(repayment.getRecordedBy());
                                                                     ARB arb = new ARB();
                                                                     arb = arbDAO.getARBByID(repayment.getArbID());
@@ -189,7 +189,7 @@
                                                 </div>
                                                 <div class="box-footer">
                                                     <div class="pull-right">
-                                                        <%if((Integer)session.getAttribute("userType")==2){%>
+                                                        <%if ((Integer) session.getAttribute("userType") == 2) {%>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-repayment-modal">Import Repayments</button>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-repayment-modal">Add Repayment</button>
                                                         <%}%>
@@ -213,8 +213,8 @@
 
                                                         <tbody>
                                                             <%
-                                                                for(PastDueAccount p : r.getPastDueAccounts()){
-                                                                    User u = new User(); 
+                                                                for (PastDueAccount p : r.getPastDueAccounts()) {
+                                                                    User u = new User();
                                                                     u = uDAO.searchUser(p.getRecordedBy());
                                                             %>
                                                             <tr>
@@ -222,9 +222,9 @@
                                                                 <td><%out.print(p.getReasonPastDueDesc());%></td>
                                                                 <td><%out.print(p.getOtherReason());%></td>
 
-                                                                <%if(p.getDateSettled() != null){%>
+                                                                <%if (p.getDateSettled() != null) {%>
                                                                 <td><%out.print(f.format(p.getDateSettled()));%></td>
-                                                                <%}else{%>
+                                                                <%} else {%>
                                                                 <td><%out.print("Unsettled.");%></td>
                                                                 <%}%>
 
@@ -256,7 +256,7 @@
                                                                                         <div class="form-group">
                                                                                             <label for="">Date Settled</label>
                                                                                             <div class="input-group">
-                                                                                                <input type="date" class="form-control" name="dateSettled" <%if(p.getDateSettled() != null){ %> value="<%out.print(p.getDateSettled());%>"<%}%>>
+                                                                                                <input type="date" class="form-control" name="dateSettled" <%if (p.getDateSettled() != null) { %> value="<%out.print(p.getDateSettled());%>"<%}%>>
                                                                                                 <input type="hidden" name="pastDueAccountID" value="<%=p.getPastDueAccountID()%>">
                                                                                                 <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
                                                                                                 <span class="input-group-btn">
@@ -316,10 +316,10 @@
                                                 </div>
                                                 <div class="box-footer">
                                                     <div class="pull-right">
-                                                        <%if((Integer)session.getAttribute("userType")==2){%>
+                                                        <%if ((Integer) session.getAttribute("userType") == 2) {%>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-pastdue-modal">Import Past Due Accounts</button>
                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-pastdue-modal">Add Past Due Account</button>
-                                                    <%}%>
+                                                        <%}%>
                                                     </div>
                                                 </div>
 
@@ -436,7 +436,7 @@
                                                     </thead>
 
                                                     <tbody>
-                                                        <%for(ARB arb : arbList){%>
+                                                        <%for (ARB arb : arbList) {%>
                                                         <tr>
                                                             <td><%out.print(arb.getFLName());%></td>
                                                             <td><%out.print(arb.getFullAddress());%></td>
@@ -539,10 +539,18 @@
                                                 <div class="form-group">
                                                     <label for="">Reason for Past Due </label>
                                                     <select class="form-control" name="reasonPastDue" id="">
-                                                        <%for(PastDueAccount p : reasons){%>
+                                                        <%for (PastDueAccount p : reasons) {%>
                                                         <option value="<%=p.getReasonPastDue()%>"><%out.print(p.getReasonPastDueDesc());%></option>
                                                         <%}%>
                                                     </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <div class="form-group">
+                                                    <label for="">Date Recorded</label>
+                                                    <input type="date" class="form-control" name="recordedDate" />
                                                 </div>
                                             </div>
                                         </div>
@@ -616,15 +624,15 @@
         <script>
             var ctx = $('#barCanvas').get(0).getContext('2d');
             <%
-                        Chart bar = new Chart();
-                        String json = bar.getBarChartEducation(arbList);
+                Chart bar = new Chart();
+                String json = bar.getBarChartEducation(arbList);
             %>
             new Chart(ctx, <%out.print(json);%>);
 
             var ctx3 = $('#pieCanvas').get(0).getContext('2d');
             <%
-                        Chart pie = new Chart();
-                        String json3 = pie.getPieChartGender(arbList);
+                Chart pie = new Chart();
+                String json3 = pie.getPieChartGender(arbList);
             %>
             new Chart(ctx3, <%out.print(json3);%>);
 
