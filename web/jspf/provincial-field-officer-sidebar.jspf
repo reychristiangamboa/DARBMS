@@ -22,24 +22,30 @@
 
 <%
     CropDAO cropDAO = new CropDAO();
-    ArrayList<Crop> allCrops = cropDAO.getAllCrops();
-
+    AddressDAO addressDAO = new AddressDAO();
+    ARBODAO arboDAO = new ARBODAO();
+    ARBDAO arbDAO = new ARBDAO();
+    APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+    CAPDEVDAO capdevDAO = new CAPDEVDAO();
+    UserDAO uDAO = new UserDAO();
+    
+    
     APCPRelease apcpRelease = new APCPRelease();
     
-    AddressDAO addressDAO = new AddressDAO();
+    ArrayList<Crop> allCrops = cropDAO.getAllCrops();
     ArrayList<Region> regionList = addressDAO.getAllRegions();
 
-    ARBODAO arboDAO = new ARBODAO();
+    
     ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
     ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
     ArrayList<ARBO> qualifiedARBOs = arboDAO.getAllQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
 
-    ARBDAO arbDAO = new ARBDAO();
+    
 
     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
     ArrayList<CityMun> cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
 
-    APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+    
     ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer) session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
@@ -48,7 +54,7 @@
     ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7, (Integer) session.getAttribute("provOfficeCode"));
 
-    CAPDEVDAO capdevDAO = new CAPDEVDAO();
+    
     ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
     ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
 
@@ -57,7 +63,7 @@
     ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
     ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
 
-    UserDAO uDAO = new UserDAO();
+    
     ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.getAttribute("provOfficeCode"));
 %>
 

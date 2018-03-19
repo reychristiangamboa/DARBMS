@@ -21,6 +21,16 @@
                 APCPRequest r = apcpRequestDAO.getRequestByID((Integer)request.getAttribute("requestID"));
                 ARBO a = arboDAO.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
+                
+                int category = 0;
+                
+                if((Integer)request.getAttribute("pastDueID") != null){
+                    category = 2;
+                }else{
+                    category = 1;
+                }
+                
+                ArrayList<CAPDEVActivity> categorizedActivities = capdevDAO.getCAPDEVActivitiesByCategory(category);
             %>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -153,7 +163,7 @@
                     if (x < max_fields) { //max input box allowed
                         x++; //text box increment
                         $('#count').val(x);
-                        $(wrapper).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity activity : activities){%><option value="<%out.print(activity.getActivityType());%>"><%out.print(activity.getActivityName());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right"></div></div></div><div class="col-xs-4"><div class="form-group"><label for="">Participants</label><input type="file" name="file[]" /></div></div></div>');
+                        $(wrapper).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity activity : categorizedActivities){%><option value="<%out.print(activity.getActivityType());%>"><%out.print(activity.getActivityName());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right"></div></div></div><div class="col-xs-4"><div class="form-group"><label for="">Participants</label><input type="file" name="file[]" /></div></div></div>');
                         $('.select2').select2();
                     }
                 });

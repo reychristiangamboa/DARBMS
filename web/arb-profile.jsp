@@ -89,7 +89,7 @@
                                 <div class="box-body box-profile">
                                     <h3 class="profile-username text-center"><%=arb.getFullName()%></h3>
                                     <div class="rate center-block">
-                                        <span class="fa fa-star checked" style></span>
+                                        <span class="fa fa-star checked"></span>
                                         <span class="fa fa-star checked"></span>
                                         <span class="fa fa-star checked"></span>
                                         <span class="fa fa-star"></span>
@@ -117,9 +117,6 @@
                                             <b>Land Area</b> <a class="pull-right"><%out.print(arb.getLandArea());%> Hectares</a>
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Crops</b> <a class="pull-right">543</a>
-                                        </li>
-                                        <li class="list-group-item">
                                             <%if (arb.getDependents().size() > 0) {%>
                                             <b>Dependents</b> <a class="pull-right" data-toggle="modal" data-target="#dependents"><%=arb.getDependents().size()%></a>
                                             <%} else {%>
@@ -129,6 +126,60 @@
                                     </ul>
                                 </div>
                                 <!-- /.box-body -->
+
+                                <div class="modal fade" id="dependents">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title">Dependents</h4>
+                                            </div>
+
+
+                                            <div class="modal-body" id="modalBody">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <table id="arbTable" class="table table-bordered table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Full Name</th>
+                                                                    <th>Birthday</th>
+                                                                    <th>Education Level</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                                <%
+                                                                    for (Dependent d : arb.getDependents()) {
+                                                                %>
+                                                                <tr>
+                                                                    <td><%=d.getName()%></td>
+                                                                    <td><%=f.format(d.getBirthday())%></td>
+                                                                    <td><%=d.getEducationLevelDesc()%></td>
+                                                                </tr>
+                                                                <%}%>
+                                                            </tbody>
+
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th>Full Name</th>
+                                                                    <th>Birthday</th>
+                                                                    <th>Education Level</th>
+                                                                </tr>
+                                                            </tfoot>
+
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!--                                            /.modal-content -->
+                                    </div>
+                                    <!--                                        /.modal-dialog -->
+                                </div>
+
                                 <div class="modal fade" id="add-evaluation">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -231,10 +282,62 @@
                                     <strong><i class="fa fa-file-text-o margin-r-5"></i> Crops</strong>
 
                                     <p>
-                                        <%for (Crop c : arb.getCrops()) {%>
+                                        <%for (Crop c : arb.getCurrentCrops()) {%>
                                         <span class="label label-success"><%=c.getCropTypeDesc()%></span>
                                         <%}%>
                                     </p>
+                                    <a href="#" data-toggle="modal" data-target="#cropTimeline" class="text-center">View Crop Timeline</a>
+
+                                    <div class="modal fade" id="cropTimeline">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title">Crop Timeline</h4>
+                                                </div>
+
+                                                <div class="modal-body" style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
+                                                    <ul class="timeline">
+                                                        <%
+                                                            boolean firstInstance = true;
+                                                            Date date = null;
+                                                        %>
+                                                        <%for(Crop c : arb.getCrops()){%>
+
+                                                        <li class="time-label">
+                                                            <span class="bg-aqua">
+                                                                <%=c.getCropTypeDesc()%>
+                                                            </span>
+                                                        </li>
+
+                                                        <li>
+                                                            <i class="fa fa-calendar-check-o bg-green"></i>
+                                                            <div class="timeline-item">
+                                                                <h3 class="timeline-header">
+                                                                    Start Date: <%out.print(f.format(c.getStartDate()));%>
+                                                                </h3>
+                                                            </div>
+                                                        </li>
+                                                        
+                                                        <li>
+                                                            <i class="fa fa-calendar-times-o bg-red"></i>
+                                                            <div class="timeline-item">
+                                                                <h3 class="timeline-header">
+                                                                    End Date: <%out.print(f.format(c.getEndDate()));%>
+                                                                </h3>
+                                                            </div>
+                                                        </li>
+                                                        <%}%>
+                                                    </ul>
+
+                                                </div>
+
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
                                 </div>
                                 <!-- /.box-body -->
                             </div>

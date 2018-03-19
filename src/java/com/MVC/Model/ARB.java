@@ -32,6 +32,7 @@ public class ARB {
     private String regDesc;
     private ArrayList<Dependent> dependents = new ArrayList();
     private ArrayList<Crop> crops = new ArrayList();
+    private ArrayList<Crop> currentCrops = new ArrayList();
     private String gender;
     private int educationLevel;
     private String educationLevelDesc;
@@ -190,6 +191,14 @@ public class ARB {
         this.crops = crops;
     }
 
+    public ArrayList<Crop> getCurrentCrops() {
+        return currentCrops;
+    }
+
+    public void setCurrentCrops(ArrayList<Crop> currentCrops) {
+        this.currentCrops = currentCrops;
+    }
+    
     public String getGender() {
         return gender;
     }
@@ -274,11 +283,9 @@ public class ARB {
         this.isPresent = isPresent;
     }
     
-    
-    
     public String printAllCrops(){
         StringBuilder sb = new StringBuilder();
-        for(Crop c : crops){
+        for(Crop c : currentCrops){
             sb.append(c.getCropTypeDesc() + " ");
         }
         return sb.toString();

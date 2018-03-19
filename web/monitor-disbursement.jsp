@@ -16,12 +16,29 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
+            <%if ((Integer) session.getAttribute("userType") == 1) {%>
+            <%@include file="jspf/admin-sidebar.jspf"%>
+            <%} else if ((Integer) session.getAttribute("userType") == 2) {%>
             <%@include file="jspf/point-person-sidebar.jspf"%>
+            <%} else if ((Integer) session.getAttribute("userType") == 3) {%>
+            <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
+            <%} else if ((Integer) session.getAttribute("userType") == 4) {%>
+            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
+            <%} else if ((Integer) session.getAttribute("userType") == 5) {%>
+            <%@include file="jspf/central-sidebar.jspf"%>
+            <%}%>
             <%
-                APCPRequest r = apcpRequestDAO.getRequestByID((Integer)request.getAttribute("requestID"));
-                APCPRelease release = apcpRequestDAO.getAPCPReleaseByID((Integer)request.getAttribute("releaseID"));
-                ARBO a = arboDAO.getARBOByID(r.getArboID());
-                ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
+                ARBDAO arbDAO99 = new ARBDAO();
+                ARBODAO arboDAO99 = new ARBODAO();
+                APCPRequestDAO apcpRequestDAO99 = new APCPRequestDAO();
+                CAPDEVDAO capdevDAO99 = new CAPDEVDAO();
+                UserDAO uDAO99 = new UserDAO();
+                
+                ArrayList<CAPDEVActivity> activities = capdevDAO99.getCAPDEVActivities();
+                APCPRequest r = apcpRequestDAO99.getRequestByID((Integer)request.getAttribute("requestID"));
+                APCPRelease release = apcpRequestDAO99.getAPCPReleaseByID((Integer)request.getAttribute("releaseID"));
+                ARBO a = arboDAO99.getARBOByID(r.getArboID());
+                ArrayList<ARB> arbList = arbDAO99.getAllARBsARBO(r.getArboID());
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -77,7 +94,7 @@
                                         <div class="col-xs-3">
                                             <div class="form-group">
                                                 <label for="">No. of ARBs</label>
-                                                <input type="text" class="form-control" id="" placeholder="" value="<%out.print(arboDAO.getARBCount(a.getArboID()));%>" disabled>
+                                                <input type="text" class="form-control" id="" placeholder="" value="<%out.print(arboDAO99.getARBCount(a.getArboID()));%>" disabled>
                                             </div>
                                         </div>
                                         <div class="col-xs-3">
@@ -160,7 +177,7 @@
                                                         <tbody>
                                                             <%
                                                                 for(Disbursement d : release.getDisbursements()){
-                                                                    ARB arb = arbDAO.getARBByID(d.getArbID());
+                                                                    ARB arb = arbDAO99.getARBByID(d.getArbID());
                                                             %>
                                                             <tr>
 
@@ -182,8 +199,10 @@
 
                                     <div class="box-footer">
                                         <div class="pull-right">
+                                            <%if((Integer)session.getAttribute("userType") == 2){%>
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-disbursements-modal">Import Disbursements</button>
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-disbursement-modal">Add Disbursement</button>
+                                            <%}%>
                                         </div>
 
                                     </div>

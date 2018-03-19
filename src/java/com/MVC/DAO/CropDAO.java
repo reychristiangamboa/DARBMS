@@ -56,7 +56,10 @@ public class CropDAO {
         Connection con = myFactory.getConnection();
         ArrayList<Crop> cropList = new ArrayList();
         try {
-            String query = "SELECT * FROM crops c JOIN ref_croptype t ON c.cropTag=t.cropType WHERE c.arbID=? GROUP BY c.cropTag, c.arbID ";
+            String query = "SELECT * FROM crops c "
+                    + "JOIN ref_croptype t "
+                    + "ON c.cropTag=t.cropType "
+                    + "WHERE c.arbID=? GROUP BY c.cropTag, c.arbID ";
 
             for (ARB arb : arbList) {
                 PreparedStatement pstmt = con.prepareStatement(query);

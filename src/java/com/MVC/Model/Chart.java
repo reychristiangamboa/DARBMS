@@ -16,6 +16,7 @@ import be.ceau.chart.dataset.BarDataset;
 import be.ceau.chart.dataset.LineDataset;
 import be.ceau.chart.dataset.PieDataset;
 import com.MVC.DAO.APCPRequestDAO;
+import com.MVC.DAO.ARBDAO;
 import com.MVC.DAO.CAPDEVDAO;
 import java.util.ArrayList;
 import com.MVC.DAO.CropDAO;
@@ -304,35 +305,32 @@ public class Chart {
         return new PieChart(data).toJson();
     }
     
-    public String getPieChartDisbursement(ArrayList<APCPRequest> unsettledProvincialRequests) {
-        CAPDEVDAO dao = new CAPDEVDAO();
+    public String getPieChartDisbursement(ArrayList<ARB> arbList) {
+        
         APCPRequestDAO dao2 = new APCPRequestDAO();
-        ArrayList<PastDueAccount> reasons = dao.getAllPastDueReasons();
         ArrayList<String> stringLabels = new ArrayList();
         PieData data = new PieData();
-        PieDataset datasetReasons = new PieDataset();
-
-        for (PastDueAccount reason : reasons) {
-            int count = 0;
-            stringLabels.add(reason.getReasonPastDueDesc());
-            for (APCPRequest r : unsettledProvincialRequests) {
-                ArrayList<PastDueAccount> unsettled = dao2.getAllUnsettledPastDueAccountsByRequest(r.getRequestID());
-                for (PastDueAccount pda : unsettled) {
-                    if (pda.getReasonPastDue() == reason.getReasonPastDue()) {
-                        count++;
-                    }
-                }
+        PieDataset datasetDisbursements = new PieDataset();
+        
+        for(ARB arb : arbList){
+            double amount = 0;
+            stringLabels.add(arb.getFLName());
+            ArrayList<Disbursement> disbursements = dao2.getAllDisbursementsByARB(arb.getArbID());
+            
+            for(Disbursement d : disbursements){
+                amount += d.getDisbursedAmount();
             }
-            datasetReasons.addData(count);
-            datasetReasons.addBackgroundColor(Color.random());
-            datasetReasons.setBorderWidth(2);
+            
+            datasetDisbursements.addData(amount);
+            datasetDisbursements.addBackgroundColor(Color.random());
+            datasetDisbursements.setBorderWidth(2);
+        
         }
         
-        data.addDataset(datasetReasons);
+        data.addDataset(datasetDisbursements);
         for(String l : stringLabels){
             data.addLabel(l);
         }
-        
         
         return new PieChart(data).toJson();
     }

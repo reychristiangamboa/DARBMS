@@ -51,6 +51,9 @@ public class ARBODAO {
             } else {
                 return null;
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -158,6 +161,9 @@ public class ARBODAO {
                 arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arboList.add(arbo);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -198,6 +204,9 @@ public class ARBODAO {
                 arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arboList.add(arbo);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -238,6 +247,9 @@ public class ARBODAO {
                 arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arboList.add(arbo);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -248,6 +260,7 @@ public class ARBODAO {
         }
         return arboList;
     }
+
     public ArrayList<ARBO> getAllARBOsByCityMun(int cityMun) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -277,6 +290,9 @@ public class ARBODAO {
                 arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arboList.add(arbo);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -312,6 +328,9 @@ public class ARBODAO {
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
                 arboList.add(arbo);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -347,6 +366,9 @@ public class ARBODAO {
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
                 arboList.add(arbo);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -373,7 +395,9 @@ public class ARBODAO {
             while (rs.next()) {
                 arboCount = rs.getInt("COUNT(*)");
             }
-
+            rs.close();
+            p.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -384,8 +408,8 @@ public class ARBODAO {
         }
         return arboCount;
     }
-    
-    public boolean updateARBOStatus(int arboID, int status){
+
+    public boolean updateARBOStatus(int arboID, int status) {
         boolean success = false;
         PreparedStatement p = null;
         Connection con = null;

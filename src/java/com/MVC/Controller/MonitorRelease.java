@@ -22,7 +22,7 @@ public class MonitorRelease extends BaseServlet {
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int requestID = Integer.parseInt(request.getParameter("id"));
         request.setAttribute("requestID", requestID);
-        request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
+        request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
     }
 
     

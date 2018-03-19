@@ -210,6 +210,9 @@ public class APCPRequestDAO {
                 r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
                 r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -256,6 +259,9 @@ public class APCPRequestDAO {
                 r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
                 apcpRequest.add(r);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -934,6 +940,41 @@ public class APCPRequestDAO {
         }
         return dList;
     }
+    
+    public ArrayList<Disbursement> getAllDisbursementsByARB(int arbID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Disbursement> dList = new ArrayList();
+        try {
+            String query = "SELECT * FROM disbursements d "
+                    + "WHERE d.arbID=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, arbID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Disbursement d = new Disbursement();
+                d.setDisbursementID(rs.getInt("disbursementID"));
+                d.setReleaseID(rs.getInt("releaseID"));
+                d.setArbID(rs.getInt("arbID"));
+                d.setDisbursedAmount(rs.getDouble("disbursedAmount"));
+                d.setOSBalance(rs.getDouble("OSBalance"));
+                d.setDateDisbursed(rs.getDate("dateDisbursed"));
+                d.setDisbursedBy(rs.getInt("disbursedBy"));
+                dList.add(d);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return dList;
+    }
 
     // FOR REPORTS
     public ArrayList<APCPRequest> getAllProvincialRequests(int provinceID) {
@@ -1211,7 +1252,7 @@ public class APCPRequestDAO {
         return sum;
     }
 
-    public double getTotalRequestedAmount(ArrayList<APCPRequest> apcpRequestList) {
+    public double getTotalApprovedAmount(ArrayList<APCPRequest> apcpRequestList) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         double sum = 0;
@@ -1291,6 +1332,8 @@ public class APCPRequestDAO {
                 r.setDateRepayment(rs.getDate("repaymentDate"));
                 repayment.add(r);
             }
+            rs.close();
+            p.close();
             con.commit();
             con.close();
 

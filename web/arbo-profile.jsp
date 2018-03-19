@@ -440,7 +440,7 @@
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="disbursement">
                                                 <div class="box-body">
-                                                    <canvas id="pieCanvas" style="height:250px"></canvas>
+                                                    <canvas id="pieDisbursements" style="height:250px"></canvas>
                                                 </div>
                                             </div>
                                             <!-- /.tab-pane -->
@@ -463,7 +463,7 @@
                                                             <!--                                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
                                                             <h3 class="timeline-header"><i>&#8369</i><%=repayment.getAmount()%></h3>
                                                             <div class="timeline-body">
-                                                                
+
                                                                 <i class="fa  fa-user"></i>&nbsp;<%=dao2.getARBByID(repayment.getArbID()).getFullName()%>
                                                             </div>
                                                         </div>
@@ -505,19 +505,42 @@
                                             <div class="active tab-pane" id="apcpCapdev">
                                                 <div class="col-xs-12" style="margin:10px;" >
                                                     <ul class="timeline">
-
+                                                        <%
+                                                            boolean firstInstance = true;
+                                                            Date date = null;
+                                                        %>
                                                         <% for (CAPDEVActivity activity : activityHistory) { %>
+                                                        <% 
+                                                            boolean dateChanged = false;
+                                                            
+                                                            if(firstInstance){ // FIRST INSTANCE
+                                                                date = activity.getActivityDate();
+                                                            }
+                                                        %>
+
+                                                        <%
+                                                            if(date.compareTo(activity.getActivityDate()) != 0){ // NEW DATE, change currDate
+                                                                date = activity.getActivityDate();
+                                                                dateChanged = true;
+                                                                System.out.print("Date changed!");
+                                                            }
+                                                        %>
+
+                                                        <%if(firstInstance || dateChanged){%>
                                                         <li class="time-label">
                                                             <span class="bg-green">
-                                                                <%out.print(f.format(activity.getActivityDate()));%>
+                                                                <%out.print(f.format(date));%>
                                                             </span>
                                                         </li>
+                                                        <%firstInstance = false;%>
+                                                        <%}%>
+
                                                         <li>
-                                                            <!-- for loop for plans -->
                                                             <i class="fa fa-clipboard bg-green"></i>
                                                             <div class="timeline-item">
-                                                                <!--                                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
-                                                                <h3 class="timeline-header"><a href="#" data-toggle='modal' data-target='#activity<%out.print(activity.getActivityID());%>'><%out.print(activity.getActivityName());%></a></h3>
+                                                                <h3 class="timeline-header">
+                                                                    <a href="#" data-toggle='modal' data-target='#activity<%out.print(activity.getActivityID());%>'><%out.print(activity.getActivityName());%></a>
+                                                                </h3>
                                                             </div>
                                                         </li>
 
@@ -673,6 +696,15 @@
                 String json3 = pie.getPieChartGender(arbListARBO);
             %>
                 new Chart(ctx3, <%out.print(json3);%>);
+
+                var ctx4 = $('#pieDisbursements').get(0).getContext('2d');
+            <%
+                Chart pie2 = new Chart();
+                String json4 = pie2.getPieChartDisbursement(arbListARBO);
+            %>
+                new Chart(ctx4, <%out.print(json4);%>);
+
+
             });
         </script>
     </body>

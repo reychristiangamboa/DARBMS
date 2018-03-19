@@ -36,8 +36,7 @@ public class RecordRequestRelease extends BaseServlet {
         APCPRequestDAO dao = new APCPRequestDAO();
         APCPRelease r = new APCPRelease();
         APCPRequest req = dao.getRequestByID(Integer.parseInt(request.getParameter("requestID")));
-        boolean success = false;
-        
+
         r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         r.setReleaseAmount(Double.parseDouble(request.getParameter("releaseAmount")));
 
@@ -51,20 +50,35 @@ public class RecordRequestRelease extends BaseServlet {
         }
 
         r.setReleaseDate(releaseDate);
-        r.setReleasedBy((Integer)session.getAttribute("userID"));
-        
-        if(!dao.requestHasRelease(req)){
+        r.setReleasedBy((Integer) session.getAttribute("userID"));
+
+        if (!dao.requestHasRelease(req)) {
             dao.updateRequestStatus(req.getRequestID(), 5);
         }
 
-        if (dao.addRequestRelease(r)) {
-            request.setAttribute("success", "Request Release successfully recorded!");
+        double limit = 0;
+        double finalLimit = 0;
+
+        for (APCPRelease release : req.getReleases()) {
+            limit += release.getReleaseAmount();
+        }
+
+        finalLimit = req.getLoanAmount() - limit;
+
+        if (r.getReleaseAmount() > finalLimit) {
+            request.setAttribute("errMessage", "Release amount exceeds Request loan amount. Try again.");
             request.setAttribute("requestID", r.getRequestID());
             request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
         } else {
-            request.setAttribute("errMessage", "Error in recording Request Release.");
-            request.setAttribute("requestID", r.getRequestID());
-            request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
+            if (dao.addRequestRelease(r)) {
+                request.setAttribute("success", "Request Release successfully recorded!");
+                request.setAttribute("requestID", r.getRequestID());
+                request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
+            } else {
+                request.setAttribute("errMessage", "Error in recording Request Release.");
+                request.setAttribute("requestID", r.getRequestID());
+                request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
+            }
         }
 
     }

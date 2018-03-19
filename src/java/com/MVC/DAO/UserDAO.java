@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * @author Rey Christian
  */
 public class UserDAO {
-    
+
     public User findUser(String email) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -45,6 +45,9 @@ public class UserDAO {
             } else {
                 return null;
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -55,7 +58,7 @@ public class UserDAO {
         }
         return u;
     }
-    
+
     public boolean loginUser(User u) {
         boolean success = false;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -83,7 +86,7 @@ public class UserDAO {
         }
         return success;
     }
-    
+
     public User searchUser(int userID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -108,6 +111,9 @@ public class UserDAO {
             } else {
                 return null;
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -118,7 +124,7 @@ public class UserDAO {
         }
         return u;
     }
-    
+
     public ArrayList<User> getAllUsers() {
         ArrayList<User> userList = new ArrayList();
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -142,6 +148,9 @@ public class UserDAO {
                 u.setRegOfficeCode(rs.getInt("regOfficeCode"));
                 userList.add(u);
             }
+            rs.close();
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -152,7 +161,7 @@ public class UserDAO {
         }
         return userList;
     }
-    
+
     public ArrayList<User> getAllPointPersonProvince(int provOfficeCode) {
         ArrayList<User> userList = new ArrayList();
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -177,6 +186,9 @@ public class UserDAO {
                 u.setRegOfficeCode(rs.getInt("regOfficeCode"));
                 userList.add(u);
             }
+            rs.close();
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -187,8 +199,7 @@ public class UserDAO {
         }
         return userList;
     }
-    
-    
+
     public boolean addPersonnel(User u) throws SQLException {
         boolean success = false;
         PreparedStatement pstmt = null;
@@ -226,13 +237,13 @@ public class UserDAO {
         }
         return success;
     }
-    
-    public boolean editPersonalInformation(User u, int userID){
+
+    public boolean editPersonalInformation(User u, int userID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         PreparedStatement p = null;
         boolean success = false;
-        try{
+        try {
             con.setAutoCommit(false);
             String query = "UPDATE `dar-bms`.`users` SET `fullName`=?, `address`=?, `contactNo`=? WHERE `userID`=?;";
             p = con.prepareStatement(query);
@@ -255,18 +266,18 @@ public class UserDAO {
         }
         return success;
     }
-    
-    public boolean editAccount(User u, int userID){
+
+    public boolean editAccount(User u, int userID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         PreparedStatement p = null;
         boolean success = false;
-        try{
+        try {
             con.setAutoCommit(false);
             String query = "UPDATE `dar-bms`.`users` SET `email`=?, `password`= sha2(?,224) WHERE `userID`=?;";
             p = con.prepareStatement(query);
             p.setString(1, u.getEmail());
-            p.setString(2, u.getPassword()) ;
+            p.setString(2, u.getPassword());
             p.setInt(3, userID);
             p.executeUpdate();
             p.close();
@@ -283,7 +294,7 @@ public class UserDAO {
         }
         return success;
     }
-    
+
     public void activateAccount(String[] userList) throws SQLException {
 
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -318,7 +329,7 @@ public class UserDAO {
             }
         }
     }
-    
+
     public void deactivateAccount(String[] userList) throws SQLException {
 
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -353,7 +364,7 @@ public class UserDAO {
             }
         }
     }
-    
+
     public ArrayList<User> retrieveAllActiveUsers() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -375,6 +386,9 @@ public class UserDAO {
                 u.setActive(rs.getInt("active"));
                 list.add(u);
             }
+            rs.close();
+            p.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -385,7 +399,7 @@ public class UserDAO {
         }
         return list;
     }
-    
+
     public ArrayList<User> retrieveAllInactiveUsers() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -407,6 +421,9 @@ public class UserDAO {
                 u.setActive(rs.getInt("active"));
                 list.add(u);
             }
+            rs.close();
+            p.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -417,5 +434,5 @@ public class UserDAO {
         }
         return list;
     }
-    
+
 }

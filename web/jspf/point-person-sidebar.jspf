@@ -34,7 +34,6 @@
     EvaluationDAO eDAO = new EvaluationDAO();
     
     ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
-    ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
     
     ArrayList<CAPDEVPlan> assignedPlans = capdevDAO.getAssignedRequestCAPDEVPlans((Integer)session.getAttribute("userID"));
     ArrayList<CAPDEVPlan> assignedPROs = capdevDAO.getAssignedPreReleasePlans((Integer)session.getAttribute("userID"));
@@ -79,17 +78,6 @@
                 <a href="point-person-view-apcp.jsp">
                     <i class="fa fa-edit"></i> <span> View APCP</span>
                 </a>
-            </li>
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-users"></i> <span>ARBOs</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="point-person-review-capdev-attendance.jsp"><i class="fa fa-eye"></i> View CAPDEV Attendance</a></li>                    
-                </ul>
             </li>
             <li>
                 <a href="edit-profile.jsp">

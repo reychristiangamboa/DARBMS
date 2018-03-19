@@ -19,6 +19,8 @@ public class CAPDEVActivity {
     private int planID;
     private int activityType;
     private int activityCategory;
+    private String activityCategoryDesc;
+    private String technicalAssistant;
     private Date activityDate;
     private String observations;
     private String recommendation;
@@ -58,6 +60,30 @@ public class CAPDEVActivity {
 
     public void setActivityType(int activityType) {
         this.activityType = activityType;
+    }
+
+    public int getActivityCategory() {
+        return activityCategory;
+    }
+
+    public void setActivityCategory(int activityCategory) {
+        this.activityCategory = activityCategory;
+    }
+
+    public String getActivityCategoryDesc() {
+        return activityCategoryDesc;
+    }
+
+    public void setActivityCategoryDesc(String activityCategoryDesc) {
+        this.activityCategoryDesc = activityCategoryDesc;
+    }
+    
+    public String getTechnicalAssistant() {
+        return technicalAssistant;
+    }
+
+    public void setTechnicalAssistant(String technicalAssistant) {
+        this.technicalAssistant = technicalAssistant;
     }
     
     public String getActivityDesc() {

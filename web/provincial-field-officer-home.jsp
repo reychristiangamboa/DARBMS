@@ -460,8 +460,8 @@
                                             <!-- /.col -->
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
-                                                    <h5 class="description-header"><i>&#8369</i><%=apcpRequestDAO.getTotalRequestedAmount(provincialRequests)%></h5>
-                                                    <span class="description-text">TOTAL REQUESTED AMOUNT</span>
+                                                    <h5 class="description-header"><i>&#8369</i><%=apcpRequestDAO.getTotalApprovedAmount(approvedRequests)%></h5>
+                                                    <span class="description-text">TOTAL APPROVED AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>

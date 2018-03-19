@@ -11,9 +11,11 @@ import com.MVC.Model.ARBO;
 import com.MVC.Model.Crop;
 import com.MVC.Model.Dependent;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,6 +62,7 @@ public class ARBDAO {
                 arb.setEducationLevel(rs.getInt("educationLevel"));
                 arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
                 arb.setLandArea(rs.getDouble("landArea"));
+                arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
                 arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
                 arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
                 arb.setArbRating(rs.getDouble("arbRating"));
@@ -119,6 +122,7 @@ public class ARBDAO {
                 arb.setEducationLevel(rs.getInt("educationLevel"));
                 arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
                 arb.setLandArea(rs.getDouble("landArea"));
+                arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
                 arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
                 arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
                 arb.setArbRating(rs.getDouble("arbRating"));
@@ -180,6 +184,7 @@ public class ARBDAO {
                     arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
                     arb.setLandArea(rs.getDouble("landArea"));
                     arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
+                    arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
                     arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
                     arb.setArbRating(rs.getDouble("arbRating"));
                     arb.setArbStatus(rs.getInt("arbStatus"));
@@ -201,6 +206,50 @@ public class ARBDAO {
         return arbList;
     }
 
+    public ArrayList<Crop> getAllARBCurrentCrops(int arbID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Crop> cropList = new ArrayList();
+        CropDAO cDAO = new CropDAO();
+        try {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Long l = System.currentTimeMillis();
+            Date d = new Date(l);
+            String dStr = sdf.format(d);
+
+            String query = "SELECT * FROM `dar-bms`.arbs a "
+                    + "JOIN `dar-bms`.crops c ON a.arbID=c.arbID "
+                    + "JOIN `dar-bms`.ref_cropType ct ON c.cropTag=ct.cropType "
+                    + "WHERE (a.arbID=?) AND ('" + dStr + "' BETWEEN c.startDate AND c.endDate)";
+
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, arbID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Crop c = new Crop();
+                c.setCropType(rs.getInt("cropTag"));
+                c.setCropTypeDesc(rs.getString("cropTypeDesc"));
+
+                if (!cDAO.checkIfCropExist(cropList, c)) {
+                    cropList.add(c);
+                }
+
+            }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cropList;
+    }
+
     public ArrayList<Crop> getAllARBCrops(int arbID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -209,7 +258,7 @@ public class ARBDAO {
             String query = "SELECT * FROM `dar-bms`.arbs a "
                     + "JOIN `dar-bms`.crops c ON a.arbID=c.arbID "
                     + "JOIN `dar-bms`.ref_cropType ct ON c.cropTag=ct.cropType "
-                    + "WHERE a.arbID=?";
+                    + "WHERE a.arbID=? ORDER BY c.startDate";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, arbID);
             ResultSet rs = pstmt.executeQuery();
@@ -398,6 +447,8 @@ public class ARBDAO {
             if (rs.next()) {
                 id = rs.getInt("educationLevel");
             }
+            rs.close();
+            pstmt.close();
             con.close();
         } catch (SQLException ex) {
             try {
@@ -422,6 +473,9 @@ public class ARBDAO {
             if (rs.next()) {
                 id = rs.getInt("cropType");
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();

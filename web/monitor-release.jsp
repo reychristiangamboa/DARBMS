@@ -16,13 +16,30 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
+            
+            <%if ((Integer) session.getAttribute("userType") == 1) {%>
+            <%@include file="jspf/admin-sidebar.jspf"%>
+            <%} else if ((Integer) session.getAttribute("userType") == 2) {%>
             <%@include file="jspf/point-person-sidebar.jspf"%>
+            <%} else if ((Integer) session.getAttribute("userType") == 3) {%>
+            <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
+            <%} else if ((Integer) session.getAttribute("userType") == 4) {%>
+            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
+            <%} else if ((Integer) session.getAttribute("userType") == 5) {%>
+            <%@include file="jspf/central-sidebar.jspf"%>
+            <%}%>
             <%
-                APCPRequest r = apcpRequestDAO.getRequestByID((Integer) request.getAttribute("requestID"));
-                ARBO a = arboDAO.getARBOByID(r.getArboID());
-                ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
-                ArrayList<APCPRelease> releaseList = apcpRequestDAO.getAllAPCPReleasesByRequest((Integer) request.getAttribute("requestID"));
-
+                ARBDAO arbDAO99 = new ARBDAO();
+                ARBODAO arboDAO99 = new ARBODAO();
+                APCPRequestDAO apcpRequestDAO99 = new APCPRequestDAO();
+                CAPDEVDAO capdevDAO99 = new CAPDEVDAO();
+                UserDAO uDAO99 = new UserDAO();
+                
+                APCPRequest r = apcpRequestDAO99.getRequestByID((Integer) request.getAttribute("requestID"));
+                ARBO a = arboDAO99.getARBOByID(r.getArboID());
+                ArrayList<ARB> arbList = arbDAO99.getAllARBsARBO(r.getArboID());
+                ArrayList<APCPRelease> releaseList = apcpRequestDAO99.getAllAPCPReleasesByRequest((Integer) request.getAttribute("requestID"));
+                ArrayList<PastDueAccount> reasons = capdevDAO99.getAllPastDueReasons();
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -119,7 +136,7 @@
                                                             <%
                                                                 for (APCPRelease release : releaseList) {
                                                                     User u = new User();
-                                                                    u = uDAO.searchUser(release.getReleasedBy());
+                                                                    u = uDAO99.searchUser(release.getReleasedBy());
                                                             %>
                                                             <tr>
                                                                 <td><a href="MonitorDisbursement?releaseID=<%out.print(release.getReleaseID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(release.getReleaseAmount());%></a></td>
@@ -163,9 +180,9 @@
                                                             <%
                                                                 for (Repayment repayment : r.getRepayments()) {
                                                                     User u = new User();
-                                                                    u = uDAO.searchUser(repayment.getRecordedBy());
+                                                                    u = uDAO99.searchUser(repayment.getRecordedBy());
                                                                     ARB arb = new ARB();
-                                                                    arb = arbDAO.getARBByID(repayment.getArbID());
+                                                                    arb = arbDAO99.getARBByID(repayment.getArbID());
                                                             %>
                                                             <tr>
                                                                 <td><%out.print(repayment.getAmount());%></td>
@@ -215,7 +232,7 @@
                                                             <%
                                                                 for (PastDueAccount p : r.getPastDueAccounts()) {
                                                                     User u = new User();
-                                                                    u = uDAO.searchUser(p.getRecordedBy());
+                                                                    u = uDAO99.searchUser(p.getRecordedBy());
                                                             %>
                                                             <tr>
                                                                 <td><a href="#" data-toggle="modal" data-target="#pastDueModal<%out.print(p.getPastDueAccountID());%>"><%out.print(p.getPastDueAmount());%></a></td>

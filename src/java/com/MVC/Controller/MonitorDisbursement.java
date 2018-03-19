@@ -24,7 +24,7 @@ public class MonitorDisbursement extends BaseServlet {
         int requestID = Integer.parseInt(request.getParameter("requestID"));
         request.setAttribute("releaseID", releaseID);
         request.setAttribute("requestID", requestID);
-        request.getRequestDispatcher("point-person-monitor-disbursement.jsp").forward(request, response);
+        request.getRequestDispatcher("monitor-disbursement.jsp").forward(request, response);
     }
     
 }

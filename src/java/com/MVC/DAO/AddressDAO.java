@@ -39,6 +39,9 @@ public class AddressDAO {
                 r.setRegDesc(rs.getString("regDesc"));
                 regionList.add(r);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -123,6 +126,9 @@ public class AddressDAO {
                 p.setRegCode(rs.getInt("regCode"));
                 provinceList.add(p);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -149,6 +155,9 @@ public class AddressDAO {
                 p.setProvDesc(rs.getString("provOfficeDesc"));
                 p.setRegCode(rs.getInt("regCode"));
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -176,6 +185,9 @@ public class AddressDAO {
                 p.setProvDesc(rs.getString("provOfficeDesc"));
                 provinceList.add(p);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -203,6 +215,9 @@ public class AddressDAO {
                 p.setProvDesc(rs.getString("provDesc"));
                 provinceList.add(p);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -292,6 +307,9 @@ public class AddressDAO {
                 b.setBrgyDesc(rs.getString("brgyDesc"));
                 barangayList.add(b);
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -338,6 +356,9 @@ public class AddressDAO {
             if (rs.next()) {
                 id = rs.getInt("cityMunCode");
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();
@@ -361,6 +382,9 @@ public class AddressDAO {
             if (rs.next()) {
                 id = rs.getInt("provCode");
             }
+            rs.close();
+            pstmt.close();
+            con.close();
         } catch (SQLException ex) {
             try {
                 con.rollback();

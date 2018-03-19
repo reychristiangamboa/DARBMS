@@ -7,6 +7,7 @@ package com.MVC.Controller;
 
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.DAO.ARBDAO;
+import com.MVC.Model.APCPRelease;
 import com.MVC.Model.Disbursement;
 import com.MVC.Model.Repayment;
 import java.io.IOException;
@@ -34,38 +35,57 @@ public class RecordDisbursement extends BaseServlet {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         APCPRequestDAO dao = new APCPRequestDAO();
-        
 
         String[] arbIDs = request.getParameterValues("arbID");
 
-        for (String arbID : arbIDs) {
-            Disbursement d = new Disbursement();
+        APCPRelease release = dao.getAPCPReleaseByID(Integer.parseInt(request.getParameter("releaseID")));
 
-            d.setArbID(Integer.parseInt(arbID));
-            d.setReleaseID(Integer.parseInt(request.getParameter("releaseID")));
-            d.setDisbursedAmount(Double.parseDouble(request.getParameter("disbursementAmount")));
-            d.setOSBalance(Double.parseDouble(request.getParameter("OSBalance")));
+        double limit = 0;
+        double finalLimit = 0;
 
-            java.sql.Date disbursedDate = null;
+        for (Disbursement disbursement : release.getDisbursements()) {
+            limit += disbursement.getDisbursedAmount();
+        }
 
-            try {
-                java.util.Date parsedDisbursedDate = sdf.parse(request.getParameter("disbursedDate"));
-                disbursedDate = new java.sql.Date(parsedDisbursedDate.getTime());
-            } catch (ParseException ex) {
-                Logger.getLogger(RecordDisbursement.class.getName()).log(Level.SEVERE, null, ex);
+        finalLimit = release.getReleaseAmount() - limit;
+        double finalVal = Double.parseDouble(request.getParameter("disbursementAmount")) * arbIDs.length;
+
+        if (finalVal > finalLimit) {
+            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+            request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
+            request.setAttribute("errMessage", "Disbursement amount (Php " + finalVal + ") exceeds Release amount (Php " + finalLimit + "). Try again.");
+            request.getRequestDispatcher("point-person-monitor-disbursement.jsp").forward(request, response);
+        } else {
+            for (String arbID : arbIDs) {
+                Disbursement d = new Disbursement();
+
+                d.setArbID(Integer.parseInt(arbID));
+                d.setReleaseID(Integer.parseInt(request.getParameter("releaseID")));
+                d.setDisbursedAmount(Double.parseDouble(request.getParameter("disbursementAmount")));
+                d.setOSBalance(Double.parseDouble(request.getParameter("OSBalance")));
+
+                java.sql.Date disbursedDate = null;
+
+                try {
+                    java.util.Date parsedDisbursedDate = sdf.parse(request.getParameter("disbursedDate"));
+                    disbursedDate = new java.sql.Date(parsedDisbursedDate.getTime());
+                } catch (ParseException ex) {
+                    Logger.getLogger(RecordDisbursement.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                d.setDateDisbursed(disbursedDate);
+                d.setDisbursedBy((Integer) session.getAttribute("userID"));
+
+                dao.addDisbursement(d);
+
             }
 
-            d.setDateDisbursed(disbursedDate);
-            d.setDisbursedBy((Integer)session.getAttribute("userID"));
-
-            dao.addDisbursement(d);
+            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+            request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
+            request.setAttribute("success", "Disbursement successfully recorded!");
+            request.getRequestDispatcher("point-person-monitor-disbursement.jsp").forward(request, response);
 
         }
-        
-        request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-        request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
-        request.setAttribute("success", "Disbursement successfully recorded!");
-        request.getRequestDispatcher("point-person-monitor-disbursement.jsp").forward(request, response);
 
     }
 

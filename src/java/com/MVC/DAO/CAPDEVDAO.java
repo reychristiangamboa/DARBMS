@@ -157,6 +157,8 @@ public class CAPDEVDAO {
                 cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -204,6 +206,8 @@ public class CAPDEVDAO {
                 planList.add(cp);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -251,6 +255,8 @@ public class CAPDEVDAO {
                 planList.add(cp);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -298,59 +304,9 @@ public class CAPDEVDAO {
                 planList.add(cp);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return planList;
-    }
-
-    public ArrayList<CAPDEVPlan> getAllFilteredRegionalCAPDEVPlanByStatus(int status, int regCode, ArrayList<Integer> provOfficeCodes) {
-
-        ArrayList<CAPDEVPlan> planList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            for (int provOfficeCode : provOfficeCodes) {
-                con.setAutoCommit(false);
-                String query = "SELECT * FROM capdev_plans c "
-                        + "JOIN ref_planStatus ps ON c.planStatus=ps.planStatus "
-                        + "JOIN apcp_requests r ON c.requestID=r.requestID "
-                        + "JOIN ref_requestStatus rs ON r.requestStatus=rs.requestStatus "
-                        + "JOIN arbos a ON r.arboID=a.arboID "
-                        + "WHERE c.planStatus = ? AND a.arboRegion = ? AND a.provOfficeCode=? AND c.pastDueAccountID IS NULL";
-                PreparedStatement p = con.prepareStatement(query);
-                p.setInt(1, status);
-                p.setInt(2, regCode);
-                p.setInt(3, provOfficeCode);
-                ResultSet rs = p.executeQuery();
-                while (rs.next()) {
-                    CAPDEVPlan cp = new CAPDEVPlan();
-                    cp.setPlanID(rs.getInt("planID"));
-                    cp.setRequestID(rs.getInt("requestID"));
-                    cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                    cp.setAssignedTo(rs.getInt("assignedTo"));
-                    cp.setPlanStatus(rs.getInt("planStatus"));
-                    cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                    cp.setPlanDTN(rs.getString("planDTN"));
-                    cp.setCreatedBy(rs.getInt("createdBy"));
-                    cp.setApprovedBy(rs.getInt("approvedBy"));
-                    cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                    planList.add(cp);
-                }
-                con.commit();
-                con.close();
-                rs.close();
-                p.close();
-            }
 
         } catch (Exception ex) {
             try {
@@ -409,7 +365,10 @@ public class CAPDEVDAO {
 
         try {
             con.setAutoCommit(false);
-            String query = "SELECT * FROM `dar-bms`.capdev_activities a JOIN ref_activity r ON a.activityType=r.activityType WHERE planID=?;";
+            String query = "SELECT * FROM `dar-bms`.capdev_activities a "
+                    + "JOIN ref_activity r ON a.activityType=r.activityType "
+                    + "JOIN ref_activityCategory c ON r.activityCategory=c.activityCategory "
+                    + "WHERE a.planID=?;";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, planID);
             ResultSet rs = p.executeQuery();
@@ -423,10 +382,15 @@ public class CAPDEVDAO {
                 ca.setActivityDesc(rs.getString("activityDesc"));
                 ca.setObservations(rs.getString("observations"));
                 ca.setRecommendation(rs.getString("recommendation"));
+                ca.setActivityCategory(rs.getInt("activityCategory"));
+                ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
+                ca.setTechnicalAssistant(rs.getString("technicalAssistance"));
                 ca.setArbList(getCAPDEVPlanActivityParticipants(rs.getInt("activityID")));
                 caList.add(ca);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -469,6 +433,8 @@ public class CAPDEVDAO {
                 caList.add(ca);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -512,6 +478,8 @@ public class CAPDEVDAO {
                 caList.add(ca);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -576,6 +544,8 @@ public class CAPDEVDAO {
                 aList.add(arb);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -608,6 +578,8 @@ public class CAPDEVDAO {
                 aList.add(arb);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -649,6 +621,8 @@ public class CAPDEVDAO {
                 cpList.add(cp);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -690,6 +664,8 @@ public class CAPDEVDAO {
                 cpList.add(cp);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -731,6 +707,8 @@ public class CAPDEVDAO {
                 cpList.add(cp);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -772,6 +750,8 @@ public class CAPDEVDAO {
                 cpList.add(cp);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -813,6 +793,8 @@ public class CAPDEVDAO {
                 cpList.add(cp);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -854,6 +836,8 @@ public class CAPDEVDAO {
                 cpList.add(cp);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -895,6 +879,8 @@ public class CAPDEVDAO {
                 cpList.add(cp);
             }
             con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -973,8 +959,10 @@ public class CAPDEVDAO {
 
         try {
             con.setAutoCommit(false);
-            String query = "SELECT * FROM `dar-bms`.ref_activity WHERE activityType != 1;";
+            String query = "SELECT * FROM `dar-bms`.ref_activity a "
+                    + "WHERE activityType != 1";
             PreparedStatement p = con.prepareStatement(query);
+            
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 CAPDEVActivity ca = new CAPDEVActivity();
@@ -984,6 +972,44 @@ public class CAPDEVDAO {
                 caList.add(ca);
             }
             con.commit();
+            rs.close();
+            p.close();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return caList;
+    }
+    
+    public ArrayList<CAPDEVActivity> getCAPDEVActivitiesByCategory(int category) {
+        ArrayList<CAPDEVActivity> caList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM `dar-bms`.ref_activity a "
+                    + "JOIN ref_activityCategory c ON a.activityCategory=c.activityCategory "
+                    + "WHERE c.activityCategory = ?";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, category);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                CAPDEVActivity ca = new CAPDEVActivity();
+                ca.setActivityType(rs.getInt("activityType"));
+                ca.setActivityName(rs.getString("activityName"));
+                ca.setActivityDesc(rs.getString("activityDesc"));
+                caList.add(ca);
+            }
+            con.commit();
+            rs.close();
+            p.close();
             con.close();
 
         } catch (Exception ex) {
@@ -1018,7 +1044,7 @@ public class CAPDEVDAO {
                 }
             }
             p.close();
-
+            rs.close();
             con.commit();
             con.close();
         } catch (Exception ex) {

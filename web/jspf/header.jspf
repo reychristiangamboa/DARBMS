@@ -2,6 +2,7 @@
 <%@page import="java.sql.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.MVC.Model.Chart"%>
+<%@page import="com.MVC.Model.Dependent"%>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>DAR-BMS</title>
