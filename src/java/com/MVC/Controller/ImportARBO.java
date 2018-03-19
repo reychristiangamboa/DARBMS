@@ -56,6 +56,12 @@ public class ImportARBO extends BaseServlet {
                 int regCode = addressDAO.getRegCode(cellStoreArrayList.get(3).toString()); // GET REGION, TURN INTO INT
                 arbo.setArboRegion(regCode);
                 
+                if(cellStoreArrayList.get(4).toString().equalsIgnoreCase("No")){
+                    arbo.setAPCPQualified(0);
+                }else if(cellStoreArrayList.get(4).toString().equalsIgnoreCase("Yes")){
+                    arbo.setAPCPQualified(1);
+                }
+                
                 arbo.setProvOfficeCode((Integer)session.getAttribute("provOfficeCode"));
                 
                 arboList.add(arbo);

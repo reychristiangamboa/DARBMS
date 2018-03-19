@@ -106,8 +106,8 @@ public class ARBODAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`arbos` (`arboName`, `arboCityMun`, `arboProvince`, `arboRegion`, `provOfficeCode`) "
-                    + "VALUES (?, ?, ?, ?, ?);";
+            String query = "INSERT INTO `dar-bms`.`arbos` (`arboName`, `arboCityMun`, `arboProvince`, `arboRegion`, `provOfficeCode`, `APCPQualified`) "
+                    + "VALUES (?, ?, ?, ?, ?, ?);";
             for (ARBO arbo : arboList) {
                 p = con.prepareStatement(query);
                 p.setString(1, arbo.getArboName());
@@ -115,6 +115,7 @@ public class ARBODAO {
                 p.setInt(3, arbo.getArboProvince());
                 p.setInt(4, arbo.getArboRegion());
                 p.setInt(5, arbo.getProvOfficeCode());
+                p.setInt(6, arbo.getAPCPQualified());
                 p.executeUpdate();
                 p.close();
             }
