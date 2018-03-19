@@ -72,17 +72,17 @@
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
-                                            <tr>
-                                                <!--WITH CAPDEV-->
-                                                 
-                                                <td><a href=""></a></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
+                                        <tr>
+                                            <!--WITH CAPDEV-->
+
+                                            <td><a href=""></a></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
                                         </tbody>
 
                                     </table>
@@ -146,35 +146,24 @@
                 <!-- /.content -->
             </div>
         </div>
-        <!-- /.row -->
 
-        <!-- /.content -->
-        <footer class="main-footer">
-            <div class="pull-right hidden-xs">
-                <b>Version</b> 2.4.0
-            </div>
-            <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-            reserved.
-        </footer>
-    </div>
+        <!-- /.content-wrapper -->
 
-    <!-- /.content-wrapper -->
+        <%@include file="jspf/footer.jspf" %>
 
-    <%@include file="jspf/footer.jspf" %>
+        <script type="text/javascript">
+            function chg() {
+                var arboID = $('input[name=arboID]:checked').val();
+                var xhttp = new XMLHttpRequest();
 
-    <script type="text/javascript">
-        function chg() {
-            var arboID = $('input[name=arboID]:checked').val();
-            var xhttp = new XMLHttpRequest();
-
-            xhttp.onreadystatechange = function () {
-                if (xhttp.readyState === 4 && xhttp.status === 200) {
-                    document.getElementById('arboName').innerHTML = xhttp.responseText;
-                }
-            };
-            xhttp.open("GET", "ARBONameRefresh?valajax=" + arboID, true);
-            xhttp.send();
-        }
-    </script>
-</body>
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        document.getElementById('arboName').innerHTML = xhttp.responseText;
+                    }
+                };
+                xhttp.open("GET", "ARBONameRefresh?valajax=" + arboID, true);
+                xhttp.send();
+            }
+        </script>
+    </body>
 </html>

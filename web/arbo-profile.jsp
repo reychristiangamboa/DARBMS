@@ -536,7 +536,13 @@
                                                         <%}%>
 
                                                         <li>
+                                                            <%if(activity.getActivityCategory() == 1){%>
                                                             <i class="fa fa-clipboard bg-green"></i>
+                                                            <%}else if(activity.getActivityCategory() == 2){%>
+                                                            <i class="fa fa-clipboard bg-red"></i>
+                                                            <%}else if(activity.getActivityCategory() == 3){%>
+                                                            <i class="fa fa-clipboard bg-orange"></i>
+                                                            <%}%>
                                                             <div class="timeline-item">
                                                                 <h3 class="timeline-header">
                                                                     <a href="#" data-toggle='modal' data-target='#activity<%out.print(activity.getActivityID());%>'><%out.print(activity.getActivityName());%></a>
@@ -664,13 +670,6 @@
                 <!-- /.content -->
             </div>
             <!-- /.content-wrapper -->
-            <footer class="main-footer">
-                <div class="pull-right hidden-xs">
-                    <b>Version</b> 2.4.0
-                </div>
-                <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-                reserved.
-            </footer>
         </div>
         <!-- ./wrapper -->
         <%@include file="jspf/footer.jspf" %>

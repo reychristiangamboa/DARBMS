@@ -66,7 +66,7 @@
                                             <li><a href="#history" data-toggle="tab">CAPDEV History</a></li>
                                         </ul>
 
-                                         <%@include file="jspf/arboInfo.jspf"%>
+                                        <%@include file="jspf/arboInfo.jspf"%>
                                     </div>
                                     <hr>        
                                 </div>
@@ -90,7 +90,7 @@
                                     <div class="box-footer">
                                         <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
                                         <input type="hidden" id="count" name="count">
-                                        <button type="submit" onclick="form.action='ApproveAPCPRequest'" class="btn btn-primary pull-right">Approve</button>
+                                        <button type="submit" onclick="form.action = 'ApproveAPCPRequest'" class="btn btn-primary pull-right">Approve</button>
                                     </div>
                                 </form>
 
@@ -105,53 +105,47 @@
 
     </div>
     <!-- /.content-wrapper -->
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>Version</b> 2.4.0
-        </div>
-        <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-        reserved.
-    </footer>
-</div>
-<%@include file="jspf/footer.jspf" %>
+
+
+    <%@include file="jspf/footer.jspf" %>
 
     <script>
-            var ctx = $('#barCanvas').get(0).getContext('2d');
-            <%
+        var ctx = $('#barCanvas').get(0).getContext('2d');
+        <%
                     Chart bar = new Chart();
                     String json = bar.getBarChartEducation(arbList);
-            %>
-            new Chart(ctx, <%out.print(json);%>);
+        %>
+        new Chart(ctx, <%out.print(json);%>);
 
-            var ctx3 = $('#pieCanvas').get(0).getContext('2d');
-            <%
+        var ctx3 = $('#pieCanvas').get(0).getContext('2d');
+        <%
                     Chart pie = new Chart();
                     String json3 = pie.getPieChartGender(arbList);
-            %>
-            new Chart(ctx3, <%out.print(json3);%>);
+        %>
+        new Chart(ctx3, <%out.print(json3);%>);
 
-        </script>
+    </script>
 
-<script>
-    $(document).ready(function () {
-        var max_fields = 9; //maximum input boxes allowed
-        var wrapper = $(".input_fields_wrap"); //Fields wrapper
-        var add_button = $(".add_field_button"); //Add button ID
-        var x = 0; //initlal text box count
-        $(add_button).click(function (e) { //on add input button click
-            e.preventDefault();
-            if (x < max_fields) { //max input box allowed
-                x++; //text box increment
-                $('#count').val(x);
-                $(wrapper).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity activity : activities){%><option value="<%out.print(activity.getActivityID());%>"><%out.print(activity.getActivityName());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right" id="datepicker"></div></div></div><div class="col-xs-4"><div class="form-group"><label for="">No. of Participants</label><select name="noOfParticipants[]' + x + '" class="form-control select2" multiple="multiple" required><%for(ARB arb : arbList){%><option value="<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></option><%}%></select></div></div></div>');
-                $('.select2').select2();
-            }
+    <script>
+        $(document).ready(function () {
+            var max_fields = 9; //maximum input boxes allowed
+            var wrapper = $(".input_fields_wrap"); //Fields wrapper
+            var add_button = $(".add_field_button"); //Add button ID
+            var x = 0; //initlal text box count
+            $(add_button).click(function (e) { //on add input button click
+                e.preventDefault();
+                if (x < max_fields) { //max input box allowed
+                    x++; //text box increment
+                    $('#count').val(x);
+                    $(wrapper).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity activity : activities){%><option value="<%out.print(activity.getActivityID());%>"><%out.print(activity.getActivityName());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right" id="datepicker"></div></div></div><div class="col-xs-4"><div class="form-group"><label for="">No. of Participants</label><select name="noOfParticipants[]' + x + '" class="form-control select2" multiple="multiple" required><%for(ARB arb : arbList){%><option value="<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></option><%}%></select></div></div></div>');
+                    $('.select2').select2();
+                }
+            });
+
+
+
         });
-
-
-
-    });
-</script>
+    </script>
 
 </body>
 </html>

@@ -160,32 +160,25 @@
         <!-- /.row -->
 
         <!-- /.content -->
-        <footer class="main-footer">
-            <div class="pull-right hidden-xs">
-                <b>Version</b> 2.4.0
-            </div>
-            <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-            reserved.
-        </footer>
-    </div>
 
-    <!-- /.content-wrapper -->
 
-    <%@include file="jspf/footer.jspf" %>
+        <!-- /.content-wrapper -->
 
-    <script type="text/javascript">
-        function chg() {
-            var arboID = $('input[name=arboID]:checked').val();
-            var xhttp = new XMLHttpRequest();
+        <%@include file="jspf/footer.jspf" %>
 
-            xhttp.onreadystatechange = function () {
-                if (xhttp.readyState === 4 && xhttp.status === 200) {
-                    document.getElementById('arboName').innerHTML = xhttp.responseText;
-                }
-            };
-            xhttp.open("GET", "ARBONameRefresh?valajax=" + arboID, true);
-            xhttp.send();
-        }
-    </script>
-</body>
+        <script type="text/javascript">
+            function chg() {
+                var arboID = $('input[name=arboID]:checked').val();
+                var xhttp = new XMLHttpRequest();
+
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        document.getElementById('arboName').innerHTML = xhttp.responseText;
+                    }
+                };
+                xhttp.open("GET", "ARBONameRefresh?valajax=" + arboID, true);
+                xhttp.send();
+            }
+        </script>
+    </body>
 </html>

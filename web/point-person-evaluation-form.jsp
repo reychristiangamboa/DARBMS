@@ -49,34 +49,7 @@
                         <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
                     </div>
                     <%}%>
-                    <div class='row'>
-                        <div class='col-xs-6'>
-                            <div class='box'>
-                                <div class='box-header with-border'>
-                                    <h3 class="box-title">Upload Evaluation</h3>
-                                </div>
-                                <form role='form' method="post" action="ImportARBO">
-                                    <div class='box-body'>
-
-                                        <div class='box-body'>
-                                            <div class="row">
-                                                <div class="col-xs-3">
-                                                    <div class="form-group">
-                                                        <label for="fileExcel">Import Evaluation</label>
-                                                        <input type='file' id='fileExcel' name="file">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="box-footer">
-                                            <button type="submit" name="import" class="btn btn-primary pull-right">Submit</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div class="row">
                         <div class="col-xs-12">
 
@@ -144,13 +117,7 @@
             <!-- /.row -->
 
             <!-- /.content -->
-            <footer class="main-footer">
-                <div class="pull-right hidden-xs">
-                    <b>Version</b> 2.4.0
-                </div>
-                <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-                reserved.
-            </footer>
+            
         </div>
 
         <!-- /.content-wrapper -->

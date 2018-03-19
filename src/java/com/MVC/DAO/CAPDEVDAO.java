@@ -462,6 +462,7 @@ public class CAPDEVDAO {
             con.setAutoCommit(false);
             String query = "SELECT * FROM `dar-bms`.capdev_activities a "
                     + "JOIN ref_activity r ON a.activityType=r.activityType "
+                    + "JOIN ref_activityCategory c ON r.activityCategory=c.activityCategory "
                     + "JOIN capdev_plans p ON a.planID=p.planID "
                     + "WHERE p.requestID=? AND a.active=1;";
             PreparedStatement p = con.prepareStatement(query);
@@ -477,6 +478,9 @@ public class CAPDEVDAO {
                 ca.setActivityDesc(rs.getString("activityDesc"));
                 ca.setObservations(rs.getString("observations"));
                 ca.setRecommendation(rs.getString("recommendation"));
+                ca.setActivityCategory(rs.getInt("activityCategory"));
+                ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
+                ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
                 ca.setArbList(getCAPDEVPlanActivityParticipants(rs.getInt("activityID")));
                 caList.add(ca);
             }
@@ -506,6 +510,7 @@ public class CAPDEVDAO {
             con.setAutoCommit(false);
             String query = "SELECT * FROM `dar-bms`.capdev_activities a "
                     + "JOIN ref_activity r ON a.activityType=r.activityType "
+                    + "JOIN ref_activityCategory c ON r.activityCategory=c.activityCategory "
                     + "JOIN capdev_plans p ON a.planID=p.planID "
                     + "JOIN apcp_requests ap ON ap.requestID=p.requestID "
                     + "WHERE ap.arboID=? AND a.active=1;";
@@ -522,6 +527,9 @@ public class CAPDEVDAO {
                 ca.setActivityDesc(rs.getString("activityDesc"));
                 ca.setObservations(rs.getString("observations"));
                 ca.setRecommendation(rs.getString("recommendation"));
+                ca.setActivityCategory(rs.getInt("activityCategory"));
+                ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
+                ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
                 ca.setArbList(getCAPDEVPlanActivityParticipants(rs.getInt("activityID")));
                 caList.add(ca);
             }

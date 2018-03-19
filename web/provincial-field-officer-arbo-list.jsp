@@ -74,56 +74,11 @@
                         </div>
                         <!-- /.col -->
                     </div>
-
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Qualified Agrarian Reform Beneficiary Organizations (ARBO)</h3>
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table id="example3" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>ARBO Name</th>
-                                                <th>No. of <br> Members</th>
-                                                <th>Total Approved <br> Amount</th>
-                                                <th>Cumulative <br> Releases</th>
-                                                <th>"Insert Current Year" Release</th>
-                                                <th>Date Released</th>
-                                                <th>O/S Balance</th>
-                                                <th>Past Due <br> Amount</th>
-                                                <th>Due Date</th>
-                                                <th>Reason for Past Due</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
                 </section>
                 <!-- /.content -->
 
             </div>
             <!-- /.content-wrapper -->
-            <footer class="main-footer">
-                <div class="pull-right hidden-xs">
-                    <b>Version</b> 2.4.0
-                </div>
-                <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-                reserved.
-            </footer>
         </div>
         <%@include file="jspf/footer.jspf" %>
     </body>
