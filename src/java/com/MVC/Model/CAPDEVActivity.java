@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -27,6 +27,7 @@ public class CAPDEVActivity {
     private String activityName;
     private String activityDesc;
     private String activityReportDTN;
+    private int isPresent;
     private int active;
     private ArrayList<ARB> arbList = new ArrayList();
 
@@ -101,6 +102,14 @@ public class CAPDEVActivity {
     public void setActivityReportDTN(String activityReportDTN) {
         this.activityReportDTN = activityReportDTN;
     }
+
+    public int getIsPresent() {
+        return isPresent;
+    }
+
+    public void setIsPresent(int isPresent) {
+        this.isPresent = isPresent;
+    }
     
     public int getPlanID() {
         return planID;
@@ -142,5 +151,33 @@ public class CAPDEVActivity {
         this.recommendation = recommendation;
     }
     
+    public double getAttendanceRate(ArrayList<CAPDEVActivity> activities){
+        double present = 0;
+        double absent = 0;
+        double rate = 0;
+        
+        for(CAPDEVActivity cAct : activities){
+            if(cAct.getIsPresent() == 0){
+                absent++;
+            } else if(cAct.getIsPresent() == 1){
+                present++;
+            }
+        }
+        
+        rate = (present/activities.size()) * 100;
+        
+        return rate;
+    }
+    public int getAttendance(ArrayList<CAPDEVActivity> activities){
+        int present = 0;
+        
+        for(CAPDEVActivity cAct : activities){
+            if(cAct.getIsPresent() == 1){
+                present++;
+            }
+        }
+        
+        return present;
+    }
     
 }
