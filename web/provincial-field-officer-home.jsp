@@ -667,20 +667,22 @@
                                 <div class="box-body" >
 
                                     <div clas="row">
-                                        <div class="col-lg-3 col-xs-6">
-                                            <!-- small box -->
-                                            <div class="small-box bg-yellow">
-                                                <div class="inner">
-                                                    <h3><%out.print(requestedRequests.size());%></h3>
+                                        <a href="provincial-field-officer-view-capdev-status.jsp">
+                                            <div class="col-lg-3 col-xs-6" >
+                                                <!-- small box -->
+                                                <div class="small-box bg-yellow">
+                                                    <div class="inner">
+                                                        <h3><%out.print(requestedRequests.size());%></h3>
 
-                                                    <p>Requested</p>
-                                                </div>
-                                                <div class="icon" >
-                                                    <i class="fa fa-keyboard-o"></i>
-                                                </div>
+                                                        <p>Requested</p>
+                                                    </div>
+                                                    <div class="icon" >
+                                                        <i class="fa fa-keyboard-o"></i>
+                                                    </div>
 
+                                                </div>
                                             </div>
-                                        </div>
+                                        </a>
                                         <div class="col-lg-3 col-xs-6">
                                             <!-- small box -->
                                             <div class="small-box bg-red">
@@ -727,37 +729,33 @@
                                     <table id="example5" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Request ID</th>
-                                                <th>Loan Request</th>
-                                                <th>Loan Amount</th>
-                                                <th>Status</th>
-                                                <th>Date</th>
+                                                <th>ARBO Name</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>                                                
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <%
+                                                      for (CAPDEVPlan cp : allPlans) {
+                                                          APCPRequest r = apcpRequestDAO.getRequestByID(cp.getRequestID());
+                                                          ARBO arbo2 = arboDAO.getARBOByID(r.getArboID());
+                                                          CAPDEVDAO capdao = new CAPDEVDAO(); 
+                                            %>
                                             <tr>
-                                                <td>1</td>
-                                                <td>April 1, 2011
-                                                </td>
-                                                <td>
-                                                    10100000
-                                                </td>
-                                                <td>
-                                                    <span class="label label-danger">RICE</span>
-                                                </td>
-                                                <td>
-                                                    April 1, 2011
-                                                </td>
+                                                <td><%out.print(arbo2.getArboName());%></td>
+                                                <td><%out.print(cp.getPlanDTN());%></td>
+                                                <td><%out.print(capdao.getCAPDEVPlanActivities(cp.getPlanID()).size());%>                                               </td>
+                                                <td><%out.print(cp.getPlanStatus());%>                                                    </td>
                                             </tr>
-
+                                            <%}%>
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th>Request ID</th>
-                                                <th>Loan Request</th>
-                                                <th>Loan Amount</th>
-                                                <th>Status</th>
-                                                <th>Date</th>
+                                                <th>ARBO Name</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>  
                                             </tr>
                                         </tfoot>
                                     </table>  
@@ -811,15 +809,15 @@
                 String json3 = pie.getPieChartGender(arbListProvince);
             %>
                 new Chart(ctx3, <%out.print(json3);%>);
-                
+
                 var ctx4 = $('#pieCanvasPastDue').get(0).getContext('2d');
             <%
                 Chart pie2 = new Chart();
                 String json4 = pie2.getPieChartPastDue(provincialRequests);
             %>
                 new Chart(ctx4, <%out.print(json4);%>);
-                
-                
+
+
             });
         </script>
     </body>
