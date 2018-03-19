@@ -54,8 +54,12 @@
 
             <%
                 ARB arb = (ARB) request.getAttribute("arb");
+                APCPRequestDAO arDAO = new APCPRequestDAO();
                 ARBODAO dao = new ARBODAO();
                 ARBO arbo = dao.getARBOByID(arb.getArboID());
+                ArrayList<Disbursement> disbursements = arDAO.getAllDisbursementsByARB(arb.getArbID());
+                ArrayList<Repayment> repayments = arDAO.getAllRepaymentsByARB(arb.getArbID());
+                
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -288,56 +292,7 @@
                                     </p>
                                     <a href="#" data-toggle="modal" data-target="#cropTimeline" class="text-center">View Crop Timeline</a>
 
-                                    <div class="modal fade" id="cropTimeline">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span></button>
-                                                    <h4 class="modal-title">Crop Timeline</h4>
-                                                </div>
 
-                                                <div class="modal-body" style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
-                                                    <ul class="timeline">
-                                                        <%
-                                                            boolean firstInstance = true;
-                                                            Date date = null;
-                                                        %>
-                                                        <%for(Crop c : arb.getCrops()){%>
-
-                                                        <li class="time-label">
-                                                            <span class="bg-aqua">
-                                                                <%=c.getCropTypeDesc()%>
-                                                            </span>
-                                                        </li>
-
-                                                        <li>
-                                                            <i class="fa fa-calendar-check-o bg-green"></i>
-                                                            <div class="timeline-item">
-                                                                <h3 class="timeline-header">
-                                                                    Start Date: <%out.print(f.format(c.getStartDate()));%>
-                                                                </h3>
-                                                            </div>
-                                                        </li>
-                                                        
-                                                        <li>
-                                                            <i class="fa fa-calendar-times-o bg-red"></i>
-                                                            <div class="timeline-item">
-                                                                <h3 class="timeline-header">
-                                                                    End Date: <%out.print(f.format(c.getEndDate()));%>
-                                                                </h3>
-                                                            </div>
-                                                        </li>
-                                                        <%}%>
-                                                    </ul>
-
-                                                </div>
-
-                                            </div>
-                                            <!-- /.modal-content -->
-                                        </div>
-                                        <!-- /.modal-dialog -->
-                                    </div>
                                 </div>
                                 <!-- /.box-body -->
                             </div>
@@ -422,92 +377,45 @@
                                         <div class="tab-content" style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
                                             <div class="active tab-pane" id="disbursement">
                                                 <ul class="timeline timeline-inverse">
-                                                    <!-- timeline time label -->
+                                                    <%
+                                                        boolean firstInstance = true;
+                                                        Date date = null;
+                                                    %>
+                                                    <% for (Disbursement db : disbursements) { %>
+                                                    <% 
+                                                        boolean dateChanged = false;
+                                                            
+                                                        if(firstInstance){ // FIRST INSTANCE
+                                                            date = db.getDateDisbursed();
+                                                        }
+                                                    %>
+
+                                                    <%
+                                                        if(date.compareTo(db.getDateDisbursed()) != 0){ // NEW DATE, change currDate
+                                                            date = db.getDateDisbursed();
+                                                            dateChanged = true;
+                                                            System.out.print("Date changed!");
+                                                        }
+                                                    %>
+
+                                                    <%if(firstInstance || dateChanged){%>
                                                     <li class="time-label">
-                                                        <span class="bg-red">
-                                                            INTERVENTION: RICE TRAINING 101
+                                                        <span class="bg-green">
+                                                            <%out.print(f.format(date));%>
                                                         </span>
                                                     </li>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
+                                                    <%firstInstance = false;%>
+                                                    <%}%>
+
                                                     <li>
-                                                        <i class="fa fa-envelope bg-blue"></i>
-
+                                                        <i class="fa fa-clipboard bg-green"></i>
                                                         <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
-
-                                                            <div class="timeline-body">
-                                                                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                                                                weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                                                                jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                                                                quora plaxo ideeli hulu weebly balihoo...
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-primary btn-xs">Read more</a>
-                                                                <a class="btn btn-danger btn-xs">Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-user bg-aqua"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
-
-                                                            <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
+                                                            <h3 class="timeline-header">
+                                                                <i>&#8369</i>&nbsp;<%out.print(db.getDisbursedAmount());%>
                                                             </h3>
                                                         </div>
                                                     </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-comments bg-yellow"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
-
-                                                            <div class="timeline-body">
-                                                                Take me to your leader!
-                                                                Switzerland is small and neutral!
-                                                                We are more like Germany, ambitious and misunderstood!
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-warning btn-flat btn-xs">View comment</a>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline time label -->
-                                                    <li class="time-label">
-                                                        <span class="bg-green">
-                                                            3 Jan. 2014
-                                                        </span>
-                                                    </li>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-camera bg-purple"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
-
-                                                            <div class="timeline-body">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
+                                                    <%}%>
                                                     <li>
                                                         <i class="fa fa-clock-o bg-gray"></i>
                                                     </li>
@@ -517,92 +425,45 @@
                                             <div class="tab-pane" id="repayment" >
                                                 <!-- The timeline -->
                                                 <ul class="timeline timeline-inverse">
-                                                    <!-- timeline time label -->
+                                                   <%
+                                                        boolean firstInstance1 = true;
+                                                        Date date1 = null;
+                                                    %>
+                                                    <% for (Repayment rp : repayments) { %>
+                                                    <% 
+                                                        boolean dateChanged1 = false;
+                                                            
+                                                        if(firstInstance1){ // FIRST INSTANCE
+                                                            date1 = rp.getDateRepayment();
+                                                        }
+                                                    %>
+
+                                                    <%
+                                                        if(date1.compareTo(rp.getDateRepayment()) != 0){ // NEW DATE, change currDate
+                                                            date1 = rp.getDateRepayment();
+                                                            dateChanged1 = true;
+                                                            System.out.print("Date changed!");
+                                                        }
+                                                    %>
+
+                                                    <%if(firstInstance1 || dateChanged1){%>
                                                     <li class="time-label">
-                                                        <span class="bg-red">
-                                                            10 Feb. 2014
+                                                        <span class="bg-green">
+                                                            <%out.print(f.format(date1));%>
                                                         </span>
                                                     </li>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
+                                                    <%firstInstance1 = false;%>
+                                                    <%}%>
+
                                                     <li>
-                                                        <i class="fa fa-envelope bg-blue"></i>
-
+                                                        <i class="fa fa-clipboard bg-green"></i>
                                                         <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
-
-                                                            <div class="timeline-body">
-                                                                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                                                                weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                                                                jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                                                                quora plaxo ideeli hulu weebly balihoo...
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-primary btn-xs">Read more</a>
-                                                                <a class="btn btn-danger btn-xs">Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-user bg-aqua"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
-
-                                                            <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
+                                                            <h3 class="timeline-header">
+                                                                <i>&#8369</i>&nbsp;<%out.print(rp.getAmount());%>
                                                             </h3>
                                                         </div>
                                                     </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-comments bg-yellow"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
-
-                                                            <div class="timeline-body">
-                                                                Take me to your leader!
-                                                                Switzerland is small and neutral!
-                                                                We are more like Germany, ambitious and misunderstood!
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-warning btn-flat btn-xs">View comment</a>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline time label -->
-                                                    <li class="time-label">
-                                                        <span class="bg-green">
-                                                            3 Jan. 2014
-                                                        </span>
-                                                    </li>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-camera bg-purple"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
-
-                                                            <div class="timeline-body">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
+                                                    <%}%>
                                                     <li>
                                                         <i class="fa fa-clock-o bg-gray"></i>
                                                     </li>

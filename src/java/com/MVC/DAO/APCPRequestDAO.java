@@ -873,6 +873,39 @@ public class APCPRequestDAO {
         return rList;
     }
 
+    public ArrayList<Repayment> getAllRepaymentsByARB(int arbID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Repayment> rList = new ArrayList();
+        try {
+            String query = "SELECT * FROM repayments r JOIN apcp_requests a ON r.requestID=a.requestID WHERE r.arbID=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, arbID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Repayment r = new Repayment();
+                r.setRepaymentID(rs.getInt("repaymentID"));
+                r.setRequestID(rs.getInt("requestID"));
+                r.setAmount(rs.getDouble("amount"));
+                r.setDateRepayment(rs.getDate("repaymentDate"));
+                r.setArbID(rs.getInt("arbID"));
+                r.setRecordedBy(rs.getInt("recordedBy"));
+                rList.add(r);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rList;
+    }
+    
     public boolean addDisbursement(Disbursement d) {
         boolean success = false;
         PreparedStatement p = null;
