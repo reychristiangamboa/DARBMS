@@ -228,6 +228,8 @@ public class ARBDAO {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Crop c = new Crop();
+                c.setStartDate(rs.getDate("startDate"));
+                c.setEndDate(rs.getDate("endDate"));
                 c.setCropType(rs.getInt("cropTag"));
                 c.setCropTypeDesc(rs.getString("cropTypeDesc"));
 
@@ -264,6 +266,8 @@ public class ARBDAO {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Crop c = new Crop();
+                c.setStartDate(rs.getDate("startDate"));
+                c.setEndDate(rs.getDate("endDate"));
                 c.setCropType(rs.getInt("cropTag"));
                 c.setCropTypeDesc(rs.getString("cropTypeDesc"));
                 cropList.add(c);

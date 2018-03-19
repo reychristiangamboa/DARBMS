@@ -98,8 +98,10 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span></button>
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
                                             <h4 class="modal-title">Agrarian Reform Beneficiaries</h4>
+
                                         </div>
 
 
@@ -139,6 +141,15 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <%if((Integer)session.getAttribute("userType") == 3){%>
+                                        <div class="modal-footer">
+                                            <div class="pull-right">
+                                                <form method="post">
+                                                    <button class="btn btn-primary" onclick="form.action = 'ProceedAddARB?id=<%out.print(arbo.getArboID());%>'">Add ARB</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <%}%>
 
                                     </div>
                                     <!--                                            /.modal-content -->

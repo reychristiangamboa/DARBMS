@@ -5,7 +5,9 @@
  */
 package com.MVC.Controller;
 
+import com.MVC.DAO.ARBDAO;
 import com.MVC.DAO.EvaluationDAO;
+import com.MVC.Model.ARB;
 import com.MVC.Model.Evaluation;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -38,7 +40,8 @@ public class AddEvaluation extends BaseServlet {
         java.sql.Date evaluationDate = null;
         java.sql.Date startDate = null;
         java.sql.Date endDate = null;
-        
+        java.sql.Date maxDate = null;
+
         System.out.println(request.getParameter("evaluationDate"));
 
         try {
@@ -65,15 +68,29 @@ public class AddEvaluation extends BaseServlet {
         }
         e.setEvaluationEndDate(endDate);
 
+        try {
+            java.util.Date parsedMaxDate = sdf.parse(request.getParameter("maxDate"));
+            maxDate = new java.sql.Date(parsedMaxDate.getTime());
+        } catch (ParseException ex) {
+            Logger.getLogger(AddEvaluation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         e.setArbID(Integer.parseInt(request.getParameter("id")));
         e.setEvaluationDTN(request.getParameter("dtn"));
         e.setEvaluationType(Integer.parseInt(request.getParameter("type")));
         e.setEvaluatedBy((Integer) session.getAttribute("userID"));
 
-        int evaluationID = dao.addEvaluation(e);
-
-        request.setAttribute("evaluationID", evaluationID);
-        request.getRequestDispatcher("point-person-evaluation-form.jsp").forward(request, response);
+        if (e.getEvaluationDate().after(maxDate)) {
+            ARBDAO arbdao = new ARBDAO();
+            ARB arb = arbdao.getARBByID(e.getArbID());
+            request.setAttribute("arb", arb);
+            request.setAttribute("errMessage", "Evaluation Date cannot go beyond one quarter of selected QUARTER.");
+            request.getRequestDispatcher("arb-profile.jsp").forward(request, response);
+        } else {
+            int evaluationID = dao.addEvaluation(e);
+            request.setAttribute("evaluationID", evaluationID);
+            request.getRequestDispatcher("point-person-evaluation-form.jsp").forward(request, response);
+        }
 
     }
 

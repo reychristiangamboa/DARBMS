@@ -248,6 +248,7 @@
                                                 <div class="modal-footer">
                                                     <div class="pull-right">
                                                         <input type="hidden" id="start" name="start"><input type="hidden" id="end" name="end" >
+                                                        <input type="hidden" id="maxDate" name="maxDate">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                         <button type="submit" class="btn btn-primary" onclick="form.action = 'AddEvaluation?id=<%out.print(arb.getArbID());%>'">Submit</button>
                                                     </div>
@@ -293,6 +294,56 @@
                                     <a href="#" data-toggle="modal" data-target="#cropTimeline" class="text-center">View Crop Timeline</a>
 
 
+                                    <div class="modal fade" id="cropTimeline">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title">Crop Timeline</h4>
+                                                </div>
+
+                                                <div class="modal-body" style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
+                                                    <ul class="timeline">
+                                                        <%
+                                                            boolean firstInstance99 = true;
+                                                            Date date99 = null;
+                                                        %>
+                                                        <%for(Crop c : arb.getCrops()){%>
+
+                                                        <li class="time-label">
+                                                            <span class="bg-aqua">
+                                                                <%=c.getCropTypeDesc()%>
+                                                            </span>
+                                                        </li>
+
+                                                        <li>
+                                                            <i class="fa fa-calendar-check-o bg-green"></i>
+                                                            <div class="timeline-item">
+                                                                <h3 class="timeline-header">
+                                                                    Start Date: <%out.print(f.format(c.getStartDate()));%>
+                                                                </h3>
+                                                            </div>
+                                                        </li>
+
+                                                        <li>
+                                                            <i class="fa fa-calendar-times-o bg-red"></i>
+                                                            <div class="timeline-item">
+                                                                <h3 class="timeline-header">
+                                                                    End Date: <%out.print(f.format(c.getEndDate()));%>
+                                                                </h3>
+                                                            </div>
+                                                        </li>
+                                                        <%}%>
+                                                    </ul>
+
+                                                </div>
+
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
                                 </div>
                                 <!-- /.box-body -->
                             </div>
@@ -425,9 +476,9 @@
                                             <div class="tab-pane" id="repayment" >
                                                 <!-- The timeline -->
                                                 <ul class="timeline timeline-inverse">
-                                                   <%
-                                                        boolean firstInstance1 = true;
-                                                        Date date1 = null;
+                                                    <%
+                                                         boolean firstInstance1 = true;
+                                                         Date date1 = null;
                                                     %>
                                                     <% for (Repayment rp : repayments) { %>
                                                     <% 
@@ -728,13 +779,14 @@
                                 'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
                                 'Past Quarter': [moment().subtract(1, 'quarter').startOf('quarter'), moment().subtract(1, 'quarter').endOf('quarter')],
                             },
-                            startDate: moment().subtract(29, 'days'),
-                            endDate: moment()
+                            
                         },
                         function (start, end) {
                             $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
                             $('#start').val(start.format('YYYY-MM-DD'));
                             $('#end').val(end.format('YYYY-MM-DD'));
+                            $('#maxDate').val(end.add(1, 'quarter').endOf('quarter').format('YYYY-MM-DD'));
+                            end.subtract(1, 'quarter').endOf('quarter').format('YYYY-MM-DD');
                         }
                 );
 

@@ -42,7 +42,7 @@
             <div class="row">
                 <div class="col-xs-4">
                     <label for=''>Loan Amount</label>
-                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type='text' class="form-control numberOnly" id='' value="<%out.print(r2.getLoanAmount());%>" disabled>
+                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type='text' class="form-control" id='' value="<%out.print(r2.getLoanAmount());%>" disabled>
                 </div>
 
                 <div class="col-xs-4">
