@@ -1,7 +1,7 @@
 <%-- 
-    Document   : field-officer-arbo-list
-    Created on : Jan 29, 2018, 4:08:13 PM
-    Author     : Rey Christian
+    Document   : provincial-field-officer-view-filtered-loan-status
+    Created on : Mar 21, 2018, 2:34:43 AM
+    Author     : ijJPN
 --%>
 
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
@@ -60,6 +60,15 @@
                         <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
                     </div>
                     <%}%>
+                    
+                    <%
+                        ArrayList<APCPRequest> requestedRequests2 = (ArrayList)request.getAttribute("requested");
+                        ArrayList<APCPRequest> clearedRequests2 = (ArrayList)request.getAttribute("cleared");
+                        ArrayList<APCPRequest> endorsedRequests2 = (ArrayList)request.getAttribute("endorsed");
+                        ArrayList<APCPRequest> approvedRequests2 = (ArrayList)request.getAttribute("approved");
+                        ArrayList<APCPRequest> releasedRequests2 = (ArrayList)request.getAttribute("released");
+                        ArrayList<APCPRequest> forReleaseRequests2 = (ArrayList)request.getAttribute("forRelease");
+                    %>
 
                     <div class="row">
                         <div class="col-xs-6">
@@ -103,7 +112,7 @@
                             <a href="#" name="btn1">
                                 <div class="small-box bg-aqua">
                                     <div class="inner">
-                                        <h3><%=requestedRequests.size()%></h3>
+                                        <h3><%=requestedRequests2.size()%></h3>
 
                                         <h4>Requested</h4>
                                     </div>
@@ -119,7 +128,7 @@
                             <a href="#" name="btn2">
                                 <div class="small-box bg-green">
                                     <div class="inner">
-                                        <h3><%=clearedRequests.size()%><sup style="font-size: 20px"></sup></h3>
+                                        <h3><%=clearedRequests2.size()%><sup style="font-size: 20px"></sup></h3>
 
                                         <h4>Cleared</h4>
                                     </div>
@@ -135,7 +144,7 @@
                             <a href="#" name="btn3">
                                 <div class="small-box bg-yellow">
                                     <div class="inner">
-                                        <h3><%=endorsedRequests.size()%></h3>
+                                        <h3><%=endorsedRequests2.size()%></h3>
 
                                         <h4>Endorsed</h4>
                                     </div>
@@ -154,7 +163,7 @@
                             <a href="#" name="btn4">
                                 <div class="small-box bg-aqua">
                                     <div class="inner">
-                                        <h3><%=approvedRequests.size()%></h3>
+                                        <h3><%=approvedRequests2.size()%></h3>
 
                                         <h4>Approved</h4>
                                     </div>
@@ -170,7 +179,7 @@
                             <a href="#" name="btn5">
                                 <div class="small-box bg-green">
                                     <div class="inner">
-                                        <h3><%=forReleaseRequests.size()%><sup style="font-size: 20px"></sup></h3>
+                                        <h3><%=forReleaseRequests2.size()%><sup style="font-size: 20px"></sup></h3>
 
                                         <h4>For Release</h4>
                                     </div>
@@ -186,7 +195,7 @@
                             <a href="#" name="btn6">
                                 <div class="small-box bg-yellow">
                                     <div class="inner">
-                                        <h3><%=releasedRequests.size()%></h3>
+                                        <h3><%=releasedRequests2.size()%></h3>
 
                                         <h4>Released</h4>
                                     </div>
@@ -226,7 +235,7 @@
 
                                         <tbody>
                                             <%
-                                                for(APCPRequest r : requestedRequests){
+                                                for(APCPRequest r : requestedRequests2){
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
@@ -277,7 +286,7 @@
 
                                         <tbody>
                                             <%
-                                                for(APCPRequest r : clearedRequests){
+                                                for(APCPRequest r : clearedRequests2){
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
@@ -360,7 +369,7 @@
                                         <tbody>
 
                                             <%
-                                                for(APCPRequest r : endorsedRequests){
+                                                for(APCPRequest r : endorsedRequests2){
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
@@ -446,7 +455,7 @@
                                         <tbody>
 
                                             <%
-                                                for(APCPRequest r : approvedRequests){
+                                                for(APCPRequest r : approvedRequests2){
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
@@ -498,7 +507,7 @@
                                         <tbody>
                                             <%
                                                
-                                                for(APCPRequest r : forReleaseRequests){
+                                                for(APCPRequest r : forReleaseRequests2){
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                                     
                                             %>

@@ -173,6 +173,56 @@ public class CAPDEVDAO {
         return cp;
     }
 
+    public ArrayList<CAPDEVPlan> getAllCityMunCAPDEVPlanByStatus(int status, ArrayList<Integer> cityMunIDs) {
+
+        ArrayList<CAPDEVPlan> planList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            for (int cityMunCode : cityMunIDs) {
+                String query = "SELECT * FROM capdev_plans c "
+                        + "JOIN ref_planStatus ps ON c.planStatus=ps.planStatus "
+                        + "JOIN apcp_requests r ON c.requestID=r.requestID "
+                        + "JOIN ref_requestStatus rs ON r.requestStatus=rs.requestStatus "
+                        + "JOIN arbos a ON r.arboID=a.arboID "
+                        + "WHERE c.planStatus = ? AND a.arboCityMun = ?";
+                PreparedStatement p = con.prepareStatement(query);
+                p.setInt(1, status);
+                p.setInt(2, cityMunCode);
+                ResultSet rs = p.executeQuery();
+                while (rs.next()) {
+                    CAPDEVPlan cp = new CAPDEVPlan();
+                    cp.setPlanID(rs.getInt("planID"));
+                    cp.setRequestID(rs.getInt("requestID"));
+                    cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                    cp.setAssignedTo(rs.getInt("assignedTo"));
+                    cp.setPlanStatus(rs.getInt("planStatus"));
+                    cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
+                    cp.setPlanDTN(rs.getString("planDTN"));
+                    cp.setCreatedBy(rs.getInt("createdBy"));
+                    cp.setApprovedBy(rs.getInt("approvedBy"));
+                    cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
+                    planList.add(cp);
+                    rs.close();
+                    p.close();
+                }
+            }
+
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return planList;
+    }
+
     public ArrayList<CAPDEVPlan> getAllProvincialCAPDEVPlanByStatus(int status, int provOfficeCode) {
 
         ArrayList<CAPDEVPlan> planList = new ArrayList();

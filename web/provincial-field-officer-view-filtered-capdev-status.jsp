@@ -1,4 +1,10 @@
 <%-- 
+    Document   : provincial-field-officer-view-filtered-capdev-status
+    Created on : Mar 21, 2018, 2:57:49 AM
+    Author     : ijJPN
+--%>
+
+<%-- 
     Document   : field-officer-arbo-list
     Created on : Jan 29, 2018, 4:08:13 PM
     Author     : Rey Christian
@@ -60,7 +66,14 @@
                         <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
                     </div>
                     <%}%>
-                    
+
+                    <%
+                        ArrayList<CAPDEVPlan> pendingPlans2 = (ArrayList)request.getAttribute("pending");
+                        ArrayList<CAPDEVPlan> approvedPlans2 = (ArrayList)request.getAttribute("approved");
+                        ArrayList<CAPDEVPlan> implementedPlans2 = (ArrayList)request.getAttribute("implemented");
+                        ArrayList<APCPRequest> requestedRequests2 = (ArrayList)request.getAttribute("requested");
+                    %>
+
                     <div class="row">
                         <div class="col-xs-6">
                             <div class="box">
@@ -96,14 +109,14 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-lg-3 col-xs-6" >
                             <!-- small box -->
                             <a href="#" name="btn1">
                                 <div class="small-box bg-aqua">
                                     <div class="inner">
-                                        <h3><%=requestedRequests.size()%></h3>
+                                        <h3><%=requestedRequests2.size()%></h3>
 
                                         <h4>Requested</h4>
                                     </div>
@@ -119,7 +132,7 @@
                             <a href="#" name="btn4">
                                 <div class="small-box bg-aqua">
                                     <div class="inner">
-                                        <h3><%=pendingPlans.size()%></h3>
+                                        <h3><%=pendingPlans2.size()%></h3>
 
                                         <h4>Pending CAPDEV Proposals</h4>
                                     </div>
@@ -135,7 +148,7 @@
                             <a href="#" name="btn2">
                                 <div class="small-box bg-green">
                                     <div class="inner">
-                                        <h3><%=approvedPlans.size()%><sup style="font-size: 20px"></sup></h3>
+                                        <h3><%=approvedPlans2.size()%><sup style="font-size: 20px"></sup></h3>
 
                                         <h4>Approved CAPDEV Proposals</h4>
                                     </div>
@@ -151,7 +164,7 @@
                             <a href="#" name="btn3">
                                 <div class="small-box bg-yellow">
                                     <div class="inner">
-                                        <h3><%=implementedPlans.size()%></h3>
+                                        <h3><%=implementedPlans2.size()%></h3>
 
                                         <h4>Implemented CAPDEV Proposals</h4>
                                     </div>
@@ -196,7 +209,7 @@
                                         <tbody>
 
                                             <%
-                                                for(APCPRequest r : requestedRequests){
+                                                for(APCPRequest r : requestedRequests2){
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
@@ -245,7 +258,7 @@
                                         <tbody>
 
                                             <%
-                                                for(CAPDEVPlan p : pendingPlans){
+                                                for(CAPDEVPlan p : pendingPlans2){
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
@@ -302,7 +315,7 @@
                                         <tbody>
 
                                             <%
-                                                for(CAPDEVPlan p : approvedPlans){
+                                                for(CAPDEVPlan p : approvedPlans2){
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
@@ -359,7 +372,7 @@
                                         <tbody>
 
                                             <%
-                                                for(CAPDEVPlan p : implementedPlans){
+                                                for(CAPDEVPlan p : implementedPlans2){
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
@@ -402,35 +415,35 @@
         <%@include file="jspf/footer.jspf" %>
         <script>
 
-            
+
 
 
             $(document).ready(function () {
-                
+
                 var update_pizza = function () {
                     if ($("#filterBy").is(":checked")) {
-                        
+
                         $('#cities').prop('disabled', 'disabled');
-                        
+
                     } else {
                         $('#cities').prop('disabled', false);
                         $('#cities').val() = '';
                     }
                 };
-                
+
                 $(update_pizza);
                 $("#filterBy").change(update_pizza);
-                
-                $('#filterDrop').on('change', function(e){
+
+                $('#filterDrop').on('change', function (e) {
                     e.preventDefault();
                     $('#provinceDrop').removeAttr('disabled');
-                   if($('#filterDrop').val() === 1 && $('#provinceDrop').attr('disabled')){
-                       $('#provinceDrop').attr('disabled');
-                   }else{
-                       $('#provinceDrop').removeAttr('disabled');
-                   } 
+                    if ($('#filterDrop').val() === 1 && $('#provinceDrop').attr('disabled')) {
+                        $('#provinceDrop').attr('disabled');
+                    } else {
+                        $('#provinceDrop').removeAttr('disabled');
+                    }
                 });
-                
+
                 $("a[name='all']").click(function () {
                     if ($("div[id='1']").css('display') == 'none') {
                         $("div[id='1']").toggle();
