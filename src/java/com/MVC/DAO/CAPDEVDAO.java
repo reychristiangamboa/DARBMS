@@ -367,6 +367,51 @@ public class CAPDEVDAO {
 
         return planList;
     }
+    public ArrayList<CAPDEVPlan> getAllCAPDEVPlan() {
+
+        ArrayList<CAPDEVPlan> planList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM capdev_plans c "
+                    + "JOIN ref_planStatus ps ON c.planStatus=ps.planStatus "
+                    + "JOIN apcp_requests r ON c.requestID=r.requestID "
+                    + "JOIN ref_requestStatus rs ON r.requestStatus=rs.requestStatus "
+                    + "JOIN arbos a ON r.arboID=a.arboID ";
+            PreparedStatement p = con.prepareStatement(query);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                CAPDEVPlan cp = new CAPDEVPlan();
+                cp.setPlanID(rs.getInt("planID"));
+                cp.setRequestID(rs.getInt("requestID"));
+                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                cp.setAssignedTo(rs.getInt("assignedTo"));
+                cp.setPlanStatus(rs.getInt("planStatus"));
+                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
+                cp.setPlanDTN(rs.getString("planDTN"));
+                cp.setCreatedBy(rs.getInt("createdBy"));
+                cp.setApprovedBy(rs.getInt("approvedBy"));
+                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
+                planList.add(cp);
+            }
+            con.commit();
+            rs.close();
+            p.close();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return planList;
+    }
 
     public ArrayList<CAPDEVPlan> getAllRegionalCAPDEVPlanByStatus(int status, int regCode) {
 
@@ -385,6 +430,54 @@ public class CAPDEVDAO {
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, status);
             p.setInt(2, regCode);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                CAPDEVPlan cp = new CAPDEVPlan();
+                cp.setPlanID(rs.getInt("planID"));
+                cp.setRequestID(rs.getInt("requestID"));
+                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                cp.setAssignedTo(rs.getInt("assignedTo"));
+                cp.setPlanStatus(rs.getInt("planStatus"));
+                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
+                cp.setPlanDTN(rs.getString("planDTN"));
+                cp.setCreatedBy(rs.getInt("createdBy"));
+                cp.setApprovedBy(rs.getInt("approvedBy"));
+                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
+                planList.add(cp);
+            }
+            con.commit();
+            rs.close();
+            p.close();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return planList;
+    }
+    
+    public ArrayList<CAPDEVPlan> getAllCAPDEVPlanByStatus(int status) {
+
+        ArrayList<CAPDEVPlan> planList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM capdev_plans c "
+                    + "JOIN ref_planStatus ps ON c.planStatus=ps.planStatus "
+                    + "JOIN apcp_requests r ON c.requestID=r.requestID "
+                    + "JOIN ref_requestStatus rs ON r.requestStatus=rs.requestStatus "
+                    + "JOIN arbos a ON r.arboID=a.arboID "
+                    + "WHERE c.planStatus = ? c.pastDueAccountID IS NULL";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, status);
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 CAPDEVPlan cp = new CAPDEVPlan();
