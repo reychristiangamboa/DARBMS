@@ -99,6 +99,12 @@
 
 
         $('.table.table-bordered.table-striped.modTable').DataTable();
+        $('.table.table-bordered.table-striped.export').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
         $('#example1').DataTable();
         $('#example8').DataTable();
         $('#example7').DataTable();

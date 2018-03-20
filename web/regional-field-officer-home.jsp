@@ -21,6 +21,24 @@
             .checked {
                 color: orange;
             }
+             @media screen and (min-width: 768px) {
+                .modal-dialog {
+                    width: 700px; /* New width for default modal */
+                }
+                .modal-sm {
+                    width: 350px; /* New width for small modal */
+                }
+            }
+            @media screen and (min-width: 992px) {
+                .modal-lg {
+                    width: 950px; /* New width for large modal */
+                }
+            }
+            @media screen and (min-width: 1080px) {
+                .modal-lger {
+                    width: 1080px; /* New width for large modal */
+                }
+            }
 
         </style>
     </head>
@@ -80,7 +98,7 @@
 
                                             </div>
                                             <div class="modal fade" id="modalPie">
-                                                <div class="modal-dialog">
+                                                <div class="modal-dialog modal-lger">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -89,29 +107,96 @@
                                                         </div>
                                                         <div class="modal-body">
 
-                                                            <table class="table table-bordered table-striped modTable">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>ARBO Name</th>
-                                                                        <th>No. of Members</th>
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <div class="col-xs-6">
+                                                                        <table class="table table-bordered table-striped modTable">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Male</th>
+                                                                                    <th>ARBO</th>
+                                                                                    <th>Address</th>
+                                                                                    <th>Land Area</th>
+                                                                                    <th>ARB Rating</th>
+                                                                                    <th>ARB Status</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <%
+                                                                                    ARBODAO arbol = new ARBODAO();
+                                                                                    for (ARB arb : arbListRegion) {
+                                                                                        if (arb.getGender().equalsIgnoreCase("M")) {
+                                                                                %>
+                                                                                <tr>
+                                                                                    <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
+                                                                                    <td><%out.print(arbol.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                                                    <td><%out.print(arb.getFullAddress());%></td>
+                                                                                    <td><%out.print(arb.getLandArea());%></td>
+                                                                                    <td><%out.print(arb.getArbRating());%></td>
+                                                                                    <td><%out.print(arb.getArbStatusDesc());%></td>
+                                                                                </tr>
+                                                                                <%}
+                                                                                    }%>
 
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <th>Male</th>
+                                                                                    <th>ARBO</th>
+                                                                                    <th>Address</th> 
+                                                                                    <th>Land Area</th>
+                                                                                    <th>ARB Rating</th>
+                                                                                    <th>ARB Status</th>
 
-                                                                    <tr>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                    </tr>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+                                                                    </div>
+                                                                    <div class="col-xs-6">
+                                                                        <table class="table table-bordered table-striped modTable">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Female</th>
+                                                                                    <th>ARBO</th>
+                                                                                    <th>Address</th>
+                                                                                    <th>Land Area</th>
+                                                                                    <th>ARB Rating</th>
+                                                                                    <th>ARB Status</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <%
+                                                                                    ARBODAO arboll = new ARBODAO();
+                                                                                    for (ARB arb : arbListRegion) {
+                                                                                        if (arb.getGender().equalsIgnoreCase("F")) {
+                                                                                %>
+                                                                                <tr>
+                                                                                    <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
+                                                                                    <td><%out.print(arboll.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                                                    <td><%out.print(arb.getFullAddress());%></td>
+                                                                                    <td><%out.print(arb.getLandArea());%></td>
+                                                                                    <td><%out.print(arb.getArbRating());%></td>
+                                                                                    <td><%out.print(arb.getArbStatusDesc());%></td>
+                                                                                </tr>
+                                                                                <%}
+                                                                                    }%>
 
-                                                                </tbody>
-                                                                <tfoot>
-                                                                    <tr>
-                                                                        <th>ARBO Name</th>
-                                                                        <th>City Mun ID</th>
-                                                                    </tr>
-                                                                </tfoot>
-                                                            </table>
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <th>Female</th>
+                                                                                    <th>ARBO</th>
+                                                                                    <th>Address</th> 
+                                                                                    <th>Land Area</th>
+                                                                                    <th>ARB Rating</th>
+                                                                                    <th>ARB Status</th>
+
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
                                                         </div>
                                                         <div class="modal-footer">
@@ -140,7 +225,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal fade" id="modalBar">
-                                                <div class="modal-dialog">
+                                                <div class="modal-dialog modal-lger">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -152,27 +237,35 @@
                                                             <table class="table table-bordered table-striped modTable">
                                                                 <thead>
                                                                     <tr>
+                                                                        <th>ARB Name</th>
                                                                         <th>ARBO Name</th>
-                                                                        <th>No. of Members</th>
-
+                                                                        <th>Gender</th>
+                                                                        <th>Education Level</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
+                                                                    <%
+                                                                        ARBODAO arboEduc = new ARBODAO();
+                                                                        for (ARB arb : arbListRegion) {
 
+                                                                    %>
                                                                     <tr>
-                                                                        <td></td>
-                                                                        <td></td>
+                                                                        <td><%out.print(arb.getFullName());%></td>
+                                                                        <td><%out.print(arboEduc.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                                        <td><%out.print(arb.getGender());%></td>
+                                                                        <td><%out.print(arb.getEducationLevelDesc());%></td>
                                                                     </tr>
-
+                                                                    <%}%>
                                                                 </tbody>
                                                                 <tfoot>
                                                                     <tr>
+                                                                        <th>ARB Name</th>
                                                                         <th>ARBO Name</th>
-                                                                        <th>City Mun ID</th>
+                                                                        <th>Gender</th>
+                                                                        <th>Education Level</th>
                                                                     </tr>
                                                                 </tfoot>
                                                             </table>
-
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
@@ -201,7 +294,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal fade" id="modal-default<%out.print(prov.getProvCode());%>">
-                                                            <div class="modal-dialog">
+                                                            <div class="modal-dialog modal-lger">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -278,27 +371,37 @@
                                                             <table class="table table-bordered table-striped modTable">
                                                                 <thead>
                                                                     <tr>
+                                                                        <th>ARB Name</th>
                                                                         <th>ARBO Name</th>
-                                                                        <th>No. of Members</th>
-
+                                                                        <th>Crop</th>
+                                                                        <th>Start Date</th>
+                                                                        <th>End Date</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-
+                                                                    <%
+                                                                        for (Crop c : cropHistory) {
+                                                                            ARB arb = arbDAO.getARBByID(c.getArbID());
+                                                                    %>
                                                                     <tr>
-                                                                        <td></td>
-                                                                        <td></td>
+                                                                        <td><%=arb.getFullName()%></td>
+                                                                        <td><%=arboDAO.getARBOByID(arb.getArboID()).getArboName()%></td>
+                                                                        <td><%=c.getCropTypeDesc()%></td>                                                                        
+                                                                        <td><%=f.format(c.getStartDate())%></td>                                                                        
+                                                                        <td><%=f.format(c.getEndDate())%></td>
                                                                     </tr>
-
+                                                                    <%}%>
                                                                 </tbody>
                                                                 <tfoot>
                                                                     <tr>
+                                                                        <th>ARB Name</th>
                                                                         <th>ARBO Name</th>
-                                                                        <th>City Mun ID</th>
+                                                                        <th>Crop</th>
+
+
                                                                     </tr>
                                                                 </tfoot>
                                                             </table>
-
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
@@ -334,7 +437,7 @@
                                         </ul>
                                         <div class="tab-content">
                                             <div class="active tab-pane" id="release">
-                                                <table id="example1" class="table table-bordered table-striped">
+                                                <table  class="table table-bordered table-striped export">
                                                     <thead>
                                                         <tr>
                                                             <th>Loan <br>Tracking No.</th>
@@ -393,27 +496,48 @@
                                                                         <h4 class="modal-title"></h4>
                                                                     </div>
                                                                     <div class="modal-body">
-
-                                                                        <table class="table table-bordered table-striped modTable">
+       <table class="table table-bordered table-striped modTable">
                                                                             <thead>
                                                                                 <tr>
-                                                                                    <th>ARBO Name</th>
-                                                                                    <th>No. of Members</th>
-
+                                                                                    <th>Loan Tracking No.</th>
+                                                                                    <th>Past Due Amount</th>
+                                                                                    <th>Reason for Past Due</th>
+                                                                                    <th>Other Reason</th>
+                                                                                    <th>Date Recorded</th>
+                                                                                    <th>Date Settled</th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
+                                                                                <%
+                                                                                    for (PastDueAccount pda : pdaByRequestList) {
+                                                                                        APCPRequest apcpPDA = apcpRequestDAO.getRequestByID(pda.getRequestID());
 
+                                                                                %>
                                                                                 <tr>
-                                                                                    <td></td>
-                                                                                    <td></td>
+                                                                                    <td><%=apcpPDA.getLoanTrackingNo()%></td>
+                                                                                    <td><%=pda.getPastDueAmount()%></td>
+                                                                                    <td><%=pda.getReasonPastDueDesc()%></td>
+                                                                                    <td><%=pda.getOtherReason()%></td>
+                                                                                    <td><%=pda.getDateRecorded()%></td>
+                                                                                    <td>
+                                                                                        <%if(pda.getDateSettled() != null){
+                                                                                            out.print(pda.getDateSettled());
+                                                                                        }else{
+                                                                                            out.print("Unsettled");
+                                                                                        }%>
+                                                                                    </td>
                                                                                 </tr>
-
+                                                                                <%}%>
                                                                             </tbody>
                                                                             <tfoot>
                                                                                 <tr>
-                                                                                    <th>ARBO Name</th>
-                                                                                    <th>City Mun ID</th>
+
+                                                                                    <th>ARB Name</th>
+                                                                                    <th>Past Due Amount</th>
+                                                                                    <th>Reason for Past Due</th>
+                                                                                    <th>Date Settled</th>
+                                                                                    <th>Recorded By</th>
+                                                                                    <th>Date Recorded</th>
                                                                                 </tr>
                                                                             </tfoot>
                                                                         </table>
@@ -736,10 +860,10 @@
                                         </thead>
                                         <tbody>
                                             <%
-                                                      for (CAPDEVPlan cp : allPlans) {
-                                                          APCPRequest r = apcpRequestDAO.getRequestByID(cp.getRequestID());
-                                                          ARBO arbo2 = arboDAO.getARBOByID(r.getArboID());
-                                                          CAPDEVDAO capdao = new CAPDEVDAO(); 
+                                                for (CAPDEVPlan cp : allPlans) {
+                                                    APCPRequest r = apcpRequestDAO.getRequestByID(cp.getRequestID());
+                                                    ARBO arbo2 = arboDAO.getARBOByID(r.getArboID());
+                                                    CAPDEVDAO capdao = new CAPDEVDAO();
                                             %>
                                             <tr>
                                                 <td><%out.print(arbo2.getArboName());%></td>
@@ -790,7 +914,7 @@
                 var ctx2 = $('#lineCanvas').get(0).getContext('2d');
             <%
                 Chart line = new Chart();
-                String json2 = line.getCropHistory(arbListRegion);
+                String json2 = line.getCropHistory(crops);
             %>
                 new Chart(ctx2, <%out.print(json2);%>);
 
