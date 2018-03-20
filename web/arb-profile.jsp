@@ -57,15 +57,15 @@
                 APCPRequestDAO arDAO = new APCPRequestDAO();
                 ARBODAO dao = new ARBODAO();
                 EvaluationDAO eDAO = new EvaluationDAO();
-                
+
                 ARB arb = (ARB) request.getAttribute("arb");
                 ARBO arbo = dao.getARBOByID(arb.getArboID());
                 ArrayList<Disbursement> disbursements = arDAO.getAllDisbursementsByARB(arb.getArbID());
                 ArrayList<Repayment> repayments = arDAO.getAllRepaymentsByARB(arb.getArbID());
-                ArrayList<Evaluation> arbEvaluations = eDAO.getEvaluationPerARBIDByType(arb.getArbID(),1);
-                ArrayList<Evaluation> apcpEvaluations = eDAO.getEvaluationPerARBIDByType(arb.getArbID(),2);
-                ArrayList<Evaluation> capdevEvaluations = eDAO.getEvaluationPerARBIDByType(arb.getArbID(),3);
-                ArrayList<Evaluation> linksfarmEvaluations = eDAO.getEvaluationPerARBIDByType(arb.getArbID(),4);
+                ArrayList<Evaluation> arbEvaluations = eDAO.getEvaluationPerARBIDByType(arb.getArbID(), 1);
+                ArrayList<Evaluation> apcpEvaluations = eDAO.getEvaluationPerARBIDByType(arb.getArbID(), 2);
+                ArrayList<Evaluation> capdevEvaluations = eDAO.getEvaluationPerARBIDByType(arb.getArbID(), 3);
+                ArrayList<Evaluation> linksfarmEvaluations = eDAO.getEvaluationPerARBIDByType(arb.getArbID(), 4);
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -315,7 +315,7 @@
                                                             boolean firstInstance99 = true;
                                                             Date date99 = null;
                                                         %>
-                                                        <%for(Crop c : arb.getCrops()){%>
+                                                        <%for (Crop c : arb.getCrops()) {%>
 
                                                         <li class="time-label">
                                                             <span class="bg-aqua">
@@ -380,32 +380,190 @@
                                                 <div class="box-body">
                                                     <div class="chart">
                                                         <canvas id="lineAPCPRating" style="height:250px"></canvas>
+                                                        <div class="row text-center">
+                                                            <a class="btn btn-submit" data-toggle="modal" data-target="#modalAPCP">View More</a>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="modal fade" id="modalAPCP">
+                                                <div class="modal-dialog modal-lger">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title"></h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table class="table table-bordered table-striped modTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Evaluation DTN</th>
+                                                                        <th>Rating</th>
+                                                                        <th>Evaluation Date</th>
+                                                                        <th>Evaluation Start & End</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <%
 
+                                                                        for (Evaluation evalArb : apcpEvaluations) {
+                                                                    %>
+                                                                    <tr>
+                                                                        <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(evalArb.getEvaluationDTN());%> </a></td>
+                                                                        <td><%out.print(evalArb.getRating());%></td>
+                                                                        <td><%out.print(evalArb.getEvaluationDate());%></td>
+                                                                        <td><%out.print(evalArb.getEvaluationStartDate() + "-" + evalArb.getEvaluationEndDate());%></td>
+                                                                    </tr>
+                                                                    <%}%>
+
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th>Evaluation DTN</th>
+                                                                        <th>Rating</th>
+                                                                        <th>Evaluation Date</th>
+                                                                        <th>Evaluation Start & End</th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="capdev">
                                                 <div class="box-body">
                                                     <div class="chart">
                                                         <canvas id="lineCAPDEV" style="height:250px"></canvas>
+                                                        <div class="row text-center">
+                                                            <a class="btn btn-submit" data-toggle="modal" data-target="#modalCAPDEV">View More</a>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="modal fade" id="modalCAPDEV">
+                                                <div class="modal-dialog modal-lger">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title"></h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table class="table table-bordered table-striped modTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Evaluation DTN</th>
+                                                                        <th>Rating</th>
+                                                                        <th>Evaluation Date</th>
+                                                                        <th>Evaluation Start & End</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <%
+
+                                                                        for (Evaluation evalArb : capdevEvaluations) {
+                                                                    %>
+                                                                    <tr>
+                                                                        <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(evalArb.getEvaluationDTN());%> </a></td>
+                                                                        <td><%out.print(evalArb.getRating());%></td>
+                                                                        <td><%out.print(evalArb.getEvaluationDate());%></td>
+                                                                        <td><%out.print(evalArb.getEvaluationStartDate() + "-" + evalArb.getEvaluationEndDate());%></td>
+                                                                    </tr>
+                                                                    <%}%>
+
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th>Evaluation DTN</th>
+                                                                        <th>Rating</th>
+                                                                        <th>Evaluation Date</th>
+                                                                        <th>Evaluation Start & End</th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="overall">
                                                 <div class="box-body">
                                                     <div class="chart">
                                                         <canvas id="lineARB" style="height:250px"></canvas>
+                                                        <div class="row text-center">
+                                                            <a class="btn btn-submit" data-toggle="modal" data-target="#overallRate">View More</a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="modal fade" id="overallRate">
+                                                <div class="modal-dialog modal-lger">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title"></h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table class="table table-bordered table-striped modTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Evaluation DTN</th>
+                                                                        <th>Rating</th>
+                                                                        <th>Evaluation Date</th>
+                                                                        <th>Evaluation Start & End</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <%
 
+                                                                        for (Evaluation evalArb : arbEvaluations) {
+                                                                    %>
+                                                                    <tr>
+                                                                        <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(evalArb.getEvaluationDTN());%> </a></td>
+                                                                        <td><%out.print(evalArb.getRating());%></td>
+                                                                        <td><%out.print(evalArb.getEvaluationDate());%></td>
+                                                                        <td><%out.print(evalArb.getEvaluationStartDate() + "-" + evalArb.getEvaluationEndDate());%></td>
+                                                                    </tr>
+                                                                    <%}%>
+
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th>Evaluation DTN</th>
+                                                                        <th>Rating</th>
+                                                                        <th>Evaluation Date</th>
+                                                                        <th>Evaluation Start & End</th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
                                         </div>
                                         <!-- /.tab-content -->
                                     </div>
                                     <!-- /.nav-tabs-custom -->
-                                    <%if ((Integer) session.getAttribute("userType") == 2) {%>
+                                    <%if ((Integer) session.getAttribute(
+                                                "userType") == 2) {%>
                                     <div class="box-footer">
                                         <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation">Add Evaluation</button>
                                     </div>
@@ -439,23 +597,23 @@
                                                         Date date = null;
                                                     %>
                                                     <% for (Disbursement db : disbursements) { %>
-                                                    <% 
+                                                    <%
                                                         boolean dateChanged = false;
-                                                            
-                                                        if(firstInstance){ // FIRST INSTANCE
+
+                                                        if (firstInstance) { // FIRST INSTANCE
                                                             date = db.getDateDisbursed();
                                                         }
                                                     %>
 
                                                     <%
-                                                        if(date.compareTo(db.getDateDisbursed()) != 0){ // NEW DATE, change currDate
+                                                        if (date.compareTo(db.getDateDisbursed()) != 0) { // NEW DATE, change currDate
                                                             date = db.getDateDisbursed();
                                                             dateChanged = true;
                                                             System.out.print("Date changed!");
                                                         }
                                                     %>
 
-                                                    <%if(firstInstance || dateChanged){%>
+                                                    <%if (firstInstance || dateChanged) {%>
                                                     <li class="time-label">
                                                         <span class="bg-green">
                                                             <%out.print(f.format(date));%>
@@ -483,27 +641,27 @@
                                                 <!-- The timeline -->
                                                 <ul class="timeline timeline-inverse">
                                                     <%
-                                                         boolean firstInstance1 = true;
-                                                         Date date1 = null;
+                                                        boolean firstInstance1 = true;
+                                                        Date date1 = null;
                                                     %>
                                                     <% for (Repayment rp : repayments) { %>
-                                                    <% 
+                                                    <%
                                                         boolean dateChanged1 = false;
-                                                            
-                                                        if(firstInstance1){ // FIRST INSTANCE
+
+                                                        if (firstInstance1) { // FIRST INSTANCE
                                                             date1 = rp.getDateRepayment();
                                                         }
                                                     %>
 
                                                     <%
-                                                        if(date1.compareTo(rp.getDateRepayment()) != 0){ // NEW DATE, change currDate
+                                                        if (date1.compareTo(rp.getDateRepayment()) != 0) { // NEW DATE, change currDate
                                                             date1 = rp.getDateRepayment();
                                                             dateChanged1 = true;
                                                             System.out.print("Date changed!");
                                                         }
                                                     %>
 
-                                                    <%if(firstInstance1 || dateChanged1){%>
+                                                    <%if (firstInstance1 || dateChanged1) {%>
                                                     <li class="time-label">
                                                         <span class="bg-green">
                                                             <%out.print(f.format(date1));%>
@@ -538,30 +696,30 @@
                                                 </div> 
 
                                                 <%
-                                                
-                                                boolean firstInstance23 = true;
-                                                Date date23 = null;
+
+                                                    boolean firstInstance23 = true;
+                                                    Date date23 = null;
                                                 %>
 
                                                 <ul class="timeline timeline-inverse">
-                                                    <%for(CAPDEVActivity act : myActivities){%>
-                                                    <% 
-                                                            boolean dateChanged = false;
-                                                            
-                                                            if(firstInstance23){ // FIRST INSTANCE
-                                                                date23 = act.getActivityDate();
-                                                            }
+                                                    <%for (CAPDEVActivity act : myActivities) {%>
+                                                    <%
+                                                        boolean dateChanged = false;
+
+                                                        if (firstInstance23) { // FIRST INSTANCE
+                                                            date23 = act.getActivityDate();
+                                                        }
                                                     %>
 
                                                     <%
-                                                            if(date23.compareTo(act.getActivityDate()) != 0){ // NEW DATE, change currDate
-                                                                date23 = act.getActivityDate();
-                                                                dateChanged = true;
-                                                                System.out.print("Date changed!");
-                                                            }
+                                                        if (date23.compareTo(act.getActivityDate()) != 0) { // NEW DATE, change currDate
+                                                            date23 = act.getActivityDate();
+                                                            dateChanged = true;
+                                                            System.out.print("Date changed!");
+                                                        }
                                                     %>
                                                     <!-- timeline time label -->
-                                                    <%if(firstInstance23 || dateChanged){%>
+                                                    <%if (firstInstance23 || dateChanged) {%>
                                                     <li class="time-label">
                                                         <span class="bg-green">
                                                             <%out.print(f.format(date23));%>
@@ -570,9 +728,9 @@
                                                     <%firstInstance23 = false;%>
                                                     <%}%>
                                                     <li>
-                                                        <%if(act.getIsPresent() == 1){%>
+                                                        <%if (act.getIsPresent() == 1) {%>
                                                         <i class='fa fa-check bg-green'></i>
-                                                        <%}else if(act.getIsPresent() == 0){%>
+                                                        <%} else if (act.getIsPresent() == 0) {%>
                                                         <i class='fa fa-times bg-red'></i>
                                                         <%}%>
                                                         <div class="timeline-item">
