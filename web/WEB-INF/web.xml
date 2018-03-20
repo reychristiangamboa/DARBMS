@@ -272,6 +272,10 @@
         <servlet-name>FilterLoanRequests</servlet-name>
         <servlet-class>com.MVC.Controller.FilterLoanRequests</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FilterCAPDEVRequests</servlet-name>
+        <servlet-class>com.MVC.Controller.FilterCAPDEVRequests</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -543,6 +547,10 @@
     <servlet-mapping>
         <servlet-name>FilterLoanRequests</servlet-name>
         <url-pattern>/FilterLoanRequests</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterCAPDEVRequests</servlet-name>
+        <url-pattern>/FilterCAPDEVRequests</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

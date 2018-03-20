@@ -102,104 +102,108 @@
 
                                             </div>
                                             <div class="modal fade" id="modalPie">
-                                                <div class="modal-dialog modal-lger">
+                                                <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title"></h4>
+                                                            <h4 class="modal-title">ARBs by Sex</h4>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="row">
+
                                                                 <div class="col-xs-12">
-                                                                    <div class="col-xs-6">
-                                                                        <table class="table table-bordered table-striped modTable">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>Male</th>
-                                                                                    <th>ARBO</th>
-                                                                                    <th>Address</th>
-                                                                                    <th>Land Area</th>
-                                                                                    <th>ARB Rating</th>
-                                                                                    <th>ARB Status</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <%
-                                                                                    ARBODAO arbol = new ARBODAO();
-                                                                                    for (ARB arb : arbListProvince) {
-                                                                                        if (arb.getGender().equalsIgnoreCase("M")) {
-                                                                                %>
-                                                                                <tr>
-                                                                                    <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
-                                                                                    <td><%out.print(arbol.getARBOByID(arb.getArboID()).getArboName());%></td>
-                                                                                    <td><%out.print(arb.getFullAddress());%></td>
-                                                                                    <td><%out.print(arb.getLandArea());%></td>
-                                                                                    <td><%out.print(arb.getArbRating());%></td>
-                                                                                    <td><%out.print(arb.getArbStatusDesc());%></td>
-                                                                                </tr>
-                                                                                <%}
+                                                                    <table id="example4" class="table table-bordered table-striped">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Male</th>
+                                                                                <th>ARBO</th>
+                                                                                <th>Address</th>
+                                                                                <th>Land Area</th>
+                                                                                <th>ARB Rating</th>
+                                                                                <th>ARB Status</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <%
+                                                                                ARBODAO arbol = new ARBODAO();
+                                                                                for (ARB arb : arbListProvince) {
+                                                                                    if (arb.getGender().equalsIgnoreCase("M")) {
+                                                                            %>
+                                                                            <tr>
+                                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
+                                                                                <td><%out.print(arbol.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                                                <td><%out.print(arb.getFullAddress());%></td>
+                                                                                <td><%out.print(arb.getLandArea());%></td>
+                                                                                <td><%out.print(arb.getArbRating());%></td>
+                                                                                <td><%out.print(arb.getArbStatusDesc());%></td>
+                                                                            </tr>
+                                                                            <%}
                                                                                     }%>
 
-                                                                            </tbody>
-                                                                            <tfoot>
-                                                                                <tr>
-                                                                                    <th>Male</th>
-                                                                                    <th>ARBO</th>
-                                                                                    <th>Address</th> 
-                                                                                    <th>Land Area</th>
-                                                                                    <th>ARB Rating</th>
-                                                                                    <th>ARB Status</th>
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr>
+                                                                                <th>Male</th>
+                                                                                <th>ARBO</th>
+                                                                                <th>Address</th> 
+                                                                                <th>Land Area</th>
+                                                                                <th>ARB Rating</th>
+                                                                                <th>ARB Status</th>
 
-                                                                                </tr>
-                                                                            </tfoot>
-                                                                        </table>
-                                                                    </div>
-                                                                    <div class="col-xs-6">
-                                                                        <table class="table table-bordered table-striped modTable">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>Female</th>
-                                                                                    <th>ARBO</th>
-                                                                                    <th>Address</th>
-                                                                                    <th>Land Area</th>
-                                                                                    <th>ARB Rating</th>
-                                                                                    <th>ARB Status</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <%
-                                                                                    ARBODAO arboll = new ARBODAO();
-                                                                                    for (ARB arb : arbListProvince) {
-                                                                                        if (arb.getGender().equalsIgnoreCase("F")) {
-                                                                                %>
-                                                                                <tr>
-                                                                                    <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
-                                                                                    <td><%out.print(arboll.getARBOByID(arb.getArboID()).getArboName());%></td>
-                                                                                    <td><%out.print(arb.getFullAddress());%></td>
-                                                                                    <td><%out.print(arb.getLandArea());%></td>
-                                                                                    <td><%out.print(arb.getArbRating());%></td>
-                                                                                    <td><%out.print(arb.getArbStatusDesc());%></td>
-                                                                                </tr>
-                                                                                <%}
-                                                                                    }%>
-
-                                                                            </tbody>
-                                                                            <tfoot>
-                                                                                <tr>
-                                                                                    <th>Female</th>
-                                                                                    <th>ARBO</th>
-                                                                                    <th>Address</th> 
-                                                                                    <th>Land Area</th>
-                                                                                    <th>ARB Rating</th>
-                                                                                    <th>ARB Status</th>
-
-                                                                                </tr>
-                                                                            </tfoot>
-                                                                        </table>
-                                                                    </div>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
                                                                 </div>
                                                             </div>
+
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <table class="table table-bordered table-striped modTable">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Female</th>
+                                                                                <th>ARBO</th>
+                                                                                <th>Address</th>
+                                                                                <th>Land Area</th>
+                                                                                <th>ARB Rating</th>
+                                                                                <th>ARB Status</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <%
+                                                                                ARBODAO arboll = new ARBODAO();
+                                                                                for (ARB arb : arbListProvince) {
+                                                                                    if (arb.getGender().equalsIgnoreCase("F")) {
+                                                                            %>
+                                                                            <tr>
+                                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
+                                                                                <td><%out.print(arboll.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                                                <td><%out.print(arb.getFullAddress());%></td>
+                                                                                <td><%out.print(arb.getLandArea());%></td>
+                                                                                <td><%out.print(arb.getArbRating());%></td>
+                                                                                <td><%out.print(arb.getArbStatusDesc());%></td>
+                                                                            </tr>
+                                                                            <%}
+                                                                                    }%>
+
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr>
+                                                                                <th>Female</th>
+                                                                                <th>ARBO</th>
+                                                                                <th>Address</th> 
+                                                                                <th>Land Area</th>
+                                                                                <th>ARB Rating</th>
+                                                                                <th>ARB Status</th>
+
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
@@ -451,9 +455,9 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <%                                                            for (APCPRequest r : releasedRequests) {
+                                                        <%          
+                                                            for (APCPRequest r : releasedRequests) {
                                                                 ARBO arbo = arboDAO.getARBOByID(r.getArboID());
-
                                                         %>
                                                         <tr>
                                                             <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%=r.getLoanTrackingNo()%></a></td>
