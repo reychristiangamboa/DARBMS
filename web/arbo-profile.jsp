@@ -22,6 +22,26 @@
                 color: orange;
             }
 
+            @media screen and (min-width: 768px) {
+                .modal-dialog {
+                    width: 700px; /* New width for default modal */
+                }
+                .modal-sm {
+                    width: 350px; /* New width for small modal */
+                }
+            }
+            @media screen and (min-width: 992px) {
+                .modal-lg {
+                    width: 950px; /* New width for large modal */
+                }
+            }
+            @media screen and (min-width: 1080px) {
+                .modal-lger {
+                    width: 1080px; /* New width for large modal */
+                }
+            }
+
+
         </style>
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
@@ -50,6 +70,7 @@
                 ArrayList<APCPRequest> arboReleasedRequest = dao4.getAllARBORequestsByStatus(5, arbo.getArboID());
                 ArrayList<CAPDEVActivity> activityHistory = capdevDAO2.getAPCPCAPDEVActivityHistoryByARBO(arbo.getArboID());
                 ArrayList<Repayment> repaymentHistory = dao4.getRepaymentHistoryByARBO(arbo.getArboID());
+                ArrayList<Crop> crops = dao3.getAllCropsByARBList(arbListARBO);
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -78,7 +99,7 @@
                                             <b>Crops</b>
                                             <p>
                                                 <%
-                                                    for (Crop c : dao3.getAllCropsByProvince(arbListARBO)) {
+                                                    for (Crop c : dao3.getAllCropsByARBList(arbListARBO)) {
                                                 %>
                                                 <span class="label label-success"><%out.print(c.getCropTypeDesc());%></span>
                                                 <%}%>
@@ -141,7 +162,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <%if((Integer)session.getAttribute("userType") == 3){%>
+                                        <%if ((Integer) session.getAttribute("userType") == 3) {%>
                                         <div class="modal-footer">
                                             <div class="pull-right">
                                                 <form method="post">
@@ -185,7 +206,6 @@
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
-                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
                                 <div class="box-body">
@@ -204,10 +224,121 @@
                                                     <div class="col-xs-8">
                                                         <div class="box-body">
                                                             <canvas id="pieCanvas" style="height:150px"></canvas>
+                                                            <div class="row text-center">
+                                                                <a class="btn btn-submit" data-toggle="modal" data-target="#modalPie">View More</a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-2"></div>
                                                 </div>
+                                            </div>
+                                            <div class="modal fade" id="modalPie">
+                                                <div class="modal-dialog modal-lger">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title"></h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <div class="col-xs-6">
+                                                                        <table class="table table-bordered table-striped modTable">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Male</th>
+                                                                                    <th>ARBO</th>
+                                                                                    <th>Address</th>
+                                                                                    <th>Land Area</th>
+                                                                                    <th>ARB Rating</th>
+                                                                                    <th>ARB Status</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <%
+                                                                                    ARBODAO arbol = new ARBODAO();
+                                                                                    for (ARB arb : arbListARBO) {
+                                                                                        if (arb.getGender().equalsIgnoreCase("M")) {
+                                                                                %>
+                                                                                <tr>
+                                                                                    <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
+                                                                                    <td><%out.print(arbol.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                                                    <td><%out.print(arb.getFullAddress());%></td>
+                                                                                    <td><%out.print(arb.getLandArea());%></td>
+                                                                                    <td><%out.print(arb.getArbRating());%></td>
+                                                                                    <td><%out.print(arb.getArbStatusDesc());%></td>
+                                                                                </tr>
+                                                                                <%}
+                                                                                    }%>
+
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <th>Male</th>
+                                                                                    <th>ARBO</th>
+                                                                                    <th>Address</th> 
+                                                                                    <th>Land Area</th>
+                                                                                    <th>ARB Rating</th>
+                                                                                    <th>ARB Status</th>
+
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+                                                                    </div>
+                                                                    <div class="col-xs-6">
+                                                                        <table class="table table-bordered table-striped modTable">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Female</th>
+                                                                                    <th>ARBO</th>
+                                                                                    <th>Address</th>
+                                                                                    <th>Land Area</th>
+                                                                                    <th>ARB Rating</th>
+                                                                                    <th>ARB Status</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <%
+                                                                                    ARBODAO arboll = new ARBODAO();
+                                                                                    for (ARB arb : arbListARBO) {
+                                                                                        if (arb.getGender().equalsIgnoreCase("F")) {
+                                                                                %>
+                                                                                <tr>
+                                                                                    <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
+                                                                                    <td><%out.print(arboll.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                                                    <td><%out.print(arb.getFullAddress());%></td>
+                                                                                    <td><%out.print(arb.getLandArea());%></td>
+                                                                                    <td><%out.print(arb.getArbRating());%></td>
+                                                                                    <td><%out.print(arb.getArbStatusDesc());%></td>
+                                                                                </tr>
+                                                                                <%}
+                                                                                    }%>
+
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <th>Female</th>
+                                                                                    <th>ARBO</th>
+                                                                                    <th>Address</th> 
+                                                                                    <th>Land Area</th>
+                                                                                    <th>ARB Rating</th>
+                                                                                    <th>ARB Status</th>
+
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="educ">
@@ -217,12 +348,66 @@
                                                         <div class="col-xs-8">
                                                             <div class="chart">
                                                                 <canvas id="barCanvas" style="height:230px"></canvas>
+                                                                <div class="row text-center">
+                                                                    <a class="btn btn-submit" data-toggle="modal" data-target="#modalBar">View More</a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-2"></div>
                                                     </div>
-
                                                 </div>
+                                            </div>
+                                            <div class="modal fade" id="modalBar">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title"></h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <table class="table table-bordered table-striped modTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ARB Name</th>
+                                                                        <th>ARBO Name</th>
+                                                                        <th>Gender</th>
+                                                                        <th>Education Level</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <%
+                                                                        ARBODAO arboEduc = new ARBODAO();
+                                                                        for (ARB arb : arbListARBO) {
+
+                                                                    %>
+                                                                    <tr>
+                                                                        <td><%out.print(arb.getFullName());%></td>
+                                                                        <td><%out.print(arboEduc.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                                        <td><%out.print(arb.getGender());%></td>
+                                                                        <td><%out.print(arb.getEducationLevelDesc());%></td>
+                                                                    </tr>
+                                                                    <%}%>
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th>ARB Name</th>
+                                                                        <th>ARBO Name</th>
+                                                                        <th>Gender</th>
+                                                                        <th>Education Level</th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="citymun">
@@ -232,10 +417,10 @@
                                                         ARBDAO arbDAO = new ARBDAO();
                                                         ARBODAO arboDAO = new ARBODAO();
                                                         ArrayList<ARBO> arboList = new ArrayList();
-                                                        if((Integer)session.getAttribute("userType") == 3){
+                                                        if ((Integer) session.getAttribute("userType") == 3) {
                                                             arboList = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
-                                                        }else if((Integer)session.getAttribute("userType") == 4){
-                                                            arboList = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));    
+                                                        } else if ((Integer) session.getAttribute("userType") == 4) {
+                                                            arboList = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
                                                         }
                                                         ArrayList<ARB> arbList = arbDAO.getAllARBsOfARBOs(arboList);
                                                         ArrayList<Integer> arbListCityMunCodes = arbDAO.getARBCityMun(arbList);
@@ -316,11 +501,69 @@
                                                         <div class="col-xs-8">
                                                             <div class="chart">
                                                                 <canvas id="lineCanvas" style="height:250px"></canvas>
+                                                                <div class="row text-center">
+                                                                    <a class="btn btn-submit" data-toggle="modal" data-target="#modalLine">View More</a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-2"></div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="modal fade" id="modalLine">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title">Provincial ARB Crop History</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <table class="table table-bordered table-striped modTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ARB Name</th>
+                                                                        <th>ARBO Name</th>
+                                                                        <th>Crop</th>
+                                                                        <th>Start Date</th>
+                                                                        <th>End Date</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <%
+                                                                        ArrayList<Crop> cropHistory = dao3.getCropHistory(arbListARBO);
+                                                                        for (Crop c : cropHistory) {
+                                                                            ARB arb = arbDAO.getARBByID(c.getArbID());
+                                                                    %>
+                                                                    <tr>
+                                                                        <td><%=arb.getFullName()%></td>
+                                                                        <td><%=arboDAO.getARBOByID(arb.getArboID()).getArboName()%></td>
+                                                                        <td><%=c.getCropTypeDesc()%></td>                                                                        
+                                                                        <td><%=f.format(c.getStartDate())%></td>                                                                        
+                                                                        <td><%=f.format(c.getEndDate())%></td>
+                                                                    </tr>
+                                                                    <%}%>
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th>ARB Name</th>
+                                                                        <th>ARBO Name</th>
+                                                                        <th>Crop</th>
+
+
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
                                             </div>
                                             <!-- /.tab-pane -->
                                         </div>
@@ -526,23 +769,23 @@
                                                             Date date = null;
                                                         %>
                                                         <% for (CAPDEVActivity activity : activityHistory) { %>
-                                                        <% 
+                                                        <%
                                                             boolean dateChanged = false;
-                                                            
-                                                            if(firstInstance){ // FIRST INSTANCE
+
+                                                            if (firstInstance) { // FIRST INSTANCE
                                                                 date = activity.getActivityDate();
                                                             }
                                                         %>
 
                                                         <%
-                                                            if(date.compareTo(activity.getActivityDate()) != 0){ // NEW DATE, change currDate
+                                                            if (date.compareTo(activity.getActivityDate()) != 0) { // NEW DATE, change currDate
                                                                 date = activity.getActivityDate();
                                                                 dateChanged = true;
                                                                 System.out.print("Date changed!");
                                                             }
                                                         %>
 
-                                                        <%if(firstInstance || dateChanged){%>
+                                                        <%if (firstInstance || dateChanged) {%>
                                                         <li class="time-label">
                                                             <span class="bg-green">
                                                                 <%out.print(f.format(date));%>
@@ -552,11 +795,11 @@
                                                         <%}%>
 
                                                         <li>
-                                                            <%if(activity.getActivityCategory() == 1){%>
+                                                            <%if (activity.getActivityCategory() == 1) {%>
                                                             <i class="fa fa-clipboard bg-green"></i>
-                                                            <%}else if(activity.getActivityCategory() == 2){%>
+                                                            <%} else if (activity.getActivityCategory() == 2) {%>
                                                             <i class="fa fa-clipboard bg-red"></i>
-                                                            <%}else if(activity.getActivityCategory() == 3){%>
+                                                            <%} else if (activity.getActivityCategory() == 3) {%>
                                                             <i class="fa fa-clipboard bg-orange"></i>
                                                             <%}%>
                                                             <div class="timeline-item">
@@ -701,7 +944,7 @@
                 var ctx2 = $('#lineCanvas').get(0).getContext('2d');
             <%
                 Chart line = new Chart();
-                String json2 = line.getCropHistory(arbListARBO);
+                String json2 = line.getCropHistory(crops);
             %>
                 new Chart(ctx2, <%out.print(json2);%>);
 

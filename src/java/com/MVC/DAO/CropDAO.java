@@ -89,7 +89,7 @@ public class CropDAO {
         return cropHistoryList;
     }
     
-    public ArrayList<Crop> getAllCropsByProvince(ArrayList<ARB> arbList) {
+    public ArrayList<Crop> getAllCropsByARBList(ArrayList<ARB> arbList) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<Crop> cropList = new ArrayList();

@@ -44,7 +44,7 @@
     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
     ArrayList<CityMun> cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
 
-    ArrayList<Crop> crops = cropDAO.getAllCropsByProvince(arbListProvince);
+    ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(arbListProvince);
     ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListProvince);
     
     ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer) session.getAttribute("provOfficeCode"));
