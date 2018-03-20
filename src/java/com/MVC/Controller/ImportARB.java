@@ -10,6 +10,7 @@ import com.MVC.DAO.ARBODAO;
 import com.MVC.DAO.AddressDAO;
 import com.MVC.Model.ARB;
 import com.MVC.Model.ARBO;
+import com.MVC.Model.Crop;
 import com.MVC.Model.Dependent;
 import java.io.IOException;
 import java.sql.Date;
@@ -53,8 +54,10 @@ public class ImportARB extends BaseServlet {
 
             ArrayList arbHolder = readExcelFile(request.getParameter("file"), 0);
             ArrayList dependentHolder = readExcelFile(request.getParameter("file"), 1);
+            ArrayList cropHolder = readExcelFile(request.getParameter("file"), 2);
             ArrayList cellStoreArrayList = new ArrayList();
             ArrayList cellStoreArrayList2 = new ArrayList();
+            ArrayList cellStoreArrayList3 = new ArrayList();
 
             int count = 0;
 
@@ -103,7 +106,7 @@ public class ImportARB extends BaseServlet {
                 int arbID = arbDAO.addARB(arb); // returns ID of newly added ARB
 
                 ArrayList<Dependent> dependentList = new ArrayList();
-                for (int x = 0; x < dependentHolder.size(); x++) {
+                for (int x = 1; x < dependentHolder.size(); x++) {
 
                     cellStoreArrayList2 = (ArrayList) dependentHolder.get(x);
                     Dependent d = new Dependent();
@@ -117,7 +120,7 @@ public class ImportARB extends BaseServlet {
                         String[] dateArr2 = excelDate2.split("-");
 
                         int val2 = getValOfMonth(dateArr2[1]);
-                        String finalDate2 = dateArr[2] + "-" + val2 + "-" + dateArr[0];
+                        String finalDate2 = dateArr2[2] + "-" + val2 + "-" + dateArr2[0];
 
                         try {
                             java.util.Date parsedBirthday = sdf.parse(finalDate2);
@@ -137,19 +140,59 @@ public class ImportARB extends BaseServlet {
                 }
 
                 arbDAO.addDependents(arbID, dependentList);
+                
+                ArrayList<Crop> cropList = new ArrayList();
+                for(int y = 1; y < cropHolder.size(); y++){
+                    
+                    cellStoreArrayList3 = (ArrayList) cropHolder.get(y);
+                    Crop c = new Crop();
+                    
+                    if(cellStoreArrayList3.get(3).equals(arb.getFullName())){
+                        c.setArbID(arb.getArbID());
+                        
+                        java.sql.Date startDate = null;
 
-                String cropsStr = (cellStoreArrayList.get(12).toString()); // Multiple Crops separated by commas
-                List<String> crops = new ArrayList<String>(Arrays.asList(cropsStr.split("\\s*,\\s*"))); // turns String to an array
-                ArrayList<Integer> cropValues = new ArrayList();
+                        String excelDate3 = cellStoreArrayList3.get(1).toString(); // Parsing of Excel Date to Java Date
+                        String[] dateArr3 = excelDate3.split("-");
 
-                for (int j = 0; j < crops.size(); j++) {
-                    int value = arbDAO.getCrop(crops.get(j)); // get value of crop
-                    cropValues.add(value); // adds it to cropValues for INSERTION to DB
+                        int val3 = getValOfMonth(dateArr3[1]);
+                        String finalDate3 = dateArr3[2] + "-" + val3 + "-" + dateArr3[0];
+
+                        try {
+                            java.util.Date parsedStartDate = sdf.parse(finalDate3);
+                            startDate = new java.sql.Date(parsedStartDate.getTime());
+                        } catch (ParseException ex) {
+                            Logger.getLogger(AddARB.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        c.setStartDate(startDate);
+                        
+                        
+                        java.sql.Date endDate = null;
+
+                        String excelDate4 = cellStoreArrayList3.get(2).toString(); // Parsing of Excel Date to Java Date
+                        String[] dateArr4 = excelDate4.split("-");
+
+                        int val4 = getValOfMonth(dateArr4[1]);
+                        String finalDate4 = dateArr4[2] + "-" + val4 + "-" + dateArr4[0];
+
+                        try {
+                            java.util.Date parsedEndDate = sdf.parse(finalDate4);
+                            endDate = new java.sql.Date(parsedEndDate.getTime());
+                        } catch (ParseException ex) {
+                            Logger.getLogger(AddARB.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        c.setStartDate(endDate);
+                        
+                        c.setCropType(arbDAO.getCrop(cellStoreArrayList3.get(0).toString()));
+                        
+                    }
                 }
-
-                if (arbDAO.addCrops(arbID, cropValues)) {
-                    count++;
-                }
+                
+                arbDAO.addCrops(arbID, cropList);
+                
+                count++;
 
             }
 

@@ -70,21 +70,32 @@
                                                     <%for(CAPDEVActivity b : caList){%>
                                                     <div class="chart tab-pane <%if(count2 == 0){out.print("active");}%>" id="activity<%out.print(b.getActivityID());%>" style="position: relative; height: 300px;">
                                                         <%count2++;%>
-                                                        <div class="box-body">
-                                                            <div class="row">
-                                                                <div class="col-xs-4">
-                                                                    <label>Date:</label>
-                                                                    <div class="input-group date">
-                                                                        <div class="input-group-addon">
-                                                                            <i class="fa fa-calendar"></i>
-                                                                        </div>
-                                                                        <input type="text" value="<%out.print(f.format(b.getActivityDate()));%>" class="form-control pull-right" id="datepicker" disabled>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                         <form method="post">
                                                             <div class="box-body">
+                                                                <div class="row">
+                                                                    <div class="col-xs-4">
+                                                                        <label>Date:</label>
+                                                                        <div class="input-group date">
+                                                                            <div class="input-group-addon">
+                                                                                <i class="fa fa-calendar"></i>
+                                                                            </div>
+                                                                            <input type="text" value="<%out.print(f.format(b.getActivityDate()));%>" class="form-control pull-right" id="datepicker" disabled>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-4">
+                                                                        <div class="form-group">
+                                                                            <label for="">Technical Assistant</label>
+                                                                            <%if(b.getTechnicalAssistant() != null){%>
+                                                                            <input type="text" name="TA" class="form-control" value="<%=b.getTechnicalAssistant()%>">
+                                                                            <%}else{%>
+                                                                            <input type="text" name="TA" class="form-control" required>
+                                                                            <%}%>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+
                                                                 <div class="row">
                                                                     <div class="col-xs-4">
 
@@ -92,10 +103,10 @@
                                                                         <input type="file" name="file">
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="box-body">
+
+
                                                                 <div class="row">
-                                                                    <div class="col-xs-4">
+                                                                    <div class="col-xs-6">
                                                                         <label for="">Observations</label>
                                                                         <%if(b.getObservations() != null){%>
                                                                         <textarea class="form-control" name="observations" id="" rows="2"><%out.print(b.getObservations());%></textarea>
@@ -103,7 +114,7 @@
                                                                         <textarea class="form-control" name="observations" id="" rows="2"></textarea>
                                                                         <%}%>
                                                                     </div>
-                                                                    <div class="col-xs-4">
+                                                                    <div class="col-xs-6">
                                                                         <label for="">Recommendations</label>
                                                                         <%if(b.getRecommendation() != null){%>
                                                                         <textarea class="form-control" name="recommendation" id="" rows="2"><%out.print(b.getRecommendation());%></textarea>
@@ -122,14 +133,22 @@
                                                             </div>
                                                         </form>
                                                     </div>
+
                                                     <%}%>
                                                 </div>
                                             </div>
                                         </div>
                                         <form method="post">
                                             <div class="box-footer">
-                                                <input type="hidden" value="<%=(Integer)request.getAttribute("planID")%>" name="planID">
-                                                <button class="btn btn-success pull-right" onclick="form.action = 'SendCAPDEVAssessment'">Submit</button>
+                                                <div class="pull-right">
+                                                    <%
+                                                        if(capdevDAO.checkIfAssessmentsComplete(caList)){
+                                                    %>
+                                                    <input type="hidden" id="lol" value="true">
+                                                    <%}%>
+                                                    <input type="hidden" value="<%=(Integer)request.getAttribute("planID")%>" name="planID">
+                                                    <button class="btn btn-success" id="sendCapdevAssessment" onclick="form.action = 'SendCAPDEVAssessment'" disabled>Submit</button>
+                                                </div>  
                                             </div>
                                         </form>
                                     </div>
@@ -144,6 +163,15 @@
         </div>
 
         <%@include file="jspf/footer.jspf" %>
+
+        <script>
+            $(function () {
+                var lolVal = $('#lol').val();
+                if(lolVal){
+                    $('#sendCapdevAssessment').removeAttr('disabled');
+                }
+            });
+        </script>
 
     </body>
 </html>

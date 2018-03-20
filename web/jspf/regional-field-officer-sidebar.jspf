@@ -93,7 +93,6 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="regional-field-officer-home.jsp"><i class="fa fa-eye"></i> Home</a></li>
                     <li><a href="regional-field-officer-view-capdev-proposals.jsp"><i class="fa fa-edit"></i>View Training Proposals</a></li>
                 </ul>
             </li>

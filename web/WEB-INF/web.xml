@@ -249,14 +249,6 @@
         <servlet-class>com.MVC.Controller.ImportPastDueAccount</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>FilterProvRefresh</servlet-name>
-        <servlet-class>com.MVC.Controller.FilterProvRefresh</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>FilterCAPDEVProposals</servlet-name>
-        <servlet-class>com.MVC.Controller.FilterCAPDEVProposals</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ShowAllCAPDEVProposals</servlet-name>
         <servlet-class>com.MVC.Controller.ShowAllCAPDEVProposals</servlet-class>
     </servlet>
@@ -275,6 +267,10 @@
     <servlet>
         <servlet-name>ProcessEvaluation</servlet-name>
         <servlet-class>com.MVC.Controller.ProcessEvaluation</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FilterLoanRequests</servlet-name>
+        <servlet-class>com.MVC.Controller.FilterLoanRequests</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -525,14 +521,6 @@
         <url-pattern>/ImportPastDueAccount</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>FilterProvRefresh</servlet-name>
-        <url-pattern>/FilterProvRefresh</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>FilterCAPDEVProposals</servlet-name>
-        <url-pattern>/FilterCAPDEVProposals</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ShowAllCAPDEVProposals</servlet-name>
         <url-pattern>/ShowAllCAPDEVProposals</url-pattern>
     </servlet-mapping>
@@ -551,6 +539,10 @@
     <servlet-mapping>
         <servlet-name>ProcessEvaluation</servlet-name>
         <url-pattern>/ProcessEvaluation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterLoanRequests</servlet-name>
+        <url-pattern>/FilterLoanRequests</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

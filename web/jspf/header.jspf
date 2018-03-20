@@ -1,6 +1,7 @@
 <%@page import="java.util.Calendar"%>
 <%@page import="java.sql.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.NumberFormat"%>
 <%@page import="com.MVC.Model.Chart"%>
 <%@page import="com.MVC.Model.Dependent"%>
 <meta charset="utf-8">
@@ -53,6 +54,7 @@
     }
 
     SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+    NumberFormat currency = NumberFormat.getCurrencyInstance();
 
     Long l = System.currentTimeMillis();
     Date currDate = new Date(l);

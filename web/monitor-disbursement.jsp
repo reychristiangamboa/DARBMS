@@ -107,7 +107,7 @@
                                     <div class="row">
                                         <div class="col-xs-4">
                                             <label for=''>Loan Amount</label>
-                                            <input type='text' class="form-control" id='' value="<%out.print(r.getLoanAmount());%>" disabled>
+                                            <input type='text' class="form-control" id='' value="<%out.print(currency.format(r.getLoanAmount()));%>" disabled>
                                         </div>
 
                                         <div class="col-xs-4">
@@ -154,7 +154,7 @@
                                                         <div class="col-xs-3">
                                                             <div class="form-group">
                                                                 <label for="">Release Amount</label>
-                                                                <input type="text" class="form-control" id="" placeholder="" value="<%=release.getReleaseAmount()%>" disabled>
+                                                                <input type="text" class="form-control" id="" placeholder="" value="<%=currency.format(release.getReleaseAmount())%>" disabled>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-3">
@@ -182,7 +182,7 @@
                                                             <tr>
 
                                                                 <td><%out.print(arb.getFLName());%></td>
-                                                                <td><%out.print(d.getDisbursedAmount());%></td>
+                                                                <td><%out.print(currency.format(d.getDisbursedAmount()));%></td>
                                                                 <td><%out.print(d.getOSBalance());%></td>
                                                                 <td><%out.print(f.format(d.getDateDisbursed()));%></td>
 
@@ -260,7 +260,12 @@
                                             <div class="col-xs-4">
                                                 <div class="form-group">
                                                     <label for="">Disbursement Amount</label>
-                                                    <input type="text" class="form-control" name="disbursementAmount" required>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <i>&#8369;</i>
+                                                        </div>
+                                                        <input type="text" class="form-control numberOnly" name="disbursementAmount" autocomplete="off" required>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">

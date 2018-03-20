@@ -356,7 +356,7 @@
                                                             <td  width=50%>
                                                                 <div class="progress">
                                                                     <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: <%out.print(r.getProgressBarWidth(apcpRequestDAO.getSumOfReleasesByRequestId(r.getRequestID()), r.getLoanAmount()));%>%">
-                                                                        <strong><i>&#8369</i><%=apcpRequestDAO.getSumOfReleasesByRequestId(r.getRequestID())%> / <i>&#8369</i><%=r.getLoanAmount()%></strong>
+                                                                        <strong><i>&#8369</i><%=apcpRequestDAO.getSumOfReleasesByRequestId(r.getRequestID())%> / <%=currency.format(r.getLoanAmount())%></strong>
                                                                     </div> 
                                                                 </div> 
                                                             </td>
@@ -443,7 +443,7 @@
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
 
-                                                    <h5 class="description-header"><i>&#8369 </i><%=apcpRequestDAO.getYearlySumOfReleasesByRequestId(regionalRequest, year)%></h5>
+                                                    <h5 class="description-header"><%=currency.format(apcpRequestDAO.getYearlySumOfReleasesByRequestId(regionalRequest, year))%></h5>
                                                     <span class="description-text">TOTAL YEARLY RELEASED AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
@@ -451,7 +451,7 @@
                                             <!-- /.col -->
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
-                                                    <h5 class="description-header"><i>&#8369</i><%=apcpRequestDAO.getSumOfAccumulatedReleasesByRequestId(regionalRequest)%></h5>
+                                                    <h5 class="description-header"><%=currency.format(apcpRequestDAO.getSumOfAccumulatedReleasesByRequestId(regionalRequest))%></h5>
                                                     <span class="description-text">TOTAL ACCUMULATED RELEASED AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
@@ -459,7 +459,7 @@
                                             <!-- /.col -->
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
-                                                    <h5 class="description-header"><i>&#8369</i><%=apcpRequestDAO.getTotalApprovedAmount(approvedRequests)%></h5>
+                                                    <h5 class="description-header"><%=currency.format(apcpRequestDAO.getTotalApprovedAmount(approvedRequests))%></h5>
                                                     <span class="description-text">TOTAL APPROVED AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
@@ -467,7 +467,7 @@
                                             <!-- /.col -->
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block">
-                                                    <h5 class="description-header"><i>&#8369</i><%=apcpRequestDAO.getTotalPastDueAmount(regionalRequest)%></h5>
+                                                    <h5 class="description-header"><%=currency.format(apcpRequestDAO.getTotalPastDueAmount(regionalRequest))%></h5>
                                                     <span class="description-text">TOTAL PAST DUE AMOUNT</span>
                                                 </div>
                                                 <!-- /.description-block -->
@@ -607,7 +607,7 @@
                                                     <tr>
                                                         <td><%out.print(arbo.getArboName());%></td>
                                                         <td><%out.print(r.getLoanReason());%></td>
-                                                        <td><%out.print(r.getLoanAmount());%></td>
+                                                        <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                         <td><%out.print(r.getHectares() + " hectares");%></td>
 
                                                         <%if (r.getRequestStatus() == 1) {%>

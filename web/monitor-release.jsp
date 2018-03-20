@@ -139,7 +139,7 @@
                                                                     u = uDAO99.searchUser(release.getReleasedBy());
                                                             %>
                                                             <tr>
-                                                                <td><a href="MonitorDisbursement?releaseID=<%out.print(release.getReleaseID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(release.getReleaseAmount());%></a></td>
+                                                                <td><a href="MonitorDisbursement?releaseID=<%out.print(release.getReleaseID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(currency.format(release.getReleaseAmount()));%></a></td>
                                                                 <td><%out.print(f.format(release.getReleaseDate()));%></td>
                                                                 <td><%out.print(u.getFullName());%></td>
                                                             </tr>
@@ -185,7 +185,7 @@
                                                                     arb = arbDAO99.getARBByID(repayment.getArbID());
                                                             %>
                                                             <tr>
-                                                                <td><%out.print(repayment.getAmount());%></td>
+                                                                <td><%out.print(currency.format(repayment.getAmount()));%></td>
                                                                 <td><%out.print(f.format(repayment.getDateRepayment()));%></td>
                                                                 <td><%out.print(arb.getFLName());%></td>
                                                                 <td><%out.print(u.getFullName());%></td>
@@ -235,7 +235,7 @@
                                                                     u = uDAO99.searchUser(p.getRecordedBy());
                                                             %>
                                                             <tr>
-                                                                <td><a href="#" data-toggle="modal" data-target="#pastDueModal<%out.print(p.getPastDueAccountID());%>"><%out.print(p.getPastDueAmount());%></a></td>
+                                                                <td><a href="#" data-toggle="modal" data-target="#pastDueModal<%out.print(p.getPastDueAccountID());%>"><%out.print(currency.format(p.getPastDueAmount()));%></a></td>
                                                                 <td><%out.print(p.getReasonPastDueDesc());%></td>
                                                                 <td><%out.print(p.getOtherReason());%></td>
 
@@ -265,7 +265,7 @@
                                                                                 <div class="col-xs-6">
                                                                                     <div class="form-group">
                                                                                         <label for="">Amount</label>
-                                                                                        <input type="text" class="form-control" value="<%=p.getPastDueAmount()%>" disabled>
+                                                                                        <input type="text" class="form-control" value="<%=currency.format(p.getPastDueAmount())%>" disabled>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-xs-6">
@@ -368,7 +368,12 @@
                                             <div class="col-xs-6">
                                                 <div class="form-group">
                                                     <label for="">Release Amount</label>
-                                                    <input type="text" class="form-control" name="releaseAmount" required>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <i>&#8369;</i>
+                                                        </div>
+                                                        <input type="text" class="form-control numberOnly" name="releaseAmount" autocomplete="off" required>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-xs-6">
@@ -474,7 +479,12 @@
                                             <div class="col-xs-6">
                                                 <div class="form-group">
                                                     <label for="">Amount</label>
-                                                    <input type="text" class="form-control" name="repaymentAmount" required>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <i>&#8369;</i>
+                                                        </div>
+                                                        <input type="text" class="form-control numberOnly" name="repaymentAmount" autocomplete="off" required>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-xs-6">
@@ -549,7 +559,12 @@
                                             <div class="col-xs-6">
                                                 <div class="form-group">
                                                     <label for="">Amount</label>
-                                                    <input type="text" class="form-control" name="pastDueAmount" required>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <i>&#8369;</i>
+                                                        </div>
+                                                        <input type="text" class="form-control numberOnly" name="pastDueAmount" autocomplete="off" required>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-xs-6">

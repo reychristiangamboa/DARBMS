@@ -83,7 +83,7 @@
 
                                                 <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(r.getLoanReason());%></td>
-                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(f.format(r.getDateApproved()));%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
@@ -134,7 +134,7 @@
 
                                                 <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(r.getLoanReason());%></td>
-                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td></td>
                                                 <td><%out.print(r.getRemarks());%></td>

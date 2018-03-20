@@ -61,7 +61,42 @@
                     </div>
                     <%}%>
 
-                    
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="box">
+                                <div class="box-header"><h3 class="box-title">Filter</h3></div>
+                                <form method="post" role="form">
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label for="actName">Select All</label>
+                                                    <input type="checkbox" id="filterBy" name="selectAll" value="Yes">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label for="actName">Cities / Municipalities</label>
+                                                    <select name="cities[]" id="cities" class="form-control select2" multiple="multiple">
+                                                        <option value="">LOL</option>
+                                                        <option value="">WEW</option>
+                                                        <option value="">ORB</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="box-footer">
+                                        <button type="submit" onclick="form.action = 'FilterLoanRequests'" class="btn btn-success pull-right">Filter</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-lg-4 col-xs-6" >
                             <!-- small box -->
@@ -198,7 +233,7 @@
 
                                                 <td><a href="CheckRequirements?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(r.getLoanReason());%></td>
-                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(f.format(r.getDateRequested()));%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
@@ -248,7 +283,7 @@
                                             <tr>
                                                 <td><a data-toggle="modal" data-target="#cleared-modal<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(r.getLoanReason());%></td>
-                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(f.format(r.getDateRequested()));%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
@@ -331,7 +366,7 @@
                                             <tr>
                                                 <td><a data-toggle="modal" data-target="#endorsed-modal<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(r.getLoanReason());%></td>
-                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(f.format(r.getDateRequested()));%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
@@ -417,7 +452,7 @@
                                             <tr>
                                                 <td><a href="SchedulePreRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(r.getLoanReason());%></td>
-                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(f.format(r.getDateRequested()));%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
@@ -472,7 +507,7 @@
 
                                                 <td><a href="#"><%out.print(arbo.getArboName());%> </a></td>
                                                 <td><%out.print(r.getLoanReason());%></td>
-                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(f.format(r.getDateRequested()));%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
@@ -551,11 +586,26 @@
 
             </div>
             <!-- /.content-wrapper -->
-            
+
         </div>
         <%@include file="jspf/footer.jspf" %>
         <script>
             $(document).ready(function () {
+
+                var update_pizza = function () {
+                    if ($("#filterBy").is(":checked")) {
+                        
+                        $('#cities').prop('disabled', 'disabled');
+                        
+                    } else {
+                        $('#cities').prop('disabled', false);
+                        $('#cities').val() = '';
+                    }
+                };
+
+                $(update_pizza);
+                $("#filterBy").change(update_pizza);
+
                 $("a[name='btn1']").click(function () {
                     $("div[id='1']").toggle();
                     if ($("div[id='2']").css('display') != 'none') {

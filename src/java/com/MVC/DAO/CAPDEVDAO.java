@@ -58,7 +58,7 @@ public class CAPDEVDAO {
         }
         return 0;
     }
-    
+
     public int addCAPDEVPlanForPastDue(CAPDEVPlan cp, int userID) {
 
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -269,6 +269,7 @@ public class CAPDEVDAO {
 
         return planList;
     }
+
     public ArrayList<CAPDEVPlan> getAllRegionalCAPDEVPlan(int regCode) {
 
         ArrayList<CAPDEVPlan> planList = new ArrayList();
@@ -480,6 +481,7 @@ public class CAPDEVDAO {
                 ca.setActivityCategory(rs.getInt("activityCategory"));
                 ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
                 ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
+                ca.setActive(rs.getInt("active"));
                 ca.setArbList(getCAPDEVPlanActivityParticipants(rs.getInt("activityID")));
                 caList.add(ca);
             }
@@ -528,6 +530,7 @@ public class CAPDEVDAO {
                 ca.setActivityCategory(rs.getInt("activityCategory"));
                 ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
                 ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
+                ca.setActive(rs.getInt("active"));
                 ca.setArbList(getCAPDEVPlanActivityParticipants(rs.getInt("activityID")));
                 caList.add(ca);
             }
@@ -577,6 +580,7 @@ public class CAPDEVDAO {
                 ca.setActivityCategory(rs.getInt("activityCategory"));
                 ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
                 ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
+                ca.setActive(rs.getInt("active"));
                 ca.setArbList(getCAPDEVPlanActivityParticipants(rs.getInt("activityID")));
                 caList.add(ca);
             }
@@ -595,7 +599,7 @@ public class CAPDEVDAO {
         }
         return caList;
     }
-    
+
     public ArrayList<CAPDEVActivity> getAPCPCAPDEVActivityHistoryByARB(int arbID) {
 
         ArrayList<CAPDEVActivity> caList = new ArrayList();
@@ -625,6 +629,7 @@ public class CAPDEVDAO {
                 ca.setActivityCategory(rs.getInt("activityCategory"));
                 ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
                 ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
+                ca.setActive(rs.getInt("active"));
                 ca.setIsPresent(rs.getInt("isPresent"));
                 ca.setArbList(getCAPDEVPlanActivityParticipants(rs.getInt("activityID")));
                 caList.add(ca);
@@ -644,7 +649,7 @@ public class CAPDEVDAO {
         }
         return caList;
     }
-    
+
     public boolean addCAPDEVPlanActivityParticipants(ArrayList<ARB> arbList, int activityID) {
         boolean success = false;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -1054,10 +1059,11 @@ public class CAPDEVDAO {
 
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`ref_activity` (`activityName`, `activityDesc`) VALUES (?,?);";
+            String query = "INSERT INTO `dar-bms`.`ref_activity` (`activityName`, `activityDesc`, `activityCategory`) VALUES (?,?,?);";
             PreparedStatement p = con.prepareStatement(query);
             p.setString(1, cAct.getActivityName());
             p.setString(2, cAct.getActivityDesc());
+            p.setInt(3, cAct.getActivityCategory());
 
             p.executeUpdate();
             p.close();
@@ -1082,11 +1088,12 @@ public class CAPDEVDAO {
 
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE `dar-bms`.`ref_activity` SET `activityName`=?, `activityDesc`=? WHERE `activityType`=?";
+            String query = "UPDATE `dar-bms`.`ref_activity` SET `activityName`=?, `activityDesc`=?, `activityCategory`=? WHERE `activityType`=?";
             PreparedStatement p = con.prepareStatement(query);
-            p.setInt(3, cAct.getActivityType());
+            p.setInt(4, cAct.getActivityType());
             p.setString(1, cAct.getActivityName());
             p.setString(2, cAct.getActivityDesc());
+            p.setInt(3, cAct.getActivityCategory());
 
             p.executeUpdate();
             success = true;
@@ -1113,15 +1120,19 @@ public class CAPDEVDAO {
         try {
             con.setAutoCommit(false);
             String query = "SELECT * FROM `dar-bms`.ref_activity a "
-                    + "WHERE activityType != 1";
+                    + "JOIN `dar-bms`.ref_activityCategory c "
+                    + "ON a.activityCategory=c.activityCategory "
+                    + "WHERE a.activityType != 1";
             PreparedStatement p = con.prepareStatement(query);
-            
+
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 CAPDEVActivity ca = new CAPDEVActivity();
                 ca.setActivityType(rs.getInt("activityType"));
                 ca.setActivityName(rs.getString("activityName"));
                 ca.setActivityDesc(rs.getString("activityDesc"));
+                ca.setActivityCategory(rs.getInt("activityCategory"));
+                ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
                 caList.add(ca);
             }
             con.commit();
@@ -1139,7 +1150,7 @@ public class CAPDEVDAO {
         }
         return caList;
     }
-    
+
     public ArrayList<CAPDEVActivity> getCAPDEVActivitiesByCategory(int category) {
         ArrayList<CAPDEVActivity> caList = new ArrayList();
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -1394,13 +1405,14 @@ public class CAPDEVDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE capdev_activities SET observations=?, recommendation=?, active=? WHERE activityID=?";
+            String query = "UPDATE capdev_activities SET observations=?, recommendation=?, active=?, technicalAssistant=? WHERE activityID=?";
 
             p = con.prepareStatement(query);
             p.setString(1, ca.getObservations());
             p.setString(2, ca.getRecommendation());
             p.setInt(3, ca.getActive());
-            p.setInt(4, ca.getActivityID());
+            p.setString(4, ca.getTechnicalAssistant());
+            p.setInt(5, ca.getActivityID());
 
             p.executeUpdate();
             p.close();
@@ -1449,6 +1461,18 @@ public class CAPDEVDAO {
             Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return success;
+    }
+
+    public boolean checkIfAssessmentsComplete(ArrayList<CAPDEVActivity> activities) {
+
+        for (CAPDEVActivity act : activities) {
+            System.out.println(act.getActive());
+            if (act.getActive() == 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }

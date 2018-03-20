@@ -28,7 +28,6 @@ public class RequestLoan extends BaseServlet {
         APCPRequestDAO requestDAO = new APCPRequestDAO();
         APCPRequest apcpRequest = new APCPRequest();
         
-        System.out.println(request.getParameter("loan"));
         String[] vals = request.getParameter("loan").split(",");
         StringBuilder sb = new StringBuilder();
         for(String val : vals){
@@ -36,6 +35,7 @@ public class RequestLoan extends BaseServlet {
         }
         
         String finLoan = sb.toString();
+        System.out.println(request.getParameter("loan"));
         System.out.println(finLoan);
 
         apcpRequest.setArboID(Integer.parseInt(request.getParameter("arboID")));

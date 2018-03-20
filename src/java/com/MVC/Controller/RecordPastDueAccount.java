@@ -37,7 +37,17 @@ public class RecordPastDueAccount extends BaseServlet {
         PastDueAccount pda = new PastDueAccount();
 
         pda.setRequestID(Integer.parseInt(request.getParameter("requestID")));
-        pda.setPastDueAmount(Double.parseDouble(request.getParameter("pastDueAmount")));
+        
+        
+        String[] vals = request.getParameter("pastDueAmount").split(",");
+        StringBuilder sb = new StringBuilder();
+        for(String val : vals){
+            sb.append(val);
+        }
+        
+        String finAmount = sb.toString();
+        pda.setPastDueAmount(Double.parseDouble(finAmount));
+        
         pda.setReasonPastDue(Integer.parseInt(request.getParameter("reasonPastDue")));
         pda.setOtherReason(request.getParameter("otherReason"));
         pda.setRecordedBy((Integer) session.getAttribute("userID"));

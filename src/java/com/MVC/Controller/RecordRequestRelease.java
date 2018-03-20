@@ -38,7 +38,16 @@ public class RecordRequestRelease extends BaseServlet {
         APCPRequest req = dao.getRequestByID(Integer.parseInt(request.getParameter("requestID")));
 
         r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
-        r.setReleaseAmount(Double.parseDouble(request.getParameter("releaseAmount")));
+        
+        String[] vals = request.getParameter("releaseAmount").split(",");
+        StringBuilder sb = new StringBuilder();
+        for(String val : vals){
+            sb.append(val);
+        }
+        
+        String finAmount = sb.toString();
+        
+        r.setReleaseAmount(Double.parseDouble(finAmount));
 
         java.sql.Date releaseDate = null;
 

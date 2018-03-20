@@ -40,7 +40,16 @@ public class RecordRepayment extends BaseServlet {
 
             r.setArbID(Integer.parseInt(arbID));
             r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
-            r.setAmount(Double.parseDouble(request.getParameter("repaymentAmount")));
+
+            String[] vals = request.getParameter("repaymentAmount").split(",");
+            StringBuilder sb = new StringBuilder();
+            for (String val : vals) {
+                sb.append(val);
+            }
+
+            String finAmount = sb.toString();
+
+            r.setAmount(Double.parseDouble(finAmount));
 
             java.sql.Date repaymentDate = null;
 

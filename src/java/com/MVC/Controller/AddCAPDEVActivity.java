@@ -27,6 +27,7 @@ public class AddCAPDEVActivity extends BaseServlet {
         CAPDEVActivity a = new CAPDEVActivity();
         a.setActivityName(request.getParameter("activityName"));
         a.setActivityDesc(request.getParameter("activityDesc"));
+        a.setActivityCategory(Integer.parseInt(request.getParameter("category")));
         
         if(dao.addCAPDEVActivity(a)){
             request.setAttribute("success", "CAPDEV activity added!");

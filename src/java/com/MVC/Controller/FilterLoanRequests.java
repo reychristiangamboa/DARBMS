@@ -5,10 +5,8 @@
  */
 package com.MVC.Controller;
 
-import com.MVC.DAO.CAPDEVDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,28 +14,22 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Rey Christian
+ * @author ijJPN
  */
-public class FilterCAPDEVProposals extends BaseServlet {
+public class FilterLoanRequests extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        String[] provOfficeCodesStr = request.getParameterValues("valajax");
-        
-        System.out.println(provOfficeCodesStr.length);
-        
-        ArrayList<Integer> provOfficeCode = new ArrayList();
-        CAPDEVDAO capdevDAO = new CAPDEVDAO();
-
-        for(String code : provOfficeCodesStr){
-            provOfficeCode.add(Integer.parseInt(code));
+        if(request.getParameter("selectAll") != null){ // IS CHECKED
+            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+        }else{
+            String[] cityValStr = request.getParameterValues("cities[]");
+            
         }
         
-        
-        
-        
-        
     }
+
+    
 
 }

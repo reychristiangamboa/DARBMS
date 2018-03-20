@@ -27,10 +27,18 @@ public class RequestLoanAccess extends BaseServlet {
         HttpSession session = request.getSession();
         APCPRequestDAO requestDAO = new APCPRequestDAO();
         APCPRequest apcpRequest = new APCPRequest();
+        
+        String[] vals = request.getParameter("loan").split(",");
+        StringBuilder sb = new StringBuilder();
+        for(String val : vals){
+            sb.append(val);
+        }
+        
+        String finLoan = sb.toString();
 
         apcpRequest.setArboID(Integer.parseInt(request.getParameter("arboID")));
         apcpRequest.setHectares(Double.parseDouble(request.getParameter("land")));
-        apcpRequest.setLoanAmount(Double.parseDouble(request.getParameter("loan")));
+        apcpRequest.setLoanAmount(Double.parseDouble(finLoan));
         apcpRequest.setLoanReason(request.getParameter("reason"));
         apcpRequest.setRemarks(request.getParameter("remarks"));
         apcpRequest.setRequestStatus(6);

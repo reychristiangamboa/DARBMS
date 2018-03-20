@@ -28,6 +28,7 @@ public class EditCAPDEVActivity extends BaseServlet {
         a.setActivityID(Integer.parseInt(request.getParameter("activityID")));
         a.setActivityName(request.getParameter("activityName"));
         a.setActivityDesc(request.getParameter("activityDesc"));
+        a.setActivityCategory(Integer.parseInt(request.getParameter("category")));
         
         if(dao.editCAPDEVActivity(a)){
             request.setAttribute("success", "CAPDEV activity updated!");

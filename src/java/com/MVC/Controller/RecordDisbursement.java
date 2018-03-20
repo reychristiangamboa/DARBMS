@@ -61,7 +61,16 @@ public class RecordDisbursement extends BaseServlet {
 
                 d.setArbID(Integer.parseInt(arbID));
                 d.setReleaseID(Integer.parseInt(request.getParameter("releaseID")));
-                d.setDisbursedAmount(Double.parseDouble(request.getParameter("disbursementAmount")));
+
+                String[] vals = request.getParameter("disbursementAmount").split(",");
+                StringBuilder sb = new StringBuilder();
+                for (String val : vals) {
+                    sb.append(val);
+                }
+
+                String finAmount = sb.toString();
+
+                d.setDisbursedAmount(Double.parseDouble(finAmount));
                 d.setOSBalance(Double.parseDouble(request.getParameter("OSBalance")));
 
                 java.sql.Date disbursedDate = null;

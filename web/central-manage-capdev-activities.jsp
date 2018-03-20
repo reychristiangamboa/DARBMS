@@ -53,13 +53,27 @@
                                                     <input type="text" id="actName" class="form-control" name="activityName" required/>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-8">
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label for="actName">Activity Category</label>
+                                                    <select name="category" id="" class="form-control">
+                                                        <option value="1">APCP/CAPDEV</option>
+                                                        <option value="2">Past Due APCP/CAPDEV</option>
+                                                        <option value="3">LINKSFARM</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-6">
                                                 <div class="form-group">
                                                     <label for="actDesc">Activity Description</label>
                                                     <textarea id="actDesc" rows="2" class="form-control" name="activityDesc"></textarea>
                                                 </div>
                                             </div>
                                         </div>
+
+
                                     </div>
                                     <div class="box-footer">
                                         <button type="submit" onclick="form.action = 'AddCAPDEVActivity'" class="btn btn-success pull-right">Add</button>
@@ -81,6 +95,7 @@
 
                                                 <th class="text-center">Name</th>
                                                 <th class="text-center">Description</th>
+                                                <th class="text-center">Category</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
@@ -92,6 +107,7 @@
 
                                                 <td><%out.print(a.getActivityName());%></td>
                                                 <td><%out.print(a.getActivityDesc());%></td>
+                                                <td><%out.print(a.getActivityCategoryDesc());%></td>
                                                 <td class="text-center">
                                                     <button class="btn btn-primary btn-s" data-toggle="modal" data-target="#modal<%out.print(a.getActivityID());%>">Edit</button>
                                                 </td>
@@ -109,13 +125,22 @@
                                                     <form method="post">
                                                         <div class="modal-body" id="modalBody">
                                                             <div class="row">
-                                                                <div class="col-xs-12">
+                                                                <div class="col-xs-4">
                                                                     <div class="form-group">
                                                                         <label for="actName">Activity Name</label>
                                                                         <input type="text" value="<%=a.getActivityName()%>" id="actName" class="form-control" name="activityName" required/>
                                                                     </div>
                                                                 </div>
-
+                                                                <div class="col-xs-4">
+                                                                    <div class="form-group">
+                                                                        <label for="actName">Activity Category</label>
+                                                                        <select name="category" id="" class="form-control">
+                                                                            <option value="1">APCP/CAPDEV</option>
+                                                                            <option value="2">Past Due APCP/CAPDEV</option>
+                                                                            <option value="3">LINKSFARM</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-xs-12">
@@ -144,6 +169,7 @@
 
                                                 <th class="text-center">Name</th>
                                                 <th class="text-center">Description</th>
+                                                <th class="text-center">Category</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
                                         </tfoot>

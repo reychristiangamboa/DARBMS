@@ -47,6 +47,7 @@ public class RecordActivityAssessment extends BaseServlet {
 
         ca.setActivityID(activityID);
         ca.setActive(1);
+        ca.setTechnicalAssistant(request.getParameter("TA"));
         ca.setObservations(request.getParameter("observations"));
         ca.setRecommendation(request.getParameter("recommendation"));
 
