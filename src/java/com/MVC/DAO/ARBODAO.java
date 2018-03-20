@@ -219,7 +219,7 @@ public class ARBODAO {
         return arboList;
     }
 
-    public ArrayList<ARBO> getAllARBOsByProvince(int provinceID) {
+    public ArrayList<ARBO> getAllARBOsByProvince(int provinceOfficeCode) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<ARBO> arboList = new ArrayList();
@@ -231,7 +231,7 @@ public class ARBODAO {
                     + "JOIN ref_provoffice po ON a.provOfficeCode=po.provOfficeCode "
                     + "WHERE a.provOfficeCode=?";
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, provinceID);
+            pstmt.setInt(1, provinceOfficeCode);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 ARBO arbo = new ARBO();

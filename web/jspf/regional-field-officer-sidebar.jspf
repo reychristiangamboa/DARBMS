@@ -17,22 +17,38 @@
 
 
 <%
-   
+
     ARBDAO arbDAO = new ARBDAO();
     ARBODAO arboDAO = new ARBODAO();
     CAPDEVDAO capdevDAO = new CAPDEVDAO();
     AddressDAO addressDAO = new AddressDAO();
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
-    
-    
+
     ArrayList<Region> regionList = addressDAO.getAllRegions();
-    ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRequestedRequestsRegion((Integer)session.getAttribute("regOfficeCode"));
+    //ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRequestedRequestsRegion((Integer) session.getAttribute("regOfficeCode"));
     
-    ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(1,(Integer)session.getAttribute("regOfficeCode"));
-    ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(2,(Integer)session.getAttribute("regOfficeCode"));
-    ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(3,(Integer)session.getAttribute("regOfficeCode"));
-    ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(5,(Integer)session.getAttribute("regOfficeCode"));
+    ArrayList<ARBO> arboListRegion = arboDAO.getAllARBOsByRegion((Integer)session.getAttribute("regOfficeCode"));
     
+    ArrayList<ARB> arbListRegion = arbDAO.getAllARBsOfARBOs(arboListRegion);
+    
+    ArrayList<Province> perProvinceList = addressDAO.getAllProvinces((Integer)session.getAttribute("regOfficeCode"));
+    
+    
+    
+    ArrayList<APCPRequest> regionalRequest = apcpRequestDAO.getAllRegionalRequests((Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(1, (Integer)session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(2, (Integer)session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(3, (Integer)session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(4, (Integer)session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(5, (Integer)session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(7, (Integer)session.getAttribute("regOfficeCode"));
+    
+    ArrayList<CAPDEVPlan> allPlans = capdevDAO.getAllRegionalCAPDEVPlan((Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(2, (Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(5, (Integer) session.getAttribute("regOfficeCode"));
+
     
 %>
 
@@ -46,7 +62,7 @@
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-                <p><%out.print((String)session.getAttribute("fullName"));%></p>
+                <p><%out.print((String) session.getAttribute("fullName"));%></p>
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
         </div>
@@ -64,6 +80,11 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
+            <li>
+                <a href="regional-field-officer-home.jsp">
+                    <i class="fa fa-dashboard"></i> <span> Dashboard</span>
+                </a>
+            </li>
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-users"></i> <span>ARBO Requests</span>
