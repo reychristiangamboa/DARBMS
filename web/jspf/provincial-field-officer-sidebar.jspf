@@ -32,7 +32,7 @@
     
     APCPRelease apcpRelease = new APCPRelease();
     
-    ArrayList<Crop> allCrops = cropDAO.getAllCrops();
+    ArrayList<Crop> allCrops = cropDAO.getAllCrops(); 
     ArrayList<Region> regionList = addressDAO.getAllRegions();
 
     
@@ -40,11 +40,12 @@
     ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
     ArrayList<ARBO> qualifiedARBOs = arboDAO.getAllQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
 
-    
 
     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
     ArrayList<CityMun> cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
 
+    ArrayList<Crop> crops = cropDAO.getAllCropsByProvince(arbListProvince);
+    ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListProvince);
     
     ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer) session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
@@ -53,7 +54,9 @@
     ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4, (Integer) session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7, (Integer) session.getAttribute("provOfficeCode"));
-
+    
+    ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(provincialRequests);
+    
     
     ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
     ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();

@@ -374,7 +374,7 @@ public class APCPRequestDAO {
         }
         return apcpRequest;
     }
-    
+
     public ArrayList<APCPRequest> getAllRegionalRequestsByStatus(int statusID, int regionID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -651,6 +651,48 @@ public class APCPRequestDAO {
             }
             rs.close();
             pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pList;
+    }
+
+
+
+    public ArrayList<PastDueAccount> getAllPastDueAccountsByRequestList(ArrayList<APCPRequest> request) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<PastDueAccount> pList = new ArrayList();
+        try {
+            String query = "SELECT * FROM past_due_accounts p "
+                    + "JOIN ref_reasonPastDue r ON p.reasonPastDue=r.reasonPastDue "
+                    + "WHERE p.requestID=?";
+            for (APCPRequest req : request) {
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, req.getRequestID());
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    PastDueAccount p = new PastDueAccount();
+                    p.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                    p.setRequestID(rs.getInt(("requestID")));
+                    p.setPastDueAmount(rs.getDouble("pastDueAmount"));
+                    p.setDateSettled(rs.getDate("dateSettled"));
+                    p.setReasonPastDue(rs.getInt("reasonPastDue"));
+                    p.setReasonPastDueDesc(rs.getString("reasonPastDueDesc"));
+                    p.setOtherReason(rs.getString("otherReason"));
+                    p.setRecordedBy(rs.getInt("recordedBy"));
+                    p.setActive(rs.getInt("active"));
+                    pList.add(p);
+                }
+                rs.close();
+                pstmt.close();
+            }
             con.close();
         } catch (SQLException ex) {
             try {
@@ -956,7 +998,7 @@ public class APCPRequestDAO {
         }
         return rList;
     }
-    
+
     public boolean addDisbursement(Disbursement d) {
         boolean success = false;
         PreparedStatement p = null;
@@ -1024,7 +1066,7 @@ public class APCPRequestDAO {
         }
         return dList;
     }
-    
+
     public ArrayList<Disbursement> getAllDisbursementsByARB(int arbID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -1109,7 +1151,7 @@ public class APCPRequestDAO {
         }
         return apcpRequest;
     }
-    
+
     public ArrayList<APCPRequest> getAllRegionalRequests(int regionID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();

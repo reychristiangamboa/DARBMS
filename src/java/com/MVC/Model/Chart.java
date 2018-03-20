@@ -75,10 +75,8 @@ public class Chart {
         return new BarChart(data).toJson();
     }
 
-    public String getCropHistory(ArrayList<ARB> arbList) {
-        CropDAO dao = new CropDAO();
-        Crop c = new Crop();
-        ArrayList<Crop> crops = dao.getAllCropsByProvince(arbList);
+    public String getCropHistory(ArrayList<Crop> crops) {
+        
         ArrayList<String> dates = new ArrayList();
 
         long l = System.currentTimeMillis();

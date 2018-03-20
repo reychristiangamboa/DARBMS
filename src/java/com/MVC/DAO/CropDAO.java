@@ -51,6 +51,44 @@ public class CropDAO {
         return cropList;
     }
 
+    public ArrayList<Crop> getCropHistory(ArrayList<ARB> arbList){
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Crop> cropHistoryList = new ArrayList();
+        try {
+            String query = "SELECT * FROM crops c "
+                    + "JOIN ref_croptype t "
+                    + "ON c.cropTag=t.cropType "
+                    + "WHERE c.arbID=?";
+
+            for (ARB arb : arbList) {
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, arb.getArbID());
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    Crop c = new Crop();
+                    c.setArbID(rs.getInt("arbID"));
+                    c.setCropType(rs.getInt("cropTag"));
+                    c.setCropTypeDesc(rs.getString("cropTypeDesc"));
+                    c.setStartDate(rs.getDate("startDate"));
+                    c.setEndDate(rs.getDate("endDate"));
+                    cropHistoryList.add(c);
+                }
+                pstmt.close();
+                rs.close();
+            }
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CropDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CropDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cropHistoryList;
+    }
+    
     public ArrayList<Crop> getAllCropsByProvince(ArrayList<ARB> arbList) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
