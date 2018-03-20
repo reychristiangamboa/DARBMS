@@ -53,14 +53,19 @@
             <%}%>
 
             <%
-                ARB arb = (ARB) request.getAttribute("arb");
+                CAPDEVDAO arbCapdevDAO = new CAPDEVDAO();
                 APCPRequestDAO arDAO = new APCPRequestDAO();
                 ARBODAO dao = new ARBODAO();
+                EvaluationDAO eDAO = new EvaluationDAO();
+                
+                ARB arb = (ARB) request.getAttribute("arb");
                 ARBO arbo = dao.getARBOByID(arb.getArboID());
                 ArrayList<Disbursement> disbursements = arDAO.getAllDisbursementsByARB(arb.getArbID());
                 ArrayList<Repayment> repayments = arDAO.getAllRepaymentsByARB(arb.getArbID());
-                CAPDEVDAO arboCapdevDAO = new CAPDEVDAO();
-                
+                ArrayList<Evaluation> arbEvaluations = eDAO.getEvaluationPerARBIDByType(arb.getArbID(),1);
+                ArrayList<Evaluation> apcpEvaluations = eDAO.getEvaluationPerARBIDByType(arb.getArbID(),2);
+                ArrayList<Evaluation> capdevEvaluations = eDAO.getEvaluationPerARBIDByType(arb.getArbID(),3);
+                ArrayList<Evaluation> linksfarmEvaluations = eDAO.getEvaluationPerARBIDByType(arb.getArbID(),4);
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -304,7 +309,7 @@
                                                     <h4 class="modal-title">Crop Timeline</h4>
                                                 </div>
 
-                                                <div class="modal-body" style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
+                                                <div class="modal-body" style="overflow-y: scroll; overflow-x: hidden;  max-height: 500px; ">
                                                     <ul class="timeline">
                                                         <%
                                                             boolean firstInstance99 = true;
@@ -374,7 +379,7 @@
                                             <div class="active tab-pane" id="apcp">
                                                 <div class="box-body">
                                                     <div class="chart">
-                                                        <canvas id="lineCanvas" style="height:250px"></canvas>
+                                                        <canvas id="lineAPCPRating" style="height:250px"></canvas>
                                                     </div>
                                                 </div>
 
@@ -383,7 +388,7 @@
                                             <div class="tab-pane" id="capdev">
                                                 <div class="box-body">
                                                     <div class="chart">
-                                                        <canvas id="lineCanvas" style="height:250px"></canvas>
+                                                        <canvas id="lineCAPDEV" style="height:250px"></canvas>
                                                     </div>
                                                 </div>
                                             </div>
@@ -391,7 +396,7 @@
                                             <div class="tab-pane" id="overall">
                                                 <div class="box-body">
                                                     <div class="chart">
-                                                        <canvas id="lineCanvas" style="height:250px"></canvas>
+                                                        <canvas id="lineARB" style="height:250px"></canvas>
                                                     </div>
                                                 </div>
                                             </div>
@@ -524,7 +529,7 @@
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="attendance" >
                                                 <!-- The timeline -->
-                                                <%ArrayList<CAPDEVActivity> myActivities = arboCapdevDAO.getAPCPCAPDEVActivityHistoryByARB(arb.getArbID());%>
+                                                <%ArrayList<CAPDEVActivity> myActivities = arbCapdevDAO.getAPCPCAPDEVActivityHistoryByARB(arb.getArbID());%>
                                                 <%CAPDEVActivity attendance = new CAPDEVActivity();%>
                                                 <div class="progress">
                                                     <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: <%out.print(attendance.getAttendanceRate(myActivities));%>%">
@@ -806,13 +811,6 @@
                 <!-- /.content -->
             </div>
             <!-- /.content-wrapper -->
-            <footer class="main-footer">
-                <div class="pull-right hidden-xs">
-                    <b>Version</b> 2.4.0
-                </div>
-                <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-                reserved.
-            </footer>
         </div>
         <!-- ./wrapper -->
         <%@include file="jspf/footer.jspf" %>
@@ -824,7 +822,7 @@
                                 'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
                                 'Past Quarter': [moment().subtract(1, 'quarter').startOf('quarter'), moment().subtract(1, 'quarter').endOf('quarter')],
                             },
-                            
+
                         },
                         function (start, end) {
                             $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
@@ -836,6 +834,25 @@
                 );
 
 
+            });
+        </script>
+
+        <script>
+            $(function () {
+                var ctx = $('#lineAPCPRating').get(0).getContext('2d');
+                var ctx2 = $('#lineCAPDEV').get(0).getContext('2d');
+                var ctx3 = $('#lineARB').get(0).getContext('2d');
+            <%
+                Chart chart = new Chart();
+            %>
+            <%
+                String json = chart.getAPCPRating(apcpEvaluations);
+                String json2 = chart.getCAPDEVRating(capdevEvaluations);
+                String json3 = chart.getARBRating(arbEvaluations);
+            %>
+                new Chart(ctx, <%out.print(json);%>);
+                new Chart(ctx2, <%out.print(json2);%>);
+                new Chart(ctx3, <%out.print(json3);%>);
             });
         </script>
 

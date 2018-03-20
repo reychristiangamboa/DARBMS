@@ -42,7 +42,7 @@ public class ARBODAO {
                 arbo.setArboCityMun(rs.getInt("arboCityMun"));
                 arbo.setArboCityMunDesc(rs.getString("cityMunDesc"));
                 arbo.setArboProvince(rs.getInt("arboProvince"));
-                arbo.setArboProvinceDesc(rs.getString("provOfficeDesc"));
+                arbo.setArboProvinceDesc(rs.getString("provDesc"));
                 arbo.setArboRegion(rs.getInt("arboRegion"));
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
@@ -154,7 +154,7 @@ public class ARBODAO {
                 arbo.setArboCityMun(rs.getInt("arboCityMun"));
                 arbo.setArboCityMunDesc(rs.getString("cityMunDesc"));
                 arbo.setArboProvince(rs.getInt("arboProvince"));
-                arbo.setArboProvinceDesc(rs.getString("provOfficeDesc"));
+                arbo.setArboProvinceDesc(rs.getString("provDesc"));
                 arbo.setArboRegion(rs.getInt("arboRegion"));
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
@@ -197,7 +197,7 @@ public class ARBODAO {
                 arbo.setArboCityMun(rs.getInt("arboCityMun"));
                 arbo.setArboCityMunDesc(rs.getString("cityMunDesc"));
                 arbo.setArboProvince(rs.getInt("arboProvince"));
-                arbo.setArboProvinceDesc(rs.getString("provOfficeDesc"));
+                arbo.setArboProvinceDesc(rs.getString("provDesc"));
                 arbo.setArboRegion(rs.getInt("arboRegion"));
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
@@ -240,7 +240,7 @@ public class ARBODAO {
                 arbo.setArboCityMun(rs.getInt("arboCityMun"));
                 arbo.setArboCityMunDesc(rs.getString("cityMunDesc"));
                 arbo.setArboProvince(rs.getInt("arboProvince"));
-                arbo.setArboProvinceDesc(rs.getString("provOfficeDesc"));
+                arbo.setArboProvinceDesc(rs.getString("provDesc"));
                 arbo.setArboRegion(rs.getInt("arboRegion"));
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
@@ -283,7 +283,7 @@ public class ARBODAO {
                 arbo.setArboCityMun(rs.getInt("arboCityMun"));
                 arbo.setArboCityMunDesc(rs.getString("cityMunDesc"));
                 arbo.setArboProvince(rs.getInt("arboProvince"));
-                arbo.setArboProvinceDesc(rs.getString("provOfficeDesc"));
+                arbo.setArboProvinceDesc(rs.getString("provDesc"));
                 arbo.setArboRegion(rs.getInt("arboRegion"));
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));

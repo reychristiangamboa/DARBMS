@@ -231,9 +231,14 @@
                                                         AddressDAO addressDAO = new AddressDAO();
                                                         ARBDAO arbDAO = new ARBDAO();
                                                         ARBODAO arboDAO = new ARBODAO();
-                                                        ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
-                                                        ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
-                                                        ArrayList<Integer> arbListCityMunCodes = arbDAO.getARBCityMun(arbListProvince);
+                                                        ArrayList<ARBO> arboList = new ArrayList();
+                                                        if((Integer)session.getAttribute("userType") == 3){
+                                                            arboList = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
+                                                        }else if((Integer)session.getAttribute("userType") == 4){
+                                                            arboList = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));    
+                                                        }
+                                                        ArrayList<ARB> arbList = arbDAO.getAllARBsOfARBOs(arboList);
+                                                        ArrayList<Integer> arbListCityMunCodes = arbDAO.getARBCityMun(arbList);
                                                         ArrayList<CityMun> cityMunList = addressDAO.getAllCityMunsByID(arbListCityMunCodes);
 
                                                         for (CityMun cm : cityMunList) {

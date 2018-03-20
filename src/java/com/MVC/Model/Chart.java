@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import com.MVC.DAO.CropDAO;
 import com.MVC.Model.Crop;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -152,6 +153,75 @@ public class Chart {
         for (String label : stringLabels) {
             data.addLabel(label);
         }
+
+        return new LineChart(data).toJson();
+    }
+
+    public String getAPCPRating(ArrayList<Evaluation> apcpEvaluations) {
+
+        SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+        LineData data = new LineData();
+        LineDataset dataset = new LineDataset();
+        dataset.setBorderColor(Color.random());
+        dataset.addPointBackgroundColor(Color.DARK_GREEN);
+        dataset.setBackgroundColor(Color.TRANSPARENT);
+        dataset.setLabel("APCP Rating");
+        
+        Calendar cal = Calendar.getInstance();
+
+        for (Evaluation e : apcpEvaluations) {
+            
+            data.addLabel(f.format(e.getEvaluationDate()));
+            dataset.addData(e.getRating());
+        }
+
+        data.addDataset(dataset);
+
+        return new LineChart(data).toJson();
+    }
+    
+    public String getCAPDEVRating(ArrayList<Evaluation> capdevEvaluations) {
+
+        SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+        LineData data = new LineData();
+        LineDataset dataset = new LineDataset();
+        dataset.setBorderColor(Color.random());
+        dataset.addPointBackgroundColor(Color.DARK_GREEN);
+        dataset.setBackgroundColor(Color.TRANSPARENT);
+        dataset.setLabel("CAPDEV Rating");
+        
+        Calendar cal = Calendar.getInstance();
+
+        for (Evaluation e : capdevEvaluations) {
+            
+            data.addLabel(f.format(e.getEvaluationDate()));
+            dataset.addData(e.getRating());
+        }
+
+        data.addDataset(dataset);
+
+        return new LineChart(data).toJson();
+    }
+    
+    public String getARBRating(ArrayList<Evaluation> arbEvaluations) {
+
+        SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+        LineData data = new LineData();
+        LineDataset dataset = new LineDataset();
+        dataset.setBorderColor(Color.random());
+        dataset.addPointBackgroundColor(Color.DARK_GREEN);
+        dataset.setBackgroundColor(Color.TRANSPARENT);
+        dataset.setLabel("ARB Rating");
+        
+        Calendar cal = Calendar.getInstance();
+
+        for (Evaluation e : arbEvaluations) {
+            
+            data.addLabel(f.format(e.getEvaluationDate()));
+            dataset.addData(e.getRating());
+        }
+
+        data.addDataset(dataset);
 
         return new LineChart(data).toJson();
     }
@@ -295,43 +365,42 @@ public class Chart {
             datasetReasons.addBackgroundColor(Color.random());
             datasetReasons.setBorderWidth(2);
         }
-        
+
         data.addDataset(datasetReasons);
-        for(String l : stringLabels){
+        for (String l : stringLabels) {
             data.addLabel(l);
         }
-        
-        
+
         return new PieChart(data).toJson();
     }
-    
+
     public String getPieChartDisbursement(ArrayList<ARB> arbList) {
-        
+
         APCPRequestDAO dao2 = new APCPRequestDAO();
         ArrayList<String> stringLabels = new ArrayList();
         PieData data = new PieData();
         PieDataset datasetDisbursements = new PieDataset();
-        
-        for(ARB arb : arbList){
+
+        for (ARB arb : arbList) {
             double amount = 0;
             stringLabels.add(arb.getFLName());
             ArrayList<Disbursement> disbursements = dao2.getAllDisbursementsByARB(arb.getArbID());
-            
-            for(Disbursement d : disbursements){
+
+            for (Disbursement d : disbursements) {
                 amount += d.getDisbursedAmount();
             }
-            
+
             datasetDisbursements.addData(amount);
             datasetDisbursements.addBackgroundColor(Color.random());
             datasetDisbursements.setBorderWidth(2);
-        
+
         }
-        
+
         data.addDataset(datasetDisbursements);
-        for(String l : stringLabels){
+        for (String l : stringLabels) {
             data.addLabel(l);
         }
-        
+
         return new PieChart(data).toJson();
     }
 
