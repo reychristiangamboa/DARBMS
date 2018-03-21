@@ -1,7 +1,7 @@
 <%-- 
-    Document   : provincial-field-officer-add-arbo-qualified
-    Created on : Feb 20, 2018, 12:44:25 PM
-    Author     : Rey Christian
+    Document   : regional-field-officer-view-filtered-capdev-proposals
+    Created on : Mar 21, 2018, 12:11:08 PM
+    Author     : ijJPN
 --%>
 
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
@@ -66,6 +66,14 @@
                         <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
                     </div>
                     <%}%>
+                    
+                    <%
+                        ArrayList<CAPDEVPlan> pendingPlans2 = (ArrayList)request.getAttribute("pending");
+                        ArrayList<CAPDEVPlan> approvedPlans2 = (ArrayList)request.getAttribute("approved");
+                        ArrayList<CAPDEVPlan> implementedPlans2 = (ArrayList)request.getAttribute("implemented");
+                        ArrayList<APCPRequest> requestedRequests2 = (ArrayList)request.getAttribute("requested");
+                        ArrayList<CAPDEVPlan> disapprovedPlans2 = (ArrayList)request.getAttribute("disapproved");
+                    %>
 
                     <div class="row">
                         <div class="col-xs-6">
@@ -118,7 +126,7 @@
                             <a href="#" name="btn1">
                                 <div class="small-box bg-yellow">
                                     <div class="inner">
-                                        <h3><%=pendingPlans.size()%></h3>
+                                        <h3><%=pendingPlans2.size()%></h3>
 
                                         <h4>Pending </h4>
                                     </div>
@@ -134,7 +142,7 @@
                             <a href="#" name="btn2">
                                 <div class="small-box bg-aqua">
                                     <div class="inner">
-                                        <h3><%=approvedPlans.size()%></h3>
+                                        <h3><%=approvedPlans2.size()%></h3>
 
                                         <h4>Approved </h4>
 
@@ -151,7 +159,7 @@
                             <a href="#" name="btn3">
                                 <div class="small-box bg-red">
                                     <div class="inner">
-                                        <h3><%=disapprovedPlans.size()%></h3>
+                                        <h3><%=disapprovedPlans2.size()%></h3>
 
                                         <h4>Disapproved </h4>
 
@@ -168,7 +176,7 @@
                             <a href="#" name="btn4">
                                 <div class="small-box bg-green">
                                     <div class="inner">
-                                        <h3><%=implementedPlans.size()%></h3>
+                                        <h3><%=implementedPlans2.size()%></h3>
 
                                         <h4>Implemented </h4>
                                     </div>
@@ -208,7 +216,7 @@
                                         <tbody id="proposals">
 
                                             <%
-                                                for(CAPDEVPlan p : pendingPlans){
+                                                for(CAPDEVPlan p : pendingPlans2){
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
@@ -270,7 +278,7 @@
                                         <tbody id="proposals">
 
                                             <%
-                                                for(CAPDEVPlan p : pendingPlans){
+                                                for(CAPDEVPlan p : approvedPlans2){
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
@@ -332,7 +340,7 @@
                                         <tbody id="proposals">
 
                                             <%
-                                                for(CAPDEVPlan p : pendingPlans){
+                                                for(CAPDEVPlan p : disapprovedPlans2){
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
@@ -394,7 +402,7 @@
                                         <tbody id="proposals">
 
                                             <%
-                                                for(CAPDEVPlan p : pendingPlans){
+                                                for(CAPDEVPlan p : implementedPlans2){
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>

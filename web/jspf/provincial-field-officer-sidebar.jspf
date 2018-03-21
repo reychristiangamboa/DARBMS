@@ -126,8 +126,8 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="provincial-field-officer-request-loan-select-arbo.jsp"><i class="fa fa-eye"></i> Request Loan</a></li>
-                    <li><a href="provincial-field-officer-view-loan-status.jsp"><i class="fa fa-edit"></i> View Loan Status</a></li>
+                    <li><a href="provincial-field-officer-request-loan-select-arbo.jsp"><i class="fa fa-eye"></i> Request APCP</a></li>
+                    <li><a href="view-apcp-status.jsp"><i class="fa fa-edit"></i> View APCP Status</a></li>
                 </ul>
             </li>
             <li class="treeview">

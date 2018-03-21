@@ -333,7 +333,7 @@ public class APCPRequestDAO {
                 String query = "SELECT * FROM apcp_requests r "
                         + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
                         + "JOIN arbos a ON r.arboID=a.arboID "
-                        + "WHERE r.requestStatus = ? AND a.arboCityMun = ?";
+                        + "WHERE r.requestStatus=? AND a.arboCityMun=?";
                 PreparedStatement pstmt = con.prepareStatement(query);
                 pstmt.setInt(1, statusID);
                 pstmt.setInt(2, cityMunCode);
@@ -361,9 +361,9 @@ public class APCPRequestDAO {
                     r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
                     r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
                     apcpRequest.add(r);
-                    rs.close();
-                    pstmt.close();
                 }
+                rs.close();
+                pstmt.close();
             }
 
             con.close();
@@ -1212,7 +1212,7 @@ public class APCPRequestDAO {
             String query = "SELECT * FROM apcp_requests r "
                     + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
                     + "JOIN arbos a ON r.arboID=a.arboID "
-                    + "WHERE a.arbRegion = ?";
+                    + "WHERE a.arboRegion = ?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, regionID);
             ResultSet rs = pstmt.executeQuery();

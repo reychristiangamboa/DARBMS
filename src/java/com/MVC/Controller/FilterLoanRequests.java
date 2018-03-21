@@ -25,7 +25,7 @@ public class FilterLoanRequests extends BaseServlet {
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         if (request.getParameter("selectAll") != null) { // IS CHECKED
-            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         } else {
             ArrayList<Integer> cityMunIDs = new ArrayList();
             String[] cityValStr = request.getParameterValues("cities[]");
@@ -48,7 +48,7 @@ public class FilterLoanRequests extends BaseServlet {
             request.setAttribute("approved", approvedRequests);
             request.setAttribute("released", releasedRequests);
             request.setAttribute("forRelease", forReleaseRequests);
-            request.getRequestDispatcher("provincial-field-officer-view-filtered-loan-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-filtered-apcp-status.jsp").forward(request, response);
 
         }
 

@@ -42,7 +42,7 @@ public class ProvOfficeRefresh extends BaseServlet {
                 response.getWriter().write("<option value=" + provinceList.get(j).getProvCode() + ">" + provinceList.get(j).getProvDesc() + "</option>");
             }
             
-            response.getWriter().write("</select");
+            response.getWriter().write("</select>");
 
         }
     }

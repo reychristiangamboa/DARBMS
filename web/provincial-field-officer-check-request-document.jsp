@@ -16,8 +16,19 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
+            <%int userType = (Integer) session.getAttribute("userType");%>
+            <%if (userType == 3) {  %>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
+            <%} else if (userType == 4) {%>
+            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
+            <%} else if (userType == 5) {%>
+            <%@include file="jspf/central-sidebar.jspf"%>
+            <%}%>
             <%
+                ARBODAO arboDAO = new ARBODAO();
+                ARBDAO arbDAO = new ARBDAO();
+                APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+                CAPDEVDAO capdevDAO = new CAPDEVDAO();
                 APCPRequest r = apcpRequestDAO.getRequestByID((Integer)request.getAttribute("requestID"));
                 ARBO a = arboDAO.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
@@ -100,16 +111,18 @@
                                                             <i class="fa fa-calendar"></i>
                                                         </div>
                                                         <%if(r.getFarmPlanDate() != null){%>
-                                                        <input type="date" name="farmPlanDate" value="<%=r.getFarmPlanDate()%>" class="form-control" id="farmPlanDate">
+                                                        <input type="date" name="farmPlanDate" value="<%=r.getFarmPlanDate()%>" class="form-control" id="farmPlanDate" <%if (userType != 3) {out.print("disabled");}%>>
                                                         <%}else{%>
-                                                        <input type="date" name="farmPlanDate" class="form-control" id="farmPlanDate">
+                                                        <input type="date" name="farmPlanDate" class="form-control" id="farmPlanDate" <%if (userType != 3) {out.print("disabled");}%>>
                                                         <%}%>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">
+                                                <%if (userType == 3) {  %>
                                                 <label for="">&nbsp;</label>
                                                 <button id="farmPlanButton" type="submit" onclick="form.action = 'SendFarmPlan'" class="form-control btn btn-primary">Submit</button>
+                                                <%}%>
                                             </div>
                                         </div>
 
@@ -126,16 +139,18 @@
                                                             <i class="fa fa-calendar"></i>
                                                         </div>
                                                         <%if(r.getBusinessPlanDate() != null){%>
-                                                        <input type="date" name="businessPlanDate" value="<%=r.getBusinessPlanDate()%>" class="form-control pull-right" id="businessPlanDate">
+                                                        <input type="date" name="businessPlanDate" value="<%=r.getBusinessPlanDate()%>" class="form-control pull-right" id="businessPlanDate" <%if (userType != 3) {out.print("disabled");}%>>
                                                         <%}else{%>
-                                                        <input type="date" name="businessPlanDate" class="form-control pull-right" id="businessPlanDate">
+                                                        <input type="date" name="businessPlanDate" class="form-control pull-right" id="businessPlanDate"<%if (userType != 3) {out.print("disabled");}%>>
                                                         <%}%>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">
+                                                <%if (userType == 3) {  %>
                                                 <label for="">&nbsp;</label>
                                                 <button id="businessPlanButton" type="submit" onclick="form.action = 'SendBusinessPlan'" class="form-control btn btn-primary" style="margin: 0 auto;">Submit</button>
+                                                <%}%>
                                             </div>
                                         </div>
 
@@ -152,23 +167,27 @@
                                                             <i class="fa fa-calendar"></i>
                                                         </div>
                                                         <%if(r.getBankRequirementsDate() != null){%>
-                                                        <input type="date" name="bankRequirementsDate" value="<%=r.getBankRequirementsDate()%>" class="form-control pull-right" id="bankRequirementsDate">
+                                                        <input type="date" name="bankRequirementsDate" value="<%=r.getBankRequirementsDate()%>" class="form-control pull-right" id="bankRequirementsDate" <%if (userType != 3) {out.print("disabled");}%>>
                                                         <%}else{%>
-                                                        <input type="date" name="bankRequirementsDate" class="form-control pull-right" id="bankRequirementsDate">
+                                                        <input type="date" name="bankRequirementsDate" class="form-control pull-right" id="bankRequirementsDate" <%if (userType != 3) {out.print("disabled");}%>>
                                                         <%}%>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">
+                                                <%if (userType == 3) {  %>
                                                 <label for="">&nbsp;</label>
                                                 <button id="bankRequirementsButton" type="submit" onclick="form.action = 'SendBankRequirements'" class="form-control btn btn-primary" style="margin: 0 auto;">Submit</button>
+                                                <%}%>
                                             </div>
                                         </div>
 
                                     </div>
                                     <div class="box-footer">
+                                        <%if (userType == 3) {  %>
                                         <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
                                         <button type="submit" onclick="form.action = 'ClearAPCPRequest'" name="manual" class="btn btn-primary pull-right">Submit</button>
+                                        <%}%>
                                     </div>
                                 </form>
                             </div>

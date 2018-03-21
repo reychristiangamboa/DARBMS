@@ -46,10 +46,10 @@ public class ApproveAPCPRequest extends BaseServlet {
         
         if(requestDAO.approveRequest(requestID, (Integer)session.getAttribute("userID"), date)){
             request.setAttribute("success", "APCP Request approved!");
-            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         }else{
             request.setAttribute("errMessage", "Error in approving APCP Request.");
-            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         }
     }
 

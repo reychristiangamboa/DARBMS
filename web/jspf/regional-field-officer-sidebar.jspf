@@ -92,13 +92,14 @@
             </li>
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-users"></i> <span>ARBO Requests</span>
+                    <i class="fa fa-users"></i> <span>APCP / CAPDEV</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="regional-field-officer-view-capdev-proposals.jsp"><i class="fa fa-edit"></i>View Training Proposals</a></li>
+                    <li><a href="regional-field-officer-view-capdev-proposals.jsp"><i class="fa fa-edit"></i>View CAPDEV Proposals</a></li>
+                    <li><a href="view-apcp-status.jsp"><i class="fa fa-edit"></i> View APCP Status</a></li>
                 </ul>
             </li>
             <li>

@@ -46,11 +46,11 @@ public class RequestLoanAccess extends BaseServlet {
         if (requestDAO.requestAPCP(apcpRequest, (Integer)session.getAttribute("userID"))) {
             request.setAttribute("arboID", apcpRequest.getArboID());
             request.setAttribute("success", "APCP requested access!");
-            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         } else {
             request.setAttribute("arboID", apcpRequest.getArboID());
             request.setAttribute("errMessage", "Error in requesting access for APCP. Try again.");
-            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         }
         
     }
