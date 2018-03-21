@@ -24,10 +24,10 @@ public class ApproveCAPDEVProposal extends BaseServlet {
         CAPDEVDAO capdevDAO = new CAPDEVDAO();
         if(capdevDAO.updatePlanStatus(Integer.parseInt(request.getParameter("planID")), 2)){
             request.setAttribute("success", "CAPDEV Plan approved!");
-            request.getRequestDispatcher("regional-field-officer-view-capdev-plans.jsp").forward(request, response);
+            request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
         }else{
             request.setAttribute("errMessage", "Error in approving CAPDEV plan. Try again.");
-            request.getRequestDispatcher("regional-field-officer-view-capdev-plans.jsp").forward(request, response);
+            request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
         }
     }
 

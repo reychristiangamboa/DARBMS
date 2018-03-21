@@ -93,10 +93,10 @@ public class SendSchedulePreRelease extends BaseServlet {
 
         if (capdevDAO.addCAPDEVPlanActivityParticipants(arbList, newlyAddedActivityID)) {
             request.setAttribute("success", "Pre-release orientation scheduled!");
-            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         } else {
             request.setAttribute("errMessage", "Error in scheduling pre-release orientation.");
-            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         }
 
     }

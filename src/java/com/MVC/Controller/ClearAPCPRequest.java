@@ -30,10 +30,10 @@ public class ClearAPCPRequest extends BaseServlet {
         
         if(requestDAO.clearRequest(requestID, (Integer)session.getAttribute("userID"))){
             request.setAttribute("success", "APCP Request cleared!");
-            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         }else{
             request.setAttribute("errMessage", "Error in clearing APCP Request.");
-            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         }
         
     }

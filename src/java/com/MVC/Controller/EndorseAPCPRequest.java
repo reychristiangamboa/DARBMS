@@ -30,10 +30,10 @@ public class EndorseAPCPRequest extends BaseServlet {
         
         if(requestDAO.endorseRequest(requestID, (Integer)session.getAttribute("userID"), ltn)){
             request.setAttribute("success", "APCP Request endorsed!");
-            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         }else{
             request.setAttribute("errMessage", "Error in endorsing APCP Request.");
-            request.getRequestDispatcher("provincial-field-officer-view-loan-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         }
     }
 }

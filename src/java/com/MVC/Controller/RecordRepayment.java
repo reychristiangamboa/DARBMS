@@ -68,7 +68,7 @@ public class RecordRepayment extends BaseServlet {
 
         request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
         request.setAttribute("success", "Repayment successfully recorded!");
-        request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
+        request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
 
     }
 

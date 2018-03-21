@@ -66,11 +66,11 @@ public class RecordPastDueAccount extends BaseServlet {
         if (dao.addPastDueAccount(pda)) {
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
             request.setAttribute("success", "Past Due Account successfully recorded!");
-            request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
+            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
         } else {
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
             request.setAttribute("success", "Error in recording Past Due Account.");
-            request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
+            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
         }
 
     }

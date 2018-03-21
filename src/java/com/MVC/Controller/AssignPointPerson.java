@@ -30,10 +30,10 @@ public class AssignPointPerson extends BaseServlet {
         
         if(dao.assignPointPerson(planID, pointPersonID) && dao.updatePlanStatus(planID, 4)){
             request.setAttribute("success", "Point Person successfully assigned to CAPDEV Plan!");
-            request.getRequestDispatcher("provincial-field-officer-view-capdev-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
         }else{
             request.setAttribute("errMessage", "Error in assigning Point Person to CAPDEV Plan.");
-            request.getRequestDispatcher("provincial-field-officer-view-capdev-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
         }
     }
 

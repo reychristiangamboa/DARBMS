@@ -21,13 +21,13 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author ijJPN
  */
-public class FilterCAPDEVRequests extends BaseServlet {
+public class FilterCAPDEVRequestsCCP extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         if (request.getParameter("selectAll") != null) { // IS CHECKED
-            request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
+            request.getRequestDispatcher("provincial-field-officer-select-request.jsp").forward(request, response);
         } else {
             ArrayList<Integer> cityMunIDs = new ArrayList();
             String[] cityValStr = request.getParameterValues("cities[]");
@@ -35,23 +35,13 @@ public class FilterCAPDEVRequests extends BaseServlet {
                 cityMunIDs.add(Integer.parseInt(id));
             }
 
-            CAPDEVDAO capdevDAO = new CAPDEVDAO();
             APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
-
-            ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllCityMunCAPDEVPlanByStatus(1, cityMunIDs);
-            ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllCityMunCAPDEVPlanByStatus(2, cityMunIDs);
-            ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllCityMunCAPDEVPlanByStatus(3, cityMunIDs);
-            ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllCityMunCAPDEVPlanByStatus(5, cityMunIDs);
             
             ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllCityMunRequestsByStatus(1, cityMunIDs);
             
             request.setAttribute("requested", requestedRequests);
-            request.setAttribute("pending", pendingPlans);
-            request.setAttribute("approved", approvedPlans);
-            request.setAttribute("implemented", implementedPlans);
-            request.setAttribute("disapproved", disapprovedPlans);
             
-            request.getRequestDispatcher("view-filtered-capdev-status.jsp").forward(request, response);
+            request.getRequestDispatcher("provincial-field-officer-filtered-select-request.jsp").forward(request, response);
         }
 
     }

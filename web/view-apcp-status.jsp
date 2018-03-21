@@ -644,7 +644,7 @@
                                                 <th>Loan Reason</th>
                                                 <th>Loan Amount</th>
                                                 <th>Land Area</th>
-                                                <th>Date Released</th>
+                                                <th>Date of Last Released</th>
                                                 <th>Remarks</th>
                                                 <th>Status</th>
                                             </tr>
@@ -661,7 +661,7 @@
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
-                                                <td><%out.print(f.format(r.getDateReleased()));%></td>
+                                                <td><%out.print(f.format(r.getReleases().get(r.getReleases().size()-1).getReleaseDate()));%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
                                                 <td><%out.print(r.getRequestStatusDesc());%></td>
                                             </tr>

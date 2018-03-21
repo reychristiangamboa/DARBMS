@@ -108,6 +108,11 @@
                                         <li class="list-group-item">
                                             <b>Members</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=dao.getARBCount(arbo.getArboID())%></a>
                                         </li>
+                                        <%if((Integer)session.getAttribute("userType") == 3){%>
+                                        <li class="list-group-item text-center">
+                                            <a class="btn btn-primary btn-lg" href="ProceedAddARB?id=<%out.print(arbo.getArboID());%>">Add ARB</a>
+                                        </li>
+                                        <%}%>
                                     </ul>
                                 </div>
                                 <!-- /.box-body -->
@@ -422,12 +427,12 @@
                                                         } else if ((Integer) session.getAttribute("userType") == 4) {
                                                             arboList = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
                                                         }
-                                                        ArrayList<ARB> arbList = arbDAO.getAllARBsOfARBOs(arboList);
+                                                        ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(arbo.getArboID());
                                                         ArrayList<Integer> arbListCityMunCodes = arbDAO.getARBCityMun(arbList);
                                                         ArrayList<CityMun> cityMunList = addressDAO.getAllCityMunsByID(arbListCityMunCodes);
 
                                                         for (CityMun cm : cityMunList) {
-                                                            ArrayList<ARB> arbListCityMun = arbDAO.getAllARBsByCityMun(cm.getCityMunCode());
+                                                            ArrayList<ARB> arbListCityMun = arbDAO.getAllARBsByCityMun(cm.getCityMunCode(), arbo.getArboID());
                                                     %>
                                                     <div class="active tab-pane" >
                                                         <div class="col-lg-2 col-xs-6" data-toggle="modal" data-target="#modal-default<%out.print(cm.getCityMunCode());%>">

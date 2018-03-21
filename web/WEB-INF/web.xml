@@ -284,6 +284,10 @@
         <servlet-name>RegionalCityFilterRefresh</servlet-name>
         <servlet-class>com.MVC.Controller.RegionalCityFilterRefresh</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FilterCAPDEVRequestsCCP</servlet-name>
+        <servlet-class>com.MVC.Controller.FilterCAPDEVRequestsCCP</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -567,6 +571,10 @@
     <servlet-mapping>
         <servlet-name>RegionalCityFilterRefresh</servlet-name>
         <url-pattern>/RegionalCityFilterRefresh</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterCAPDEVRequestsCCP</servlet-name>
+        <url-pattern>/FilterCAPDEVRequestsCCP</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

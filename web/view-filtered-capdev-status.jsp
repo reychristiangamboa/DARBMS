@@ -57,14 +57,12 @@
                 ArrayList<CAPDEVPlan> approvedPlans = new ArrayList();
                 ArrayList<CAPDEVPlan> disapprovedPlans = new ArrayList();
                 ArrayList<CAPDEVPlan> implementedPlans = new ArrayList();
-                ArrayList<APCPRequest> requestedRequests = new ArrayList();
     
                 if(userType == 3){
                     ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
                     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
                     cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
                     
-                    requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
                     allPlans = capdevDAO.getAllProvincialCAPDEVPlan((Integer) session.getAttribute("provOfficeCode"));
                     pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
                     approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
@@ -73,14 +71,12 @@
                 } else if(userType == 4){
                     ArrayList<ARBO> arboListRegion = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
                     ArrayList<ARB> arbListRegion = arbDAO.getAllARBsOfARBOs(arboListRegion);
-                    requestedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
                     allPlans = capdevDAO.getAllRegionalCAPDEVPlan((Integer) session.getAttribute("regOfficeCode"));
                     pendingPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
                     approvedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(2, (Integer) session.getAttribute("regOfficeCode"));
                     disapprovedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
                     implementedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(5, (Integer) session.getAttribute("regOfficeCode"));
                 } else if (userType == 5){
-                    requestedRequests = apcpRequestDAO.getAllRequestsByStatus(1);
                     allPlans = capdevDAO.getAllCAPDEVPlan();
                     pendingPlans = capdevDAO.getAllCAPDEVPlanByStatus(1);
                     approvedPlans = capdevDAO.getAllCAPDEVPlanByStatus(2);
@@ -121,6 +117,16 @@
                     </div>
 
                     <%}%>
+                    
+                    <%
+                        ArrayList<APCPRequest> requestedRequests2 = (ArrayList)request.getAttribute("requested");
+                        ArrayList<CAPDEVPlan> pendingPlans2 = (ArrayList)request.getAttribute("pending");
+                        ArrayList<CAPDEVPlan> approvedPlans2 = (ArrayList)request.getAttribute("approved");
+                        ArrayList<CAPDEVPlan> implementedPlans2 = (ArrayList)request.getAttribute("implemented");
+                        ArrayList<CAPDEVPlan> disapprovedPlans2 = (ArrayList)request.getAttribute("disapproved");
+                    %>
+                    
+                    
                     <%if(userType == 3){%>
                     <div class="row">
                         <div class="col-xs-6">
@@ -209,7 +215,7 @@
                             <a href="#" name="btn1">
                                 <div class="small-box bg-yellow">
                                     <div class="inner">
-                                        <h3><%=pendingPlans.size()%></h3>
+                                        <h3><%=pendingPlans2.size()%></h3>
 
                                         <h4>Pending </h4>
                                     </div>
@@ -225,7 +231,7 @@
                             <a href="#" name="btn2">
                                 <div class="small-box bg-aqua">
                                     <div class="inner">
-                                        <h3><%=approvedPlans.size()%></h3>
+                                        <h3><%=approvedPlans2.size()%></h3>
 
                                         <h4>Approved </h4>
 
@@ -242,7 +248,7 @@
                             <a href="#" name="btn3">
                                 <div class="small-box bg-red">
                                     <div class="inner">
-                                        <h3><%=disapprovedPlans.size()%></h3>
+                                        <h3><%=disapprovedPlans2.size()%></h3>
 
                                         <h4>Disapproved </h4>
 
@@ -259,7 +265,7 @@
                             <a href="#" name="btn4">
                                 <div class="small-box bg-green">
                                     <div class="inner">
-                                        <h3><%=implementedPlans.size()%></h3>
+                                        <h3><%=implementedPlans2.size()%></h3>
 
                                         <h4>Implemented </h4>
                                     </div>
@@ -303,7 +309,7 @@
                                         <tbody>
 
                                             <%
-                                                for(CAPDEVPlan p : pendingPlans){
+                                                for(CAPDEVPlan p : pendingPlans2){
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
@@ -361,7 +367,7 @@
                                         <tbody>
 
                                             <%
-                                                for(CAPDEVPlan p : approvedPlans){
+                                                for(CAPDEVPlan p : approvedPlans2){
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
@@ -420,7 +426,7 @@
                                         <tbody id="proposals">
 
                                             <%
-                                                for(CAPDEVPlan p : disapprovedPlans){
+                                                for(CAPDEVPlan p : disapprovedPlans2){
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
@@ -481,7 +487,7 @@
                                         <tbody>
 
                                             <%
-                                                for(CAPDEVPlan p : implementedPlans){
+                                                for(CAPDEVPlan p : implementedPlans2){
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>

@@ -1183,6 +1183,7 @@ public class APCPRequestDAO {
                 r.setLoanAmount(rs.getDouble("loanAmount"));
                 r.setLoanReason(rs.getString("loanReason"));
                 r.setRemarks(rs.getString("remarks"));
+                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
                 r.setRequestStatus(rs.getInt("requestStatus"));
                 r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
                 r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));

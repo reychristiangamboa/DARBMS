@@ -65,7 +65,6 @@ public class ARBDAO {
                 arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
                 arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
                 arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
-                arb.setArbRating(rs.getDouble("arbRating"));
                 arb.setArbStatus(rs.getInt("arbStatus"));
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
             } else {
@@ -125,7 +124,6 @@ public class ARBDAO {
                 arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
                 arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
                 arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
-                arb.setArbRating(rs.getDouble("arbRating"));
                 arb.setArbStatus(rs.getInt("arbStatus"));
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
                 arbList.add(arb);
@@ -186,7 +184,6 @@ public class ARBDAO {
                     arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
                     arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
                     arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
-                    arb.setArbRating(rs.getDouble("arbRating"));
                     arb.setArbStatus(rs.getInt("arbStatus"));
                     arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
                     arbList.add(arb);
@@ -555,7 +552,64 @@ public class ARBDAO {
                 arb.setLandArea(rs.getDouble("landArea"));
                 arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
                 arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
-                arb.setArbRating(rs.getDouble("arbRating"));
+                arb.setArbStatus(rs.getInt("arbStatus"));
+                arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
+                arbList.add(arb);
+            }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return arbList;
+    }
+    
+    public ArrayList<ARB> getAllARBsByCityMun(int cityMun, int arboID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<ARB> arbList = new ArrayList();
+        try {
+            String query = "SELECT * FROM `dar-bms`.arbs a "
+                    + "JOIN `dar-bms`.ref_educationLevel e ON a.educationLevel=e.educationLevel "
+                    + "JOIN `dar-bms`.ref_arbStatus s ON a.arbStatus=s.arbStatus "
+                    + "JOIN `dar-bms`.refbrgy b ON a.brgyCode=b.brgyCode "
+                    + "JOIN `dar-bms`.refcitymun c ON a.cityMunCode=c.citymunCode "
+                    + "JOIN `dar-bms`.refprovince p ON a.provCode=p.provCode "
+                    + "JOIN `dar-bms`.refregion r ON a.regCode=r.regCode "
+                    + "WHERE a.cityMunCode=? AND a.arboID=?;";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, cityMun);
+            pstmt.setInt(2, arboID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ARB arb = new ARB();
+                arb.setArbID(rs.getInt("arbID"));
+                arb.setArboID(rs.getInt("arboID"));
+                arb.setFirstName(rs.getString("firstName"));
+                arb.setMiddleName(rs.getString("middleName"));
+                arb.setLastName(rs.getString("lastName"));
+                arb.setMemberSince(rs.getDate("memberSince"));
+                arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
+                arb.setBrgyCode(rs.getInt("brgyCode"));
+                arb.setBrgyDesc(rs.getString("brgyDesc"));
+                arb.setCityMunCode(rs.getInt("cityMunCode"));
+                arb.setCityMunDesc(rs.getString("citymunDesc"));
+                arb.setProvCode(rs.getInt("provCode"));
+                arb.setProvDesc(rs.getString("provDesc"));
+                arb.setRegCode(rs.getInt("regCode"));
+                arb.setRegDesc(rs.getString("regDesc"));
+                arb.setGender(rs.getString("gender"));
+                arb.setEducationLevel(rs.getInt("educationLevel"));
+                arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
+                arb.setLandArea(rs.getDouble("landArea"));
+                arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
+                arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
                 arb.setArbStatus(rs.getInt("arbStatus"));
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
                 arbList.add(arb);

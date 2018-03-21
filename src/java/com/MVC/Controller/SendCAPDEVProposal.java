@@ -112,7 +112,7 @@ public class SendCAPDEVProposal extends BaseServlet {
         }
 
         request.setAttribute("success", "CAPDEV plan submitted!");
-        request.getRequestDispatcher("provincial-field-officer-view-capdev-status.jsp").forward(request, response);
+        request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
     }
 
     public static ArrayList readExcelFile(String fileName) {

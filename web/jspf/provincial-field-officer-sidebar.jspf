@@ -47,7 +47,7 @@
     ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(arbListProvince);
     ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListProvince);
     
-    ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer)session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
@@ -138,7 +138,8 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="provincial-field-officer-view-capdev-status.jsp"><i class="fa fa-edit"></i> View CAPDEV Status</a></li>
+                    <li><a href="view-capdev-status.jsp"><i class="fa fa-edit"></i> View CAPDEV Status</a></li>
+                    <li><a href="provincial-field-officer-select-request.jsp"><i class="fa fa-edit"></i> Create CAPDEV Proposal</a></li>
 
                 </ul>
             </li>
