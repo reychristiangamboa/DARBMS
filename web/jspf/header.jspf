@@ -1,9 +1,14 @@
 <%@page import="java.util.Calendar"%>
 <%@page import="java.sql.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.ParseException;"%>
+<%@page import="java.util.logging.Level;"%>
+<%@page import="java.util.logging.Logger;"%>
 <%@page import="java.text.NumberFormat"%>
+<%@page import="java.util.Locale;"%>
 <%@page import="com.MVC.Model.Chart"%>
 <%@page import="com.MVC.Model.Dependent"%>
+<%@page import="com.MVC.DAO.ReportsDAO"%>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>DAR-BMS</title>
@@ -41,6 +46,19 @@
 <link rel="stylesheet" href="bower_components/select2/dist/css/select2.min.css">
 <link rel="stylesheet" href="bower_components/select2/dist/css/select2.css">
 
+<!--<style>
+    @media print{@page {size: landscape}}
+</style>
+
+<style type="text/css" media="print">
+    .page
+    {
+     -webkit-transform: rotate(-90deg); 
+     -moz-transform:rotate(-90deg);
+     filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    }
+</style>-->
+
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -59,7 +77,9 @@
     }
 
     SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
-    NumberFormat currency = NumberFormat.getCurrencyInstance();
+    
+    Locale pinoy = new Locale("fil", "PH");
+    NumberFormat currency = NumberFormat.getCurrencyInstance(pinoy);
 
     Long l = System.currentTimeMillis();
     Date currDate = new Date(l);

@@ -87,7 +87,7 @@ public class ImportRepayment extends BaseServlet {
     public static ArrayList readExcelFile(String file) {
         ArrayList cellArrayListHolder = new ArrayList();
         try {
-            OPCPackage pkg = OPCPackage.open("C:\\Users\\Rey Christian\\Documents\\NetBeansProjects\\DARBMS\\" + file);
+            OPCPackage pkg = OPCPackage.open(file);
             XSSFWorkbook workbook = new XSSFWorkbook(pkg);
             XSSFSheet sheet = workbook.getSheetAt(0);
 

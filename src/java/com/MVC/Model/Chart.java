@@ -15,8 +15,10 @@ import be.ceau.chart.data.PieData;
 import be.ceau.chart.dataset.BarDataset;
 import be.ceau.chart.dataset.LineDataset;
 import be.ceau.chart.dataset.PieDataset;
+import be.ceau.chart.options.BarOptions;
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.DAO.ARBDAO;
+import com.MVC.DAO.ARBODAO;
 import com.MVC.DAO.CAPDEVDAO;
 import java.util.ArrayList;
 import com.MVC.DAO.CropDAO;
@@ -24,12 +26,17 @@ import com.MVC.Model.Crop;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
  * @author Rey Christian
  */
 public class Chart {
+    
+    Locale pinoy = new Locale("fil", "PH");
+    NumberFormat currency = NumberFormat.getCurrencyInstance(pinoy);
 
     public String getBarChart() {
 
@@ -73,6 +80,26 @@ public class Chart {
         data.addDataset(dataset2);
 
         return new BarChart(data).toJson();
+    }
+    
+    public String getTotalYearBarChart(ArrayList<APCPRequest> requests) {
+        
+        ARBODAO arboDAO = new ARBODAO();
+        BarData data = new BarData();
+        for(APCPRequest req : requests){
+            ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+            BarDataset dataset = new BarDataset();
+            dataset.setLabel(arbo.getArboName());
+            dataset.setData(req.getTotalReleaseAmount());
+            dataset.addBackgroundColor(Color.random());
+            dataset.setBorderWidth(2);
+            data.addDataset(dataset);
+        }
+        
+        BarOptions options = new BarOptions();
+        options.setResponsive(true);
+        
+        return new BarChart(data, options).toJson();
     }
 
     public String getCropHistory(ArrayList<Crop> crops) {
@@ -586,5 +613,7 @@ public class Chart {
 
         return new BarChart(data).toJson();
     }
+    
+    
 
 }

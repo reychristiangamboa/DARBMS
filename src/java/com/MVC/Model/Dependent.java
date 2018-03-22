@@ -17,6 +17,8 @@ public class Dependent {
     public Date birthday;
     public int educationLevel;
     public String educationLevelDesc;
+    private int relationshipType;
+    private String relationshipTypeDesc;
     public int arbID;
 
     public String getName() {
@@ -51,6 +53,22 @@ public class Dependent {
         this.educationLevelDesc = educationLevelDesc;
     }
 
+    public int getRelationshipType() {
+        return relationshipType;
+    }
+
+    public void setRelationshipType(int relationshipType) {
+        this.relationshipType = relationshipType;
+    }
+
+    public String getRelationshipTypeDesc() {
+        return relationshipTypeDesc;
+    }
+
+    public void setRelationshipTypeDesc(String relationshipTypeDesc) {
+        this.relationshipTypeDesc = relationshipTypeDesc;
+    }
+    
     public int getArbID() {
         return arbID;
     }

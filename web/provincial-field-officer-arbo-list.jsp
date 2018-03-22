@@ -49,7 +49,7 @@
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
-                                                <th>Leader</th>
+                                                <th>Address</th>
                                                 <th>No. of Members</th>
                                             </tr>
                                         </thead>
@@ -58,10 +58,8 @@
                                             <%for(ARBO arbo : arboListProvince){%>
                                             <tr>
                                                 <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td>Internet
-                                                    Explorer 4.0
-                                                </td>
-                                                <td>Win 95+</td>
+                                                <td><%=arbo.getFullAddress()%></td>
+                                                <td><%=arboDAO.getARBCount(arbo.getArboID())%></td>
                                             </tr>
                                             <%}%>
                                         </tbody>

@@ -1,9 +1,10 @@
-
 <%-- 
-    Document   : field-officer-arbo-list
-    Created on : Jan 29, 2018, 4:08:13 PM
+    Document   : report-accumulated-release
+    Created on : Mar 22, 2018, 2:53:51 PM
     Author     : Rey Christian
 --%>
+
+
 
 <%@page contentType="text/html" pageEncoding="windows-1252"%>
 <!DOCTYPE html>
@@ -44,16 +45,14 @@
                     requestsParam = apcpRequestDAO.getAllRegionalRequests((Integer) session.getAttribute("regOfficeCode"));;
                 }
                 
-                requests = rDAO.getAllFilteredReleasesByRequests(requestsParam,e.getEvaluationStartDate(),e.getEvaluationEndDate());
-                
-                
+                requests = rDAO.getAccumulatedReleasesByRequests(requestsParam,e.getEvaluationStartDate(),e.getEvaluationEndDate());
             %>
 
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        REPORT<small>TOTAL <%out.print(year);%> RELEASED AMOUNT</small>
+                        REPORT<small>TOTAL RELEASED ACCUMULATED AMOUNT</small>
                     </h1>
                 </section>
 
@@ -63,7 +62,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <h2 class="page-header">
-                                <i class="fa fa-globe"></i> TOTAL <%out.print(year);%> RELEASED AMOUNT: <%=place%>
+                                <i class="fa fa-globe"></i> TOTAL RELEASED ACCUMULATED AMOUNT: <%=place%>
                                 <div class="pull-right">
                                     <small><%out.print(f.format(e.getEvaluationStartDate()));%>-<%out.print(f.format(e.getEvaluationEndDate()));%></small>
                                 </div>
@@ -80,39 +79,55 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Loan Tracking No.</th>
                                         <th>ARBO Name</th>
-                                        <th>Release Amount</th>
-                                        <th>Release Date</th>
-                                        <th>Released By</th>
+                                        <th>No. of ARBs</th>
+                                        <th>Total Approved Amount</th>
+                                        <th>Accumulated Releases</th>
+                                        <th><%=year%> Releases</th>
+                                        <th>Date of Last Release</th>
+                                        <th>O/S Balance</th>
+                                        <th>Past Due Amount</th>
+                                        <th>Past Due Reason</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <%
                                         for(APCPRequest req : requests){
-                                            for(APCPRelease rel : req.getReleases()){
-                                                ARBO arbo = arboDAO.getARBOByID(req.getArboID());
-                                                User u = uDAO.searchUser(rel.getReleasedBy());
+                                            ARBO arbo = arboDAO.getARBOByID(req.getArboID());
                                     %>
                                     <tr>
-                                        <td><%=req.getLoanTrackingNo()%></td>
                                         <td><%=arbo.getArboName()%></td>
-                                        <td><%=currency.format(rel.getReleaseAmount())%></td>
-                                        <td><%=rel.getReleaseDate()%></td>
-                                        <td><%=u.getFullName()%></td>
+                                        <td><%=arboDAO.getARBCount(arbo.getArboID())%></td>
+                                        <td><%out.print("N/A");%></td>
+                                        <td><%=req.getTotalReleaseAmount()%></td>
+                                        <td><%out.print("N/A");%></td>
+
+                                        <%if(!req.getReleases().isEmpty()){%>
+                                        <td><%=f.format(req.getDateLastReleased())%></td>
+                                        <%}else{%>
+                                        <td><%out.print("N/A");%></td>
+                                        <%}%>
+
+                                        <td><%=req.getAccumulatedOSBalance()%></td>
+                                        <td><%=currency.format(req.getTotalPDAAmount())%></td>
+                                        <td><%out.print("N/A");%></td>
                                     </tr>
                                     <%
-                                            }                                                                            
+                                                                                                                       
                                         }
                                     %>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th>Loan Tracking No.</th>
                                         <th>ARBO Name</th>
-                                        <th>Release Amount</th>
-                                        <th>Release Date</th>
-                                        <th>Released By</th>
+                                        <th>No. of ARBs</th>
+                                        <th>Total Approved Amount</th>
+                                        <th>Accumulated Releases</th>
+                                        <th><%=year%> Releases</th>
+                                        <th>Date of Last Release</th>
+                                        <th>O/S Balance</th>
+                                        <th>Past Due Amount</th>
+                                        <th>Past Due Reason</th>
                                     </tr>
                                 </tfoot>
                             </table>

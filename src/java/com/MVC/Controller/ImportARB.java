@@ -215,7 +215,7 @@ public class ImportARB extends BaseServlet {
         ArrayList cellArrayListHolder = new ArrayList();
         try {
 
-            OPCPackage pkg = OPCPackage.open("C:\\Users\\Rey Christian\\Documents\\NetBeansProjects\\DAR-BMS\\" + fileName);
+            OPCPackage pkg = OPCPackage.open(fileName);
             XSSFWorkbook workbook = new XSSFWorkbook(pkg);
             XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
 

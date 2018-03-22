@@ -204,9 +204,25 @@ public class APCPRequest {
     public void setPastDueAccounts(ArrayList<PastDueAccount> pastDueAccounts) {
         this.pastDueAccounts = pastDueAccounts;
     }
+    
+    public double getTotalPDAAmount(){
+        double val = 0;
+        for(PastDueAccount pda : this.pastDueAccounts){
+            val += pda.getPastDueAmount();
+        }
+        return val;
+    }
 
     public ArrayList<APCPRelease> getReleases() {
         return releases;
+    }
+    
+    public double getTotalReleaseAmount(){
+        double val = 0;
+        for(APCPRelease release : this.releases){
+            val += release.getReleaseAmount();
+        }
+        return val;
     }
 
     public void setReleases(ArrayList<APCPRelease> releases) {
@@ -223,6 +239,18 @@ public class APCPRequest {
     
     public double getProgressBarWidth(double val1, double val2){
         return (val1/val2)*100;
+    }
+    
+    public double getAccumulatedOSBalance(){
+        double value = 0;
+        for(APCPRelease r : this.releases){
+            value += r.getTotalOSBalance();
+        }
+        return value;
+    }
+    
+    public Date getDateLastReleased(){
+        return this.getReleases().get(this.getReleases().size()-1).getReleaseDate();
     }
     
 }

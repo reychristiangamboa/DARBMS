@@ -117,6 +117,7 @@ public class AddARB extends BaseServlet {
             String[] names = request.getParameterValues("dependentName[]");
             String[] birthdays = request.getParameterValues("dependentBirthday[]");
             String[] el = request.getParameterValues("dependentEL[]");
+            String[] re = request.getParameterValues("dependentR[]");
             ArrayList<Dependent> dependentList = new ArrayList();
 
             for (int x = 0; x < names.length; x++) {
@@ -124,6 +125,7 @@ public class AddARB extends BaseServlet {
                 Dependent d = new Dependent();
                 d.setName(names[x]);
                 d.setEducationLevel(Integer.parseInt(el[x]));
+                d.setRelationshipType(Integer.parseInt(re[x]));
 
                 java.sql.Date birthday = null;
 

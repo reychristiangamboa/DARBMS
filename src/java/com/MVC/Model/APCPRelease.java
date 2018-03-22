@@ -47,6 +47,14 @@ public class APCPRelease {
         this.disbursements = disbursements;
     }
     
+    public double getTotalOSBalance(){
+        double value = 0;
+        for(Disbursement d : this.disbursements){
+            value += d.getOSBalance();
+        }
+        return value;
+    }
+    
     public double getReleaseAmount() {
         return releaseAmount;
     }

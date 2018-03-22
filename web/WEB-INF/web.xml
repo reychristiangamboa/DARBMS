@@ -288,6 +288,10 @@
         <servlet-name>FilterCAPDEVRequestsCCP</servlet-name>
         <servlet-class>com.MVC.Controller.FilterCAPDEVRequestsCCP</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewReport</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewReport</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -575,6 +579,10 @@
     <servlet-mapping>
         <servlet-name>FilterCAPDEVRequestsCCP</servlet-name>
         <url-pattern>/FilterCAPDEVRequestsCCP</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewReport</servlet-name>
+        <url-pattern>/ViewReport</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

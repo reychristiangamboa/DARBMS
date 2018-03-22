@@ -6,6 +6,7 @@
 <%@page import="com.MVC.Model.ARBO;"%>
 <%@page import="com.MVC.Model.ARB;"%>
 <%@page import="com.MVC.Model.Crop;"%>
+<%@page import="com.MVC.Model.Evaluation;"%>
 <%@page import="com.MVC.Model.APCPRequest;"%>
 <%@page import="com.MVC.Model.APCPRelease;"%>
 <%@page import="com.MVC.Model.CAPDEVPlan;"%>
@@ -28,6 +29,9 @@
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
     CAPDEVDAO capdevDAO = new CAPDEVDAO();
     UserDAO uDAO = new UserDAO();
+    
+    ArrayList<String> educationLevel = arbDAO.getAllEducationLevel();
+    ArrayList<String> relationshipType = arbDAO.getAllRelationshipType();
     
     
     APCPRelease apcpRelease = new APCPRelease();

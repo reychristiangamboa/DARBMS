@@ -156,6 +156,7 @@
                                                                     <th>Full Name</th>
                                                                     <th>Birthday</th>
                                                                     <th>Education Level</th>
+                                                                    <th>Relationship</th>
                                                                 </tr>
                                                             </thead>
 
@@ -167,6 +168,8 @@
                                                                     <td><%=d.getName()%></td>
                                                                     <td><%=f.format(d.getBirthday())%></td>
                                                                     <td><%=d.getEducationLevelDesc()%></td>
+                                                                    <td><%=d.getRelationshipTypeDesc()%></td>
+                                                                    
                                                                 </tr>
                                                                 <%}%>
                                                             </tbody>
@@ -176,6 +179,7 @@
                                                                     <th>Full Name</th>
                                                                     <th>Birthday</th>
                                                                     <th>Education Level</th>
+                                                                    <th>Relationship</th>
                                                                 </tr>
                                                             </tfoot>
 
@@ -253,7 +257,8 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <div class="pull-right">
-                                                        <input type="hidden" id="start" name="start"><input type="hidden" id="end" name="end" >
+                                                        <input type="hidden" id="start" name="start">
+                                                        <input type="hidden" id="end" name="end" >
                                                         <input type="hidden" id="maxDate" name="maxDate">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                         <button type="submit" class="btn btn-primary" onclick="form.action = 'AddEvaluation?id=<%out.print(arb.getArbID());%>'">Submit</button>

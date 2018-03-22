@@ -43,13 +43,13 @@
                                         </thead>
                                         <tbody>
                                             <%
-                                                for (Log l:logs) {
+                                                for (Log l2:logs) {
                                             %>
                                             <tr>
-                                                <td><%out.print(l.getDate());%></td>
-                                                <td><%out.print(l.getTime());%></td>
-                                                <td><%out.print(l.getActionDesc());%></td>
-                                                <td><%out.print(l.getActionByDesc());%></td>
+                                                <td><%out.print(l2.getDate());%></td>
+                                                <td><%out.print(l2.getTime());%></td>
+                                                <td><%out.print(l2.getActionDesc());%></td>
+                                                <td><%out.print(l2.getActionByDesc());%></td>
                                             </tr>
                                             <%}%>
                                             </tr>

@@ -69,7 +69,7 @@
                             <!-- /.col -->
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">ARB Visuals</h3>
+                                    <h3 class="box-title">Agrarian Reform Beneficiary Visuals</h3>
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
@@ -256,7 +256,7 @@
 
                                                                     %>
                                                                     <tr>
-                                                                        <td><%out.print(arb.getFullName());%></td>
+                                                                        <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFullName());%></a></td>
                                                                         <td><%out.print(arboEduc.getARBOByID(arb.getArboID()).getArboName());%></td>
                                                                         <td><%out.print(arb.getGender());%></td>
                                                                         <td><%out.print(arb.getEducationLevelDesc());%></td>
@@ -356,6 +356,11 @@
                                                         <div class="col-xs-8">
                                                             <div class="chart">
                                                                 <canvas id="lineCanvas" style="height:250px"></canvas>
+                                                                <div class="row">
+                                                                    <div class="text-center">
+                                                                        <p><%out.print(year - 1);%> - <%out.print(year);%></p>
+                                                                    </div>
+                                                                </div>
                                                                 <div class="row text-center">
                                                                     <a class="btn btn-submit" data-toggle="modal" data-target="#modalLine">View More</a>
                                                                 </div>
@@ -431,7 +436,7 @@
                             <!-- /.col -->
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">APCP Visuals</h3>
+                                    <h3 class="box-title">Agrarian Production Credit Program Visuals</h3>
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
@@ -462,7 +467,7 @@
                                                         <tr>
                                                             <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%=r.getLoanTrackingNo()%></a></td>
                                                             <td><%=arbo.getArboName()%></td>
-                                                            <td><%=f.format(r.getReleases().get(r.getReleases().size() - 1).getReleaseDate())%></td>
+                                                            <td><%=r.getReleases().get(r.getReleases().size() - 1).getReleaseDate()%></td>
                                                             <td  width=50%>
                                                                 <div class="progress">
                                                                     <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: <%out.print(r.getProgressBarWidth(apcpRequestDAO.getSumOfReleasesByRequestId(r.getRequestID()), r.getLoanAmount()));%>%">
@@ -591,70 +596,74 @@
                                                             <h4 class="modal-title">PROVINCIAL RELEASES</h4>
                                                         </div>
 
-                                                        <form method="post">
-                                                            <div class="modal-body">
-                                                                <div class="row">
-                                                                    <div class="col-xs-12">
-                                                                        <table class="table table-bordered table-striped export">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>Loan Tracking No.</th>
-                                                                                    <th>ARBO Name</th>
-                                                                                    <th>Release Amount</th>
-                                                                                    <th>Release Date</th>
-                                                                                    <th>Released By</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <%
-                                                                                    for(APCPRequest req : provincialRequests){
-                                                                                        for(APCPRelease rel : req.getReleases()){
-                                                                                            ARBO arbo = arboDAO.getARBOByID(req.getArboID());
-                                                                                            User u = uDAO.searchUser(rel.getReleasedBy());
-                                                                                %>
-                                                                                <tr>
-                                                                                    <td><%=req.getLoanTrackingNo()%></td>
-                                                                                    <td><%=arbo.getArboName()%></td>
-                                                                                    <td><%=currency.format(rel.getReleaseAmount())%></td>
-                                                                                    <td><%=rel.getReleaseDate()%></td>
-                                                                                    <td><%=u.getFullName()%></td>
-                                                                                </tr>
-                                                                                <%
-                                                                                        }                                                                            
-                                                                                    }
-                                                                                %>
-                                                                            </tbody>
-                                                                            <tfoot>
-                                                                                <tr>
 
-                                                                                    <th>Loan Tracking No.</th>
-                                                                                    <th>ARBO Name</th>
-                                                                                    <th>Release Amount</th>
-                                                                                    <th>Release Date</th>
-                                                                                    <th>Released By</th>
-                                                                                </tr>
-                                                                            </tfoot>
-                                                                        </table>
-                                                                    </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <table class="table table-bordered table-striped export">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Loan Tracking No.</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>Release Amount</th>
+                                                                                <th>Release Date</th>
+                                                                                <th>Released By</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <%
+                                                                                for(APCPRequest req : provincialRequests){
+                                                                                    for(APCPRelease rel : req.getReleases()){
+                                                                                        ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                                                                        User u = uDAO.searchUser(rel.getReleasedBy());
+                                                                            %>
+                                                                            <tr>
+                                                                                <td><%=req.getLoanTrackingNo()%></td>
+                                                                                <td><%=arbo.getArboName()%></td>
+                                                                                <td><%=currency.format(rel.getReleaseAmount())%></td>
+                                                                                <td><%=rel.getReleaseDate()%></td>
+                                                                                <td><%=u.getFullName()%></td>
+                                                                            </tr>
+                                                                            <%
+                                                                                    }                                                                            
+                                                                                }
+                                                                            %>
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr>
+
+                                                                                <th>Loan Tracking No.</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>Release Amount</th>
+                                                                                <th>Release Date</th>
+                                                                                <th>Released By</th>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
                                                                 </div>
-
                                                             </div>
+
+                                                        </div>
+                                                        <form method="post">
                                                             <div class="modal-footer">
                                                                 <div class="pull-left">
                                                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                                 </div>
                                                                 <div class="pull-right">
-                                                                    <input type="hidden" name="reportType" value="1">
+
                                                                     <button type="button" class="btn btn-default" id="dr-totalYearReleaseReport">
                                                                         <span>
                                                                             <i class="fa fa-calendar"></i> Date range picker
                                                                         </span>
                                                                         <i class="fa fa-caret-down"></i>
                                                                     </button>
-                                                                    <button type="button" class="btn btn-default" onclick="form.action = ''">Generate Report</button>
+
+                                                                    <input type="hidden" name="reportType" value="1">
+                                                                    <input type="hidden" id="start-totalYearReleaseReport" name="start">
+                                                                    <input type="hidden" id="end-totalYearReleaseReport" name="end" >
+
+                                                                    <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
                                                                 </div>
-
-
                                                             </div>
                                                         </form>
                                                     </div>
@@ -679,7 +688,7 @@
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title"></h4>
+                                                            <h4 class="modal-title">PROVINCIAL RELEASES</h4>
                                                         </div>
                                                         <div class="modal-body">
 
@@ -733,10 +742,28 @@
 
 
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Generate Report</button>
-                                                        </div>
+                                                        <form method="post">
+                                                            <div class="modal-footer">
+                                                                <div class="pull-left">
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                </div>
+                                                                <div class="pull-right">
+
+                                                                    <button type="button" class="btn btn-default" id="dr-totalAccumulatedReleaseReport">
+                                                                        <span>
+                                                                            <i class="fa fa-calendar"></i> Date range picker
+                                                                        </span>
+                                                                        <i class="fa fa-caret-down"></i>
+                                                                    </button>
+
+                                                                    <input type="hidden" name="reportType" value="2">
+                                                                    <input type="hidden" id="start-totalAccumulatedReleaseReport" name="start">
+                                                                    <input type="hidden" id="end-totalAccumulatedReleaseReport" name="end" >
+
+                                                                    <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                     <!-- /.modal-content -->
                                                 </div>
@@ -900,7 +927,7 @@
                         <div class=" col-xs-6">
                             <div class="box">
                                 <div class="box-header with-border" >
-                                    <h3 class="box-title">APCP Requests</h3>
+                                    <h3 class="box-title">Agrarian Production Credit Program Requests</h3>
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
@@ -1022,24 +1049,29 @@
                                                         <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                         <td><%out.print(r.getHectares() + " hectares");%></td>
 
+                                                        <%if (r.getRequestStatus() == 6) {%>
+
+                                                        <%}else{%>
+
                                                         <%if (r.getRequestStatus() == 1) {%>
-                                                        <td><%out.print(f.format(r.getDateRequested()));%></td>
+                                                        <td><%out.print(r.getDateRequested());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 2) {%>
-                                                        <td><%out.print(f.format(r.getDateCleared()));%></td>
+                                                        <td><%out.print(r.getDateCleared());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 3) {%>
-                                                        <td><%out.print(f.format(r.getDateEndorsed()));%></td>
+                                                        <td><%out.print(r.getDateEndorsed());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 4) {%>
-                                                        <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                        <td><%out.print(r.getDateApproved());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 5) {%>
-                                                        <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                        <td><%out.print(r.getDateApproved());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 7) {%>
-                                                        <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                        <td><%out.print(r.getDateApproved());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
+                                                            <%}%>
                                                             <%}%>
 
                                                     </tr>
@@ -1065,7 +1097,7 @@
                         <div class=" col-xs-6">
                             <div class="box">
                                 <div class="box-header with-border" >
-                                    <h3 class="box-title">CAPDEV Proposals</h3>
+                                    <h3 class="box-title">Capacity Development Proposals</h3>
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
@@ -1206,8 +1238,26 @@
                         },
                         function (start, end) {
                             $('#dr-totalYearReleaseReport span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                            $('#start').val(start.format('YYYY-MM-DD'));
-                            $('#end').val(end.format('YYYY-MM-DD'));
+                            $('#start-totalYearReleaseReport').val(start.format('YYYY-MM-DD'));
+                            $('#end-totalYearReleaseReport').val(end.format('YYYY-MM-DD'));
+                        }
+                );
+
+                $('#dr-totalAccumulatedReleaseReport').daterangepicker(
+                        {
+                            minDate: moment().startOf('year'),
+                            maxDate: moment().endOf('year'),
+                            ranges: {
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+                                'This Year': [moment().startOf('year'), moment().endOf('year')]
+                            }
+
+                        },
+                        function (start, end) {
+                            $('#dr-totalAccumulatedReleaseReport span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                            $('#start-totalAccumulatedReleaseReport').val(start.format('YYYY-MM-DD'));
+                            $('#end-totalAccumulatedReleaseReport').val(end.format('YYYY-MM-DD'));
                         }
                 );
 
