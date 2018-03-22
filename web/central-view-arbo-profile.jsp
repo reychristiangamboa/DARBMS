@@ -36,11 +36,7 @@
                     <h1>
                         ARBO Profile
                     </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="/DAR-BMS/pages/tables/FO-Homepage.html"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li><a href="/DAR-BMS/pages/tables/FO-ARBO-ARBList.html">(ARBO Name) Beneficiary List</a></li>
-                        <li class="active">ARB Profile</li>
-                    </ol>
+                    
                 </section>
 
                 <!-- Main content -->

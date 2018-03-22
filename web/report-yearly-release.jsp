@@ -45,6 +45,7 @@
                 }
                 
                 requests = rDAO.getAllFilteredReleasesByRequests(requestsParam,e.getEvaluationStartDate(),e.getEvaluationEndDate());
+                System.out.print(requests.size());
                 
                 
             %>
@@ -133,7 +134,6 @@
 
         <script>
             $(function () {
-
 
                 var ctx = $('#barTotalYear').get(0).getContext('2d');
 

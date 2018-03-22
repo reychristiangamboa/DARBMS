@@ -697,6 +697,8 @@
                                                                     <table class="table table-bordered table-striped export">
                                                                         <thead>
                                                                             <tr>
+                                                                                <th>Region</th>
+                                                                                <th>Province</th>
                                                                                 <th>ARBO Name</th>
                                                                                 <th>No. of ARBs</th>
                                                                                 <th>Total Approved Amount</th>
@@ -709,22 +711,31 @@
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-
+                                                                            <%
+                                                                            ReportsDAO rDAO = new ReportsDAO();
+                                                                            ArrayList<APCPRequest> accumulatedRequests = rDAO.getAllAccumulatedARBORequests(arboListProvince);
+                                                                                for(APCPRequest req : accumulatedRequests){
+                                                                                    ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                                                            %>
                                                                             <tr>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
+                                                                                <td><%=arbo.getArboRegionDesc()%></td>
+                                                                                <td><%=arbo.getArboProvinceDesc()%></td>
+                                                                                <td><%=arbo.getArboName()%></td>
+                                                                                <td><%=arboDAO.getARBCount(arbo.getArboID())%></td>
+                                                                                <td><%=currency.format(req.getLoanAmount())%></td>
+                                                                                <td><%=currency.format(req.getTotalReleasedAmount())%></td>
+                                                                                <td><%=currency.format(req.getYearlyReleasedAmount())%></td>
+                                                                                <td><%if(req.getDateLastRelease()!= null) out.print(req.getDateLastRelease());%></td>
+                                                                                <td><%=currency.format(req.getTotalOSBalance())%></td>
+                                                                                <td><%=currency.format(req.getTotalPastDueAmount())%></td>
+                                                                                <td><%=req.printAllPastDueReasons()%></td>
                                                                             </tr>
-
+                                                                            <%}%>
                                                                         </tbody>
                                                                         <tfoot>
                                                                             <tr>
+                                                                                <th>Region</th>
+                                                                                <th>Province</th>
                                                                                 <th>ARBO Name</th>
                                                                                 <th>No. of ARBs</th>
                                                                                 <th>Total Approved Amount</th>
@@ -924,7 +935,7 @@
                             <!-- /.col -->
                         </div>
                         <!-- /.col -->
-                        <div class=" col-xs-6">
+                        <div class=" col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border" >
                                     <h3 class="box-title">Agrarian Production Credit Program Requests</h3>
@@ -1030,6 +1041,8 @@
                                             <table class="table table-bordered table-striped export">
                                                 <thead>
                                                     <tr>
+                                                        <th>Region</th>
+                                                        <th>Province</th>
                                                         <th>ARBO Name</th>
                                                         <th>Loan Reason</th>
                                                         <th>Loan Amount</th>
@@ -1044,16 +1057,14 @@
                                                             ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                                     %>
                                                     <tr>
+                                                        <td><%out.print(arbo.getArboRegionDesc());%></td>
+                                                        <td><%out.print(arbo.getArboProvinceDesc());%></td>
                                                         <td><%out.print(arbo.getArboName());%></td>
                                                         <td><%out.print(r.getLoanReason());%></td>
                                                         <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                         <td><%out.print(r.getHectares() + " hectares");%></td>
 
-                                                        <%if (r.getRequestStatus() == 6) {%>
-
-                                                        <%}else{%>
-
-                                                        <%if (r.getRequestStatus() == 1) {%>
+                                                        <%if (r.getRequestStatus() == 1 || r.getRequestStatus() == 6) {%>
                                                         <td><%out.print(r.getDateRequested());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 2) {%>
@@ -1072,13 +1083,15 @@
                                                         <td><%out.print(r.getDateApproved());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%}%>
-                                                            <%}%>
+
 
                                                     </tr>
                                                     <%}%>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
+                                                        <th>Region</th>
+                                                        <th>Province</th>
                                                         <th>ARBO Name</th>
                                                         <th>Loan Reason</th>
                                                         <th>Loan Amount</th>
@@ -1094,7 +1107,7 @@
 
                             </div>
                         </div>
-                        <div class=" col-xs-6">
+                        <div class=" col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border" >
                                     <h3 class="box-title">Capacity Development Proposals</h3>
@@ -1172,6 +1185,8 @@
                                     <table class="table table-bordered table-striped export">
                                         <thead>
                                             <tr>
+                                                <th>Region</th>
+                                                <th>Province</th>
                                                 <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
                                                 <th>No. of Activities</th>
@@ -1186,6 +1201,8 @@
                                                     CAPDEVDAO capdao = new CAPDEVDAO();
                                             %>
                                             <tr>
+                                                <td><%out.print(arbo2.getArboRegionDesc());%></td>
+                                                <td><%out.print(arbo2.getArboProvinceDesc());%></td>
                                                 <td><%out.print(arbo2.getArboName());%></td>
                                                 <td><%out.print(cp.getPlanDTN());%></td>
                                                 <td><%out.print(capdao.getCAPDEVPlanActivities(cp.getPlanID()).size());%>                                               </td>
@@ -1195,10 +1212,12 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
+                                                <th>Region</th>
+                                                <th>Province</th>
                                                 <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>  
+                                                <th>Status</th>   
                                             </tr>
                                         </tfoot>
                                     </table>  

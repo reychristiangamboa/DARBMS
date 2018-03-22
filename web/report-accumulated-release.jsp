@@ -31,7 +31,7 @@
                 
                 ReportsDAO rDAO = new ReportsDAO();
                 
-                ArrayList<APCPRequest> requestsParam = new ArrayList();
+                ArrayList<ARBO> arboListParam = new ArrayList();
                 ArrayList<APCPRequest> requests = new ArrayList();
                 String place = "rwerwer";
                 Evaluation e = (Evaluation)request.getAttribute("evaluation");
@@ -39,13 +39,13 @@
                 if((Integer)session.getAttribute("userType") == 3){ // PFO
                     Province pro = addressDAO.getProvOffice((Integer)session.getAttribute("provOfficeCode"));
                     place = pro.getProvDesc();
-                    requestsParam = apcpRequestDAO.getAllProvincialRequests((Integer)session.getAttribute("provOfficeCode"));
+                    arboListParam = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
                 }else if((Integer)session.getAttribute("userType") == 4){ // RFO
                     place = addressDAO.getRegDesc((Integer)session.getAttribute("regOfficeCode"));
-                    requestsParam = apcpRequestDAO.getAllRegionalRequests((Integer) session.getAttribute("regOfficeCode"));;
+                    arboListParam = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
                 }
                 
-                requests = rDAO.getAccumulatedReleasesByRequests(requestsParam,e.getEvaluationStartDate(),e.getEvaluationEndDate());
+                requests = rDAO.getAllFilteredAccumulatedARBORequests(arboListParam,e.getEvaluationStartDate(),e.getEvaluationEndDate());
             %>
 
             <div class="content-wrapper">
@@ -71,14 +71,22 @@
                     </div>
                     <div class="row invoice-info">
                         <div class="text-center">
-                            <canvas id="barTotalYear" style="height:500px"></canvas>
+                            <canvas id="barTotalRequestedAmount" style="height:500px"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="row invoice-info">
+                        <div class="text-center">
+                            <canvas id="barTotalReleaseAmount" style="height:500px"></canvas>
                         </div>
                     </div>
                     <div class="row invoice-info">
                         <div class="col-xs-12">
-                            <table class="table table-bordered table-striped">
+                            <table class="table table-bordered table-striped export">
                                 <thead>
                                     <tr>
+                                        <th>Region</th>
+                                        <th>Province</th>
                                         <th>ARBO Name</th>
                                         <th>No. of ARBs</th>
                                         <th>Total Approved Amount</th>
@@ -96,29 +104,24 @@
                                             ARBO arbo = arboDAO.getARBOByID(req.getArboID());
                                     %>
                                     <tr>
+                                        <td><%=arbo.getArboRegionDesc()%></td>
+                                        <td><%=arbo.getArboProvinceDesc()%></td>
                                         <td><%=arbo.getArboName()%></td>
                                         <td><%=arboDAO.getARBCount(arbo.getArboID())%></td>
-                                        <td><%out.print("N/A");%></td>
-                                        <td><%=req.getTotalReleaseAmount()%></td>
-                                        <td><%out.print("N/A");%></td>
-
-                                        <%if(!req.getReleases().isEmpty()){%>
-                                        <td><%=f.format(req.getDateLastReleased())%></td>
-                                        <%}else{%>
-                                        <td><%out.print("N/A");%></td>
-                                        <%}%>
-
-                                        <td><%=req.getAccumulatedOSBalance()%></td>
-                                        <td><%=currency.format(req.getTotalPDAAmount())%></td>
-                                        <td><%out.print("N/A");%></td>
+                                        <td><%=currency.format(req.getLoanAmount())%></td>
+                                        <td><%=currency.format(req.getTotalReleasedAmount())%></td>
+                                        <td><%=currency.format(req.getYearlyReleasedAmount())%></td>
+                                        <td><%if(req.getDateLastRelease()!= null) out.print(req.getDateLastRelease());%></td>
+                                        <td><%=currency.format(req.getTotalOSBalance())%></td>
+                                        <td><%=currency.format(req.getTotalPastDueAmount())%></td>
+                                        <td><%=req.printAllPastDueReasons()%></td>
                                     </tr>
-                                    <%
-                                                                                                                       
-                                        }
-                                    %>
+                                    <%}%>
                                 </tbody>
                                 <tfoot>
                                     <tr>
+                                        <th>Region</th>
+                                        <th>Province</th>
                                         <th>ARBO Name</th>
                                         <th>No. of ARBs</th>
                                         <th>Total Approved Amount</th>
@@ -149,14 +152,19 @@
         <script>
             $(function () {
 
-
-                var ctx = $('#barTotalYear').get(0).getContext('2d');
+            var ctx = $('#barTotalRequestedAmount').get(0).getContext('2d');
+            var ctx2 = $('#barTotalReleaseAmount').get(0).getContext('2d');
 
             <%Chart chart = new Chart();%>
-            <%String json = chart.getTotalYearBarChart(requests);%>
+            <%String json = chart.getTotalRequestedAmountBarChart(requests);%>
                 new Chart(ctx, <%out.print(json);%>);
+                
+                
+            <%Chart chart2 = new Chart();%>
+            <%String json2 = chart2.getTotalReleasedAmountBarChart(requests);%>
+                new Chart(ctx2, <%out.print(json2);%>);
             });
-
+            
             function myFunction() {
                 window.print();
             }

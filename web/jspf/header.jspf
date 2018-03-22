@@ -9,6 +9,27 @@
 <%@page import="com.MVC.Model.Chart"%>
 <%@page import="com.MVC.Model.Dependent"%>
 <%@page import="com.MVC.DAO.ReportsDAO"%>
+<%@page import="java.util.ArrayList;"%>
+<%@page import="com.MVC.Model.Region;"%>
+<%@page import="com.MVC.Model.Province;"%>
+<%@page import="com.MVC.Model.CityMun;"%>
+<%@page import="com.MVC.Model.User;"%>
+<%@page import="com.MVC.Model.ARBO;"%>
+<%@page import="com.MVC.Model.ARB;"%>
+<%@page import="com.MVC.Model.Crop;"%>
+<%@page import="com.MVC.Model.Evaluation;"%>
+<%@page import="com.MVC.Model.APCPRequest;"%>
+<%@page import="com.MVC.Model.APCPRelease;"%>
+<%@page import="com.MVC.Model.CAPDEVPlan;"%>
+<%@page import="com.MVC.Model.CAPDEVActivity;"%>
+<%@page import="com.MVC.Model.PastDueAccount;"%>
+<%@page import="com.MVC.DAO.AddressDAO;"%>
+<%@page import="com.MVC.DAO.ARBODAO;"%>
+<%@page import="com.MVC.DAO.ARBDAO;"%>
+<%@page import="com.MVC.DAO.CropDAO;"%>
+<%@page import="com.MVC.DAO.APCPRequestDAO;"%>
+<%@page import="com.MVC.DAO.CAPDEVDAO;"%>
+<%@page import="com.MVC.DAO.UserDAO;"%>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>DAR-BMS</title>

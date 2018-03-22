@@ -19,6 +19,7 @@
 
 <%
 
+    UserDAO uDAO = new UserDAO();
     ARBDAO arbDAO = new ARBDAO();
     ARBODAO arboDAO = new ARBODAO();
     CAPDEVDAO capdevDAO = new CAPDEVDAO();

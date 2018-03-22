@@ -412,7 +412,7 @@ public class ARBDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`dependents` (`arbID`, `name`, `birthday`, `educationLevel`) VALUES (?, ?, ?, ?);";
+            String query = "INSERT INTO `dar-bms`.`dependents` (`arbID`, `name`, `birthday`, `educationLevel`. `relationshipType`) VALUES (?, ?, ?, ?, ?);";
 
             for (Dependent d : dependentList) {
                 p = con.prepareStatement(query);
@@ -420,6 +420,7 @@ public class ARBDAO {
                 p.setString(2, d.getName());
                 p.setDate(3, d.getBirthday());
                 p.setInt(4, d.getEducationLevel());
+                p.setInt(5, d.getRelationshipType());
                 p.executeUpdate();
                 p.close();
             }
@@ -450,6 +451,32 @@ public class ARBDAO {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 id = rs.getInt("educationLevel");
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
+    }
+    
+    public int getRelationshipType(String relationshipType) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        int id = 0;
+        try {
+            String query = "SELECT * FROM `dar-bms`.ref_relationshipType WHERE `relationshipTypeDesc`=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setString(1, relationshipType);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("relationshipType");
             }
             rs.close();
             pstmt.close();

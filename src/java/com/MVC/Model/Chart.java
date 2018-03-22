@@ -16,6 +16,7 @@ import be.ceau.chart.dataset.BarDataset;
 import be.ceau.chart.dataset.LineDataset;
 import be.ceau.chart.dataset.PieDataset;
 import be.ceau.chart.options.BarOptions;
+import be.ceau.chart.options.Title;
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.DAO.ARBDAO;
 import com.MVC.DAO.ARBODAO;
@@ -90,7 +91,7 @@ public class Chart {
             ARBO arbo = arboDAO.getARBOByID(req.getArboID());
             BarDataset dataset = new BarDataset();
             dataset.setLabel(arbo.getArboName());
-            dataset.setData(req.getTotalReleaseAmount());
+            dataset.setData(req.getTotalReleasedAmountPerRequest());
             dataset.addBackgroundColor(Color.random());
             dataset.setBorderWidth(2);
             data.addDataset(dataset);
@@ -98,6 +99,71 @@ public class Chart {
         
         BarOptions options = new BarOptions();
         options.setResponsive(true);
+        
+        Title title = new Title();
+        title.setDisplay(true);
+        
+        Calendar cal = Calendar.getInstance();
+        Long l = System.currentTimeMillis();
+        Date d = new Date(l);
+        cal.setTime(d);
+        int year = cal.get(Calendar.YEAR);
+        
+        title.setText("TOTAL " +year+" RELEASED AMOUNT");
+        title.setFontSize(30);
+        options.setTitle(title);
+        
+        return new BarChart(data, options).toJson();
+    }
+    
+    public String getTotalRequestedAmountBarChart(ArrayList<APCPRequest> requests) {
+        
+        ARBODAO arboDAO = new ARBODAO();
+        BarData data = new BarData();
+        for(APCPRequest req : requests){
+            ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+            BarDataset dataset = new BarDataset();
+            dataset.setLabel(arbo.getArboName());
+            dataset.setData(req.getLoanAmount());
+            dataset.addBackgroundColor(Color.random());
+            dataset.setBorderWidth(2);
+            data.addDataset(dataset);
+        }
+        
+        BarOptions options = new BarOptions();
+        options.setResponsive(true);
+        
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("TOTAL APPROVED AMOUNT");
+        title.setFontSize(30);
+        options.setTitle(title);
+        
+        return new BarChart(data, options).toJson();
+    }
+    
+    public String getTotalReleasedAmountBarChart(ArrayList<APCPRequest> requests) {
+        
+        ARBODAO arboDAO = new ARBODAO();
+        BarData data = new BarData();
+        for(APCPRequest req : requests){
+            ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+            BarDataset dataset = new BarDataset();
+            dataset.setLabel(arbo.getArboName());
+            dataset.setData(req.getTotalReleasedAmount());
+            dataset.addBackgroundColor(Color.random());
+            dataset.setBorderWidth(2);
+            data.addDataset(dataset);
+        }
+        
+        BarOptions options = new BarOptions();
+        options.setResponsive(true);
+        
+        Title title = new Title();
+        title.setText("ACCUMULATED RELEASES");
+        title.setFontSize(30);
+        title.setDisplay(true);
+        options.setTitle(title);
         
         return new BarChart(data, options).toJson();
     }

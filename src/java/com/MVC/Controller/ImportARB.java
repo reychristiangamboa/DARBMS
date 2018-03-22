@@ -111,7 +111,7 @@ public class ImportARB extends BaseServlet {
                     cellStoreArrayList2 = (ArrayList) dependentHolder.get(x);
                     Dependent d = new Dependent();
 
-                    if (cellStoreArrayList2.get(3).toString().equals(arb.getFullName())) { // Check if equal ARB Name
+                    if (cellStoreArrayList2.get(4).toString().equals(arb.getFullName())) { // Check if equal ARB Name
                         d.setName(cellStoreArrayList2.get(0).toString()); // Dependent Name
 
                         java.sql.Date birthday = null;
@@ -130,8 +130,12 @@ public class ImportARB extends BaseServlet {
                         }
 
                         d.setBirthday(birthday); // Dependent Birthday
+                        
+                        int relationshipType = arbDAO.getRelationshipType(cellStoreArrayList2.get(3).toString());
 
                         int educationalLevel2 = arbDAO.getEducationalLevel(cellStoreArrayList2.get(2).toString()); // Educational Level
+                        
+                        d.setRelationshipType(relationshipType);
                         d.setEducationLevel(educationalLevel2);
 
                         dependentList.add(d);

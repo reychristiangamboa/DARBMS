@@ -7,12 +7,14 @@ package com.MVC.Model;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  *
  * @author Rey Christian
  */
 public class APCPRequest {
+
     private int requestID;
     private int arboID;
     private String loanReason;
@@ -34,8 +36,16 @@ public class APCPRequest {
     private Date bankRequirementsDate;
     private int loanTrackingNo;
     private ArrayList<PastDueAccount> pastDueAccounts = new ArrayList();
+    private ArrayList<PastDueAccount> unsettledPastDueAccounts = new ArrayList();
     private ArrayList<APCPRelease> releases = new ArrayList();
     private ArrayList<Repayment> repayments = new ArrayList();
+
+    private double totalReleasedAmount;
+    private double yearlyReleasedAmount;
+    private double totalOSBalance;
+    private double totalPastDueAmount;
+    private ArrayList<PastDueAccount> pastDueReasons = new ArrayList();
+    private Date dateLastRelease;
 
     public int getRequestID() {
         return requestID;
@@ -100,7 +110,7 @@ public class APCPRequest {
     public void setClearedBy(int clearedBy) {
         this.clearedBy = clearedBy;
     }
-    
+
     public Date getDateEndorsed() {
         return dateEndorsed;
     }
@@ -124,7 +134,7 @@ public class APCPRequest {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-    
+
     public int getRequestStatus() {
         return requestStatus;
     }
@@ -204,10 +214,20 @@ public class APCPRequest {
     public void setPastDueAccounts(ArrayList<PastDueAccount> pastDueAccounts) {
         this.pastDueAccounts = pastDueAccounts;
     }
+
+    public ArrayList<PastDueAccount> getUnsettledPastDueAccounts() {
+        return unsettledPastDueAccounts;
+    }
+
+    public void setUnsettledPastDueAccounts(ArrayList<PastDueAccount> unsettledPastDueAccounts) {
+        this.unsettledPastDueAccounts = unsettledPastDueAccounts;
+    }
     
-    public double getTotalPDAAmount(){
+    
+
+    public double getTotalPDAAmountPerRequest() {
         double val = 0;
-        for(PastDueAccount pda : this.pastDueAccounts){
+        for (PastDueAccount pda : this.unsettledPastDueAccounts) {
             val += pda.getPastDueAmount();
         }
         return val;
@@ -216,11 +236,37 @@ public class APCPRequest {
     public ArrayList<APCPRelease> getReleases() {
         return releases;
     }
-    
-    public double getTotalReleaseAmount(){
+
+    public double getTotalReleasedAmountPerRequest() {
         double val = 0;
-        for(APCPRelease release : this.releases){
+        for (APCPRelease release : this.releases) {
             val += release.getReleaseAmount();
+        }
+        return val;
+    }
+
+    public double getYearlyReleaseAmountPerRequest() {
+        double val = 0;
+        Long l = System.currentTimeMillis();
+        Date d = new Date(l);
+
+        Calendar cal = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        int currentYear = 0;
+        int releaseYear = 0;
+
+        cal.setTime(d);
+        currentYear = cal.get(Calendar.YEAR);
+
+        for (APCPRelease release : this.releases) {
+            cal2.setTime(release.getReleaseDate());
+            releaseYear = cal2.get(Calendar.YEAR);
+
+            if (currentYear == releaseYear) {
+                val += release.getReleaseAmount();
+            }
+
         }
         return val;
     }
@@ -236,21 +282,102 @@ public class APCPRequest {
     public void setRepayments(ArrayList<Repayment> repayments) {
         this.repayments = repayments;
     }
-    
-    public double getProgressBarWidth(double val1, double val2){
-        return (val1/val2)*100;
+
+    public double getProgressBarWidth(double val1, double val2) {
+        return (val1 / val2) * 100;
     }
-    
-    public double getAccumulatedOSBalance(){
+
+    public double getAccumulatedOSBalancePerRequest() {
         double value = 0;
-        for(APCPRelease r : this.releases){
+        for (APCPRelease r : this.releases) {
             value += r.getTotalOSBalance();
         }
         return value;
     }
-    
-    public Date getDateLastReleased(){
-        return this.getReleases().get(this.getReleases().size()-1).getReleaseDate();
+
+    public boolean sameARBO(int arboID) {
+        if (arboID == this.arboID) {
+            return true;
+        }
+        return false;
     }
-    
+
+    public void setTotalRequestedAmount(double requestedAmount) {
+        this.loanAmount += requestedAmount;
+    }
+
+    public void setTotalReleaseAmount(double releaseAmount) {
+        this.totalReleasedAmount += releaseAmount;
+    }
+
+    public void setYearlyReleasedAmount(double yearlyReleasedAmount) {
+        this.yearlyReleasedAmount += yearlyReleasedAmount;
+    }
+
+    public void setTotalOSBalance(double totalOSBalance) {
+        this.totalOSBalance += totalOSBalance;
+    }
+
+    public void setTotalPastDueAmount(double totalPastDueAmount) {
+        this.totalPastDueAmount += totalPastDueAmount;
+    }
+
+    public void setPastDueReasons(ArrayList<PastDueAccount> pastDueReasons) {
+        for (PastDueAccount pda : pastDueReasons) {
+            if (!this.pastDueReasons.contains(pda) && pda.getActive() == 1) {
+                this.pastDueReasons.add(pda);
+            }
+        }
+    }
+
+    public double getTotalReleasedAmount() {
+        return totalReleasedAmount;
+    }
+
+    public double getYearlyReleasedAmount() {
+        return yearlyReleasedAmount;
+    }
+
+    public double getTotalOSBalance() {
+        return totalOSBalance;
+    }
+
+    public double getTotalPastDueAmount() {
+        return totalPastDueAmount;
+    }
+
+    public ArrayList<PastDueAccount> getPastDueReasons() {
+        return pastDueReasons;
+    }
+
+    public Date getDateLastRelease() {
+        return dateLastRelease;
+    }
+
+    public Date getDateLastReleasedPerRequest() {
+        if (!releases.isEmpty()) {
+            return releases.get(this.getReleases().size() - 1).getReleaseDate();
+        }
+        return null;
+    }
+
+    public void setDateLastRelease(Date dateLastRelease) {
+        this.dateLastRelease = dateLastRelease;
+    }
+
+    public String printAllPastDueReasons() {
+        StringBuilder sb = new StringBuilder();
+        if (!this.pastDueReasons.isEmpty()) {
+            for (PastDueAccount pda : this.pastDueReasons) {
+                if(pda.getReasonPastDue() == this.pastDueReasons.get(this.pastDueReasons.size()-1).getReasonPastDue()){
+                    sb.append(pda.getReasonPastDueDesc());
+                }else{
+                    sb.append(pda.getReasonPastDueDesc() + ", ");
+                }
+            }
+        }
+
+        return sb.toString();
+    }
+
 }
