@@ -81,7 +81,7 @@
 
                                     </div>
                                     <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequestsCCP'" class="btn btn-success pull-right">Filter</button>
+                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequestsCCP'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i>Filter</button>
                                     </div>
                                 </form>
 
@@ -91,11 +91,6 @@
 
 
 
-                    <div class="row text-center">
-                        <div class="col-xs-12">
-                            <a name="all" href="#">Select All <i class="fa fa-chevron-down"></i></a>
-                        </div>
-                    </div>
 
                     <!--REQUESTED-->
                     <div class="row" id="1">

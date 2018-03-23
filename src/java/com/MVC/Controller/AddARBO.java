@@ -31,25 +31,18 @@ public class AddARBO extends BaseServlet {
             ARBODAO arboDAO = new ARBODAO();
             ARBO arbo = new ARBO();
 
-            
+            arbo.setArboName(request.getParameter("arboName"));
+            arbo.setArboCityMun(Integer.parseInt(request.getParameter("arboCityMun")));
+            arbo.setArboProvince(Integer.parseInt(request.getParameter("arboProvince")));
+            arbo.setArboRegion(Integer.parseInt(request.getParameter("arboRegion")));
+            arbo.setProvOfficeCode((Integer) session.getAttribute("provOfficeCode"));
 
-            if (arboDAO.checkIfARBOExist(request.getParameter("arboName"))) {
-                request.setAttribute("errMessage", "ARBO already exists. Try again.");
+            if (arboDAO.addARBO(arbo)) {
+                request.setAttribute("success", "ARBO added!");
                 request.getRequestDispatcher("provincial-field-officer-add-arbo.jsp").forward(request, response);
             } else {
-                arbo.setArboName(request.getParameter("arboName"));
-                arbo.setArboCityMun(Integer.parseInt(request.getParameter("arboCityMun")));
-                arbo.setArboProvince(Integer.parseInt(request.getParameter("arboProvince")));
-                arbo.setArboRegion(Integer.parseInt(request.getParameter("arboRegion")));
-                arbo.setProvOfficeCode((Integer) session.getAttribute("provOfficeCode"));
-
-                if (arboDAO.addARBO(arbo)) {
-                    request.setAttribute("success", "ARBO added!");
-                    request.getRequestDispatcher("provincial-field-officer-add-arbo.jsp").forward(request, response);
-                } else {
-                    request.setAttribute("errMessage", "Error in adding ARBO. Try again.");
-                    request.getRequestDispatcher("provincial-field-officer-add-arbo.jsp").forward(request, response);
-                }
+                request.setAttribute("errMessage", "Error in adding ARBO. Try again.");
+                request.getRequestDispatcher("provincial-field-officer-add-arbo.jsp").forward(request, response);
             }
 
         }

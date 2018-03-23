@@ -60,6 +60,18 @@ public class ViewReport extends BaseServlet {
         }else if(Integer.parseInt(request.getParameter("reportType")) == 2){
             request.setAttribute("evaluation", e);
             request.getRequestDispatcher("report-accumulated-release.jsp").forward(request, response);
+        }else if(Integer.parseInt(request.getParameter("reportType")) == 3){
+            request.setAttribute("evaluation", e);
+            request.setAttribute("arbID", Integer.parseInt(request.getParameter("arbID")));
+            request.getRequestDispatcher("report-arb-apcp-rating.jsp").forward(request, response);
+        }else if(Integer.parseInt(request.getParameter("reportType")) == 4){
+            request.setAttribute("evaluation", e);
+            request.setAttribute("arbID", Integer.parseInt(request.getParameter("arbID")));
+            request.getRequestDispatcher("report-arb-capdev-rating.jsp").forward(request, response);
+        }else if(Integer.parseInt(request.getParameter("reportType")) == 5){
+            request.setAttribute("evaluation", e);
+            request.setAttribute("arbID", Integer.parseInt(request.getParameter("arbID")));
+            request.getRequestDispatcher("report-arb-overall-rating.jsp").forward(request, response);
         }
 
     }

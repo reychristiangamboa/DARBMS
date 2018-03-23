@@ -96,7 +96,7 @@
 
                                     <ul class="list-group list-group-unbordered">
                                         <li class="list-group-item">
-                                            <b>Crops</b>
+                                            <b><i class="fa fa-tree margin-r-5"></i>Crops</b>
                                             <p>
                                                 <%
                                                     for (Crop c : dao3.getAllCropsByARBList(arbListARBO)) {
@@ -106,11 +106,11 @@
                                             </p>
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Members</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=dao.getARBCount(arbo.getArboID())%></a>
+                                            <b><i class="fa fa-user margin-r-5"></i>Members</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=dao.getARBCount(arbo.getArboID())%></a>
                                         </li>
                                         <%if((Integer)session.getAttribute("userType") == 3){%>
                                         <li class="list-group-item text-center">
-                                            <a class="btn btn-primary btn-lg" href="ProceedAddARB?id=<%out.print(arbo.getArboID());%>">Add ARB</a>
+                                            <a class="btn btn-primary btn-lg" href="ProceedAddARB?id=<%out.print(arbo.getArboID());%>"><i class="fa fa-user-plus margin-r-5"></i>Add ARB</a>
                                         </li>
                                         <%}%>
                                     </ul>
@@ -192,7 +192,7 @@
                                 <div class="box-body">
                                     <strong><i class="fa fa-book margin-r-5"></i> Main Office</strong>
                                     <p class="text-muted">
-                                        Bataan
+                                        <%=arbo.getProvOfficeCodeDesc()%>
                                     </p>
                                     <hr>
                                     <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
@@ -586,7 +586,6 @@
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
-                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
                                 <div class="box-body">

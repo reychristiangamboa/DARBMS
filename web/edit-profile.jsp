@@ -29,15 +29,7 @@
             <div class="content-wrapper">
                 <section class="content-header">
                     <h1><i class="fa fa-user-plus"></i> Edit Profile</h1>
-                    <ol class="breadcrumb">
-                        <%if ((Integer) session.getAttribute("userType") == 1) {%>            
-                        <li><a href="admin-system-logs.jsp"><i class="fa fa-eye"></i> View System Logs</a></li>
-                            <%} else if ((Integer) session.getAttribute("userType") == 2) {%>        
-                        // PROVINCIAL FIELD OFFICER HOME HERE
-                        <%}%>
-                        <li class="disabled"><a href="#"><i class="fa fa-users"></i> Manage Accounts</a></li>
-                        <li class="active"><a href="#"><i class="fa fa-user-plus"></i> Edit Profile</a></li>
-                    </ol>
+     
                 </section>
                 <section class="content">
                     <%if (request.getAttribute("success") != null) {%>
@@ -88,7 +80,7 @@
                                     </div>
                                     <!-- /.box-body -->
                                     <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'EditPersonalInformation'" class="btn btn-success pull-right">Submit</button>
+                                        <button type="submit" onclick="form.action = 'EditPersonalInformation'" class="btn btn-success pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                     </div>
                                 </div>
                                 <!-- /.box -->
@@ -129,7 +121,7 @@
                                     </div>
                                     <!-- /.box-body -->
                                     <div class="box-footer">
-                                        <button type="submit" onclick="form.action='EditAccount'" class="btn btn-success pull-right">Submit</button>
+                                        <button type="submit" onclick="form.action='EditAccount'" class="btn btn-success pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                     </div>
                                 </div>
                             </div>

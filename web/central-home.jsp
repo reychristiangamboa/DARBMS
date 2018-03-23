@@ -307,6 +307,7 @@
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>ARBO Name</th>
+                                                                                    <th>Address</th>
                                                                                     <th>No. of Members</th>
 
                                                                                 </tr>
@@ -316,6 +317,7 @@
                                                                                     for (ARBO arbo : arboListRegion) { %>
                                                                                 <tr>
                                                                                     <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>" class="btn btn-link"><%out.print(arbo.getArboName());%></a></td>
+                                                                                    <td><%out.print(arbo.getFullAddress());%></td>
                                                                                     <td><%out.print(arboDAO.getARBCount(arbo.getArboID()));%></td>
                                                                                 </tr>
                                                                                 <%}%>
@@ -323,7 +325,8 @@
                                                                             <tfoot>
                                                                                 <tr>
                                                                                     <th>ARBO Name</th>
-                                                                                    <th>City Mun ID</th>
+                                                                                    <th>Address</th>
+                                                                                    <th>No. of Members</th>
                                                                                 </tr>
                                                                             </tfoot>
                                                                         </table>
@@ -569,6 +572,9 @@
 
                                                     <h5 class="description-header"><%=currency.format(apcpRequestDAO.getYearlySumOfReleasesByRequestId(allRequests, year))%></h5>
                                                     <span class="description-text">TOTAL YEARLY RELEASED AMOUNT</span>
+                                                    <div class="row text-center">
+                                                        <a class="btn btn-submit" data-toggle="modal" data-target="#totalYear">View More</a>
+                                                    </div>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
@@ -676,7 +682,7 @@
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title">PROVINCIAL RELEASES</h4>
+                                                            <h4 class="modal-title">NATIONAL RELEASES</h4>
                                                         </div>
                                                         <div class="modal-body">
 
@@ -773,9 +779,6 @@
                                                 <div class="description-block border-right">
                                                     <h5 class="description-header"><%=currency.format(apcpRequestDAO.getTotalApprovedAmount(approvedRequests))%></h5>
                                                     <span class="description-text">TOTAL APPROVED AMOUNT</span>
-                                                    <div class="row text-center">
-                                                        <a class="btn btn-submit" data-toggle="modal" data-target="#totalAccumulated">View More</a>
-                                                    </div>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
@@ -1094,6 +1097,47 @@
         <!-- ./wrapper -->
         <%@include file="jspf/footer.jspf" %>
         <script type="text/javascript">
+
+            $(function () {
+                $('#dr-totalYearReleaseReport').daterangepicker(
+                        {
+                            minDate: moment().startOf('year'),
+                            maxDate: moment().endOf('year'),
+                            ranges: {
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+                                'This Year': [moment().startOf('year'), moment().endOf('year')]
+                            }
+
+                        },
+                        function (start, end) {
+                            $('#dr-totalYearReleaseReport span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                            $('#start-totalYearReleaseReport').val(start.format('YYYY-MM-DD'));
+                            $('#end-totalYearReleaseReport').val(end.format('YYYY-MM-DD'));
+                        }
+                );
+
+                $('#dr-totalAccumulatedReleaseReport').daterangepicker(
+                        {
+                            minDate: moment().startOf('year'),
+                            maxDate: moment().endOf('year'),
+                            ranges: {
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+                                'This Year': [moment().startOf('year'), moment().endOf('year')]
+                            }
+
+                        },
+                        function (start, end) {
+                            $('#dr-totalAccumulatedReleaseReport span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                            $('#start-totalAccumulatedReleaseReport').val(start.format('YYYY-MM-DD'));
+                            $('#end-totalAccumulatedReleaseReport').val(end.format('YYYY-MM-DD'));
+                        }
+                );
+
+
+            });
+
             $(function () {
                 var ctx = $('#barCanvas').get(0).getContext('2d');
             <%

@@ -38,11 +38,12 @@ public class RegionRefresh extends BaseServlet {
             response.getWriter().write("<label for='provinceDrop'>Province</label>");
             response.getWriter().write("<select class='form-control' onchange='chg2()' name='arboProvince' id='provinceDrop' style='width: 100%'>");
 
+            response.getWriter().write("<option value='0'> --Select-- </option>");
             for (int j = 0; j < provinceList.size(); j++) {
                 response.getWriter().write("<option value=" + provinceList.get(j).getProvCode() + ">" + provinceList.get(j).getProvDesc() + "</option>");
             }
-            
-            response.getWriter().write("</select");
+
+            response.getWriter().write("</select>");
 
         }
     }

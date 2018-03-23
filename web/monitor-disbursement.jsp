@@ -264,14 +264,14 @@
                                                         <div class="input-group-addon">
                                                             <i>&#8369;</i>
                                                         </div>
-                                                        <input type="number" class="form-control numberOnly" name="disbursementAmount" autocomplete="off" required>
+                                                        <input type="text" class="form-control numberOnly" name="disbursementAmount" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">
                                                 <div class="form-group">
                                                     <label for="">O/S Balance</label>
-                                                    <input type="number" class="form-control numberOnly" name="OSBalance" required>
+                                                    <input type="text" class="form-control numberOnly" name="OSBalance" required>
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">

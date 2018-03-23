@@ -76,7 +76,7 @@
 
                                     </div>
                                     <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'AddCAPDEVActivity'" class="btn btn-success pull-right">Add</button>
+                                        <button type="submit" onclick="form.action = 'AddCAPDEVActivity'" class="btn btn-success pull-right"><i class="fa fa-plus margin-r-5"></i>Add</button>
                                     </div>
                                 </form>
 
@@ -109,7 +109,7 @@
                                                 <td><%out.print(a.getActivityDesc());%></td>
                                                 <td><%out.print(a.getActivityCategoryDesc());%></td>
                                                 <td class="text-center">
-                                                    <button class="btn btn-primary btn-s" data-toggle="modal" data-target="#modal<%out.print(a.getActivityID());%>">Edit</button>
+                                                    <button class="btn btn-primary btn-s" data-toggle="modal" data-target="#modal<%out.print(a.getActivityID());%>"><i class="fa fa-edit margin-r-5"></i>Edit</button>
                                                 </td>
                                             </tr>
 

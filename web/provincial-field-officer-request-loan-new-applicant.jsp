@@ -50,10 +50,6 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="provincial-field-officer-arbo-list.jsp"><i class="fa fa-dashboard"></i> ARBO List</a></li>
-                        <li class="active"><a href="provincial-field-officer-request-loan.jsp">Request Loan (Qualified)</a></li>
-                    </ol>
 
                 </section>
 
@@ -105,7 +101,7 @@
                                                         <div class="input-group-addon">
                                                             <i>&#8369;</i>
                                                         </div>
-                                                        <input type='number' name="loan" class="form-control numberOnly" autocomplete="off" maxlength="4" >
+                                                        <input type='text' name="loan" class="form-control numberOnly" autocomplete="off" >
                                                     </div>
                                                 </div>
 
@@ -127,7 +123,7 @@
 
                                         <div class="box-footer">
                                             <input type="hidden" name="arboID" value="<%out.print(arboID);%>">
-                                            <button type="submit" class="btn btn-primary pull-right">Submit</button>
+                                            <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i> Submit</button>
                                         </div>
 
                                     </div>

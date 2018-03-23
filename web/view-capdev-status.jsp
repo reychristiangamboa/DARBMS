@@ -100,9 +100,7 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="field-officer-arbo-list.jsp"><i class="fa fa-dashboard"></i> Home</a></li>
-                    </ol>
+
 
                 </section>
 
@@ -150,7 +148,7 @@
 
                                     </div>
                                     <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequests'" class="btn btn-success pull-right">Filter</button>
+                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequests'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i>Filter</button>
                                     </div>
                                 </form>
 
@@ -194,7 +192,7 @@
 
                                     </div>
                                     <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequests'" class="btn btn-success pull-right">Filter</button>
+                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequests'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i>Filter</button>
                                     </div>
                                 </form>
 
@@ -272,11 +270,7 @@
                         <!-- ./col -->
                         <!-- ./col -->
                     </div>
-                    <div class="row text-center">
-                        <div class="col-xs-12">
-                            <a name="all" href="#">Select All <i class="fa fa-chevron-down"></i></a>
-                        </div>
-                    </div>
+
 
                     <!--PENDING-->
                     <div class="row" id="1" style="display:none;">

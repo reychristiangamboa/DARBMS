@@ -60,7 +60,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -105,6 +105,62 @@
                         </div>
                         <!-- /.col -->
                     </div>
+                                            
+                                            <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><strong>With Past Due CAPDEV Plans</strong></h3>
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>                         
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">             
+                                    <table id="example3" class="table table-bordered table-striped modTable">
+                                        <thead>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                            <tr>
+                                                <td><a href="modal-default" class="btn"data-toggle="modal" data-target="#modal-default">ARB</a></a></td>
+                                                <td>Internet
+                                                    Explorer 4.0
+                                                </td>
+                                                <td>Win 95+</td>
+                                                <td>Win 95+</td>
+                                                <td>Win 95+</td>
+                                                <td>Win 95+</td>
+                                                <td>Win 95+</td>
+                                            </tr>
+
+                                        </tbody>
+                                        
+                                        <tfoot>
+                                            <tr>
+                                                <th>ARBO Name</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>        
+                                            </tr>
+
+                                        </tfoot>
+
+                                    </table>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
 
                     <div class="row">
                         <div class="col-xs-12">
@@ -117,7 +173,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table class="table table-bordered table-striped modTable">
+                                    <table id="example1" class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -163,51 +219,7 @@
                         <!-- /.col -->
                     </div>                        
 
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>With Past Due CAPDEV Plans</strong></h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                    </div>                         
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table class="table table-bordered table-striped modTable">
-                                        <thead>
-                                            <tr>
-                                                <th>ARBO Name</th>
-                                                <th>Plan DTN</th>
-                                                <th>No. of Activities</th>
-                                                <th>Status</th> 
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            <tr>
-                                                <td><a href="modal-default" class="btn"data-toggle="modal" data-target="#modal-default">ARB</a></a></td>
-                                                <td>Internet
-                                                    Explorer 4.0
-                                                </td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                            </tr>
-
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
+                    
                     <!-- /.row -->
                 </section>
                 <!-- /.content -->

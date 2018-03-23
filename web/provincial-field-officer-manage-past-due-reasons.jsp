@@ -21,10 +21,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1 class="box-title"><i class="fa fa-briefcase"></i> Manage Past Due Reasons</h1>
-                    <ol class="breadcrumb">
-                        <li><a href="admin-system-logs.jsp"><i class="fa fa-eye"></i> View System Logs</a></li>
-                        <li><a href="#"><i class="fa fa-users"></i> Manage Past Due Reasons</a></li>
-                    </ol>
+
                 </section>
 
                 <!-- Main content -->
@@ -56,7 +53,7 @@
                                         </div>
                                     </div>
                                     <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'AddPastDueReason'" class="btn btn-success pull-right">Add</button>
+                                        <button type="submit" onclick="form.action = 'AddPastDueReason'" class="btn btn-success pull-right"><i class="fa fa-plus margin-r-5"></i>Add</button>
                                     </div>
                                 </form>
 
@@ -85,7 +82,7 @@
                                                 <td class="provCode"><%out.print(p.getReasonPastDue());%></td>
                                                 <td class="provDesc"><%out.print(p.getReasonPastDueDesc());%></td>
                                                 <td class="text-center">
-                                                    <button class="btn btn-primary btn-s" data-toggle="modal" data-target="#modal<%out.print(p.getReasonPastDue());%>">Edit</button>
+                                                    <button class="btn btn-primary btn-s" data-toggle="modal" data-target="#modal<%out.print(p.getReasonPastDue());%>"><i class="fa fa-edit margin-r-5"></i>Edit</button>
                                                 </td>
                                             </tr>
 

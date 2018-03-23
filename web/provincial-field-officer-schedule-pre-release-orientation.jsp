@@ -31,10 +31,7 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="field-officer-arbo-list.jsp"><i class="fa fa-dashboard"></i> Home</a></li>
-                    </ol>
-
+         
                 </section>
                 <%if(request.getAttribute("success") != null){%>
                 <div class="alert alert-success alert-dismissible">
@@ -122,7 +119,7 @@
                                     <div class="box-footer">
                                         <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
                                         <input type="hidden" value="1" name="activityType">
-                                        <button type="submit" name="manual" class="btn btn-primary pull-right">Submit</button>
+                                        <button type="submit" name="manual" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                     </div>
                                 </form>
                             </div>

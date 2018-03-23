@@ -10,6 +10,8 @@ import com.MVC.Model.ARB;
 import com.MVC.Model.ARBO;
 import com.MVC.Model.Crop;
 import com.MVC.Model.Dependent;
+import com.MVC.Model.EducationLevel;
+import com.MVC.Model.RelationshipType;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -412,7 +414,7 @@ public class ARBDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`dependents` (`arbID`, `name`, `birthday`, `educationLevel`. `relationshipType`) VALUES (?, ?, ?, ?, ?);";
+            String query = "INSERT INTO `dar-bms`.`dependents` (`arbID`, `name`, `birthday`, `educationLevel`, `relationshipType`) VALUES (?, ?, ?, ?, ?);";
 
             for (Dependent d : dependentList) {
                 p = con.prepareStatement(query);
@@ -699,60 +701,6 @@ public class ARBDAO {
         return false;
     }
 
-    public ArrayList<String> getAllEducationLevel() {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        ArrayList<String> educationLevelDesc = new ArrayList();
-        try {
-            String query = "SELECT * FROM `dar-bms`.ref_educationLevel;";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                educationLevelDesc.add(rs.getString("educationLevelDesc"));
-            }
-            pstmt.close();
-            rs.close();
-
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return educationLevelDesc;
-    }
-    
-    public ArrayList<String> getAllRelationshipType() {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        ArrayList<String> relationshipTypeDesc = new ArrayList();
-        try {
-            String query = "SELECT * FROM `dar-bms`.ref_relationshipType;";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                relationshipTypeDesc.add(rs.getString("relationshipTypeDesc"));
-            }
-            pstmt.close();
-            rs.close();
-
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return relationshipTypeDesc;
-    }
-    
     public boolean checkIfARBExists(ARB arb1){
         boolean success = false;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -772,22 +720,15 @@ public class ARBDAO {
                 arb.setMemberSince(rs.getDate("memberSince"));
                 arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
                 arb.setBrgyCode(rs.getInt("brgyCode"));
-                arb.setBrgyDesc(rs.getString("brgyDesc"));
                 arb.setCityMunCode(rs.getInt("cityMunCode"));
-                arb.setCityMunDesc(rs.getString("citymunDesc"));
                 arb.setProvCode(rs.getInt("provCode"));
-                arb.setProvDesc(rs.getString("provDesc"));
                 arb.setRegCode(rs.getInt("regCode"));
-                arb.setRegDesc(rs.getString("regDesc"));
                 arb.setGender(rs.getString("gender"));
                 arb.setEducationLevel(rs.getInt("educationLevel"));
-                arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
                 arb.setLandArea(rs.getDouble("landArea"));
                 arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
                 arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
                 arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
-                arb.setArbStatus(rs.getInt("arbStatus"));
-                arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
                 
                 if(arb1.toString().equalsIgnoreCase(arb.toString())){
                     success = true;
@@ -807,6 +748,62 @@ public class ARBDAO {
         }
         
         return success;
+    }
+    
+    public ArrayList<EducationLevel> getAllEducationLevel() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<EducationLevel> educations = new ArrayList();
+        try {
+            String query = "SELECT * FROM `dar-bms`.ref_educationLevel";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                EducationLevel e = new EducationLevel();
+                e.setEducationLevel(rs.getInt("educationLevel"));
+                e.setEducationLevelDesc(rs.getString("educationLevelDesc"));
+                educations.add(e);
+            }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return educations;
+    }
+    
+    public ArrayList<RelationshipType> getAllRelationshipType() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<RelationshipType> type = new ArrayList();
+        try {
+            String query = "SELECT * FROM `dar-bms`.ref_relationshiptype";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                RelationshipType e = new RelationshipType();
+                e.setRelationshipType(rs.getInt("relationshipType"));
+                e.setRelationshipTypeDesc(rs.getString("relationshipTypeDesc"));
+                type.add(e);
+            }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return type;
     }
     
 }

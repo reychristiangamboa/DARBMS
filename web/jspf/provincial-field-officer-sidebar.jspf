@@ -12,6 +12,8 @@
 <%@page import="com.MVC.Model.CAPDEVPlan;"%>
 <%@page import="com.MVC.Model.CAPDEVActivity;"%>
 <%@page import="com.MVC.Model.PastDueAccount;"%>
+<%@page import="com.MVC.Model.EducationLevel;"%>
+<%@page import="com.MVC.Model.RelationshipType;"%>
 <%@page import="com.MVC.DAO.AddressDAO;"%>
 <%@page import="com.MVC.DAO.ARBODAO;"%>
 <%@page import="com.MVC.DAO.ARBDAO;"%>
@@ -30,8 +32,8 @@
     CAPDEVDAO capdevDAO = new CAPDEVDAO();
     UserDAO uDAO = new UserDAO();
     
-    ArrayList<String> educationLevel = arbDAO.getAllEducationLevel();
-    ArrayList<String> relationshipType = arbDAO.getAllRelationshipType();
+    ArrayList<EducationLevel> educationLevel = arbDAO.getAllEducationLevel();
+    ArrayList<RelationshipType> relationshipType = arbDAO.getAllRelationshipType();
     
     
     APCPRelease apcpRelease = new APCPRelease();
@@ -156,8 +158,6 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="provincial-field-officer-linksfarm-select-project-sites.jsp"><i class="fa fa-dot-circle-o"></i>Select Project Site</a></li>
-                    <li><a href="provincial-field-officer-select-request.jsp"><i class="fa fa-dot-circle-o"></i> Create CAPDEV Proposal</a></li>
-
                 </ul>
             </li>
             <li>

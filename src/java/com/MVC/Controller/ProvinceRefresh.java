@@ -33,7 +33,7 @@ public class ProvinceRefresh extends BaseServlet {
             response.getWriter().write("<label for=''>City</label>");
             response.getWriter().write("<select class='form-control' name='arboCityMun' onchange='chg3()' id='cityDrop' style='width:100%'>");
             
-            response.getWriter().write("<option value=''>N/A</option>");
+            response.getWriter().write("<option value=''>--Select--</option>");
             for(int i = 0; i < cityMunList.size(); i++){
                 response.getWriter().write("<option value=" + cityMunList.get(i).getCityMunCode() + ">" + cityMunList.get(i).getCityMunDesc() + "</option>");
             }

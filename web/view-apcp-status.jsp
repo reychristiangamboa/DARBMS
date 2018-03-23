@@ -99,9 +99,6 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="field-officer-arbo-list.jsp"><i class="fa fa-dashboard"></i> Home</a></li>
-                    </ol>
 
                 </section>
 
@@ -147,7 +144,7 @@
 
                                     </div>
                                     <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'FilterLoanRequests'" class="btn btn-success pull-right">Filter</button>
+                                        <button type="submit" onclick="form.action = 'FilterLoanRequests'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i>Filter</button>
                                     </div>
                                 </form>
 
@@ -197,7 +194,7 @@
 
                                     </div>
                                     <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'FilterLoanRequests'" class="btn btn-success pull-right">Filter</button>
+                                        <button type="submit" onclick="form.action = 'FilterLoanRequests'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i>Filter</button>
                                     </div>
                                 </form>
 
@@ -205,8 +202,8 @@
                         </div>
                     </div>
                     <%}%>
-                    
-                    
+
+
                     <div class="row">
                         <div class="col-lg-4 col-xs-6" >
                             <!-- small box -->
@@ -391,7 +388,11 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
+                                                <%if(userType == 3){%>
                                                 <td><a data-toggle="modal" data-target="#cleared-modal<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else if(userType == 4){%>
+                                                <td><a data-toggle="modal" data-target="#arbo-modal<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}%>
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
@@ -408,7 +409,7 @@
                                                             <span aria-hidden="true">&times;</span></button>
                                                         <h4 class="modal-title">Endorse APCP Request</h4>
                                                     </div>
-
+                                                 
                                                     <form method="post">
                                                         <div class="modal-body" id="modalBody">
                                                             <div class="row">
@@ -422,7 +423,7 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
-                                                            <button type="submit" name="manual" onclick="form.action = 'EndorseAPCPRequest'" class="btn btn-primary pull-right">Submit</button>
+                                                            <button type="submit" name="manual" onclick="form.action = 'EndorseAPCPRequest'" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                                         </div>
                                                     </form>
 
@@ -431,6 +432,7 @@
                                             </div>
                                             <!--                                        /.modal-dialog -->
                                         </div>
+
 
                                         <%}%>
                                         </tbody>
@@ -507,7 +509,7 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
-                                                            <button type="submit" name="manual" onclick="form.action = 'ApproveAPCPRequest'" class="btn btn-primary pull-right">Submit</button>
+                                                            <button type="submit" name="manual" onclick="form.action = 'ApproveAPCPRequest'" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                                         </div>
                                                     </form>
 
@@ -693,7 +695,7 @@
         </div>
         <%@include file="jspf/footer.jspf" %>
         <script>
-            
+
             function chg() {
                 var values = $('#provinces').val();
 
@@ -705,7 +707,7 @@
                     }
 
                 }
-                
+
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
@@ -722,11 +724,11 @@
                     }
                 }
 
-                
+
                 xhttp.open("GET", url, true);
                 xhttp.send();
             }
-            
+
             $(document).ready(function () {
 
                 var update_pizza = function () {

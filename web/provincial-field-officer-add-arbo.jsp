@@ -26,9 +26,7 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="field-officer-arbo-list.jsp"><i class="fa fa-dashboard"></i> Home</a></li>
-                    </ol>
+                    
 
                 </section>
 
@@ -61,7 +59,7 @@
                                         </div>
 
                                         <div class="box-footer">
-                                            <button type="submit" name="import" class="btn btn-primary pull-right">Submit</button>
+                                            <button type="submit" name="import" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                         </div>
                                     </div>
                                 </form>
@@ -112,6 +110,7 @@
                                                     <label for="">Region</label>
                                                     <select class="form-control" id="regionDrop" name="arboRegion" onchange="chg()" style="width: 100%;" required>
                                                              <%for(Region r: regionList){%>
+                                                             <option value="0">--Select--</option>
                                                                 <option value="<%out.print(r.getRegCode());%>"> <%out.print(r.getRegDesc());%> </option>
                                                              <%}%>
                                                     </select>
@@ -123,7 +122,7 @@
                                     <!--                                     /.box-body -->
 
                                     <div class="box-footer">
-                                        <button type="submit" name="manual" class="btn btn-primary pull-right">Submit</button>
+                                        <button type="submit" name="manual" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                     </div>
                                 </form>
                             </div>

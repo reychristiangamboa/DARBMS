@@ -42,10 +42,7 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="field-officer-arbo-list.jsp"><i class="fa fa-dashboard"></i> Home</a></li>
-                    </ol>
-
+           
                 </section>
 
                 <!-- Main content -->
@@ -121,7 +118,7 @@
                                             <div class="col-xs-4">
                                                 <%if (userType == 3) {  %>
                                                 <label for="">&nbsp;</label>
-                                                <button id="farmPlanButton" type="submit" onclick="form.action = 'SendFarmPlan'" class="form-control btn btn-primary">Submit</button>
+                                                <button id="farmPlanButton" type="submit" onclick="form.action = 'SendFarmPlan'" class="form-control btn btn-primary"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                                 <%}%>
                                             </div>
                                         </div>
@@ -149,7 +146,7 @@
                                             <div class="col-xs-4">
                                                 <%if (userType == 3) {  %>
                                                 <label for="">&nbsp;</label>
-                                                <button id="businessPlanButton" type="submit" onclick="form.action = 'SendBusinessPlan'" class="form-control btn btn-primary" style="margin: 0 auto;">Submit</button>
+                                                <button id="businessPlanButton" type="submit" onclick="form.action = 'SendBusinessPlan'" class="form-control btn btn-primary" style="margin: 0 auto;"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                                 <%}%>
                                             </div>
                                         </div>
@@ -177,7 +174,7 @@
                                             <div class="col-xs-4">
                                                 <%if (userType == 3) {  %>
                                                 <label for="">&nbsp;</label>
-                                                <button id="bankRequirementsButton" type="submit" onclick="form.action = 'SendBankRequirements'" class="form-control btn btn-primary" style="margin: 0 auto;">Submit</button>
+                                                <button id="bankRequirementsButton" type="submit" onclick="form.action = 'SendBankRequirements'" class="form-control btn btn-primary" style="margin: 0 auto;"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                                 <%}%>
                                             </div>
                                         </div>
@@ -186,7 +183,7 @@
                                     <div class="box-footer">
                                         <%if (userType == 3) {  %>
                                         <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
-                                        <button type="submit" onclick="form.action = 'ClearAPCPRequest'" name="manual" class="btn btn-primary pull-right">Submit</button>
+                                        <button type="submit" onclick="form.action = 'ClearAPCPRequest'" name="manual" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                         <%}%>
                                     </div>
                                 </form>

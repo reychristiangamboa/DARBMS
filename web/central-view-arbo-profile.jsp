@@ -55,8 +55,8 @@
                             <form method="post">
                                 <div class="box-footer ">
                                     <div class="btn-group pull-right">
-                                        <button type="submit" onclick="form.action = 'DisapproveNewAccessing?id=<%out.print(r.getRequestID());%>'" class="btn btn-danger">Disapprove</button>
-                                        <button type="submit" onclick="form.action = 'ApproveNewAccessing?id=<%out.print(r.getRequestID());%>'" class="btn btn-success">Approve</button>
+                                        <button type="submit" onclick="form.action = 'DisapproveNewAccessing?id=<%out.print(r.getRequestID());%>'" class="btn btn-danger"><i class="fa fa-times margin-r-5"></i> Disapprove</button>
+                                        <button type="submit" onclick="form.action = 'ApproveNewAccessing?id=<%out.print(r.getRequestID());%>'" class="btn btn-success"><i class="fa fa-check margin-r-5"></i>Approve</button>
                                     </div>
                                 </div>
                             </form>

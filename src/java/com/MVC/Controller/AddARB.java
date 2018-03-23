@@ -126,8 +126,9 @@ public class AddARB extends BaseServlet {
                 String[] birthdays = request.getParameterValues("dependentBirthday[]");
                 String[] el = request.getParameterValues("dependentEL[]");
                 String[] re = request.getParameterValues("dependentR[]");
+                System.out.println(re[0]);
                 ArrayList<Dependent> dependentList = new ArrayList();
-
+                
                 for (int x = 0; x < names.length; x++) {
 
                     Dependent d = new Dependent();

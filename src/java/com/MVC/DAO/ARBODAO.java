@@ -144,8 +144,7 @@ public class ARBODAO {
                     + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
                     + "JOIN refprovince p ON c.provCode=p.provCode "
                     + "JOIN refregion r ON c.regCode=r.regCode "
-                    + "JOIN ref_provoffice po ON a.provOfficeCode=po.provOfficeCode "
-                    + "JOIN users u ON u.provOfficeCode=po.provOfficeCode";
+                    + "JOIN ref_provoffice po ON a.provOfficeCode=po.provOfficeCode";
             PreparedStatement pstmt = con.prepareStatement(query);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {

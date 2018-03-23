@@ -117,7 +117,7 @@
                                         <%if((Integer)request.getAttribute("pastDueID") != null){%>
                                         <input type="hidden" name="pastDueID" value="<%out.print((Integer)request.getAttribute("pastDueID"));%>">
                                         <%}%>
-                                        <button type="submit" name="manual" class="btn btn-primary pull-right">Submit</button>
+                                        <button type="submit" name="manual" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                     </div>
                                 </form>
                             </div>

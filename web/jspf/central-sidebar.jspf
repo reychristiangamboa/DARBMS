@@ -103,9 +103,7 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="central-home.jsp"><i class="fa fa-eye"></i> Home</a></li>
-                    <li><a href="central-view-new-requesting-arbo.jsp"><i class="fa fa-eye"></i> View New Requesting ARBOs</a></li>
-                    <li><a href="central-view-arbo-profile.jsp"><i class="fa fa-edit"></i>  View Qualification Requests</a></li>
+                    <li><a href="central-view-new-requesting-arbo.jsp"><i class="fa fa-dot-circle-o"></i>  View New Requesting ARBOs</a></li>
                 </ul>
             </li>
             <li>

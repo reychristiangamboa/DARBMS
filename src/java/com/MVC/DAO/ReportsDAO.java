@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.Model.APCPRelease;
 import com.MVC.Model.ARBO;
+import com.MVC.Model.Evaluation;
 import java.sql.Date;
 
 /**
@@ -124,19 +125,19 @@ public class ReportsDAO {
             APCPRequest request = new APCPRequest();
             System.out.println(apcpRequest.size());
             for (APCPRequest req : apcpRequest) {
-                
+
                 if (firstInstance) {
                     request.setArboID(req.getArboID());
                     request.setTotalRequestedAmount(req.getLoanAmount());
                     request.setTotalReleaseAmount(req.getTotalReleasedAmountPerRequest());
                     request.setYearlyReleasedAmount(req.getYearlyReleaseAmountPerRequest());
-                    
+
                     if (req.getDateLastReleasedPerRequest() != null) {
                         request.setDateLastRelease(req.getDateLastReleasedPerRequest());
                     }
-                    
+
                     request.setPastDueReasons(req.getPastDueAccounts());
-                    
+
                     request.setTotalOSBalance(req.getAccumulatedOSBalancePerRequest());
                     request.setTotalPastDueAmount(req.getTotalPDAAmountPerRequest());
                     firstInstance = false;
@@ -145,17 +146,17 @@ public class ReportsDAO {
                     request.setTotalReleaseAmount(req.getTotalReleasedAmountPerRequest());
                     request.setYearlyReleasedAmount(req.getYearlyReleaseAmountPerRequest());
                     request.setPastDueReasons(req.getPastDueAccounts());
-                    
+
                     if (req.getDateLastReleasedPerRequest() != null && request.getDateLastReleasedPerRequest() != null) {
                         if (req.getDateLastReleasedPerRequest().after(request.getDateLastReleasedPerRequest())) {
                             request.setDateLastRelease(req.getDateLastReleasedPerRequest());
-                        }else{
+                        } else {
                             request.setDateLastRelease(request.getDateLastRelease());
                         }
-                    }else{
+                    } else {
                         request.setDateLastRelease(req.getDateLastReleasedPerRequest());
                     }
-                    
+
                     request.setTotalOSBalance(req.getAccumulatedOSBalancePerRequest());
                     request.setTotalPastDueAmount(req.getTotalPDAAmountPerRequest());
                     firstInstance = false;
@@ -167,16 +168,16 @@ public class ReportsDAO {
                     request.setTotalReleaseAmount(req.getTotalReleasedAmountPerRequest());
                     request.setYearlyReleasedAmount(req.getYearlyReleaseAmountPerRequest());
                     request.setPastDueReasons(req.getPastDueAccounts());
-                    
+
                     if (req.getDateLastReleasedPerRequest() != null) {
                         request.setDateLastRelease(req.getDateLastReleasedPerRequest());
                     }
-                    
+
                     request.setTotalOSBalance(req.getAccumulatedOSBalancePerRequest());
                     request.setTotalPastDueAmount(req.getTotalPDAAmountPerRequest());
                     firstInstance = false;
                 }
-                if(request.getArboID() == apcpRequest.get(apcpRequest.size() -1).getArboID()){
+                if (request.getArboID() == apcpRequest.get(apcpRequest.size() - 1).getArboID()) {
                     accumulated.add(request);
                 }
             }
@@ -189,10 +190,10 @@ public class ReportsDAO {
             }
             Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return accumulated;
     }
-    
+
     public ArrayList<APCPRequest> getAllFilteredAccumulatedARBORequests(ArrayList<ARBO> arboList, Date start, Date end) {
 
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -230,11 +231,11 @@ public class ReportsDAO {
                     r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
                     r.setRequestStatus(rs.getInt("requestStatus"));
                     r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
-                    
-                    r.setPastDueAccounts(dao.getAllFilteredPastDueAccountsByRequest(rs.getInt("requestID"),start,end));
-                    r.setUnsettledPastDueAccounts(dao.getAllFilteredUnsettledPastDueAccountsByRequest(rs.getInt("requestID"),start,end));
-                    r.setReleases(dao.getAllFilteredAPCPReleasesByRequest(rs.getInt("requestID"),start,end));
-                    r.setRepayments(dao.getAllFilteredRepaymentsByRequest(rs.getInt("requestID"),start,end));
+
+                    r.setPastDueAccounts(dao.getAllFilteredPastDueAccountsByRequest(rs.getInt("requestID"), start, end));
+                    r.setUnsettledPastDueAccounts(dao.getAllFilteredUnsettledPastDueAccountsByRequest(rs.getInt("requestID"), start, end));
+                    r.setReleases(dao.getAllFilteredAPCPReleasesByRequest(rs.getInt("requestID"), start, end));
+                    r.setRepayments(dao.getAllFilteredRepaymentsByRequest(rs.getInt("requestID"), start, end));
                     apcpRequest.add(r);
                 }
                 rs.close();
@@ -242,21 +243,21 @@ public class ReportsDAO {
             }
             boolean firstInstance = true;
             APCPRequest request = new APCPRequest();
-            
+
             for (APCPRequest req : apcpRequest) {
-                
+
                 if (firstInstance) {
                     request.setArboID(req.getArboID());
                     request.setTotalRequestedAmount(req.getLoanAmount());
                     request.setTotalReleaseAmount(req.getTotalReleasedAmountPerRequest());
                     request.setYearlyReleasedAmount(req.getYearlyReleaseAmountPerRequest());
-                    
+
                     if (req.getDateLastReleasedPerRequest() != null) {
                         request.setDateLastRelease(req.getDateLastReleasedPerRequest());
                     }
-                    
+
                     request.setPastDueReasons(req.getPastDueAccounts());
-                    
+
                     request.setTotalOSBalance(req.getAccumulatedOSBalancePerRequest());
                     request.setTotalPastDueAmount(req.getTotalPDAAmountPerRequest());
                     firstInstance = false;
@@ -265,17 +266,17 @@ public class ReportsDAO {
                     request.setTotalReleaseAmount(req.getTotalReleasedAmountPerRequest());
                     request.setYearlyReleasedAmount(req.getYearlyReleaseAmountPerRequest());
                     request.setPastDueReasons(req.getPastDueAccounts());
-                    
+
                     if (req.getDateLastReleasedPerRequest() != null && request.getDateLastReleasedPerRequest() != null) {
                         if (req.getDateLastReleasedPerRequest().after(request.getDateLastReleasedPerRequest())) {
                             request.setDateLastRelease(req.getDateLastReleasedPerRequest());
-                        }else{
+                        } else {
                             request.setDateLastRelease(request.getDateLastRelease());
                         }
-                    }else{
+                    } else {
                         request.setDateLastRelease(req.getDateLastReleasedPerRequest());
                     }
-                    
+
                     request.setTotalOSBalance(req.getAccumulatedOSBalancePerRequest());
                     request.setTotalPastDueAmount(req.getTotalPDAAmountPerRequest());
                     firstInstance = false;
@@ -287,16 +288,16 @@ public class ReportsDAO {
                     request.setTotalReleaseAmount(req.getTotalReleasedAmountPerRequest());
                     request.setYearlyReleasedAmount(req.getYearlyReleaseAmountPerRequest());
                     request.setPastDueReasons(req.getPastDueAccounts());
-                    
+
                     if (req.getDateLastReleasedPerRequest() != null) {
                         request.setDateLastRelease(req.getDateLastReleasedPerRequest());
                     }
-                    
+
                     request.setTotalOSBalance(req.getAccumulatedOSBalancePerRequest());
                     request.setTotalPastDueAmount(req.getTotalPDAAmountPerRequest());
                     firstInstance = false;
                 }
-                if(request.getArboID() == apcpRequest.get(apcpRequest.size() -1).getArboID()){
+                if (request.getArboID() == apcpRequest.get(apcpRequest.size() - 1).getArboID()) {
                     accumulated.add(request);
                 }
             }
@@ -309,8 +310,52 @@ public class ReportsDAO {
             }
             Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return accumulated;
+    }
+
+    public ArrayList<Evaluation> getFilteredEvaluationPerARBIDByType(int arbID, int type, Date start, Date end) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        EvaluationDAO eDAO = new EvaluationDAO();
+        ArrayList<Evaluation> evaluations = new ArrayList();
+        try {
+            String query = "SELECT * FROM `evaluations` e "
+                    + "JOIN `ref_questionType` t ON e.evaluationType=t.questionType "
+                    + "WHERE e.arbID=? AND t.questionType=? AND e.evaluationDate BETWEEN ? AND ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, arbID);
+            pstmt.setInt(2, type);
+            pstmt.setDate(3, start);
+            pstmt.setDate(4, end);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Evaluation e = new Evaluation();
+                e.setEvaluationID(rs.getInt("evaluationID"));
+                e.setArbID(rs.getInt("arbID"));
+                e.setEvaluationDate(rs.getDate("evaluationDate"));
+                e.setEvaluationStartDate(rs.getDate("evaluationStartDate"));
+                e.setEvaluationEndDate(rs.getDate("evaluationEndDate"));
+                e.setEvaluationDTN(rs.getString("evaluationDTN"));
+                e.setRating(rs.getDouble("rating"));
+                e.setEvaluatedBy(rs.getInt("evaluatedBy"));
+                e.setEvaluationType(rs.getInt("evaluationType"));
+                e.setEvaluationTypeDesc(rs.getString("questionTypeDesc"));
+                e.setQuestionRatings(eDAO.getQuestionRatingsByEvaluationID(rs.getInt("evaluationID")));
+                evaluations.add(e);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(EvaluationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(EvaluationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return evaluations;
     }
 
 }

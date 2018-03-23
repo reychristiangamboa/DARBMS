@@ -165,7 +165,7 @@
                         <div class="input-group">
                             <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(a2.getArboName());%>" disabled>    
                             <span class="input-group-btn">
-                                <a href="ViewARBO?id=<%out.print(a2.getArboID());%>" class="btn btn-link"><i class="fa fa-users"></i> View Profile</a>
+                                <a href="ViewARBO?id=<%out.print(a2.getArboID());%>" class="btn btn-link"><i class="fa fa-folder margin-r-5"></i> View Profile</a>
                             </span>
                         </div>
 

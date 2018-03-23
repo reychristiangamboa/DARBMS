@@ -29,10 +29,7 @@
                         <strong><%out.print(arbo.getArboName());%></strong> 
                         <small><%out.print(arbo.getArboProvinceDesc());%>, <%out.print(arbo.getArboRegionDesc());%></small>
                     </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="FO-Homepage.html"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li class="active">(ARBO Name) Beneficiary List</li>
-                    </ol>
+
                 </section>
 
                 <!-- Main content -->
@@ -62,7 +59,7 @@
 
                                         <div class="box-footer">
                                             <input type="hidden" name="arboID" value="<%out.print(arbo.getArboID());%>">
-                                            <button type="submit" name="import" class="btn btn-primary pull-right">Submit</button>
+                                            <button type="submit" name="import" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                         </div>
                                     </div>
                                 </form>
@@ -190,8 +187,8 @@
                                                 <div class="form-group">
                                                     <label>Education Level</label>
                                                     <select name="educationalLevel" class="form-control" style="width: 100%;" required>
-                                                        <%for(int x = 1; i <= educationLevel.size(); x++ ){%>
-                                                        <option value="<%=x%>"><%out.print(educationLevel.get(x));%></option>
+                                                        <%for(EducationLevel e : educationLevel){%>
+                                                        <option value="<%=e.getEducationLevel()%>"><%out.print(e.getEducationLevelDesc());%></option>
                                                         <%}%>
                                                     </select>    
                                                 </div>
@@ -204,7 +201,7 @@
                                             </div>
                                         </div>
 
-                                        <button type="button" class="add_crop_button btn btn-primary" id="addCrop"><i class="fa fa-user-plus"></i> Add Crop</button>
+                                        <button type="button" class="add_crop_button btn btn-primary" id="addCrop"><i class="fa fa-plus"></i> Add Crop</button>
 
                                         <div class="input_crops_wrap">
 
@@ -223,7 +220,7 @@
 
                                     <div class="box-footer">
                                         <input type="hidden" name="arboID" value="<%out.print(arbo.getArboID());%>">
-                                        <button type="submit" name="manual" class="btn btn-primary pull-right">Submit</button>
+                                        <button type="submit" name="manual" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                     </div>
                                 </form>
 
@@ -307,7 +304,7 @@
                     e.preventDefault();
                     if (x < max_fields) { //max input box allowed
                         x++; //text box increment
-                        $(wrapper).append('<div class="row"><div class="col-xs-3"><div class="form-group"><label for="">Name</label><input type="text" name="dependentName[]" class="form-control" required></div></div><div class="col-xs-3"><label>Birthday</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dependentBirthday[]" class="form-control pull-right" id="datepicker"></div></div><div class="col-xs-3"><div class="form-group"><label for="EL">Education Level</label><select name="dependentEL[]" class="form-control" id="EL" style="width:100%;"><%for(int i = 1; i <= educationLevel.size(); i++){%><option value="<%=i%>"><%out.print(educationLevel.get(i));%></option><%}%></select></div></div><div class="col-xs-3"><div class="form-group"><label for="Re">Relationship</label><select name="dependentR[]" class="form-control" id="Re" style="width:100%;"><%for(int j = 1; j <= relationshipType.size(); j++){%><option value="<%=j%>"><%out.print(relationshipType.get(j));%></option><%}%></select></div></div></div>');
+                        $(wrapper).append('<div class="row"><div class="col-xs-3"><div class="form-group"><label for="">Name</label><input type="text" name="dependentName[]" class="form-control" required></div></div><div class="col-xs-3"><label>Birthday</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dependentBirthday[]" class="form-control pull-right" id="datepicker"></div></div><div class="col-xs-3"><div class="form-group"><label for="EL">Education Level</label><select name="dependentEL[]" class="form-control" id="EL" style="width:100%;"><%for(EducationLevel e1 : educationLevel){%><option value="<%=e1.getEducationLevel()%>"><%out.print(e1.getEducationLevelDesc());%></option><%}%></select></div></div><div class="col-xs-3"><div class="form-group"><label for="Re">Relationship</label><select name="dependentR[]" class="form-control" id="Re" style="width:100%;"><%for(RelationshipType r : relationshipType){%><option value="<%=r.getRelationshipType()%>"><%out.print(r.getRelationshipTypeDesc());%></option><%}%></select></div></div></div>');
                     }
                 });
 

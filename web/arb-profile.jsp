@@ -169,7 +169,7 @@
                                                                     <td><%=f.format(d.getBirthday())%></td>
                                                                     <td><%=d.getEducationLevelDesc()%></td>
                                                                     <td><%=d.getRelationshipTypeDesc()%></td>
-                                                                    
+
                                                                 </tr>
                                                                 <%}%>
                                                             </tbody>
@@ -435,6 +435,20 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                            <div class="pull-right">
+                                                                <button type="button" class="btn btn-default" id="dr-totalYearReleaseReport">
+                                                                    <span>
+                                                                        <i class="fa fa-calendar"></i> Date range picker
+                                                                    </span>
+                                                                    <i class="fa fa-caret-down"></i>
+                                                                </button>
+
+                                                                <input type="hidden" name="reportType" value="3">
+                                                                <input type="hidden" id="start-totalYearReleaseReport" name="start">
+                                                                <input type="hidden" id="end-totalYearReleaseReport" name="end">
+                                                                <input type="hidden" value="<%=arb.getArbID()%>" name="arbID">
+                                                                <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
@@ -496,6 +510,20 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                            <div class="pull-right">
+                                                                <button type="button" class="btn btn-default" id="dr-totalAccumulatedReleaseReport">
+                                                                    <span>
+                                                                        <i class="fa fa-calendar"></i> Date range picker
+                                                                    </span>
+                                                                    <i class="fa fa-caret-down"></i>
+                                                                </button>
+
+                                                                <input type="hidden" name="reportType" value="4">
+                                                                <input type="hidden" id="start-totalAccumulatedReleaseReport" name="start">
+                                                                <input type="hidden" id="end-totalAccumulatedReleaseReport" name="end">
+                                                                <input type="hidden" value="<%=arb.getArbID()%>" name="arbID">
+                                                                <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
@@ -557,6 +585,20 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                            <div class="pull-right">
+                                                                <button type="button" class="btn btn-default" id="dr-totalAccumulatedReleaseReport2">
+                                                                    <span>
+                                                                        <i class="fa fa-calendar"></i> Date range picker
+                                                                    </span>
+                                                                    <i class="fa fa-caret-down"></i>
+                                                                </button>
+
+                                                                <input type="hidden" name="reportType" value="5">
+                                                                <input type="hidden" id="start-totalAccumulatedReleaseReport2" name="start">
+                                                                <input type="hidden" id="end-totalAccumulatedReleaseReport2" name="end">
+                                                                <input type="hidden" value="<%=arb.getArbID()%>" name="arbID">
+                                                                <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
@@ -978,6 +1020,65 @@
         <!-- ./wrapper -->
         <%@include file="jspf/footer.jspf" %>
         <script>
+
+            $(function () {
+                $('#dr-totalYearReleaseReport').daterangepicker(
+                        {
+                            minDate: moment().startOf('year'),
+                            maxDate: moment().endOf('year'),
+                            ranges: {
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+                                'This Year': [moment().startOf('year'), moment().endOf('year')]
+                            }
+
+                        },
+                        function (start, end) {
+                            $('#dr-totalYearReleaseReport span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                            $('#start-totalYearReleaseReport').val(start.format('YYYY-MM-DD'));
+                            $('#end-totalYearReleaseReport').val(end.format('YYYY-MM-DD'));
+                        }
+                );
+
+                $('#dr-totalAccumulatedReleaseReport').daterangepicker(
+                        {
+                            minDate: moment().startOf('year'),
+                            maxDate: moment().endOf('year'),
+                            ranges: {
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+                                'This Year': [moment().startOf('year'), moment().endOf('year')]
+                            }
+
+                        },
+                        function (start, end) {
+                            $('#dr-totalAccumulatedReleaseReport span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                            $('#start-totalAccumulatedReleaseReport').val(start.format('YYYY-MM-DD'));
+                            $('#end-totalAccumulatedReleaseReport').val(end.format('YYYY-MM-DD'));
+                        }
+                );
+
+                $('#dr-totalAccumulatedReleaseReport2').daterangepicker(
+                        {
+                            minDate: moment().startOf('year'),
+                            maxDate: moment().endOf('year'),
+                            ranges: {
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+                                'This Year': [moment().startOf('year'), moment().endOf('year')]
+                            }
+
+                        },
+                        function (start, end) {
+                            $('#dr-totalAccumulatedReleaseReport2 span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                            $('#start-totalAccumulatedReleaseReport2').val(start.format('YYYY-MM-DD'));
+                            $('#end-totalAccumulatedReleaseReport2').val(end.format('YYYY-MM-DD'));
+                        }
+                );
+
+
+            });
+
             $(function () {
                 $('#daterange-btn').daterangepicker(
                         {
@@ -991,8 +1092,8 @@
                             $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
                             $('#start').val(start.format('YYYY-MM-DD'));
                             $('#end').val(end.format('YYYY-MM-DD'));
-                            $('#maxDate').val(end.add(1, 'quarter').endOf('quarter').format('YYYY-MM-DD'));
-                            end.subtract(1, 'quarter').endOf('quarter').format('YYYY-MM-DD');
+                            $('#maxDate').val(end.add(1, 'month').endOf('month').format('YYYY-MM-DD'));
+                            end.subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
                         }
                 );
 

@@ -251,6 +251,7 @@ public class APCPRequestDAO {
                 r.setRequestedTo(rs.getInt("requestedTo"));
                 r.setHectares(rs.getDouble("hectares"));
                 r.setLoanAmount(rs.getDouble("loanAmount"));
+                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
                 r.setLoanReason(rs.getString("loanReason"));
                 r.setRemarks(rs.getString("remarks"));
                 r.setRequestStatus(rs.getInt("requestStatus"));
