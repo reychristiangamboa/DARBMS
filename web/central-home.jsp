@@ -21,7 +21,7 @@
             .checked {
                 color: orange;
             }
-             @media screen and (min-width: 768px) {
+            @media screen and (min-width: 768px) {
                 .modal-dialog {
                     width: 700px; /* New width for default modal */
                 }
@@ -496,7 +496,7 @@
                                                                         <h4 class="modal-title"></h4>
                                                                     </div>
                                                                     <div class="modal-body">
-       <table class="table table-bordered table-striped modTable">
+                                                                        <table class="table table-bordered table-striped modTable">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>Loan Tracking No.</th>
@@ -515,7 +515,7 @@
                                                                                 %>
                                                                                 <tr>
                                                                                     <td><%=apcpPDA.getLoanTrackingNo()%></td>
-                                                                                    <td><%=pda.getPastDueAmount()%></td>
+                                                                                    <td><%=currency.format(pda.getPastDueAmount())%></td>
                                                                                     <td><%=pda.getReasonPastDueDesc()%></td>
                                                                                     <td><%=pda.getOtherReason()%></td>
                                                                                     <td><%=pda.getDateRecorded()%></td>
@@ -572,19 +572,210 @@
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
+                                            <div class="modal fade" id="totalYear">
+                                                <div class="modal-dialog modal-lger">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title">NATIONAL RELEASES</h4>
+                                                        </div>
+
+
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <table class="table table-bordered table-striped export">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Loan Tracking No.</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>Province</th>
+                                                                                <th>Release Amount</th>
+                                                                                <th>Release Date</th>
+                                                                                <th>Released By</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <%
+                                                                                for(APCPRequest req : allRequests){
+                                                                                    for(APCPRelease rel : req.getReleases()){
+                                                                                        ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                                                                        User u = uDAO.searchUser(rel.getReleasedBy());
+                                                                            %>
+                                                                            <tr>
+                                                                                <td><%=req.getLoanTrackingNo()%></td>
+                                                                                <td><%=arbo.getArboName()%></td>
+                                                                                <td><%=arbo.getArboProvinceDesc()%></td>
+                                                                                <td><%=currency.format(rel.getReleaseAmount())%></td>
+                                                                                <td><%=rel.getReleaseDate()%></td>
+                                                                                <td><%=u.getFullName()%></td>
+                                                                            </tr>
+                                                                            <%
+                                                                                    }                                                                            
+                                                                                }
+                                                                            %>
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr>
+
+                                                                                <th>Loan Tracking No.</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>Province</th>
+                                                                                <th>Release Amount</th>
+                                                                                <th>Release Date</th>
+                                                                                <th>Released By</th>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <form method="post">
+                                                            <div class="modal-footer">
+                                                                <div class="pull-left">
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                </div>
+                                                                <div class="pull-right">
+
+                                                                    <button type="button" class="btn btn-default" id="dr-totalYearReleaseReport">
+                                                                        <span>
+                                                                            <i class="fa fa-calendar"></i> Date range picker
+                                                                        </span>
+                                                                        <i class="fa fa-caret-down"></i>
+                                                                    </button>
+
+                                                                    <input type="hidden" name="reportType" value="1">
+                                                                    <input type="hidden" id="start-totalYearReleaseReport" name="start">
+                                                                    <input type="hidden" id="end-totalYearReleaseReport" name="end" >
+
+                                                                    <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
                                             <!-- /.col -->
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
                                                     <h5 class="description-header"><%=currency.format(apcpRequestDAO.getSumOfAccumulatedReleasesByRequestId(allRequests))%></h5>
                                                     <span class="description-text">TOTAL ACCUMULATED RELEASED AMOUNT</span>
+                                                    <div class="row text-center">
+                                                        <a class="btn btn-submit" data-toggle="modal" data-target="#totalAccumulated">View More</a>
+                                                    </div>
                                                 </div>
                                                 <!-- /.description-block -->
+                                            </div>
+                                            <div class="modal fade" id="totalAccumulated">
+                                                <div class="modal-dialog modal-lger">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title">PROVINCIAL RELEASES</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <table class="table table-bordered table-striped export">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Region</th>
+                                                                                <th>Province</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>No. of ARBs</th>
+                                                                                <th>Total Approved Amount</th>
+                                                                                <th>Accumulated Releases</th>
+                                                                                <th><%=year%> Releases</th>
+                                                                                <th>Date of Last Release</th>
+                                                                                <th>O/S Balance</th>
+                                                                                <th>Past Due Amount</th>
+                                                                                <th>Past Due Reason</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <%
+                                                                            ReportsDAO rDAO = new ReportsDAO();
+                                                                            ArrayList<APCPRequest> accumulatedRequests = rDAO.getAllAccumulatedARBORequests(arboList);
+                                                                                for(APCPRequest req : accumulatedRequests){
+                                                                                    ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                                                            %>
+                                                                            <tr>
+                                                                                <td><%=arbo.getArboRegionDesc()%></td>
+                                                                                <td><%=arbo.getArboProvinceDesc()%></td>
+                                                                                <td><%=arbo.getArboName()%></td>
+                                                                                <td><%=arboDAO.getARBCount(arbo.getArboID())%></td>
+                                                                                <td><%=currency.format(req.getLoanAmount())%></td>
+                                                                                <td><%=currency.format(req.getTotalReleasedAmount())%></td>
+                                                                                <td><%=currency.format(req.getYearlyReleasedAmount())%></td>
+                                                                                <td><%if(req.getDateLastRelease()!= null) out.print(req.getDateLastRelease());%></td>
+                                                                                <td><%=currency.format(req.getTotalOSBalance())%></td>
+                                                                                <td><%=currency.format(req.getTotalPastDueAmount())%></td>
+                                                                                <td><%=req.printAllPastDueReasons()%></td>
+                                                                            </tr>
+                                                                            <%}%>
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr>
+                                                                                <th>Region</th>
+                                                                                <th>Province</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>No. of ARBs</th>
+                                                                                <th>Total Approved Amount</th>
+                                                                                <th>Accumulated Releases</th>
+                                                                                <th><%=year%> Releases</th>
+                                                                                <th>Date of Last Release</th>
+                                                                                <th>O/S Balance</th>
+                                                                                <th>Past Due Amount</th>
+                                                                                <th>Past Due Reason</th>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                        <form method="post">
+                                                            <div class="modal-footer">
+                                                                <div class="pull-left">
+                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                </div>
+                                                                <div class="pull-right">
+
+                                                                    <button type="button" class="btn btn-default" id="dr-totalAccumulatedReleaseReport">
+                                                                        <span>
+                                                                            <i class="fa fa-calendar"></i> Date range picker
+                                                                        </span>
+                                                                        <i class="fa fa-caret-down"></i>
+                                                                    </button>
+
+                                                                    <input type="hidden" name="reportType" value="2">
+                                                                    <input type="hidden" id="start-totalAccumulatedReleaseReport" name="start">
+                                                                    <input type="hidden" id="end-totalAccumulatedReleaseReport" name="end" >
+
+                                                                    <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
                                             </div>
                                             <!-- /.col -->
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
                                                     <h5 class="description-header"><%=currency.format(apcpRequestDAO.getTotalApprovedAmount(approvedRequests))%></h5>
                                                     <span class="description-text">TOTAL APPROVED AMOUNT</span>
+                                                    <div class="row text-center">
+                                                        <a class="btn btn-submit" data-toggle="modal" data-target="#totalAccumulated">View More</a>
+                                                    </div>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>

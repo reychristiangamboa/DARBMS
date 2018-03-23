@@ -118,38 +118,51 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="provincial-field-officer-arbo-list.jsp"><i class="fa fa-eye"></i> View All</a></li>
-                    <li><a href="provincial-field-officer-add-arbo.jsp"><i class="fa fa-edit"></i> Create ARBO</a></li>
+                    <li><a href="provincial-field-officer-arbo-list.jsp"><i class="fa fa-dot-circle-o"></i> View All</a></li>
+                    <li><a href="provincial-field-officer-add-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Create ARBO</a></li>
                 </ul>
             </li>
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-users"></i> <span>APCP</span>
+                    <i class="fa fa-credit-card"></i> <span>APCP</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="provincial-field-officer-request-loan-select-arbo.jsp"><i class="fa fa-eye"></i> Request APCP</a></li>
-                    <li><a href="view-apcp-status.jsp"><i class="fa fa-edit"></i> View APCP Status</a></li>
+                    <li><a href="provincial-field-officer-request-loan-select-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Request APCP</a></li>
+                    <li><a href="view-apcp-status.jsp"><i class="fa fa-dot-circle-o"></i> View APCP Status</a></li>
                 </ul>
             </li>
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-users"></i> <span>CAPDEV</span>
+                    <i class="fa fa-industry"></i> <span>CAPDEV</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="view-capdev-status.jsp"><i class="fa fa-edit"></i> View CAPDEV Status</a></li>
-                    <li><a href="provincial-field-officer-select-request.jsp"><i class="fa fa-edit"></i> Create CAPDEV Proposal</a></li>
+                    <li><a href="view-capdev-status.jsp"><i class="fa fa-dot-circle-o"></i> View CAPDEV Status</a></li>
+                    <li><a href="provincial-field-officer-select-request.jsp"><i class="fa fa-dot-circle-o"></i> Create CAPDEV Proposal</a></li>
+
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-list-alt"></i> <span>LINKSFARM</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="provincial-field-officer-linksfarm-select-project-sites.jsp"><i class="fa fa-dot-circle-o"></i>Select Project Site</a></li>
+                    <li><a href="provincial-field-officer-select-request.jsp"><i class="fa fa-dot-circle-o"></i> Create CAPDEV Proposal</a></li>
 
                 </ul>
             </li>
             <li>
                 <a href="provincial-field-officer-manage-past-due-reasons.jsp">
-                    <i class="fa fa-edit"></i> <span> Manage Past Due Reasons</span>
+                    <i class="fa fa-hourglass"></i> <span> Manage Past Due Reasons</span>
                 </a>
             </li>
             <li>

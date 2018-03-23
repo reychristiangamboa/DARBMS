@@ -293,7 +293,18 @@ public class ARB {
 
     @Override
     public String toString() {
-        return this.firstName + " " + this.middleName + " " + this.lastName + " " + this.gender + " " + this.arbUnitNumStreet + " " + this.landArea + " " + this.memberSince + " " + this.educationLevel;
+        return this.firstName + " " 
+                + this.middleName + " " 
+                + this.lastName + " " 
+                + this.gender + " " 
+                + this.arbUnitNumStreet + " " 
+                + this.brgyCode + " " 
+                + this.cityMunCode + " " 
+                + this.provCode + " " 
+                + this.regCode + " " 
+                + this.landArea + " " 
+                + this.memberSince + " " 
+                + this.educationLevel;
     }
     
     

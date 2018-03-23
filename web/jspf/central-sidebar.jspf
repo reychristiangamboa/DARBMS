@@ -32,8 +32,8 @@
     ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince(1);
     ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs(1);
 
-    ArrayList<ARBO> arbList = arboDAO.getAllARBOs();
-    ArrayList<ARB> allArbsList = arbDAO.getAllARBsOfARBOs(arbList);
+    ArrayList<ARBO> arboList = arboDAO.getAllARBOs();
+    ArrayList<ARB> allArbsList = arbDAO.getAllARBsOfARBOs(arboList);
 
     ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(allArbsList);
     ArrayList<Crop> cropHistory = cropDAO.getCropHistory(allArbsList);

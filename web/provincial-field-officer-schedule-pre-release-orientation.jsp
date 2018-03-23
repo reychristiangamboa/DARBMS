@@ -84,7 +84,7 @@
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Schedule Pre-release Orientation</h3>
                                     <div class="col-xs-3 pull-right">
-                                        <input type="text" name="dtn" class="form-control" placeholder="Pre-Release Orientation DTN"/>
+                                        <input type="text" name="dtn" class="form-control" placeholder="Pre-Release Orientation DTN" required/>
                                     </div>
                                 </div>
                                 
@@ -92,13 +92,12 @@
                                         <div class="row">
                                             <div class="col-xs-4">
                                                 <div class="form-group">
-                                                    <label for="pointPerson">Point Person</label>
-                                                    <select class="form-control" name="pointPerson">
-                                                        <%for(User u : pointPersons){%>
-                                                        <option value="<%=u.getUserID()%>"><%out.print(u.getFullName());%></option>
+                                                    <label for="">Assign Point Person</label>
+                                                    <select name="pointPerson" id="">
+                                                        <%for(User pointPerson : pointPersons){%>
+                                                        <option value="<%=pointPerson.getUserID()%>"><%out.print(pointPerson.getFullName());%></option>
                                                         <%}%>
                                                     </select>
-
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">
@@ -129,41 +128,6 @@
                             </div>
                         </div>
                         <!-- /.col -->
-                    </div>
-
-                    <div class="modal fade" id="endorsed-modal<%out.print(r.getRequestID());%>">
-                        <div class="modal-dialog modal-sm">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Approve APCP Request</h4>
-                                </div>
-
-                                <form method="post">
-                                    <div class="modal-body" id="modalBody">
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <div class="form-group">
-                                                    <label for="">Approval Date</label>
-                                                    <div class="input-group date">
-                                                        <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                                                        <input type="date" class="form-control" name="approveDate" />        
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
-                                        <button type="submit" name="manual" onclick="form.action = 'SendSchedulePreRelease'" class="btn btn-primary pull-right">Submit</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                            <!--                                            /.modal-content -->
-                        </div>
-                        <!--                                        /.modal-dialog -->
                     </div>
 
                 </section>

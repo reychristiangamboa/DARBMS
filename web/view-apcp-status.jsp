@@ -168,6 +168,12 @@
                                                     <input type="checkbox" id="filterBy" name="selectAll" value="Yes">
                                                 </div>
                                             </div>
+                                            <div class="col-xs-2">
+                                                <div class="form-group">
+                                                    <label for="actName">By Province</label>
+                                                    <input type="checkbox" id="filterBy2" name="byProvince" value="Yes">
+                                                </div>
+                                            </div>
                                             <div class="col-xs-4">
                                                 <div class="form-group">
                                                     <label for="actName">Provinces</label>
@@ -409,7 +415,7 @@
                                                                 <div class="col-xs-12">
                                                                     <div class="form-group">
                                                                         <label for="">Loan Tracking Number</label>
-                                                                        <input type="text" name="ltn" class="form-control">
+                                                                        <input type="number" max="9" name="ltn" class="form-control">
                                                                     </div>
                                                                 </div>
                                                             </div>

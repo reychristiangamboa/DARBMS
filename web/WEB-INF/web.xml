@@ -292,6 +292,18 @@
         <servlet-name>ViewReport</servlet-name>
         <servlet-class>com.MVC.Controller.ViewReport</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewSite</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewSite</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProceedClusterARB</servlet-name>
+        <servlet-class>com.MVC.Controller.ProceedClusterARB</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ClusterARB</servlet-name>
+        <servlet-class>com.MVC.Controller.ClusterARB</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -583,6 +595,18 @@
     <servlet-mapping>
         <servlet-name>ViewReport</servlet-name>
         <url-pattern>/ViewReport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewSite</servlet-name>
+        <url-pattern>/ViewSite</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProceedClusterARB</servlet-name>
+        <url-pattern>/ProceedClusterARB</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ClusterARB</servlet-name>
+        <url-pattern>/ClusterARB</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -6,6 +6,7 @@
 package com.MVC.DAO;
 
 import com.MVC.Database.DBConnectionFactory;
+import com.MVC.Model.ARB;
 import com.MVC.Model.ARBO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -438,4 +439,42 @@ public class ARBODAO {
         }
         return success;
     }
+
+    public boolean checkIfARBOExist(String arboName) {
+        boolean success = false;
+        PreparedStatement p = null;
+        Connection con = null;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        con = myFactory.getConnection();
+        
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM `dar-bms`.arbos;";
+            p = con.prepareStatement(query);
+            ResultSet rs = p.executeQuery();
+            
+            while (rs.next()) {
+                if (rs.getString(1).equalsIgnoreCase(arboName)) {
+                    success = true;
+                }
+            }
+
+            rs.close();
+            p.close();
+            con.commit();
+            con.close();
+            success = true;
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
+    }
+
+    
+
 }

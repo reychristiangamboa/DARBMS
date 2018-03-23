@@ -36,7 +36,6 @@ public class RecordPreReleaseAssessment extends BaseServlet {
         CAPDEVDAO cDAO = new CAPDEVDAO();
         ARBDAO arbDAO = new ARBDAO();
         APCPRequestDAO rDAO = new APCPRequestDAO();
-        
 
         ArrayList arbHolder = readExcelFile(request.getParameter("file"));
         ArrayList cellStoreArrayList = new ArrayList();
@@ -67,11 +66,11 @@ public class RecordPreReleaseAssessment extends BaseServlet {
             request.setAttribute("planID", planID);
             request.setAttribute("requestID", requestID);
             request.getRequestDispatcher("point-person-view-capdev-plans.jsp").forward(request, response);
-            
-        } else{
+
+        } else {
             request.setAttribute("errMessage", "Unable to record Pre-release Orientation Assessment.");
             request.setAttribute("planID", planID);
-        request.setAttribute("requestID", requestID);
+            request.setAttribute("requestID", requestID);
             request.getRequestDispatcher("point-person-view-capdev-plans.jsp").forward(request, response);
         }
 
@@ -102,7 +101,5 @@ public class RecordPreReleaseAssessment extends BaseServlet {
         }
         return cellArrayListHolder;
     }
-
-    
 
 }

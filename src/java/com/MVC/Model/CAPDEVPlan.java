@@ -17,9 +17,9 @@ public class CAPDEVPlan {
     private int planID;
     private int requestID;
     private int pastDueAccountID;
-    private int assignedTo;
     private String planDTN;
     private int createdBy;
+    private int assignedTo;
     private int approvedBy;
     private int planStatus;
     private String planStatusDesc;
@@ -49,14 +49,6 @@ public class CAPDEVPlan {
 
     public void setPastDueAccountID(int pastDueAccountID) {
         this.pastDueAccountID = pastDueAccountID;
-    }
-
-    public int getAssignedTo() {
-        return assignedTo;
-    }
-
-    public void setAssignedTo(int assignedTo) {
-        this.assignedTo = assignedTo;
     }
 
     public String getPlanDTN() {
@@ -107,6 +99,16 @@ public class CAPDEVPlan {
     public void setActivities(ArrayList<CAPDEVActivity> activities) {
         this.activities = activities;
     }
+
+    public int getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(int assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+    
+    
     
     
     

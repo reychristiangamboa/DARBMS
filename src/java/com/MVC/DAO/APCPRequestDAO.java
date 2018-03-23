@@ -1745,5 +1745,33 @@ public class APCPRequestDAO {
         }
         return repayment;
     }
+    
+    public boolean checkIfLTNExists(int ltn){
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        boolean success = false;
+        
+        try {
+            String query = "SELECT * FROM apcp_requests r";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                if(rs.getInt("ltn") == ltn){
+                    success = true;
+                }
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
+    }
 
 }

@@ -23,17 +23,23 @@ public class EndorseAPCPRequest extends BaseServlet {
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        
+
         int requestID = Integer.parseInt(request.getParameter("requestID"));
         int ltn = Integer.parseInt(request.getParameter("ltn"));
         APCPRequestDAO requestDAO = new APCPRequestDAO();
-        
-        if(requestDAO.endorseRequest(requestID, (Integer)session.getAttribute("userID"), ltn)){
-            request.setAttribute("success", "APCP Request endorsed!");
+
+        if (requestDAO.checkIfLTNExists(ltn)) {
+            request.setAttribute("errMessage", "LTN already exists.");
             request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
-        }else{
-            request.setAttribute("errMessage", "Error in endorsing APCP Request.");
-            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
+        } else {
+            if (requestDAO.endorseRequest(requestID, (Integer) session.getAttribute("userID"), ltn)) {
+                request.setAttribute("success", "APCP Request endorsed!");
+                request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
+            } else {
+                request.setAttribute("errMessage", "Error in endorsing APCP Request.");
+                request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
+            }
         }
+
     }
 }

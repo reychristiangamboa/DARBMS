@@ -117,7 +117,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -174,16 +174,13 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
-                                                <th>Loan Reason</th>
-                                                <th>Loan Amount</th>
-                                                <th>Land Area</th>
-                                                <th>Date Cleared</th>
-                                                <th>Remarks</th>
-                                                <th>Status</th>
+                                                <th>Plan DTN</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th> 
                                             </tr>
                                         </thead>
 

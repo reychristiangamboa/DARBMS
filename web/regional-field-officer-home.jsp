@@ -688,6 +688,8 @@
                                                                     <table class="table table-bordered table-striped export">
                                                                         <thead>
                                                                             <tr>
+                                                                                <th>Region</th>
+                                                                                <th>Province</th>
                                                                                 <th>ARBO Name</th>
                                                                                 <th>No. of ARBs</th>
                                                                                 <th>Total Approved Amount</th>
@@ -700,22 +702,31 @@
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-
+                                                                            <%
+                                                                            ReportsDAO rDAO = new ReportsDAO();
+                                                                            ArrayList<APCPRequest> accumulatedRequests = rDAO.getAllAccumulatedARBORequests(arboListRegion);
+                                                                                for(APCPRequest req : accumulatedRequests){
+                                                                                    ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                                                            %>
                                                                             <tr>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
+                                                                                <td><%=arbo.getArboRegionDesc()%></td>
+                                                                                <td><%=arbo.getArboProvinceDesc()%></td>
+                                                                                <td><%=arbo.getArboName()%></td>
+                                                                                <td><%=arboDAO.getARBCount(arbo.getArboID())%></td>
+                                                                                <td><%=currency.format(req.getLoanAmount())%></td>
+                                                                                <td><%=currency.format(req.getTotalReleasedAmount())%></td>
+                                                                                <td><%=currency.format(req.getYearlyReleasedAmount())%></td>
+                                                                                <td><%if(req.getDateLastRelease()!= null) out.print(req.getDateLastRelease());%></td>
+                                                                                <td><%=currency.format(req.getTotalOSBalance())%></td>
+                                                                                <td><%=currency.format(req.getTotalPastDueAmount())%></td>
+                                                                                <td><%=req.printAllPastDueReasons()%></td>
                                                                             </tr>
-
+                                                                            <%}%>
                                                                         </tbody>
                                                                         <tfoot>
                                                                             <tr>
+                                                                                <th>Region</th>
+                                                                                <th>Province</th>
                                                                                 <th>ARBO Name</th>
                                                                                 <th>No. of ARBs</th>
                                                                                 <th>Total Approved Amount</th>
@@ -1209,6 +1220,48 @@
         <!-- ./wrapper -->
         <%@include file="jspf/footer.jspf" %>
         <script type="text/javascript">
+
+            $(function () {
+                $('#dr-totalYearReleaseReport').daterangepicker(
+                        {
+                            minDate: moment().startOf('year'),
+                            maxDate: moment().endOf('year'),
+                            ranges: {
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+                                'This Year': [moment().startOf('year'), moment().endOf('year')]
+                            }
+
+                        },
+                        function (start, end) {
+                            $('#dr-totalYearReleaseReport span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                            $('#start-totalYearReleaseReport').val(start.format('YYYY-MM-DD'));
+                            $('#end-totalYearReleaseReport').val(end.format('YYYY-MM-DD'));
+                        }
+                );
+
+                $('#dr-totalAccumulatedReleaseReport').daterangepicker(
+                        {
+                            minDate: moment().startOf('year'),
+                            maxDate: moment().endOf('year'),
+                            ranges: {
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+                                'This Year': [moment().startOf('year'), moment().endOf('year')]
+                            }
+
+                        },
+                        function (start, end) {
+                            $('#dr-totalAccumulatedReleaseReport span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                            $('#start-totalAccumulatedReleaseReport').val(start.format('YYYY-MM-DD'));
+                            $('#end-totalAccumulatedReleaseReport').val(end.format('YYYY-MM-DD'));
+                        }
+                );
+
+
+            });
+
+
             $(function () {
                 var ctx = $('#barCanvas').get(0).getContext('2d');
             <%

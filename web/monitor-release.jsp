@@ -372,7 +372,7 @@
                                                         <div class="input-group-addon">
                                                             <i>&#8369;</i>
                                                         </div>
-                                                        <input type="text" class="form-control numberOnly" name="releaseAmount" autocomplete="off" required>
+                                                        <input type="number" class="form-control numberOnly" name="releaseAmount" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -483,7 +483,7 @@
                                                         <div class="input-group-addon">
                                                             <i>&#8369;</i>
                                                         </div>
-                                                        <input type="text" class="form-control numberOnly" name="repaymentAmount" autocomplete="off" required>
+                                                        <input type="number" class="form-control numberOnly" name="repaymentAmount" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -563,7 +563,7 @@
                                                         <div class="input-group-addon">
                                                             <i>&#8369;</i>
                                                         </div>
-                                                        <input type="text" class="form-control numberOnly" name="pastDueAmount" autocomplete="off" required>
+                                                        <input type="number" class="form-control numberOnly" name="pastDueAmount" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                             </div>

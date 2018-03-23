@@ -190,9 +190,9 @@
                                                 <div class="form-group">
                                                     <label>Education Level</label>
                                                     <select name="educationalLevel" class="form-control" style="width: 100%;" required>
-                                                        <option value="1">Primary</option>
-                                                        <option value="2">Secondary</option>
-                                                        <option value="3">Tertiary - Undergraduate</option>
+                                                        <%for(int x = 1; i <= educationLevel.size(); x++ ){%>
+                                                        <option value="<%=x%>"><%out.print(educationLevel.get(x));%></option>
+                                                        <%}%>
                                                     </select>    
                                                 </div>
                                             </div>
@@ -200,16 +200,6 @@
                                                 <div class="form-group">
                                                     <label for="landArea">Land Area</label>
                                                     <input type="text" name="landArea" class="form-control" id="landArea" placeholder="Ex. 3 Acres">    
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-4">
-                                                <div class="form-group">
-                                                    <label>Crops</label>
-                                                    <select id="select" class="form-control select2" name="crops[]" multiple="multiple">
-                                                        <%for(Crop c : allCrops){%>
-                                                        <option value="<%out.print(c.getCropType());%>"><%out.print(c.getCropTypeDesc());%></option>
-                                                        <%}%>
-                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -317,7 +307,7 @@
                     e.preventDefault();
                     if (x < max_fields) { //max input box allowed
                         x++; //text box increment
-                        $(wrapper).append('<div class="row"><div class="col-xs-3"><div class="form-group"><label for="">Name</label><input type="text" name="dependentName[]" class="form-control" required></div></div><div class="col-xs-3"><label>Birthday</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dependentBirthday[]" class="form-control pull-right" id="datepicker"></div></div><div class="col-xs-3"><div class="form-group"><label for="EL">Education Level</label><select name="dependentEL[]" class="form-control" id="EL" style="width:100%;"><%for(int i = 0; i < educationLevel.size(); i++){%><option value="<%=i%>"><%out.print(educationLevel.get(i));%></option><%}%></select></div></div><div class="col-xs-3"><div class="form-group"><label for="Re">Relationship</label><select name="dependentR[]" class="form-control" id="Re" style="width:100%;"><%for(int j = 0; j < relationshipType.size(); j++){%><option value="<%=j%>"><%out.print(relationshipType.get(j));%></option><%}%></select></div></div></div>');
+                        $(wrapper).append('<div class="row"><div class="col-xs-3"><div class="form-group"><label for="">Name</label><input type="text" name="dependentName[]" class="form-control" required></div></div><div class="col-xs-3"><label>Birthday</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dependentBirthday[]" class="form-control pull-right" id="datepicker"></div></div><div class="col-xs-3"><div class="form-group"><label for="EL">Education Level</label><select name="dependentEL[]" class="form-control" id="EL" style="width:100%;"><%for(int i = 1; i <= educationLevel.size(); i++){%><option value="<%=i%>"><%out.print(educationLevel.get(i));%></option><%}%></select></div></div><div class="col-xs-3"><div class="form-group"><label for="Re">Relationship</label><select name="dependentR[]" class="form-control" id="Re" style="width:100%;"><%for(int j = 1; j <= relationshipType.size(); j++){%><option value="<%=j%>"><%out.print(relationshipType.get(j));%></option><%}%></select></div></div></div>');
                     }
                 });
 

@@ -7,8 +7,10 @@ package com.MVC.Controller;
 
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.DAO.ARBDAO;
+import com.MVC.DAO.ARBODAO;
 import com.MVC.DAO.CAPDEVDAO;
 import com.MVC.Model.ARB;
+import com.MVC.Model.ARBO;
 import com.MVC.Model.CAPDEVActivity;
 import com.MVC.Model.CAPDEVPlan;
 import java.io.IOException;
@@ -38,41 +40,46 @@ public class SendCAPDEVProposal extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         CAPDEVDAO capdevDAO = new CAPDEVDAO();
-        
+        ARBODAO arboDAO = new ARBODAO();
         ARBDAO arbDAO = new ARBDAO();
 
         String[] activities = request.getParameterValues("activities[]");
         String[] activityDates = request.getParameterValues("activityDates[]");
         String[] files = request.getParameterValues("file[]");
 
+        if (files.length != activities.length) {
+            request.setAttribute("errMessage", "Error in processing participants.");
+            request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
+        }
+
+        ARBO arbo = arboDAO.getARBOByID(Integer.parseInt(request.getParameter("requestID")));
+
         CAPDEVPlan capdevPlan = new CAPDEVPlan();
-        
-        
+
         capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         capdevPlan.setPlanDTN(request.getParameter("dtn"));
-        
+
         int planID = 0;
 
         if (request.getParameter("pastDueID") != null) {
             capdevPlan.setPastDueAccountID(Integer.parseInt(request.getParameter("pastDueID")));
-            planID = capdevDAO.addCAPDEVPlanForPastDue(capdevPlan, (Integer)session.getAttribute("userID"));
-        }else{
-            planID = capdevDAO.addCAPDEVPlan(capdevPlan, (Integer)session.getAttribute("userID"));
+            planID = capdevDAO.addCAPDEVPlanForPastDue(capdevPlan, (Integer) session.getAttribute("userID"));
+        } else {
+            planID = capdevDAO.addCAPDEVPlan(capdevPlan, (Integer) session.getAttribute("userID"));
         }
-        
 
         for (int i = 0; i < activities.length; i++) {
 
             CAPDEVActivity activity = new CAPDEVActivity();
             ArrayList<ARB> arbList = new ArrayList();
             ArrayList arbHolder = readExcelFile(files[i]);
-            
+
             ArrayList cellStoreArrayList = new ArrayList();
 
             java.sql.Date activityDate = null;
@@ -97,14 +104,13 @@ public class SendCAPDEVProposal extends BaseServlet {
                 String lN = cellStoreArrayList.get(0).toString();
                 String fN = cellStoreArrayList.get(1).toString();
                 String mN = cellStoreArrayList.get(2).toString();
-                
 
                 int arbID = arbDAO.getARBID(fN, mN, lN);
                 ARB arb = arbDAO.getARBByID(arbID);
-                
-                System.out.println(arb.getFullName());
 
-                arbList.add(arb);
+                if (arb.getArboID() == arbo.getArboID()) {
+                    arbList.add(arb);
+                }
             }
 
             capdevDAO.addCAPDEVPlanActivityParticipants(arbList, newlyAddedActivityID);
