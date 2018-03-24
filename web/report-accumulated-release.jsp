@@ -20,7 +20,9 @@
             <%if((Integer)session.getAttribute("userType") == 3){ // PFO%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
             <%}else if((Integer)session.getAttribute("userType") == 4){ // RFO%>
-            <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
+            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
+            <%}else if((Integer)session.getAttribute("userType") == 5){ // RFO%>
+            <%@include file="jspf/central-sidebar.jspf"%>
             <%}%>
 
             <%
@@ -40,9 +42,12 @@
                     Province pro = addressDAO.getProvOffice((Integer)session.getAttribute("provOfficeCode"));
                     place = pro.getProvDesc();
                     arboListParam = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
-                }else if((Integer)session.getAttribute("userType") == 4){ // RFO
+                }else if((Integer)session.getAttribute("userType") == 4 || (Integer)session.getAttribute("userType") == 5 && (Integer)session.getAttribute("regOfficeCode") != 13){ // RFO
                     place = addressDAO.getRegDesc((Integer)session.getAttribute("regOfficeCode"));
                     arboListParam = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
+                }else if((Integer)session.getAttribute("userType") == 5 && (Integer)session.getAttribute("regOfficeCode") == 13){ // RFO
+                    place = "NATIONAL";
+                    arboListParam = arboDAO.getAllARBOs();
                 }
                 
                 requests = rDAO.getAllFilteredAccumulatedARBORequests(arboListParam,e.getEvaluationStartDate(),e.getEvaluationEndDate());

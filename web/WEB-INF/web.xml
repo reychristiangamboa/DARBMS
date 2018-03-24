@@ -304,6 +304,26 @@
         <servlet-name>ClusterARB</servlet-name>
         <servlet-class>com.MVC.Controller.ClusterARB</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewRegionalDashboard</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewRegionalDashboard</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewProvincialDashboard</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewProvincialDashboard</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ManageEvaluation</servlet-name>
+        <servlet-class>com.MVC.Controller.ManageEvaluation</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddQuestion</servlet-name>
+        <servlet-class>com.MVC.Controller.AddQuestion</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EditQuestion</servlet-name>
+        <servlet-class>com.MVC.Controller.EditQuestion</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -607,6 +627,26 @@
     <servlet-mapping>
         <servlet-name>ClusterARB</servlet-name>
         <url-pattern>/ClusterARB</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewRegionalDashboard</servlet-name>
+        <url-pattern>/ViewRegionalDashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewProvincialDashboard</servlet-name>
+        <url-pattern>/ViewProvincialDashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageEvaluation</servlet-name>
+        <url-pattern>/ManageEvaluation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddQuestion</servlet-name>
+        <url-pattern>/AddQuestion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditQuestion</servlet-name>
+        <url-pattern>/EditQuestion</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

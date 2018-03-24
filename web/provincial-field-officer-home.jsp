@@ -49,14 +49,74 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
+            <%if((Integer)session.getAttribute("userType") == 3){%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
+            <%}else if((Integer)session.getAttribute("userType") == 4){%>
+            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
+            <%}else if((Integer)session.getAttribute("userType") == 5){%>
+            <%@include file="jspf/central-sidebar.jspf"%>
+            <%}%>
+            
+            <%
+            CropDAO cropDAO = new CropDAO();
+    AddressDAO addressDAO = new AddressDAO();
+    ARBODAO arboDAO = new ARBODAO();
+    ARBDAO arbDAO = new ARBDAO();
+    APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+    CAPDEVDAO capdevDAO = new CAPDEVDAO();
+    UserDAO uDAO = new UserDAO();
+    
+    ArrayList<EducationLevel> educationLevel = arbDAO.getAllEducationLevel();
+    ArrayList<RelationshipType> relationshipType = arbDAO.getAllRelationshipType();
+    
+    
+    APCPRelease apcpRelease = new APCPRelease();
+    
+    ArrayList<Crop> allCrops = cropDAO.getAllCrops(); 
+    ArrayList<Region> regionList = addressDAO.getAllRegions();
+
+    
+    ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<ARBO> qualifiedARBOs = arboDAO.getAllQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
+
+
+    ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
+    ArrayList<CityMun> cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
+
+    ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(arbListProvince);
+    ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListProvince);
+    
+    ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer)session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7, (Integer) session.getAttribute("provOfficeCode"));
+    
+    ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(provincialRequests);
+    
+    
+    ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
+    ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
+    
+    ArrayList<CAPDEVPlan> allPlans = capdevDAO.getAllProvincialCAPDEVPlan((Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
+
+    
+    ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.getAttribute("provOfficeCode"));
+            %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        User Profile
+                        Provincial Field Officer Home
                     </h1>
                 </section>
 
@@ -330,7 +390,7 @@
                                                                             <tfoot>
                                                                                 <tr>
                                                                                     <th>ARBO Name</th>
-                                                                                    <th>City Mun ID</th>
+                                                                                    <th>No. of Members</th>
                                                                                 </tr>
                                                                             </tfoot>
                                                                         </table>

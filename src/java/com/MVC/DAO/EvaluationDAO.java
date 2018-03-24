@@ -56,6 +56,39 @@ public class EvaluationDAO {
         }
         return success;
     }
+    
+    public boolean editQuestion(Question q) {
+        boolean success = false;
+        PreparedStatement p = null;
+        Connection con = null;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        con = myFactory.getConnection();
+        try {
+            con.setAutoCommit(false);
+            String query = "UPDATE `dar-bms`.`questions` SET `question`=?, `weight`=? WHERE `questionID`=?";
+
+            p = con.prepareStatement(query);
+            p.setString(1, q.getQuestion());
+            p.setDouble(2, q.getWeight());
+            p.setInt(3, q.getQuestionID());
+
+            p.executeUpdate();
+            p.close();
+
+            con.commit();
+            con.close();
+            success = true;
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(EvaluationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(EvaluationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
+    }
 
     public Question getQuestionByID(int questionID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();

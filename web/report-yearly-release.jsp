@@ -19,7 +19,9 @@
             <%if((Integer)session.getAttribute("userType") == 3){ // PFO%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
             <%}else if((Integer)session.getAttribute("userType") == 4){ // RFO%>
-            <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
+            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
+            <%}else if((Integer)session.getAttribute("userType") == 5){ // RFO%>
+            <%@include file="jspf/central-sidebar.jspf"%>
             <%}%>
 
             <%
@@ -39,9 +41,12 @@
                     Province pro = addressDAO.getProvOffice((Integer)session.getAttribute("provOfficeCode"));
                     place = pro.getProvDesc();
                     requestsParam = apcpRequestDAO.getAllProvincialRequests((Integer)session.getAttribute("provOfficeCode"));
-                }else if((Integer)session.getAttribute("userType") == 4){ // RFO
+                }else if((Integer)session.getAttribute("userType") == 4 || (Integer)session.getAttribute("userType") == 5 && (Integer)session.getAttribute("regOfficeCode") != 13){ // RFO
                     place = addressDAO.getRegDesc((Integer)session.getAttribute("regOfficeCode"));
                     requestsParam = apcpRequestDAO.getAllRegionalRequests((Integer) session.getAttribute("regOfficeCode"));;
+                }else if((Integer)session.getAttribute("userType") == 5 && (Integer)session.getAttribute("regOfficeCode") == 13){ // RFO
+                    place = "NATIONAL";
+                    requestsParam = apcpRequestDAO.getAllRequests();
                 }
                 
                 requests = rDAO.getAllFilteredReleasesByRequests(requestsParam,e.getEvaluationStartDate(),e.getEvaluationEndDate());

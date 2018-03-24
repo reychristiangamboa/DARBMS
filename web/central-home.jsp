@@ -190,7 +190,6 @@
                                                                                     <th>Land Area</th>
                                                                                     <th>ARB Rating</th>
                                                                                     <th>ARB Status</th>
-
                                                                                 </tr>
                                                                             </tfoot>
                                                                         </table>
@@ -332,9 +331,14 @@
                                                                         </table>
 
                                                                     </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                                    </div>
+                                                                    <form method="post">
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                                            <div class="pull-right">
+                                                                                <button class="btn btn-primary" type="submit" onclick="form.action='ViewRegionalDashboard?regOfficeCode=<%out.print(region.getRegCode());%>'">View Dashboard</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
                                                                 </div>
                                                                 <!-- /.modal-content -->
                                                             </div>

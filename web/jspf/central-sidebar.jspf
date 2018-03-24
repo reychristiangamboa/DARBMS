@@ -8,6 +8,7 @@
 <%@page import="com.MVC.Model.CityMun;"%>
 <%@page import="com.MVC.Model.ARBO;"%>
 <%@page import="com.MVC.Model.ARB;"%>
+<%@page import="com.MVC.Model.Question;"%>
 <%@page import="com.MVC.Model.CAPDEVActivity;"%>
 <%@page import="com.MVC.Model.APCPRequest;"%>
 <%@page import="com.MVC.DAO.AddressDAO;"%>
@@ -111,6 +112,22 @@
                     <i class="fa fa-edit"></i> <span> Manage CAPDEV Activities</span>
                 </a>
             </li>
+            
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-users"></i> <span>Manage Evaluation Questions</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="ManageEvaluation?type=1"><i class="fa fa-dot-circle-o"></i>  Overall/ARB Evaluation</a></li>
+                    <li><a href="ManageEvaluation?type=2"><i class="fa fa-dot-circle-o"></i>  APCP Evaluation</a></li>
+                    <li><a href="ManageEvaluation?type=3"><i class="fa fa-dot-circle-o"></i>  CAPDEV Evaluation</a></li>
+                </ul>
+            </li>
+            
+            
             <li>
                 <a href="edit-profile.jsp">
                     <i class="fa fa-edit"></i> <span> Edit Profile</span>

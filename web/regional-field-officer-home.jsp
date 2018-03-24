@@ -46,8 +46,49 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
+            <%if((Integer)session.getAttribute("userType") == 4){%>
             <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
+            <%}else if((Integer)session.getAttribute("userType") == 5){%>
+            <%@include file="jspf/central-sidebar.jspf"%>
+            <%}%>
+            <%
+            UserDAO uDAO = new UserDAO();
+    ARBDAO arbDAO = new ARBDAO();
+    ARBODAO arboDAO = new ARBODAO();
+    CAPDEVDAO capdevDAO = new CAPDEVDAO();
+    AddressDAO addressDAO = new AddressDAO();
+    CropDAO cropDAO = new CropDAO();
+    APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
 
+    ArrayList<Region> regionList = addressDAO.getAllRegions();
+    //ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRequestedRequestsRegion((Integer) session.getAttribute("regOfficeCode"));
+
+    ArrayList<ARBO> arboListRegion = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
+
+    ArrayList<ARB> arbListRegion = arbDAO.getAllARBsOfARBOs(arboListRegion);
+
+    ArrayList<Province> perProvinceList = addressDAO.getAllProvOfficesRegion((Integer) session.getAttribute("regOfficeCode"));
+
+    ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(arbListRegion);
+    ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListRegion);
+    ArrayList<APCPRequest> regionalRequest = apcpRequestDAO.getAllRegionalRequests((Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(2, (Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(4, (Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(5, (Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(7, (Integer) session.getAttribute("regOfficeCode"));
+
+    ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
+    ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(regionalRequest);
+
+    ArrayList<CAPDEVPlan> allPlans = capdevDAO.getAllRegionalCAPDEVPlan((Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(2, (Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(5, (Integer) session.getAttribute("regOfficeCode"));
+            %>
+            
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
@@ -323,15 +364,20 @@
                                                                             <tfoot>
                                                                                 <tr>
                                                                                     <th>ARBO Name</th>
-                                                                                    <th>City Mun ID</th>
+                                                                                    <th>No. of Members</th>
                                                                                 </tr>
                                                                             </tfoot>
                                                                         </table>
 
                                                                     </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                                    </div>
+                                                                    <form method="post">
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                                            <div class="pull-right">
+                                                                                <button class="btn btn-primary" type="submit" onclick="form.action='ViewProvincialDashboard?provOfficeCode=<%out.print(prov.getProvCode());%>'">View Dashboard</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
                                                                 </div>
                                                                 <!-- /.modal-content -->
                                                             </div>
