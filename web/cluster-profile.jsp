@@ -59,12 +59,13 @@
             <%}%>
 
             <%
-                int cityMunCode = (Integer) request.getAttribute("cityMunCode");
+                Cluster cluster = (Cluster)request.getAttribute("cluster");
                 ARBODAO dao = new ARBODAO();
                 ARBDAO dao2 = new ARBDAO();
                 CropDAO dao3 = new CropDAO();
-                ArrayList<ARB> allArbPerCity = dao2.getAllARBsByCityMun(cityMunCode);
-                ArrayList<Crop> crops = dao3.getAllCropsByARBList(allArbPerCity);
+                LINKSFARMDAO dao4 = new LINKSFARMDAO();
+                ArrayList<Crop> crops = dao3.getAllCropsByARBList(cluster.getClusterMembers());
+                ArrayList<CAPDEVActivity> activityHistory = dao4.getAPCPCAPDEVActivityHistoryByCluster(cluster.getClusterID());
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -82,15 +83,15 @@
                             <!-- Profile Image -->
                             <div class="box box-primary">
                                 <div class="box-body box-profile">
-                                    <h3 class="profile-username text-center">#Tropang Texters</h3>
+                                    <h3 class="profile-username text-center"><%=cluster.getClusterName()%></h3>
                                     <p class="text-muted text-center">Project Site</p>
 
                                     <ul class="list-group list-group-unbordered">
                                         <li class="list-group-item">
-                                            <b>No. of ARBs</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=allArbPerCity.size()%></a>
+                                            <b>No. of ARBs</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=cluster.getClusterMembers().size()%></a>
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Location</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=dao.getARBOByID(cityMunCode).getArboCityMunDesc()%>, <%=dao.getARBOByID(cityMunCode).getArboProvinceDesc()%>, <%=dao.getARBOByID(cityMunCode).getArboRegionDesc()%></a>
+                                            <b>Location</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=cluster.getClusterSiteDesc()%></a>
                                         </li>
                                         <li class="list-group-item">
                                             <b>Crops</b> <a class="pull-right" data-toggle="modal" data-target="#arbs">Crops</a>
@@ -124,7 +125,7 @@
 
                                                         <tbody>
                                                             <%
-                                                                for (ARB arb : allArbPerCity) {
+                                                                for (ARB arb : cluster.getClusterMembers()) {
                                                             %>
                                                             <tr>
                                                                 <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFullName());%></a></td>
@@ -215,7 +216,7 @@
                                                                             <tbody>
                                                                                 <%
                                                                                     ARBODAO arbol = new ARBODAO();
-                                                                                    for (ARB arb : allArbPerCity) {
+                                                                                    for (ARB arb : cluster.getClusterMembers()) {
                                                                                         if (arb.getGender().equalsIgnoreCase("M")) {
                                                                                 %>
                                                                                 <tr>
@@ -258,7 +259,7 @@
                                                                             <tbody>
                                                                                 <%
                                                                                     ARBODAO arboll = new ARBODAO();
-                                                                                    for (ARB arb : allArbPerCity) {
+                                                                                    for (ARB arb : cluster.getClusterMembers()) {
                                                                                         if (arb.getGender().equalsIgnoreCase("F")) {
                                                                                 %>
                                                                                 <tr>
@@ -336,7 +337,7 @@
                                                                 <tbody>
                                                                     <%
                                                                         ARBODAO arboEduc = new ARBODAO();
-                                                                        for (ARB arb : allArbPerCity) {
+                                                                        for (ARB arb : cluster.getClusterMembers()) {
 
                                                                     %>
                                                                     <tr>
@@ -380,7 +381,7 @@
 
                                                             <tbody>
                                                                 <%
-                                                                    for (ARB arb : allArbPerCity) {
+                                                                    for (ARB arb : cluster.getClusterMembers()) {
                                                                 %>
                                                                 <tr>
                                                                     <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFullName());%></a></td>
@@ -438,7 +439,7 @@
                                                                     </thead>
                                                                     <tbody>
                                                                         <%
-                                                                            ArrayList<Crop> cropHistory = dao3.getCropHistory(allArbPerCity);
+                                                                            ArrayList<Crop> cropHistory = dao3.getCropHistory(cluster.getClusterMembers());
                                                                             for (Crop c : cropHistory) {
                                                                                 ARB arb = dao2.getARBByID(c.getArbID());
                                                                         %>
@@ -456,8 +457,6 @@
                                                                             <th>ARB Name</th>
                                                                             <th>ARBO Name</th>
                                                                             <th>Crop</th>
-
-
                                                                         </tr>
                                                                     </tfoot>
                                                                 </table>
@@ -481,50 +480,164 @@
 
                                 </div>
                             </div>
-
-                            <!-- /.col -->
                             <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">APCP Visuals</h3>
+                                <div class="box-header with-border" >
+                                    <h3 class="box-title">CAPDEV Visuals</h3>
                                     <div class="box-tools pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                        <a class="btn btn-link" type="button" href="CreateLINKSFARMCAPDEVProposal?clusterID=<%out.print(cluster.getClusterID());%>"><i class="fa fa-plus"></i> Create LINKSFARM CAPDEV</a>
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"></button>
                                     </div>
                                 </div>
-                                <div class="box-body">
+                                <div class="box-body" >
                                     <div class="nav-tabs-custom">
                                         <ul class="nav nav-tabs">
-
-                                            <li class="active"><a href="#disbursement" data-toggle="tab">Disbursements</a></li>
-                                            <li><a href="#repayment" data-toggle="tab">Repayments</a></li>
-                                            <li><a href="#pastDue" data-toggle="tab">Past Due</a></li>
+                                            <li class="active"><a href="#apcpCapdev" data-toggle="tab">APCP CAPDEV</a></li>
                                         </ul>
-                                        <div class="tab-content">
+                                        <div class="tab-content"  style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
+                                            <div class="active tab-pane" id="apcpCapdev">
+                                                <div class="col-xs-12" style="margin:10px;" >
+                                                    <ul class="timeline">
+                                                        <%
+                                                            boolean firstInstance = true;
+                                                            Date date = null;
+                                                        %>
+                                                        <% for (CAPDEVActivity activity : activityHistory) { %>
+                                                        <%
+                                                            boolean dateChanged = false;
 
-                                            <div class="active tab-pane" id="disbursement">
-                                                <div class="box-body">
-                                                    <canvas id="pieDisbursements" style="height:250px"></canvas>
-                                                </div>
-                                            </div>
-                                            <!-- /.tab-pane -->
-                                            <div class="tab-pane" id="repayment" style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
-                                            </div>
-                                            <!-- /.tab-pane -->
+                                                            if (firstInstance) { // FIRST INSTANCE
+                                                                date = activity.getActivityDate();
+                                                            }
+                                                        %>
 
-                                            <div class="tab-pane" id="pastDue">
-                                                <div class="box-body">
-                                                    <canvas id="pieCanvas" style="height:250px"></canvas>
+                                                        <%
+                                                            if (date.compareTo(activity.getActivityDate()) != 0) { // NEW DATE, change currDate
+                                                                date = activity.getActivityDate();
+                                                                dateChanged = true;
+                                                                System.out.print("Date changed!");
+                                                            }
+                                                        %>
+
+                                                        <%if (firstInstance || dateChanged) {%>
+                                                        <li class="time-label">
+                                                            <span class="bg-green">
+                                                                <%out.print(f.format(date));%>
+                                                            </span>
+                                                        </li>
+                                                        <%firstInstance = false;%>
+                                                        <%}%>
+
+                                                        <li>
+                                                            <%if (activity.getActivityCategory() == 1) {%>
+                                                            <i class="fa fa-clipboard bg-green"></i>
+                                                            <%} else if (activity.getActivityCategory() == 2) {%>
+                                                            <i class="fa fa-clipboard bg-red"></i>
+                                                            <%} else if (activity.getActivityCategory() == 3) {%>
+                                                            <i class="fa fa-clipboard bg-orange"></i>
+                                                            <%}%>
+                                                            <div class="timeline-item">
+                                                                <h3 class="timeline-header">
+                                                                    <a href="#" data-toggle='modal' data-target='#activity<%out.print(activity.getActivityID());%>'><%out.print(activity.getActivityName());%></a>
+                                                                </h3>
+                                                            </div>
+                                                        </li>
+
+                                                        <div class="modal fade" id="activity<%out.print(activity.getActivityID());%>">
+                                                            <div class="modal-dialog modal-md">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span></button>
+                                                                        <h4 class="modal-title">Activity Details</h4>
+                                                                    </div>
+
+
+                                                                    <div class="modal-body" id="modalBody">
+
+                                                                        <div class="row">
+                                                                            <div class="col-xs-4">
+                                                                                <div class="form-group">
+                                                                                    <label for="">Activity Title</label>
+                                                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getActivityName());%>" disabled>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-xs-8">
+                                                                                <div class="form-group">
+                                                                                    <label for="">Activity Description</label>
+                                                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getActivityDesc());%>" disabled>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-xs-4">
+                                                                                <div class="form-group">
+                                                                                    <label for="">Activity Date</label>
+                                                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(f.format(activity.getActivityDate()));%>" disabled>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-xs-4">
+                                                                                <div class="form-group">
+                                                                                    <label for="">No. of Participants</label>
+                                                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getArbList().size());%>" disabled>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-xs-12">
+                                                                                <div class="form-group">
+                                                                                    <label for="">Observations</label>
+                                                                                    <textarea id="" cols="30" rows="3" class="form-control" disabled><%if (activity.getObservations() != null) {
+                                                                                            out.print(activity.getObservations());
+                                                                                        } else {
+                                                                                            out.print("N/A");
+                                                                                        };%></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-xs-12">
+                                                                                <div class="form-group">
+                                                                                    <label for="">Recommendation</label>
+                                                                                    <textarea id="" cols="30" rows="3" class="form-control" disabled><%if (activity.getRecommendation() != null) {
+                                                                                            out.print(activity.getRecommendation());
+                                                                                        } else {
+                                                                                            out.print("N/A");
+                                                                                        };%></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <div class="pull-right">
+                                                                            <button type='button' class="btn btn-default">Cancel</button>
+                                                                            <button type='button' class="btn btn-primary">View More</button>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <!--                                            /.modal-content -->
+                                                            </div>
+                                                            <!--                                        /.modal-dialog -->
+                                                        </div>
+                                                        <% }%>
+                                                    </ul>
+
                                                 </div>
+
+
                                             </div>
                                         </div>
+
+
                                         <!-- /.tab-content -->
                                     </div>
                                     <!-- /.nav-tabs-custom -->
 
                                 </div>
                             </div>
-                            <!-- /.col -->
 
                         </div>
                     </div>
@@ -541,13 +654,13 @@
                 var ctx = $('#barCanvas').get(0).getContext('2d');
             <%
                 Chart bar = new Chart();
-                String json = bar.getBarChartEducation(allArbPerCity);
+                String json = bar.getBarChartEducation(cluster.getClusterMembers());
             %>
                 new Chart(ctx, <%out.print(json);%>);
                 var ctx2 = $('#lineCanvas').get(0).getContext('2d');
             <%
                 Chart line = new Chart();
-                String json2 = line.getCropHistory(crops,allArbPerCity);
+                String json2 = line.getCropHistory(crops,cluster.getClusterMembers());
             %>
                 new Chart(ctx2, <%out.print(json2);%>);
 
@@ -555,14 +668,14 @@
                 var ctx3 = $('#pieCanvas').get(0).getContext('2d');
             <%
                 Chart pie = new Chart();
-                String json3 = pie.getPieChartGender(allArbPerCity);
+                String json3 = pie.getPieChartGender(cluster.getClusterMembers());
             %>
                 new Chart(ctx3, <%out.print(json3);%>);
 
                 var ctx4 = $('#pieDisbursements').get(0).getContext('2d');
             <%
                 Chart pie2 = new Chart();
-                String json4 = pie2.getPieChartDisbursement(allArbPerCity);
+                String json4 = pie2.getPieChartDisbursement(cluster.getClusterMembers());
             %>
                 new Chart(ctx4, <%out.print(json4);%>);
 

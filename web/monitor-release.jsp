@@ -16,7 +16,7 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
-            
+
             <%if ((Integer) session.getAttribute("userType") == 1) {%>
             <%@include file="jspf/admin-sidebar.jspf"%>
             <%} else if ((Integer) session.getAttribute("userType") == 2) {%>
@@ -50,7 +50,7 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-                    
+
 
                 </section>
 
@@ -256,56 +256,67 @@
                                                                         <h4 class="modal-title">Past Due Account Details</h4>
                                                                     </div>
 
-
-                                                                    <div class="modal-body" id="modalBody">
-                                                                        <div class="row">
-                                                                            <div class="col-xs-12">
-                                                                                <div class="col-xs-6">
-                                                                                    <div class="form-group">
-                                                                                        <label for="">Amount</label>
-                                                                                        <input type="text" class="form-control" value="<%=currency.format(p.getPastDueAmount())%>" disabled>
+                                                                    <form method="post">
+                                                                        <div class="modal-body" id="modalBody">
+                                                                            <div class="row">
+                                                                                <div class="col-xs-12">
+                                                                                    <div class="text-center">
+                                                                                        <div class="form-group">
+                                                                                            <input type="radio" id="full" name="paymentMode" value="full" checked onclick="document.getElementById('pdaAmount<%out.print(p.getPastDueAccountID());%>').disabled = true">
+                                                                                            <label for="">Full Settlement</label>
+                                                                                            <input type="radio" id="partial" name="paymentMode" value="partial" onclick="document.getElementById('pdaAmount<%out.print(p.getPastDueAccountID());%>').disabled = false">
+                                                                                            <label for="">Partial Settlement</label>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-xs-6">
-                                                                                    <form method="post">
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-xs-12">
+                                                                                    <div class="col-xs-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="">Amount</label>
+                                                                                            <input type="text" id="pdaAmount<%out.print(p.getPastDueAccountID());%>" class="form-control numberOnly" name="amount" value="<%=p.getPastDueAmount()%>">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-xs-6">
                                                                                         <div class="form-group">
                                                                                             <label for="">Date Settled</label>
                                                                                             <div class="input-group">
-                                                                                                <input type="date" class="form-control" name="dateSettled" <%if (p.getDateSettled() != null) { %> value="<%out.print(p.getDateSettled());%>"<%}%>>
-                                                                                                <input type="hidden" name="pastDueAccountID" value="<%=p.getPastDueAccountID()%>">
-                                                                                                <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
-                                                                                                <span class="input-group-btn">
-                                                                                                    <button class="btn btn-primary" onclick="form.action = 'SettlePastDueAccount'">Settle</button>
-                                                                                                </span>
+                                                                                                <input type="date" class="form-control" name="dateSettled" <%if (p.getDateSettled() != null) { %> value="<%out.print(p.getDateSettled());%>"<%}%> required>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </form>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-xs-12">
-                                                                                <div class="col-xs-6">
-                                                                                    <div class="form-group">
-                                                                                        <label for="">Reason for Past Due</label>
-                                                                                        <input type="text" class="form-control" value="<%=p.getReasonPastDueDesc()%>" disabled>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div class="col-xs-6">
-                                                                                    <label for="">Other Reason for Past Due</label>
-                                                                                    <textarea class="form-control" name="otherReason" id="" cols="10" rows="3" disabled><%out.print(p.getOtherReason());%></textarea>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-xs-12">
+                                                                                    <div class="col-xs-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="">Reason for Past Due</label>
+                                                                                            <input type="text" class="form-control" value="<%=p.getReasonPastDueDesc()%>" disabled>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-xs-6">
+                                                                                        <label for="">Other Reason for Past Due</label>
+                                                                                        <textarea class="form-control" name="otherReason" id="" cols="10" rows="3" disabled><%out.print(p.getOtherReason());%></textarea>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <form method="post">
+
+
                                                                         <div class="modal-footer">
+
                                                                             <input type="hidden" name="id" value="<%=r.getRequestID()%>">
                                                                             <input type="hidden" name="pastDueID" value="<%=p.getPastDueAccountID()%>">
+                                                                            <%if((Integer)session.getAttribute("userType") == 3){%>
                                                                             <button type="submit" onclick="form.action = 'CreateCAPDEVProposal'" class="btn btn-primary pull-right">Create CAPDEV Proposal</button>
+                                                                            <%}else if((Integer)session.getAttribute("userType") == 2){%>
+                                                                            <button class="btn btn-primary" onclick="form.action = 'SettlePastDueAccount'">Settle</button>
+                                                                            <%}%>
                                                                         </div>
-                                                                    </form>
 
+                                                                    </form>
                                                                 </div>
                                                                 <!--                                            /.modal-content -->
                                                             </div>
@@ -561,7 +572,7 @@
                                                         <div class="input-group-addon">
                                                             <i>&#8369;</i>
                                                         </div>
-                                                        <input type="text" class="form-control numberOnly" name="pastDueAmount" autocomplete="off" required>
+                                                        <input type="text" class="form-control numberOnly" name="pastDueAmount" autocomplete="off" required disabled>
                                                     </div>
                                                 </div>
                                             </div>
@@ -642,10 +653,13 @@
 
             </div>
             <!-- /.content-wrapper -->
-            
+
         </div>
         <%@include file="jspf/footer.jspf" %>
         <script>
+
+
+
             var ctx = $('#barCanvas').get(0).getContext('2d');
             <%
                 Chart bar = new Chart();

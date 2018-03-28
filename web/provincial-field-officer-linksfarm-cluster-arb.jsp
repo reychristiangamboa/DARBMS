@@ -78,53 +78,74 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="box">
-                                <div class="box-header"><h3 class="box-title">Active ARBs</h3></div>
-                                <!-- /.box-header -->
-                                <div class="box-body">
-                                    <form action="ClusterARB" method="post">
-                                        <table id="example1" class="table table-bordered table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>ARB Name</th>
-                                                    <th>Address</th>
-                                                    <th>ARBO</th>
-                                                    <th>Gender</th>
-                                                    <th>Education Level</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <%
-                                                    ARBODAO arboDAO = new ARBODAO(); 
-                                                    for (ARB arb : allArbPerCity) {
-                                                %>
-                                                <tr>
-                                                    <td><%out.print(arb.getFullName());%></td>
-                                                    <td><%out.print(arb.getFullAddress());%></td>
-                                                    <td><%out.print(arboDAO.getARBOByID(arb.getArboID()).getArboName());%></td>
-                                                    <td><%out.print(arb.getGender());%></td>
-                                                    <td><%out.print(arb.getEducationLevelDesc());%></td>
-                                                    <td> 
-                                                        <input type="checkbox" id="<%=arb.getArbID()%>" name="IDs" value="<%=arb.getArbID()%>"/>
-                                                    </td>
-                                                </tr>
-                                                <%}%>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>ARB Name</th>
-                                                    <th>Address</th>
-                                                    <th>ARBO</th>
-                                                    <th>Gender</th>
-                                                    <th>Education Level</th>
-                                                    <th></th>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                        <button type="submit" class="btn btn-danger pull-right">Cluster</button>
-                                    </form>
-                                </div>
-                                <!-- /.box-body -->
+                                <form method="post" action="ClusterARB">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Active ARBs</h3>
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+
+                                        <div class="row">
+                                            <div class="col-xs-10">
+                                                <div class="form-group">
+                                                    <label for="">Cluser Name:</label>
+                                                    <input type="text" name="clusterName" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <table id="example1" class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ARB Name</th>
+                                                            <th>Address</th>
+                                                            <th>ARBO</th>
+                                                            <th>Gender</th>
+                                                            <th>Education Level</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <%
+                                                            ARBODAO arboDAO = new ARBODAO(); 
+                                                            for (ARB arb : allArbPerCity) {
+                                                        %>
+                                                        <tr>
+                                                            <td><%out.print(arb.getFullName());%></td>
+                                                            <td><%out.print(arb.getFullAddress());%></td>
+                                                            <td><%out.print(arboDAO.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                            <td><%out.print(arb.getGender());%></td>
+                                                            <td><%out.print(arb.getEducationLevelDesc());%></td>
+                                                            <td> 
+                                                                <input type="checkbox" id="<%=arb.getArbID()%>" name="IDs" value="<%=arb.getArbID()%>"/>
+                                                            </td>
+                                                        </tr>
+                                                        <%}%>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th>ARB Name</th>
+                                                            <th>Address</th>
+                                                            <th>ARBO</th>
+                                                            <th>Gender</th>
+                                                            <th>Education Level</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- /.box-body -->
+                                    <div class="box-footer">
+                                        <div class="pull-right">
+                                            <input type="hidden" name="cityMunCode" value="<%=cityMunCode%>">
+                                            <button type="submit" class="btn btn-primary pull-right">Cluster</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         <!-- /.col -->

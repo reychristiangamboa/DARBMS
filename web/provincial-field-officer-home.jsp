@@ -745,15 +745,41 @@
                                             <div class="modal fade" id="totalAccumulated">
                                                 <div class="modal-dialog modal-lger">
                                                     <div class="modal-content">
+
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span></button>
                                                             <h4 class="modal-title">PROVINCIAL RELEASES</h4>
+
                                                         </div>
+
                                                         <div class="modal-body">
 
                                                             <div class="row">
                                                                 <div class="col-xs-12">
+                                                                    <form method="post">
+                                                                        <div class="pull-left">
+
+                                                                            <button type="button" class="btn btn-primary" id="dr-totalAccumulatedReleaseReport">
+                                                                                <span>
+                                                                                    <i class="fa fa-calendar"></i> Date range picker
+                                                                                </span>
+                                                                                <i class="fa fa-caret-down"></i>
+                                                                            </button>
+
+                                                                            <input type="hidden" name="reportType" value="2">
+                                                                            <input type="hidden" id="start-totalAccumulatedReleaseReport" name="start">
+                                                                            <input type="hidden" id="end-totalAccumulatedReleaseReport" name="end" >
+
+                                                                            <button type="submit" class="btn btn-primary" onclick="form.action = 'ViewReport'">Generate Report</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+
                                                                     <table class="table table-bordered table-striped export">
                                                                         <thead>
                                                                             <tr>
@@ -813,28 +839,13 @@
 
 
                                                         </div>
-                                                        <form method="post">
-                                                            <div class="modal-footer">
-                                                                <div class="pull-left">
-                                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                                </div>
-                                                                <div class="pull-right">
 
-                                                                    <button type="button" class="btn btn-default" id="dr-totalAccumulatedReleaseReport">
-                                                                        <span>
-                                                                            <i class="fa fa-calendar"></i> Date range picker
-                                                                        </span>
-                                                                        <i class="fa fa-caret-down"></i>
-                                                                    </button>
-
-                                                                    <input type="hidden" name="reportType" value="2">
-                                                                    <input type="hidden" id="start-totalAccumulatedReleaseReport" name="start">
-                                                                    <input type="hidden" id="end-totalAccumulatedReleaseReport" name="end" >
-
-                                                                    <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
-                                                                </div>
+                                                        <div class="modal-footer">
+                                                            <div class="pull-left">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                             </div>
-                                                        </form>
+                                                        </div>
+
                                                     </div>
                                                     <!-- /.modal-content -->
                                                 </div>
@@ -843,11 +854,11 @@
                                             <!-- /.col -->
                                             <div class="col-sm-3 col-xs-6">
                                                 <div class="description-block border-right">
-                                                    <h5 class="description-header"><%=currency.format(apcpRequestDAO.getTotalApprovedAmount(approvedRequests))%></h5>
+                                                    <h5 class="description-header"><%=currency.format(apcpRequestDAO.getTotalApprovedAmount(provincialRequests))%></h5>
                                                     <span class="description-text">TOTAL APPROVED AMOUNT</span>
-<!--                                                    <div class="row text-center">
+                                                    <div class="row text-center">
                                                         <a class="btn btn-submit" data-toggle="modal" data-target="#totalApprovedAmount">View More</a>
-                                                    </div>-->
+                                                    </div>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
@@ -877,32 +888,38 @@
                                                                                 for (APCPRequest r : provincialRequests) {
                                                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                                                             %>
+
+
+
+                                                                            <%if (r.getRequestStatus() == 4) {%>
                                                                             <tr>
-                                                                                
-                                                                                
-                                                                                <%if (r.getRequestStatus() == 4) {%>
                                                                                 <td><%out.print(r.getLoanTrackingNo());%></td>
                                                                                 <td><%out.print(arbo.getArboName());%></td>
                                                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                                                 <td><%out.print(r.getDateApproved());%></td>
                                                                                 <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
-                                                                                <%} else if (r.getRequestStatus() == 5) {%>
-                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
-                                                                                <td><%out.print(arbo.getArboName());%></td>
-                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
-                                                                                <td><%out.print(r.getDateApproved());%></td>
-                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
-                                                                                <%} else if (r.getRequestStatus() == 7) {%>
-                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
-                                                                                <td><%out.print(arbo.getArboName());%></td>
-                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
-                                                                                <td><%out.print(r.getDateApproved());%></td>
-                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
-                                                                                <%}else{%>
-                                                                                
-                                                                                
                                                                             </tr>
-                                                                            <%}}%>
+                                                                            <%} else if (r.getRequestStatus() == 5) {%>
+                                                                            <tr>
+                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
+                                                                                <td><%out.print(arbo.getArboName());%></td>
+                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
+                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
+                                                                            </tr>
+                                                                            <%} else if (r.getRequestStatus() == 7) {%>
+                                                                            <tr>
+                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
+                                                                                <td><%out.print(arbo.getArboName());%></td>
+                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
+                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
+                                                                            </tr>
+                                                                            <%}%>
+
+
+
+                                                                            <%}%>
 
                                                                         </tbody>
                                                                         <tfoot>
@@ -934,9 +951,9 @@
                                                 <div class="description-block">
                                                     <h5 class="description-header"><%=currency.format(apcpRequestDAO.getTotalPastDueAmount(provincialRequests))%></h5>
                                                     <span class="description-text">TOTAL PAST DUE AMOUNT</span>
-<!--                                                    <div class="row text-center">
+                                                    <div class="row text-center">
                                                         <a class="btn btn-submit" data-toggle="modal" data-target="#totalPastDue">View More</a>
-                                                    </div>-->
+                                                    </div>
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
@@ -946,7 +963,7 @@
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title"></h4>
+                                                            <h4 class="modal-title">Past Due Accounts</h4>
                                                         </div>
                                                         <div class="modal-body">
 
@@ -955,34 +972,39 @@
                                                                     <table class="table table-bordered table-striped export">
                                                                         <thead>
                                                                             <tr>
+                                                                                <th>ARBO Name</th>
                                                                                 <th>Loan Tracking No.</th>
                                                                                 <th>Past Due Amount</th>
                                                                                 <th>Reason for Past Due</th>
                                                                                 <th>Other Reason</th>
                                                                                 <th>Date Recorded</th>
-                                                                                <th>Date Settled</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-
+                                                                            <%
+                                                                                for(PastDueAccount pda : pdaByRequestList){
+                                                                                    APCPRequest req = apcpRequestDAO.getRequestByID(pda.getRequestID());
+                                                                                    ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                                                            %>
+                                                                            <%if(pda.getActive() == 1){%>
                                                                             <tr>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
+                                                                                <td><%=arbo.getArboName()%></td>
+                                                                                <td><%=req.getLoanTrackingNo()%></td>
+                                                                                <td><%=pda.getPastDueAmount()%></td>
+                                                                                <td><%=pda.getReasonPastDueDesc()%></td>
+                                                                                <td><%=pda.getOtherReason()%></td>
+                                                                                <td><%=pda.getDateRecorded()%></td>
                                                                             </tr>
-
+                                                                            <%}%>
+                                                                            <%}%>
                                                                         </tbody>
                                                                         <tfoot>
                                                                             <tr>
-
-                                                                                <th>ARB Name</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>Loan Tracking No.</th>
                                                                                 <th>Past Due Amount</th>
                                                                                 <th>Reason for Past Due</th>
-                                                                                <th>Date Settled</th>
-                                                                                <th>Recorded By</th>
+                                                                                <th>Other Reason</th>
                                                                                 <th>Date Recorded</th>
                                                                             </tr>
                                                                         </tfoot>
@@ -1284,7 +1306,7 @@
                                                 <td><%out.print(arbo2.getArboName());%></td>
                                                 <td><%out.print(cp.getPlanDTN());%></td>
                                                 <td><%out.print(capdao.getCAPDEVPlanActivities(cp.getPlanID()).size());%>                                               </td>
-                                                <td><%out.print(cp.getPlanStatus());%>                                                    </td>
+                                                <td><%out.print(cp.getPlanStatusDesc());%></td>
                                             </tr>
                                             <%}%>
                                         </tbody>

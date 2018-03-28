@@ -661,7 +661,7 @@ public class APCPRequestDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`past_due_accounts` (`requestID`, `pastDueAmount`, `reasonPastDue`, `otherReason`, `recordedBy`, `recordedDate`) "
+            String query = "INSERT INTO `dar-bms`.`past_due_accounts` (`requestID`, `pastDueAmount`, `reasonPastDue`, `otherReason`, `recordedBy`, `dateRecorded`) "
                     + " VALUES (?, ?, ?, ?, ?, ?);";
             p = con.prepareStatement(query);
             p.setInt(1, pda.getRequestID());
@@ -723,6 +723,45 @@ public class APCPRequestDAO {
             Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return pList;
+    }
+    
+    public PastDueAccount getPastDueAccountByID(int pastDueAccountID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        PastDueAccount p = new PastDueAccount();
+        try {
+            String query = "SELECT * FROM past_due_accounts p "
+                    + "JOIN ref_reasonPastDue r ON p.reasonPastDue=r.reasonPastDue "
+                    + "WHERE p.pastDueAccountID=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, pastDueAccountID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                
+                p.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                p.setRequestID(rs.getInt(("requestID")));
+                p.setPastDueAmount(rs.getDouble("pastDueAmount"));
+                p.setDateSettled(rs.getDate("dateSettled"));
+                p.setReasonPastDue(rs.getInt("reasonPastDue"));
+                p.setReasonPastDueDesc(rs.getString("reasonPastDueDesc"));
+                p.setOtherReason(rs.getString("otherReason"));
+                p.setRecordedBy(rs.getInt("recordedBy"));
+                p.setDateRecorded(rs.getDate("dateRecorded"));
+                p.setActive(rs.getInt("active"));
+                
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return p;
     }
     
     public ArrayList<PastDueAccount> getAllFilteredPastDueAccountsByRequest(int requestID, Date start, Date end) {
@@ -787,6 +826,7 @@ public class APCPRequestDAO {
                     p.setReasonPastDue(rs.getInt("reasonPastDue"));
                     p.setReasonPastDueDesc(rs.getString("reasonPastDueDesc"));
                     p.setOtherReason(rs.getString("otherReason"));
+                    p.setDateRecorded(rs.getDate("dateRecorded"));
                     p.setRecordedBy(rs.getInt("recordedBy"));
                     p.setActive(rs.getInt("active"));
                     pList.add(p);
@@ -894,10 +934,11 @@ public class APCPRequestDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE past_due_accounts p SET p.dateSettled = ?, p.active=0 WHERE p.pastDueAccountID=?";
+            String query = "UPDATE past_due_accounts p SET p.dateSettled = ?, p.pastDueAmount=?, p.active=0 WHERE p.pastDueAccountID=?";
             p = con.prepareStatement(query);
             p.setDate(1, pda.getDateSettled());
-            p.setInt(2, pda.getPastDueAccountID());
+            p.setDouble(2, pda.getPastDueAmount());
+            p.setInt(3, pda.getPastDueAccountID());
             p.executeUpdate();
             p.close();
             con.commit();
@@ -1656,7 +1697,7 @@ public class APCPRequestDAO {
         Connection con = myFactory.getConnection();
         double sum = 0;
         try {
-            String query = "SELECT SUM(loanAmount) FROM apcp_requests WHERE requestID=?";
+            String query = "SELECT SUM(loanAmount) FROM apcp_requests WHERE requestID=? AND (requestStatus=4 OR requestStatus=5 OR requestStatus=7)";
             for (APCPRequest r : apcpRequestList) {
                 PreparedStatement pstmt = con.prepareStatement(query);
                 pstmt.setInt(1, r.getRequestID());

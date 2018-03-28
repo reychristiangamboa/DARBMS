@@ -419,8 +419,8 @@ public class Chart {
         dataset.setLabel("DATASET");
         for (int i = 0; i < doubleFigures.size(); i++) {
             dataset.addData(doubleFigures.get(i));
-            dataset.addBackgroundColor(Color.AQUA);
-            dataset.addBackgroundColor(Color.PINK);
+            dataset.addBackgroundColor(Color.BLUE);
+            dataset.addBackgroundColor(Color.DARK_SALMON);
 
         }
         dataset.setBorderWidth(2);
@@ -603,7 +603,7 @@ public class Chart {
         datasetsIntermediateEduc.setLabel("Intermediate");
         for (int i = 0; i < intermediateEduc.size(); i++) {
             datasetsIntermediateEduc.addData(intermediateEduc.get(i));
-            datasetsIntermediateEduc.addBackgroundColor(Color.AQUA);
+            datasetsIntermediateEduc.addBackgroundColor(Color.random());
         }
         datasetsIntermediateEduc.setBorderWidth(2);
 
@@ -611,7 +611,7 @@ public class Chart {
         datasetsElementaryGradEduc.setLabel("Elementary Graduate");
         for (int i = 0; i < elementaryGradEduc.size(); i++) {
             datasetsElementaryGradEduc.addData(elementaryGradEduc.get(i));
-            datasetsElementaryGradEduc.addBackgroundColor(Color.GREEN);
+            datasetsElementaryGradEduc.addBackgroundColor(Color.random());
         }
         datasetsElementaryGradEduc.setBorderWidth(2);
 
@@ -619,7 +619,7 @@ public class Chart {
         datasetsHsLevelEduc.setLabel("High School Level");
         for (int i = 0; i < hsLevelEduc.size(); i++) {
             datasetsHsLevelEduc.addData(hsLevelEduc.get(i));
-            datasetsHsLevelEduc.addBackgroundColor(Color.AZURE);
+            datasetsHsLevelEduc.addBackgroundColor(Color.random());
         }
         datasetsHsLevelEduc.setBorderWidth(2);
 
@@ -627,7 +627,7 @@ public class Chart {
         datasetsHsGradEduc.setLabel("High School Graduate");
         for (int i = 0; i < hsGradEduc.size(); i++) {
             datasetsHsGradEduc.addData(hsGradEduc.get(i));
-            datasetsHsGradEduc.addBackgroundColor(Color.BLACK);
+            datasetsHsGradEduc.addBackgroundColor(Color.random());
         }
         datasetsHsGradEduc.setBorderWidth(2);
 
@@ -635,7 +635,7 @@ public class Chart {
         datasetsCollegeLevelEduc.setLabel("College Level");
         for (int i = 0; i < collegeLevelEduc.size(); i++) {
             datasetsCollegeLevelEduc.addData(collegeLevelEduc.get(i));
-            datasetsCollegeLevelEduc.addBackgroundColor(Color.BROWN);
+            datasetsCollegeLevelEduc.addBackgroundColor(Color.random());
         }
         datasetsCollegeLevelEduc.setBorderWidth(2);
 
@@ -643,7 +643,7 @@ public class Chart {
         datasetsCollegeGradEduc.setLabel("College Graduate");
         for (int i = 0; i < collegeGradEduc.size(); i++) {
             datasetsCollegeGradEduc.addData(collegeGradEduc.get(i));
-            datasetsCollegeGradEduc.addBackgroundColor(Color.CRIMSON);
+            datasetsCollegeGradEduc.addBackgroundColor(Color.random());
         }
         datasetsCollegeGradEduc.setBorderWidth(2);
 
@@ -651,7 +651,7 @@ public class Chart {
         datasetsGradsStudEduc.setLabel("Graduate Studies");
         for (int i = 0; i < gradsStudEduc.size(); i++) {
             datasetsGradsStudEduc.addData(gradsStudEduc.get(i));
-            datasetsGradsStudEduc.addBackgroundColor(Color.GOLD);
+            datasetsGradsStudEduc.addBackgroundColor(Color.random());
         }
         datasetsGradsStudEduc.setBorderWidth(2);
 
@@ -659,7 +659,7 @@ public class Chart {
         datasetsVocationalEduc.setLabel("Vocational");
         for (int i = 0; i < vocationalEduc.size(); i++) {
             datasetsVocationalEduc.addData(vocationalEduc.get(i));
-            datasetsVocationalEduc.addBackgroundColor(Color.DARK_KHAKI);
+            datasetsVocationalEduc.addBackgroundColor(Color.random());
         }
         datasetsVocationalEduc.setBorderWidth(2);
 

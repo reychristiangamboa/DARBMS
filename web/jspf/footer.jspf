@@ -61,6 +61,8 @@
 <script src="bower_components/select2/dist/js/select2.js"></script>
 <script src="bower_components/select2/dist/js/select2.min.js"></script>
 
+<script src="bower_components/inputmask/dist/jquery.inputmask.bundle.js"></script>
+
 <script>
     $(document).ready(function () {
         $('.select2').select2();

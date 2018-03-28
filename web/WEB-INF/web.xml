@@ -340,6 +340,10 @@
         <servlet-name>AddARBCrop</servlet-name>
         <servlet-class>com.MVC.Controller.AddARBCrop</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateLINKSFARMCAPDEVProposal</servlet-name>
+        <servlet-class>com.MVC.Controller.CreateLINKSFARMCAPDEVProposal</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -679,6 +683,10 @@
     <servlet-mapping>
         <servlet-name>AddARBCrop</servlet-name>
         <url-pattern>/AddARBCrop</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateLINKSFARMCAPDEVProposal</servlet-name>
+        <url-pattern>/CreateLINKSFARMCAPDEVProposal</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

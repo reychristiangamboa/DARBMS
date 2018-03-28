@@ -102,7 +102,7 @@
                                                         <div class="input-group-addon">
                                                             <i>&#8369;</i>
                                                         </div>
-                                                        <input id="loanAmount" type='text' name="loan" class="form-control numberOnly" autocomplete="off">
+                                                        <input id="loanAmount" type='text' name="loan" class="form-control numberOnly">
                                                     </div>
                                                 </div>
 

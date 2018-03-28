@@ -168,6 +168,34 @@ public class AddressDAO {
         }
         return p;
     }
+    
+    public CityMun getCityMun(int cityMunCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        CityMun c = new CityMun();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.refcitymun WHERE cityMunCode=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, cityMunCode);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                c.setCityMunCode(rs.getInt("cityMunCode"));
+                c.setCityMunDesc(rs.getString("cityMunDesc"));
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return c;
+    }
 
     public ArrayList<Province> getAllProvOfficesRegion(int regionID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();

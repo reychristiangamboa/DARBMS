@@ -82,7 +82,7 @@
                                         <%
                                             AddressDAO cityMunCode = new AddressDAO();
                                             for (CityMun cm : cityMunListSites) {
-                                                ArrayList<ARBO> arboListCityMun = arboDAO.getAllARBOsByCityMun(cm.getCityMunCode());
+                                                ArrayList<ARB> arbListCityMun = arbDAO.getAllARBsByCityMun(cm.getCityMunCode());
                                                 
                                         %>
                                         <div class="active tab-pane" >
@@ -92,7 +92,7 @@
                                                 <a href="ViewExistingSite?id=<%out.print(cm.getCityMunCode());%>" class="btn-link">
                                                     <div class="small-box bg-yellow">
                                                         <div class="inner">
-                                                            <h3><%out.print(arboListCityMun.size());%></h3>
+                                                            <h3><%out.print(arbListCityMun.size());%></h3>
 
                                                             <p><%=cm.getCityMunDesc()%></p>
                                                         </div>
@@ -117,7 +117,7 @@
                                     <div class="box-body">
                                         <%
                                             for (CityMun cm : cityMunListNonSites) {
-                                                ArrayList<ARBO> arboListCityMun = arboDAO.getAllARBOsByCityMun(cm.getCityMunCode());
+                                                ArrayList<ARB> arbListCityMun = arbDAO.getAllARBsByCityMun(cm.getCityMunCode());
                                         %>
                                         <div class="active tab-pane" >
                                             <div class="col-lg-2 col-xs-6" data-toggle="modal" data-target="#modal-default<%out.print(cm.getCityMunCode());%>">
@@ -125,7 +125,7 @@
                                                 <a href="ViewNonExistingSite?id=<%out.print(cm.getCityMunCode());%>" class="btn-link">
                                                     <div class="small-box bg-yellow">
                                                         <div class="inner">
-                                                            <h3><%out.print(arboListCityMun.size());%></h3>
+                                                            <h3><%out.print(arbListCityMun.size());%></h3>
 
                                                             <p><%=cm.getCityMunDesc()%></p>
                                                         </div>

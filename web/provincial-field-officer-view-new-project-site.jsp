@@ -63,8 +63,10 @@
                 ARBODAO dao = new ARBODAO();
                 ARBDAO dao2 = new ARBDAO();
                 CropDAO dao3 = new CropDAO();
+                AddressDAO dao4 = new AddressDAO();
                 ArrayList<ARB> allArbPerCity = dao2.getAllARBsByCityMun(cityMunCode);
                 ArrayList<Crop> crops = dao3.getAllCropsByARBList(allArbPerCity);
+                CityMun city = dao4.getCityMun(cityMunCode);
 
             %>
 
@@ -83,7 +85,7 @@
                             <!-- Profile Image -->
                             <div class="box box-primary">
                                 <div class="box-body box-profile">
-                                    <h3 class="profile-username text-center"><%=allArbPerCity.get(0).getCityMunDesc()%></h3>
+                                    <h3 class="profile-username text-center"><%=city.getCityMunDesc()%></h3>
                                     <p class="text-muted text-center">New Project Site</p>
 
                                     <ul class="list-group list-group-unbordered">

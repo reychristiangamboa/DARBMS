@@ -674,7 +674,7 @@
 
                                             <tr>
                                                 <%if (userType == 4 || userType == 3){%>
-                                                <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <%}%>
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>

@@ -89,7 +89,7 @@
                                             <%for(CAPDEVActivity activity : p.getActivities()){%>
                                             <tr>
                                                 <td><a data-toggle="modal" data-target="#cleared-modal"></a><%out.print(activity.getActivityName());%></td>
-                                                <td><%out.print(f.format(activity.getActivityDate()));%></td>
+                                                <td><%out.print(activity.getActivityDate());%></td>
                                                 <td><%out.print(activity.getArbList().size());%></td>
                                             </tr>
                                             <%}%>

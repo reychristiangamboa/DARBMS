@@ -6,8 +6,10 @@
 package com.MVC.Controller;
 
 import com.MVC.DAO.ARBDAO;
+import com.MVC.DAO.LINKSFARMDAO;
 import com.MVC.DAO.UserDAO;
 import com.MVC.Model.ARB;
+import com.MVC.Model.Cluster;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -25,23 +27,33 @@ public class ClusterARB extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-           HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
 
-        ARBDAO arbDAO = new ARBDAO();
+        String clusterName = request.getParameter("clusterName");
+        int cityMunCode = Integer.parseInt(request.getParameter("cityMunCode"));
 
         String[] arbID = request.getParameterValues("IDs");
         ArrayList<ARB> clusteredARBs = new ArrayList();
         ARBDAO dao = new ARBDAO();
-        
-        for(String id : arbID){
+        LINKSFARMDAO linksFarmDAO = new LINKSFARMDAO();
+        Cluster c = new Cluster();
+
+        int clusterID = linksFarmDAO.addCluster(clusterName, cityMunCode);
+
+        for (String id : arbID) {
             ARB arb = dao.getARBByID(Integer.parseInt(id));
             clusteredARBs.add(arb);
         }
-        
-        request.setAttribute("clusteredARBs", clusteredARBs);
-        request.getRequestDispatcher("").forward(request, response);
-  
+
+        if (linksFarmDAO.setClusterID(clusteredARBs, clusterID)) {
+            c = linksFarmDAO.getClusterByID(clusterID);
+            request.setAttribute("cluster", c);
+            request.getRequestDispatcher("cluster-profile.jsp").forward(request, response);
+        }else{
+            
+        }
+
     }
 
 }

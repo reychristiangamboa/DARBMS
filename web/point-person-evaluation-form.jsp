@@ -79,7 +79,7 @@
                                                         <tr>
                                                             <td><%out.print(q.getQuestion());%></td>
                                                             <td>   
-                                                                <input type="radio" name="<%out.print(q.getQuestionID());%>" value="1">
+                                                                <input type="radio" name="<%out.print(q.getQuestionID());%>" value="1" required>
                                                             </td>
                                                             <td>   
                                                                 <input type="radio" name="<%out.print(q.getQuestionID());%>"  value="2">

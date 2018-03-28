@@ -82,48 +82,18 @@
                                 <!-- /.box-header -->
 
 
-                                <div class="box-body">
+                                <div class="box-body"> 
 
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <div class="form-group">
-                                                <label for="">Name of ARBO</label>
-                                                <input type="text" class="form-control" value="<%out.print(a.getArboName());%>" disabled >
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <div class="form-group">
-                                                <label for="">No. of ARBs</label>
-                                                <input type="text" class="form-control" id="" placeholder="" value="<%out.print(arboDAO99.getARBCount(a.getArboID()));%>" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <div class="form-group">
-                                                <label for="">Land Area (Hectares)</label>
-                                                <input type="text" class="form-control" id="" value="<%out.print(r.getHectares());%>" disabled >
-                                            </div>
-                                        </div>
+                                    <div class="nav-tabs-custom">
+                                        <!-- Tabs within a box -->
+                                        <ul class="nav nav-tabs pull-left">
+                                            <li class="active"><a href="#request" data-toggle="tab">Request Information</a></li>
+                                            <li><a href="#info" data-toggle="tab">ARBO Profile</a></li>
+                                            <li><a href="#history" data-toggle="tab">CAPDEV History</a></li>
+                                        </ul>
+                                        <%@include file="jspf/arboInfo.jspf"%>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-xs-4">
-                                            <label for=''>Loan Amount</label>
-                                            <input type='text' class="form-control" id='' value="<%out.print(currency.format(r.getLoanAmount()));%>" disabled>
-                                        </div>
-
-                                        <div class="col-xs-4">
-                                            <div class="form-group">
-                                                <label for="">Reason for Loan</label>
-                                                <input type="text" class="form-control" value="<%out.print(r.getLoanReason());%>" disabled/>
-                                            </div>
-                                        </div>         
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <label for=''>Remarks</label>
-                                            <textarea class="form-control" rows="3" disabled><%out.print(r.getRemarks());%> </textarea>
-                                        </div>
-
-                                    </div>
+                                    <hr>        
                                 </div>
                                 <!-- /.box-body -->
 
