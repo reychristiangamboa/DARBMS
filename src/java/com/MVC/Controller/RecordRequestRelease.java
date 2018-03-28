@@ -75,9 +75,9 @@ public class RecordRequestRelease extends BaseServlet {
         finalLimit = req.getLoanAmount() - limit;
 
         if (r.getReleaseAmount() > finalLimit) {
-            request.setAttribute("errMessage", "Release amount exceeds Request loan amount. Try again.");
+            request.setAttribute("errMessage", "RELEASE amount (PHP "+r.getReleaseAmount()+") exceeds REQUEST amount (PHP "+finalLimit+". Try again.");
             request.setAttribute("requestID", r.getRequestID());
-            request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
+            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
         } else {
             if (dao.addRequestRelease(r)) {
                 request.setAttribute("success", "Request Release successfully recorded!");

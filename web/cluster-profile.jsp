@@ -65,7 +65,6 @@
                 CropDAO dao3 = new CropDAO();
                 ArrayList<ARB> allArbPerCity = dao2.getAllARBsByCityMun(cityMunCode);
                 ArrayList<Crop> crops = dao3.getAllCropsByARBList(allArbPerCity);
-
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -83,22 +82,19 @@
                             <!-- Profile Image -->
                             <div class="box box-primary">
                                 <div class="box-body box-profile">
-                                    <h3 class="profile-username text-center"><%=allArbPerCity.get(0).getCityMunDesc()%></h3>
-                                    <p class="text-muted text-center">New Project Site</p>
+                                    <h3 class="profile-username text-center">#Tropang Texters</h3>
+                                    <p class="text-muted text-center">Project Site</p>
 
                                     <ul class="list-group list-group-unbordered">
                                         <li class="list-group-item">
                                             <b>No. of ARBs</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=allArbPerCity.size()%></a>
                                         </li>
-                                        <%if((Integer)session.getAttribute("userType") == 3){%>
-                                        <li class="list-group-item text-center">
-                                            <a class="btn btn-primary btn-lg" href="ProceedClusterARB?id=<%out.print(cityMunCode);%>">Cluster ARB</a>
+                                        <li class="list-group-item">
+                                            <b>Location</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=dao.getARBOByID(cityMunCode).getArboCityMunDesc()%>, <%=dao.getARBOByID(cityMunCode).getArboProvinceDesc()%>, <%=dao.getARBOByID(cityMunCode).getArboRegionDesc()%></a>
                                         </li>
-                                        <%}else if((Integer)session.getAttribute("userType") == 5){%>
-                                        <li class="list-group-item text-center">
-                                            <a class="btn btn-primary btn-lg" href="ApproveProjectSite?cityMunCode=<%out.print(cityMunCode);%>">Approve Project Site</a>
+                                        <li class="list-group-item">
+                                            <b>Crops</b> <a class="pull-right" data-toggle="modal" data-target="#arbs">Crops</a>
                                         </li>
-                                        <%}%>
                                     </ul>
                                 </div>
                                 <!-- /.box-body -->

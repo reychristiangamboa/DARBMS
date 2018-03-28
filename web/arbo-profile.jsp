@@ -759,7 +759,7 @@
                                     <div class="nav-tabs-custom">
                                         <ul class="nav nav-tabs">
                                             <li class="active"><a href="#apcpCapdev" data-toggle="tab">APCP CAPDEV</a></li>
-                                            <li><a href="#linksfarmCapdev" data-toggle="tab">LINKSFARM CAPDEV</a></li>
+
 
                                         </ul>
                                         <div class="tab-content"  style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
@@ -898,16 +898,6 @@
 
 
                                             </div>
-
-                                            <div class="tab-pane" id="linksfarmCapdev">
-
-                                                <div class="col-xs-12" style="margin:10px;" >
-                                                    lol
-
-                                                </div>
-
-
-                                            </div>
                                         </div>
 
 
@@ -946,7 +936,7 @@
                 var ctx2 = $('#lineCanvas').get(0).getContext('2d');
             <%
                 Chart line = new Chart();
-                String json2 = line.getCropHistory(crops);
+                String json2 = line.getCropHistory(crops,arbListARBO);
             %>
                 new Chart(ctx2, <%out.print(json2);%>);
 

@@ -5,9 +5,10 @@
  */
 package com.MVC.Controller;
 
-
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.DAO.ARBDAO;
+import com.MVC.Model.APCPRelease;
+import com.MVC.Model.APCPRequest;
 import com.MVC.Model.Disbursement;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -44,47 +45,108 @@ public class ImportDisbursement extends BaseServlet {
         ArrayList disbursementHolder = readExcelFile(request.getParameter("file"));
         ArrayList store = new ArrayList();
         
-        for(int i = 1; i < disbursementHolder.size(); i++){
-            Disbursement d = new Disbursement();
 
-            String lN = store.get(0).toString();
-            String fN = store.get(1).toString();
-            String mN = store.get(2).toString();
-            int arbID = arbDAO.getARBID(fN, mN, lN);
+        APCPRelease rel = dao.getAPCPReleaseByID(Integer.parseInt(request.getParameter("releaseID")));
+        double amountLimit = rel.getReleaseAmount()-sumDibursements2(rel.getDisbursements());
 
-            d.setArbID(arbID);
-            d.setReleaseID(Integer.parseInt(request.getParameter("releaseID")));
-            d.setDisbursedAmount(Double.parseDouble(store.get(3).toString()));
-            d.setOSBalance(Double.parseDouble(store.get(4).toString()));
-            
-            java.sql.Date disbursedDate = null;
-            
-            String excelDate = store.get(1).toString(); // Parsing of Excel Date to Java Date
-            String[] dateArr = excelDate.split("-");
+        if (disbursementsExceedLimit(rel, disbursementHolder)) {
+            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+            request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
+            request.setAttribute("errMessage", "DISBURSEMENT/S amount (Php " + sumDibursements(disbursementHolder) + ") exceeds RELEASE amount (Php " + amountLimit + "). Try again.");
+            request.getRequestDispatcher("monitor-disbursement.jsp").forward(request, response);
+        } else {
+            for (int i = 1; i < disbursementHolder.size(); i++) {
+                store = (ArrayList) disbursementHolder.get(i);
+                Disbursement d = new Disbursement();
 
-            int val = getValOfMonth(dateArr[1]);
-            String finalDate = dateArr[2] + "-" + val + "-" + dateArr[0];
+                String lN = store.get(0).toString();
+                String fN = store.get(1).toString();
+                String mN = store.get(2).toString();
+                int arbID = arbDAO.getARBID(fN, mN, lN);
+                
+                
 
-            try {
-                java.util.Date parsedDisbursedDate = sdf.parse(finalDate);
-                disbursedDate = new java.sql.Date(parsedDisbursedDate.getTime());
-            } catch (ParseException ex) {
-                Logger.getLogger(ImportDisbursement.class.getName()).log(Level.SEVERE, null, ex);
+                d.setArbID(arbID);
+                d.setReleaseID(Integer.parseInt(request.getParameter("releaseID")));
+                d.setDisbursedAmount(Double.parseDouble(store.get(3).toString()));
+                d.setOSBalance(Double.parseDouble(store.get(4).toString()));
+
+                java.sql.Date disbursedDate = null;
+
+                String excelDate = store.get(5).toString(); // Parsing of Excel Date to Java Date
+                String[] dateArr = excelDate.split("-");
+
+                int val = getValOfMonth(dateArr[1]);
+                String finalDate = dateArr[2] + "-" + val + "-" + dateArr[0];
+
+                try {
+                    java.util.Date parsedDisbursedDate = sdf.parse(finalDate);
+                    disbursedDate = new java.sql.Date(parsedDisbursedDate.getTime());
+                } catch (ParseException ex) {
+                    Logger.getLogger(ImportDisbursement.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                d.setDateDisbursed(disbursedDate);
+                d.setDisbursedBy((Integer) session.getAttribute("userID"));
+               
+                System.out.println(d.getArbID() + " " + d.getReleaseID() + " " + d.getDisbursedAmount() + " " + d.getOSBalance());
+
+                dao.addDisbursement(d);
             }
 
-            d.setDateDisbursed(disbursedDate);
-            d.setDisbursedBy((Integer)session.getAttribute("userID"));
+            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+            request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
+            request.setAttribute("success", "Disbursements successfully imported!");
+            request.getRequestDispatcher("monitor-disbursement.jsp").forward(request, response);
+        }
 
-            dao.addDisbursement(d);
+    }
+
+    public static boolean disbursementsExceedLimit(APCPRelease rel, ArrayList disbursementHolder) {
+        ArrayList store = new ArrayList();
+        double limit = 0;
+        double sumCurrentDisbursement = 0;
+        double finalLimit = 0;
+
+        for (int i = 1; i < disbursementHolder.size(); i++) {
+            store = (ArrayList) disbursementHolder.get(i);
+            limit += Double.parseDouble(store.get(3).toString());
         }
         
-        request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-        request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
-        request.setAttribute("success", "Disbursements successfully imported!");
-        request.getRequestDispatcher("point-person-monitor-disbursement.jsp").forward(request, response);
+        for(Disbursement d : rel.getDisbursements()){
+            sumCurrentDisbursement += d.getDisbursedAmount();
+        }
         
+        finalLimit = rel.getReleaseAmount() - sumCurrentDisbursement;
+
+        if (limit > finalLimit) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static double sumDibursements(ArrayList disbursementHolder) {
+        ArrayList store = new ArrayList();
+        double limit = 0;
+
+        for (int i = 1; i < disbursementHolder.size(); i++) {
+            store = (ArrayList) disbursementHolder.get(i);
+            limit += Double.parseDouble(store.get(3).toString());
+        }
+
+        return limit;
     }
     
+    public static double sumDibursements2(ArrayList<Disbursement> disbursements) {
+        
+        double sumCurrentDisbursement = 0;
+        for(Disbursement d : disbursements){
+            sumCurrentDisbursement += d.getDisbursedAmount();
+        }
+        return sumCurrentDisbursement;
+    }
+
     public static ArrayList readExcelFile(String file) {
         ArrayList cellArrayListHolder = new ArrayList();
         try {
@@ -143,7 +205,5 @@ public class ImportDisbursement extends BaseServlet {
         return val;
 
     }
-
-    
 
 }

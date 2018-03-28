@@ -109,8 +109,9 @@
                                                 <div class="form-group">
                                                     <label for="">Region</label>
                                                     <select class="form-control" id="regionDrop" name="arboRegion" onchange="chg()" style="width: 100%;" required>
+                                                        <option value="0">--Select--</option>
                                                              <%for(Region r: regionList){%>
-                                                             <option value="0">--Select--</option>
+                                                             
                                                                 <option value="<%out.print(r.getRegCode());%>"> <%out.print(r.getRegDesc());%> </option>
                                                              <%}%>
                                                     </select>

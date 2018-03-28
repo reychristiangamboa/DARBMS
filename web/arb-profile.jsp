@@ -57,6 +57,9 @@
                 APCPRequestDAO arDAO = new APCPRequestDAO();
                 ARBODAO dao = new ARBODAO();
                 EvaluationDAO eDAO = new EvaluationDAO();
+                CropDAO cDAO = new CropDAO();
+                
+                ArrayList<Crop> allCrops = cDAO.getAllCrops();
 
                 ARB arb = (ARB) request.getAttribute("arb");
                 ARBO arbo = dao.getARBOByID(arb.getArboID());
@@ -303,6 +306,7 @@
                                         <%}%>
                                     </p>
                                     <a href="#" data-toggle="modal" data-target="#cropTimeline" class="text-center">View Crop Timeline</a>
+                                    <a href="#" data-toggle="modal" data-target="#addCrop" class="text-center">Add Crop</a>
 
 
                                     <div class="modal fade" id="cropTimeline">
@@ -349,7 +353,39 @@
                                                     </ul>
 
                                                 </div>
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+                                    <div class="modal fade" id="addCrop">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title">Add Crop</h4>
+                                                </div>
+                                                <form method="post">
+                                                    <div class="modal-body" style="overflow-y: scroll; overflow-x: hidden;  max-height: 500px; ">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <button class="add_field_button btn btn-primary" type="button">Add Crop</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="input_fields_wrap" id="wrapper">
 
+
+                                                        </div>
+                                                        
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <div class="pull-right">
+                                                            <button class="btn btn-primary" onclick="form.action = 'AddARBCrop?arbID=<%out.print(arb.getArbID());%>'" type="submit">Submit</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                             <!-- /.modal-content -->
                                         </div>
@@ -1020,6 +1056,22 @@
         <!-- ./wrapper -->
         <%@include file="jspf/footer.jspf" %>
         <script>
+
+            $(document).ready(function () {
+                var max_fields = 5; //maximum input boxes allowed
+                var wrapper = $(".input_fields_wrap"); //Fields wrapper
+                var add_button = $(".add_field_button"); //Add button ID
+                var x = 0; //initlal text box count
+                $(add_button).click(function (e) { //on add input button click
+                    e.preventDefault();
+                    if (x < max_fields) { //max input box allowed
+                        x++; //text box increment
+                        $('#count').val(x);
+                        $(wrapper).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="">Crop</label><select name="cropType" class="form-control select2" id=""><%for(Crop c : allCrops){%><option value="<%=c.getCropType()%>"><%out.print(c.getCropTypeDesc());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label for=""></label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="startDate" class="form-control pull-right"></div></div></div><div class="col-xs-4"><div class="form-group"><label for=""></label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="endDate" class="form-control pull-right"></div></div></div></div>');
+                        $('.select2').select2();
+                    }
+                });
+            });
 
             $(function () {
                 $('#dr-totalYearReleaseReport').daterangepicker(

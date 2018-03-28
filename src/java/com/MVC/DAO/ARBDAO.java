@@ -69,6 +69,7 @@ public class ARBDAO {
                 arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
                 arb.setArbStatus(rs.getInt("arbStatus"));
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
+                arb.setClusterID(rs.getInt("clusterID"));
             } else {
                 return null;
             }
@@ -128,6 +129,7 @@ public class ARBDAO {
                 arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
                 arb.setArbStatus(rs.getInt("arbStatus"));
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
+                arb.setClusterID(rs.getInt("clusterID"));
                 arbList.add(arb);
             }
             pstmt.close();
@@ -188,6 +190,7 @@ public class ARBDAO {
                     arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
                     arb.setArbStatus(rs.getInt("arbStatus"));
                     arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
+                    arb.setClusterID(rs.getInt("clusterID"));
                     arbList.add(arb);
                 }
                 pstmt.close();
@@ -586,6 +589,7 @@ public class ARBDAO {
                 arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
                 arb.setArbStatus(rs.getInt("arbStatus"));
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
+                arb.setClusterID(rs.getInt("clusterID"));
                 arbList.add(arb);
             }
             pstmt.close();
@@ -644,6 +648,7 @@ public class ARBDAO {
                 arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
                 arb.setArbStatus(rs.getInt("arbStatus"));
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
+                arb.setClusterID(rs.getInt("clusterID"));
                 arbList.add(arb);
             }
             pstmt.close();

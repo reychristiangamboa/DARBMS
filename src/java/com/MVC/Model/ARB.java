@@ -42,6 +42,7 @@ public class ARB {
     private String arbStatusDesc;
     private int arbActive;
     private int isPresent;
+    private int clusterID;
     
 
     public ARB() {
@@ -290,6 +291,16 @@ public class ARB {
         }
         return sb.toString();
     }
+
+    public int getClusterID() {
+        return clusterID;
+    }
+
+    public void setClusterID(int clusterID) {
+        this.clusterID = clusterID;
+    }
+    
+    
 
     @Override
     public String toString() {

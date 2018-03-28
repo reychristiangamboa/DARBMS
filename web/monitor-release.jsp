@@ -50,9 +50,7 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-                    <ol class="breadcrumb">
-
-                    </ol>
+                    
 
                 </section>
 
@@ -140,7 +138,7 @@
                                                             %>
                                                             <tr>
                                                                 <td><a href="MonitorDisbursement?releaseID=<%out.print(release.getReleaseID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(currency.format(release.getReleaseAmount()));%></a></td>
-                                                                <td><%out.print(f.format(release.getReleaseDate()));%></td>
+                                                                <td><%out.print(release.getReleaseDate());%></td>
                                                                 <td><%out.print(u.getFullName());%></td>
                                                             </tr>
                                                             <%}%>
@@ -186,8 +184,8 @@
                                                             %>
                                                             <tr>
                                                                 <td><%out.print(currency.format(repayment.getAmount()));%></td>
-                                                                <td><%out.print(f.format(repayment.getDateRepayment()));%></td>
-                                                                <td><%out.print(arb.getFLName());%></td>
+                                                                <td><%out.print(repayment.getDateRepayment());%></td>
+                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
                                                                 <td><%out.print(u.getFullName());%></td>
                                                             </tr>
                                                             <%}%>
@@ -240,7 +238,7 @@
                                                                 <td><%out.print(p.getOtherReason());%></td>
 
                                                                 <%if (p.getDateSettled() != null) {%>
-                                                                <td><%out.print(f.format(p.getDateSettled()));%></td>
+                                                                <td><%out.print(p.getDateSettled());%></td>
                                                                 <%} else {%>
                                                                 <td><%out.print("Unsettled.");%></td>
                                                                 <%}%>

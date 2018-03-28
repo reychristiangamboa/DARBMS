@@ -49,12 +49,14 @@ public class ImportARBO extends BaseServlet {
                 cellStoreArrayList = (ArrayList) dataHolder.get(i);
                 ARBO arbo = new ARBO();
                 arbo.setArboName(cellStoreArrayList.get(0).toString()); // GET ARBO NAME
-                int cityMunCode = addressDAO.getCityMunCode(cellStoreArrayList.get(1).toString()); // GET CITY, TURN INTO INT
-                arbo.setArboCityMun(cityMunCode);
-                int provCode = addressDAO.getProvCode(cellStoreArrayList.get(2).toString()); // GET PROVINCE, TURN INTO INT
-                arbo.setArboProvince(provCode);
+                
+                
                 int regCode = addressDAO.getRegCode(cellStoreArrayList.get(3).toString()); // GET REGION, TURN INTO INT
                 arbo.setArboRegion(regCode);
+                int provCode = addressDAO.getProvCode(cellStoreArrayList.get(2).toString(),regCode); // GET PROVINCE, TURN INTO INT
+                arbo.setArboProvince(provCode);
+                int cityMunCode = addressDAO.getCityMunCode(cellStoreArrayList.get(1).toString(),provCode,regCode); // GET CITY, TURN INTO INT
+                arbo.setArboCityMun(cityMunCode);
                 
                 if(cellStoreArrayList.get(4).toString().equalsIgnoreCase("No")){
                     arbo.setAPCPQualified(0);
@@ -64,11 +66,11 @@ public class ImportARBO extends BaseServlet {
                 
                 arbo.setProvOfficeCode((Integer)session.getAttribute("provOfficeCode"));
                 
+                
+                
                 arboList.add(arbo);
             }
             
-            
-
             if (arboDAO.addARBOExcel(arboList)) {
                 request.setAttribute("success", "ARBOs imported!");
                 request.getRequestDispatcher("provincial-field-officer-add-arbo.jsp").forward(request, response);

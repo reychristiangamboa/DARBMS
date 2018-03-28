@@ -82,6 +82,16 @@
                                                                         <input type="text" value="<%out.print(f.format(b.getActivityDate()));%>" class="form-control pull-right" id="datepicker" disabled>
                                                                     </div>
                                                                 </div>
+                                                                <div class="col-xs-4">
+                                                                    <div class="form-group">
+                                                                        <label for="">Technical Assistant</label>
+                                                                        <%if(b.getTechnicalAssistant() != null){%>
+                                                                        <input type="text" name="TA" class="form-control" value="<%=b.getTechnicalAssistant()%>">
+                                                                        <%}else{%>
+                                                                        <input type="text" name="TA" class="form-control" required>
+                                                                        <%}%>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <form method="post">

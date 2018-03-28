@@ -56,7 +56,7 @@ public class SendSchedulePreRelease extends BaseServlet {
         } else {
 
             ARBO arbo = arboDAO.getARBOByID(Integer.parseInt(request.getParameter("requestID")));
-            
+
             ArrayList<ARB> arbList = new ArrayList();
             ArrayList arbHolder = readExcelFile(request.getParameter("file"));
             ArrayList cellStoreArrayList = new ArrayList();
@@ -97,10 +97,8 @@ public class SendSchedulePreRelease extends BaseServlet {
 
                 int arbID = arbDAO.getARBID(fN, mN, lN);
                 ARB arb = arbDAO.getARBByID(arbID);
-                
-                if (arb.getArboID() == arbo.getArboID()) {
-                    arbList.add(arb);
-                }
+
+                arbList.add(arb);
 
             }
 

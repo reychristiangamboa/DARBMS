@@ -138,7 +138,7 @@ public class CropDAO {
         return false;
     }
 
-    public double getCountOfCropsByMonth(Crop c, String d) {
+    public double getCountOfCropsByMonth(Crop c, String d, int arbID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<Crop> cropList = new ArrayList();
@@ -148,10 +148,11 @@ public class CropDAO {
                     + "WHERE `cropTag` = ? "
                     + "AND " + "'" + d + "'"
                     + " between `startDate` "
-                    + "AND `endDate`;";
+                    + "AND `endDate` AND `arbID`=?;";
 
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, c.getCropType());
+            pstmt.setInt(2, arbID);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 count++;

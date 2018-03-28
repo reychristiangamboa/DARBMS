@@ -94,7 +94,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Regional Field Officer Home
+                        Dashboard: <%out.print(addressDAO.getRegDesc((Integer)session.getAttribute("regOfficeCode")).getRegDesc());%>
                     </h1>
                 </section>
 
@@ -843,34 +843,53 @@
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>Loan Tracking No.</th>
-                                                                                <th>Past Due Amount</th>
-                                                                                <th>Reason for Past Due</th>
-                                                                                <th>Other Reason</th>
-                                                                                <th>Date Recorded</th>
-                                                                                <th>Date Settled</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>Approved Amount</th>
+                                                                                <th>Approved Date</th>
+                                                                                <th>Approved By</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-
+                                                                            <%
+                                                                                for (APCPRequest r : regionalRequest) {
+                                                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                                                                    
+                                                                            %>
                                                                             <tr>
+                                                                                
+                                                                                
+                                                                                <%if (r.getRequestStatus() == 4) {%>
+                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
+                                                                                <td><%out.print(arbo.getArboName());%></td>
+                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
+                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
                                                                                 <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
+                                                                                <%} else if (r.getRequestStatus() == 5) {%>
+                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
+                                                                                <td><%out.print(arbo.getArboName());%></td>
+                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
+                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
+                                                                                <%} else if (r.getRequestStatus() == 7) {%>
+                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
+                                                                                <td><%out.print(arbo.getArboName());%></td>
+                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
+                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
+                                                                                <%}%>
+                                                                                
                                                                             </tr>
+                                                                            <%}%>
 
                                                                         </tbody>
                                                                         <tfoot>
                                                                             <tr>
-
-                                                                                <th>ARB Name</th>
-                                                                                <th>Past Due Amount</th>
-                                                                                <th>Reason for Past Due</th>
-                                                                                <th>Date Settled</th>
-                                                                                <th>Recorded By</th>
-                                                                                <th>Date Recorded</th>
+                                                                                <th>Loan Tracking No.</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>Approved Amount</th>
+                                                                                <th>Approved Date</th>
+                                                                                <th>Approved By</th>
                                                                             </tr>
                                                                         </tfoot>
                                                                     </table>
@@ -972,7 +991,7 @@
                             <!-- /.col -->
                         </div>
                         <!-- /.col -->
-                        <div class=" col-xs-6">
+                        <div class=" col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border" >
                                     <h3 class="box-title">APCP Requests</h3>
@@ -1097,26 +1116,25 @@
                                                         <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                         <td><%out.print(r.getHectares() + " hectares");%></td>
 
-                                                        <%if (r.getRequestStatus() == 1) {%>
-                                                        <td><%out.print(f.format(r.getDateRequested()));%></td>
+                                                        <%if (r.getRequestStatus() == 1 || r.getRequestStatus() == 6) {%>
+                                                        <td><%out.print(r.getDateRequested());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 2) {%>
-                                                        <td><%out.print(f.format(r.getDateCleared()));%></td>
+                                                        <td><%out.print(r.getDateCleared());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 3) {%>
-                                                        <td><%out.print(f.format(r.getDateEndorsed()));%></td>
+                                                        <td><%out.print(r.getDateEndorsed());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 4) {%>
-                                                        <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                        <td><%out.print(r.getDateApproved());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 5) {%>
-                                                        <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                        <td><%out.print(r.getDateApproved());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 7) {%>
-                                                        <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                        <td><%out.print(r.getDateApproved());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%}%>
-
                                                     </tr>
                                                     <%}%>
                                                 </tbody>
@@ -1137,7 +1155,7 @@
 
                             </div>
                         </div>
-                        <div class=" col-xs-6">
+                        <div class=" col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border" >
                                     <h3 class="box-title">CAPDEV Proposals</h3>
@@ -1319,7 +1337,7 @@
                 var ctx2 = $('#lineCanvas').get(0).getContext('2d');
             <%
                 Chart line = new Chart();
-                String json2 = line.getCropHistory(crops);
+                String json2 = line.getCropHistory(crops,arbListRegion);
             %>
                 new Chart(ctx2, <%out.print(json2);%>);
 

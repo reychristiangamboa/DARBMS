@@ -33,9 +33,11 @@
     UserDAO uDAO = new UserDAO();
     EvaluationDAO eDAO = new EvaluationDAO();
     
+    
     ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
     
     ArrayList<CAPDEVPlan> assignedPlans = capdevDAO.getAssignedRequestCAPDEVPlans((Integer)session.getAttribute("userID"));
+    ArrayList<CAPDEVPlan> assignedPlansPastDue = capdevDAO.getAssignedRequestCAPDEVPlansPastDue((Integer)session.getAttribute("userID"));
     ArrayList<CAPDEVPlan> assignedPROs = capdevDAO.getAllAssignedPreReleasePlans((Integer)session.getAttribute("userID"));
     ArrayList<APCPRequest> ReleasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5,(Integer)session.getAttribute("provOfficeCode"));
     ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7,(Integer)session.getAttribute("provOfficeCode"));

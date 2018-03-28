@@ -61,7 +61,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example1" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -85,7 +85,7 @@
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
-                                                <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                <td><%out.print(r.getDateApproved());%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
                                                 <td><%out.print(r.getRequestStatusDesc());%></td>
                                             </tr>
@@ -112,7 +112,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example6" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -131,12 +131,11 @@
                                                 ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-
                                                 <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
-                                                <td></td>
+                                                <td><%out.print(r.getDateLastReleasedPerRequest());%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
                                                 <td><%out.print(r.getRequestStatusDesc());%></td>
                                             </tr>

@@ -41,12 +41,13 @@ public class ImportARB extends BaseServlet {
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         if (request.getParameter("import") != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
             ARBDAO arbDAO = new ARBDAO();
             AddressDAO addressDAO = new AddressDAO();
 
             int arboID = Integer.parseInt(request.getParameter("arboID"));
+            int count = 0;
 
             ARBODAO arboDAO = new ARBODAO();
             ARBO arbo = new ARBO();
@@ -55,143 +56,116 @@ public class ImportARB extends BaseServlet {
             ArrayList arbHolder = readExcelFile(request.getParameter("file"), 0);
             ArrayList dependentHolder = readExcelFile(request.getParameter("file"), 1);
             ArrayList cropHolder = readExcelFile(request.getParameter("file"), 2);
-            ArrayList cellStoreArrayList = new ArrayList();
-            ArrayList cellStoreArrayList2 = new ArrayList();
-            ArrayList cellStoreArrayList3 = new ArrayList();
 
-            int count = 0;
+            ArrayList storeARB = new ArrayList();
+            ArrayList storeDependent = new ArrayList();
+            ArrayList storeCrop = new ArrayList();
 
             for (int i = 1; i < arbHolder.size(); i++) {
-
-                cellStoreArrayList = (ArrayList) arbHolder.get(i);
+                storeARB = (ArrayList) arbHolder.get(i);
                 ARB arb = new ARB();
-
+                
+                arb.setArboRepresentative(0);
                 arb.setArboID(arboID);
 
-                arb.setArboRepresentative(0);
-
-                arb.setFirstName(cellStoreArrayList.get(0).toString()); // First Name
-                arb.setMiddleName(cellStoreArrayList.get(1).toString()); // Middle Name
-                arb.setLastName(cellStoreArrayList.get(2).toString()); // Last Name
-                arb.setGender(cellStoreArrayList.get(3).toString()); // Gender
+                arb.setFirstName(storeARB.get(0).toString());
+                arb.setMiddleName(storeARB.get(1).toString());
+                arb.setLastName(storeARB.get(2).toString());
+                arb.setGender(storeARB.get(3).toString());
 
                 java.sql.Date memberSince = null;
-
-                String excelDate = cellStoreArrayList.get(4).toString(); // Parsing of Excel Date to Java Date
+                String excelDate = storeARB.get(4).toString(); // Parsing of Excel Date to Java Date
                 String[] dateArr = excelDate.split("-");
-
-                int val = getValOfMonth(dateArr[1]);
-                String finalDate = dateArr[2] + "-" + val + "-" + dateArr[0];
-
+                int memberSinceMonth = getValOfMonth(dateArr[1]);
+                String finalMemberSince = dateArr[2] + "-" + memberSinceMonth + "-" + dateArr[0];
                 try {
-                    java.util.Date parsedMemberDate = sdf.parse(finalDate);
-                    memberSince = new java.sql.Date(parsedMemberDate.getTime());
+                    java.util.Date parsedDate = sdf.parse(finalMemberSince);
+                    memberSince = new java.sql.Date(parsedDate.getTime());
                 } catch (ParseException ex) {
-                    Logger.getLogger(AddARB.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ImportPastDueAccount.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                arb.setMemberSince(memberSince);
 
-                arb.setMemberSince(memberSince); // MemberSince
+                arb.setArbUnitNumStreet(storeARB.get(5).toString());
+                arb.setRegCode(addressDAO.getRegCode(storeARB.get(9).toString()));
+                arb.setProvCode(addressDAO.getProvCode(storeARB.get(8).toString(), arb.getRegCode()));
+                arb.setCityMunCode(addressDAO.getCityMunCode(storeARB.get(7).toString(), arb.getProvCode(), arb.getRegCode()));
+                arb.setBrgyCode(addressDAO.getBrgyCode(storeARB.get(6).toString(), arb.getCityMunCode(), arb.getProvCode(), arb.getRegCode()));
+                arb.setEducationLevel(arbDAO.getEducationalLevel(storeARB.get(10).toString()));
+                arb.setLandArea(Double.parseDouble(storeARB.get(11).toString()));
+                
+                
 
-                arb.setArbUnitNumStreet(cellStoreArrayList.get(5).toString()); // Unit Num Street
-                arb.setBrgyCode(addressDAO.getBrgyCode(cellStoreArrayList.get(6).toString())); // Barangay
-                arb.setCityMunCode(addressDAO.getCityMunCode(cellStoreArrayList.get(7).toString())); // City
-                arb.setProvCode(addressDAO.getProvCode(cellStoreArrayList.get(8).toString())); // Province
-                arb.setRegCode(addressDAO.getRegCode(cellStoreArrayList.get(9).toString())); // Region
-
-                int educationalLevel = arbDAO.getEducationalLevel(cellStoreArrayList.get(10).toString()); // Educational Level
-                arb.setEducationLevel(educationalLevel);
-
-                arb.setLandArea(Double.parseDouble(cellStoreArrayList.get(11).toString())); // Land Area
-
-                int arbID = arbDAO.addARB(arb); // returns ID of newly added ARB
+                int arbID = arbDAO.addARB(arb);
 
                 ArrayList<Dependent> dependentList = new ArrayList();
-                for (int x = 1; x < dependentHolder.size(); x++) {
-
-                    cellStoreArrayList2 = (ArrayList) dependentHolder.get(x);
+                for (int j = 1; j < dependentHolder.size(); j++) {
+                    storeDependent = (ArrayList) dependentHolder.get(j);
                     Dependent d = new Dependent();
 
-                    if (cellStoreArrayList2.get(4).toString().equals(arb.getFullName())) { // Check if equal ARB Name
-                        d.setName(cellStoreArrayList2.get(0).toString()); // Dependent Name
+                    if (arb.getFullName().equalsIgnoreCase(storeDependent.get(4).toString())) {
+                        d.setName(storeDependent.get(0).toString());
 
                         java.sql.Date birthday = null;
-
-                        String excelDate2 = cellStoreArrayList2.get(1).toString(); // Parsing of Excel Date to Java Date
-                        String[] dateArr2 = excelDate2.split("-");
-
-                        int val2 = getValOfMonth(dateArr2[1]);
-                        String finalDate2 = dateArr2[2] + "-" + val2 + "-" + dateArr2[0];
-
+                        String excelDate1 = storeDependent.get(1).toString(); // Parsing of Excel Date to Java Date
+                        String[] dateArr1 = excelDate1.split("-");
+                        int birthdayMonth = getValOfMonth(dateArr1[1]);
+                        String finalBirthday = dateArr1[2] + "-" + birthdayMonth + "-" + dateArr1[0];
                         try {
-                            java.util.Date parsedBirthday = sdf.parse(finalDate2);
-                            birthday = new java.sql.Date(parsedBirthday.getTime());
+                            java.util.Date parsedDate = sdf.parse(finalBirthday);
+                            birthday = new java.sql.Date(parsedDate.getTime());
                         } catch (ParseException ex) {
-                            Logger.getLogger(AddARB.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(ImportPastDueAccount.class.getName()).log(Level.SEVERE, null, ex);
                         }
-
-                        d.setBirthday(birthday); // Dependent Birthday
-                        
-                        int relationshipType = arbDAO.getRelationshipType(cellStoreArrayList2.get(3).toString());
-
-                        int educationalLevel2 = arbDAO.getEducationalLevel(cellStoreArrayList2.get(2).toString()); // Educational Level
-                        
-                        d.setRelationshipType(relationshipType);
-                        d.setEducationLevel(educationalLevel2);
+                        d.setBirthday(birthday);
+                        d.setEducationLevel(arbDAO.getEducationalLevel(storeDependent.get(2).toString()));
+                        d.setRelationshipType(arbDAO.getRelationshipType(storeDependent.get(3).toString()));
 
                         dependentList.add(d);
                     }
-
                 }
 
                 arbDAO.addDependents(arbID, dependentList);
-                
+
                 ArrayList<Crop> cropList = new ArrayList();
-                for(int y = 1; y < cropHolder.size(); y++){
-                    
-                    cellStoreArrayList3 = (ArrayList) cropHolder.get(y);
+                for (int x = 1; x < cropHolder.size(); x++) {
+                    storeCrop = (ArrayList) cropHolder.get(x);
                     Crop c = new Crop();
-                    
-                    if(cellStoreArrayList3.get(3).equals(arb.getFullName())){
-                        c.setArbID(arb.getArbID());
-                        
+
+                    if (storeCrop.get(3).toString().equalsIgnoreCase(arb.getFullName())) {
+                        c.setArbID(arbID);
+                        c.setCropType(arbDAO.getCrop(storeCrop.get(0).toString()));
+
                         java.sql.Date startDate = null;
-
-                        String excelDate3 = cellStoreArrayList3.get(1).toString(); // Parsing of Excel Date to Java Date
-                        String[] dateArr3 = excelDate3.split("-");
-
-                        int val3 = getValOfMonth(dateArr3[1]);
-                        String finalDate3 = dateArr3[2] + "-" + val3 + "-" + dateArr3[0];
-
+                        String excelDate2 = storeCrop.get(1).toString(); // Parsing of Excel Date to Java Date
+                        String[] dateArr2 = excelDate2.split("-");
+                        int startDateMonth = getValOfMonth(dateArr2[1]);
+                        String finalStartDate = dateArr2[2] + "-" + startDateMonth + "-" + dateArr2[0];
                         try {
-                            java.util.Date parsedStartDate = sdf.parse(finalDate3);
-                            startDate = new java.sql.Date(parsedStartDate.getTime());
+                            java.util.Date parsedDate = sdf.parse(finalStartDate);
+                            startDate = new java.sql.Date(parsedDate.getTime());
                         } catch (ParseException ex) {
-                            Logger.getLogger(AddARB.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(ImportARB.class.getName()).log(Level.SEVERE, null, ex);
                         }
-
                         c.setStartDate(startDate);
-                        
-                        
+
                         java.sql.Date endDate = null;
-
-                        String excelDate4 = cellStoreArrayList3.get(2).toString(); // Parsing of Excel Date to Java Date
-                        String[] dateArr4 = excelDate4.split("-");
-
-                        int val4 = getValOfMonth(dateArr4[1]);
-                        String finalDate4 = dateArr4[2] + "-" + val4 + "-" + dateArr4[0];
-
+                        String excelDate3 = storeCrop.get(2).toString(); // Parsing of Excel Date to Java Date
+                        String[] dateArr3 = excelDate3.split("-");
+                        int endDateMonth = getValOfMonth(dateArr3[1]);
+                        String finalEndDate = dateArr3[2] + "-" + endDateMonth + "-" + dateArr3[0];
                         try {
-                            java.util.Date parsedEndDate = sdf.parse(finalDate4);
-                            endDate = new java.sql.Date(parsedEndDate.getTime());
+                            java.util.Date parsedDate = sdf.parse(finalEndDate);
+                            endDate = new java.sql.Date(parsedDate.getTime());
                         } catch (ParseException ex) {
-                            Logger.getLogger(AddARB.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(ImportARB.class.getName()).log(Level.SEVERE, null, ex);
                         }
-
-                        c.setStartDate(endDate);
-                        
-                        c.setCropType(arbDAO.getCrop(cellStoreArrayList3.get(0).toString()));
-                        
+                        c.setEndDate(endDate);
+                        System.out.println(c.getStartDate());
+                        System.out.println(c.getEndDate());
                     }
+                    
+                    cropList.add(c);
                 }
                 
                 arbDAO.addCrops(arbID, cropList);

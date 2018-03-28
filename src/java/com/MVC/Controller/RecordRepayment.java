@@ -7,6 +7,7 @@ package com.MVC.Controller;
 
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.Model.APCPRelease;
+import com.MVC.Model.APCPRequest;
 import com.MVC.Model.Repayment;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,43 +33,60 @@ public class RecordRepayment extends BaseServlet {
         HttpSession session = request.getSession();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String[] arbIDs = request.getParameterValues("arbIDs");
-        System.out.println(arbIDs.length);
         APCPRequestDAO dao = new APCPRequestDAO();
+        APCPRequest req = dao.getRequestByID(Integer.parseInt(request.getParameter("requestID")));
 
-        for (String arbID : arbIDs) {
-            Repayment r = new Repayment();
+        double limit = 0;
+        double finalLimit = 0;
 
-            r.setArbID(Integer.parseInt(arbID));
-            r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
-
-            String[] vals = request.getParameter("repaymentAmount").split(",");
-            StringBuilder sb = new StringBuilder();
-            for (String val : vals) {
-                sb.append(val);
-            }
-
-            String finAmount = sb.toString();
-
-            r.setAmount(Double.parseDouble(finAmount));
-
-            java.sql.Date repaymentDate = null;
-
-            try {
-                java.util.Date parsedRepaymentDate = sdf.parse(request.getParameter("repaymentDate"));
-                repaymentDate = new java.sql.Date(parsedRepaymentDate.getTime());
-            } catch (ParseException ex) {
-                Logger.getLogger(RecordRepayment.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            r.setDateRepayment(repaymentDate);
-            r.setRecordedBy((Integer) session.getAttribute("userID"));
-
-            dao.addRepayment(r);
+        for (Repayment rep : req.getRepayments()) {
+            limit += rep.getAmount();
         }
 
-        request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-        request.setAttribute("success", "Repayment successfully recorded!");
-        request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
+        String[] vals = request.getParameter("repaymentAmount").split(",");
+        StringBuilder sb = new StringBuilder();
+        for (String val : vals) {
+            sb.append(val);
+        }
+
+        String finAmount = sb.toString();
+
+        double finalVal = Double.parseDouble(finAmount) * arbIDs.length;
+
+        finalLimit = req.getLoanAmount() - limit;
+
+        if (finalVal > finalLimit) {
+            request.setAttribute("errMessage", "REPAYMENT amount (PHP "+finalVal+") exceeds REQUEST amount (PHP "+finalLimit+"). Try again.");
+            request.setAttribute("requestID", req.getRequestID());
+            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
+        } else {
+            for (String arbID : arbIDs) {
+                Repayment r = new Repayment();
+
+                r.setArbID(Integer.parseInt(arbID));
+                r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
+
+                r.setAmount(Double.parseDouble(finAmount));
+
+                java.sql.Date repaymentDate = null;
+
+                try {
+                    java.util.Date parsedRepaymentDate = sdf.parse(request.getParameter("repaymentDate"));
+                    repaymentDate = new java.sql.Date(parsedRepaymentDate.getTime());
+                } catch (ParseException ex) {
+                    Logger.getLogger(RecordRepayment.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                r.setDateRepayment(repaymentDate);
+                r.setRecordedBy((Integer) session.getAttribute("userID"));
+
+                dao.addRepayment(r);
+            }
+
+            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+            request.setAttribute("success", "Repayment successfully recorded!");
+            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
+        }
 
     }
 

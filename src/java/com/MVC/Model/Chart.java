@@ -35,7 +35,7 @@ import java.util.Locale;
  * @author Rey Christian
  */
 public class Chart {
-    
+
     Locale pinoy = new Locale("fil", "PH");
     NumberFormat currency = NumberFormat.getCurrencyInstance(pinoy);
 
@@ -82,12 +82,12 @@ public class Chart {
 
         return new BarChart(data).toJson();
     }
-    
+
     public String getTotalYearBarChart(ArrayList<APCPRequest> requests) {
-        
+
         ARBODAO arboDAO = new ARBODAO();
         BarData data = new BarData();
-        for(APCPRequest req : requests){
+        for (APCPRequest req : requests) {
             ARBO arbo = arboDAO.getARBOByID(req.getArboID());
             BarDataset dataset = new BarDataset();
             dataset.setLabel(arbo.getArboName());
@@ -96,31 +96,31 @@ public class Chart {
             dataset.setBorderWidth(2);
             data.addDataset(dataset);
         }
-        
+
         BarOptions options = new BarOptions();
         options.setResponsive(true);
-        
+
         Title title = new Title();
         title.setDisplay(true);
-        
+
         Calendar cal = Calendar.getInstance();
         Long l = System.currentTimeMillis();
         Date d = new Date(l);
         cal.setTime(d);
         int year = cal.get(Calendar.YEAR);
-        
-        title.setText("TOTAL " +year+" RELEASED AMOUNT");
+
+        title.setText("TOTAL " + year + " RELEASED AMOUNT");
         title.setFontSize(30);
         options.setTitle(title);
-        
+
         return new BarChart(data, options).toJson();
     }
-    
+
     public String getTotalRequestedAmountBarChart(ArrayList<APCPRequest> requests) {
-        
+
         ARBODAO arboDAO = new ARBODAO();
         BarData data = new BarData();
-        for(APCPRequest req : requests){
+        for (APCPRequest req : requests) {
             ARBO arbo = arboDAO.getARBOByID(req.getArboID());
             BarDataset dataset = new BarDataset();
             dataset.setLabel(arbo.getArboName());
@@ -129,24 +129,24 @@ public class Chart {
             dataset.setBorderWidth(2);
             data.addDataset(dataset);
         }
-        
+
         BarOptions options = new BarOptions();
         options.setResponsive(true);
-        
+
         Title title = new Title();
         title.setDisplay(true);
         title.setText("TOTAL APPROVED AMOUNT");
         title.setFontSize(30);
         options.setTitle(title);
-        
+
         return new BarChart(data, options).toJson();
     }
-    
+
     public String getTotalReleasedAmountBarChart(ArrayList<APCPRequest> requests) {
-        
+
         ARBODAO arboDAO = new ARBODAO();
         BarData data = new BarData();
-        for(APCPRequest req : requests){
+        for (APCPRequest req : requests) {
             ARBO arbo = arboDAO.getARBOByID(req.getArboID());
             BarDataset dataset = new BarDataset();
             dataset.setLabel(arbo.getArboName());
@@ -155,21 +155,22 @@ public class Chart {
             dataset.setBorderWidth(2);
             data.addDataset(dataset);
         }
-        
+
         BarOptions options = new BarOptions();
         options.setResponsive(true);
-        
+
         Title title = new Title();
         title.setText("ACCUMULATED RELEASES");
         title.setFontSize(30);
         title.setDisplay(true);
         options.setTitle(title);
-        
+
         return new BarChart(data, options).toJson();
     }
 
-    public String getCropHistory(ArrayList<Crop> crops) {
-        
+    public String getCropHistory(ArrayList<Crop> crops, ArrayList<ARB> arbList) {
+
+        System.out.println(crops.size());
         ArrayList<String> dates = new ArrayList();
 
         long l = System.currentTimeMillis();
@@ -216,17 +217,18 @@ public class Chart {
         LineData data = new LineData();
 
         for (Crop arbC : crops) {
-
             LineDataset dataset = new LineDataset();
             dataset.setBorderColor(Color.random());
             dataset.setBackgroundColor(Color.TRANSPARENT);
             dataset.setLabel(arbC.getCropTypeDesc());
-            for (String date : dates) {
-                dataset.addData(cDAO.getCountOfCropsByMonth(arbC, date));
+            for (ARB arb : arbList) {
+                for (String date : dates) {
+                    dataset.addData(cDAO.getCountOfCropsByMonth(arbC, date, arb.getArbID()));
+                }
             }
             data.addDataset(dataset);
-
         }
+        
         ArrayList<String> stringLabels = new ArrayList();
         stringLabels.add("July");
         stringLabels.add("August");
@@ -257,11 +259,11 @@ public class Chart {
         dataset.addPointBackgroundColor(Color.DARK_GREEN);
         dataset.setBackgroundColor(Color.TRANSPARENT);
         dataset.setLabel("APCP Rating");
-        
+
         Calendar cal = Calendar.getInstance();
 
         for (Evaluation e : apcpEvaluations) {
-            
+
             data.addLabel(f.format(e.getEvaluationDate()));
             dataset.addData(e.getRating());
         }
@@ -270,7 +272,7 @@ public class Chart {
 
         return new LineChart(data).toJson();
     }
-    
+
     public String getCAPDEVRating(ArrayList<Evaluation> capdevEvaluations) {
 
         SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
@@ -280,11 +282,11 @@ public class Chart {
         dataset.addPointBackgroundColor(Color.DARK_GREEN);
         dataset.setBackgroundColor(Color.TRANSPARENT);
         dataset.setLabel("CAPDEV Rating");
-        
+
         Calendar cal = Calendar.getInstance();
 
         for (Evaluation e : capdevEvaluations) {
-            
+
             data.addLabel(f.format(e.getEvaluationDate()));
             dataset.addData(e.getRating());
         }
@@ -293,7 +295,7 @@ public class Chart {
 
         return new LineChart(data).toJson();
     }
-    
+
     public String getARBRating(ArrayList<Evaluation> arbEvaluations) {
 
         SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
@@ -303,11 +305,11 @@ public class Chart {
         dataset.addPointBackgroundColor(Color.DARK_GREEN);
         dataset.setBackgroundColor(Color.TRANSPARENT);
         dataset.setLabel("ARB Rating");
-        
+
         Calendar cal = Calendar.getInstance();
 
         for (Evaluation e : arbEvaluations) {
-            
+
             data.addLabel(f.format(e.getEvaluationDate()));
             dataset.addData(e.getRating());
         }
@@ -679,7 +681,5 @@ public class Chart {
 
         return new BarChart(data).toJson();
     }
-    
-    
 
 }

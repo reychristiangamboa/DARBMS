@@ -324,6 +324,22 @@
         <servlet-name>EditQuestion</servlet-name>
         <servlet-class>com.MVC.Controller.EditQuestion</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewARBOInfo</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewARBOInfo</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewExistingSite</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewExistingSite</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewNonExistingSite</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewNonExistingSite</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddARBCrop</servlet-name>
+        <servlet-class>com.MVC.Controller.AddARBCrop</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -647,6 +663,22 @@
     <servlet-mapping>
         <servlet-name>EditQuestion</servlet-name>
         <url-pattern>/EditQuestion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewARBOInfo</servlet-name>
+        <url-pattern>/ViewARBOInfo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewExistingSite</servlet-name>
+        <url-pattern>/ViewExistingSite</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewNonExistingSite</servlet-name>
+        <url-pattern>/ViewNonExistingSite</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddARBCrop</servlet-name>
+        <url-pattern>/AddARBCrop</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

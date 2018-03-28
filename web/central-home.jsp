@@ -53,7 +53,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Central Home
+                        Dashboard: Central
                     </h1>
                 </section>
 
@@ -335,7 +335,7 @@
                                                                         <div class="modal-footer">
                                                                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                                                                             <div class="pull-right">
-                                                                                <button class="btn btn-primary" type="submit" onclick="form.action='ViewRegionalDashboard?regOfficeCode=<%out.print(region.getRegCode());%>'">View Dashboard</button>
+                                                                                <button class="btn btn-primary" type="submit" onclick="form.action = 'ViewRegionalDashboard?regOfficeCode=<%out.print(region.getRegCode());%>'">View Dashboard</button>
                                                                             </div>
                                                                         </div>
                                                                     </form>
@@ -783,8 +783,90 @@
                                                 <div class="description-block border-right">
                                                     <h5 class="description-header"><%=currency.format(apcpRequestDAO.getTotalApprovedAmount(approvedRequests))%></h5>
                                                     <span class="description-text">TOTAL APPROVED AMOUNT</span>
+                                                    <div class="row text-center">
+                                                        <a class="btn btn-submit" data-toggle="modal" data-target="#totalApprovedAmount">View More</a>
+                                                    </div>
                                                 </div>
                                                 <!-- /.description-block -->
+                                            </div>
+                                            <div class="modal fade" id="totalApprovedAmount">
+                                                <div class="modal-dialog modal-lger">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title"></h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <table class="table table-bordered table-striped export">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Loan Tracking No.</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>Approved Amount</th>
+                                                                                <th>Approved Date</th>
+                                                                                <th>Approved By</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <%
+                                                                                for (APCPRequest r : allRequests) {
+                                                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                                                                    
+                                                                            %>
+                                                                            <tr>
+
+
+                                                                                <%if (r.getRequestStatus() == 4) {%>
+                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
+                                                                                <td><%out.print(arbo.getArboName());%></td>
+                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
+                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
+                                                                                <td></td>
+                                                                                <%} else if (r.getRequestStatus() == 5) {%>
+                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
+                                                                                <td><%out.print(arbo.getArboName());%></td>
+                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
+                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
+                                                                                <%} else if (r.getRequestStatus() == 7) {%>
+                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
+                                                                                <td><%out.print(arbo.getArboName());%></td>
+                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
+                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
+                                                                                <%}%>
+
+                                                                            </tr>
+                                                                            <%}%>
+
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <tr>
+                                                                                <th>Loan Tracking No.</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>Approved Amount</th>
+                                                                                <th>Approved Date</th>
+                                                                                <th>Approved By</th>
+                                                                            </tr>
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Generate Report</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
                                             </div>
                                             <!-- /.col -->
                                             <div class="col-sm-3 col-xs-6">
@@ -807,7 +889,7 @@
                             <!-- /.col -->
                         </div>
                         <!-- /.col -->
-                        <div class=" col-xs-6">
+                        <div class=" col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border" >
                                     <h3 class="box-title">APCP Requests</h3>
@@ -910,7 +992,7 @@
 
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <table id="example6" class="table table-bordered table-striped">
+                                            <table class="table table-bordered table-striped export">
                                                 <thead>
                                                     <tr>
                                                         <th>ARBO Name</th>
@@ -932,23 +1014,23 @@
                                                         <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                         <td><%out.print(r.getHectares() + " hectares");%></td>
 
-                                                        <%if (r.getRequestStatus() == 1) {%>
-                                                        <td><%out.print(f.format(r.getDateRequested()));%></td>
+                                                        <%if (r.getRequestStatus() == 1 || r.getRequestStatus() == 6) {%>
+                                                        <td><%out.print(r.getDateRequested());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 2) {%>
-                                                        <td><%out.print(f.format(r.getDateCleared()));%></td>
+                                                        <td><%out.print(r.getDateCleared());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 3) {%>
-                                                        <td><%out.print(f.format(r.getDateEndorsed()));%></td>
+                                                        <td><%out.print(r.getDateEndorsed());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 4) {%>
-                                                        <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                        <td><%out.print(r.getDateApproved());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 5) {%>
-                                                        <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                        <td><%out.print(r.getDateApproved());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%} else if (r.getRequestStatus() == 7) {%>
-                                                        <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                        <td><%out.print(r.getDateApproved());%></td>
                                                         <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                             <%}%>
 
@@ -972,7 +1054,7 @@
 
                             </div>
                         </div>
-                        <div class=" col-xs-6">
+                        <div class=" col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border" >
                                     <h3 class="box-title">CAPDEV Proposals</h3>
@@ -1047,7 +1129,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <table id="example5" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped export">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -1153,7 +1235,7 @@
                 var ctx2 = $('#lineCanvas').get(0).getContext('2d');
             <%
                 Chart line = new Chart();
-                String json2 = line.getCropHistory(crops);
+                String json2 = line.getCropHistory(crops,allArbsList);
             %>
                 new Chart(ctx2, <%out.print(json2);%>);
 

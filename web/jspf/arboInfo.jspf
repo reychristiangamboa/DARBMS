@@ -40,18 +40,23 @@
         <% ArrayList<CAPDEVActivity> activityHistory = capdevDAO2.getCAPDEVActivityHistoryByRequest(r2.getRequestID());%>
         <div class="box-body">
             <div class="row">
-                <div class="col-xs-4">
+                <div class="col-xs-3">
+                    <label for=''>Loan Tracking No.</label>
+                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type='text' class="form-control" id='' value="<%out.print(r2.getLoanTrackingNo());%>" disabled>
+                </div>
+                
+                <div class="col-xs-3">
                     <label for=''>Loan Amount</label>
                     <input style='border-left: none; border-right: none; border-top: none; background: none;' type='text' class="form-control" id='' value="<%out.print(currency.format(r2.getLoanAmount()));%>" disabled>
                 </div>
 
-                <div class="col-xs-4">
+                <div class="col-xs-3">
                     <div class="form-group">
                         <label for="">Reason for Loan</label>
                         <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(r2.getLoanReason());%>" disabled/>
                     </div>
                 </div>         
-                <div class="col-xs-4">
+                <div class="col-xs-3">
                     <div class="form-group">
                         <label for="">Status</label>
                         <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%=r2.getRequestStatusDesc()%>" disabled/>
@@ -301,7 +306,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-xs-8">
+                                            <div class="col-xs-12">
                                                 <div class="form-group">
                                                     <label for="">Activity Description</label>
                                                     <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getActivityDesc());%>" disabled>
@@ -348,12 +353,7 @@
                                         </div>
 
                                     </div>
-                                    <div class="modal-footer">
-                                        <div class="pull-right">
-                                            <button type='button' class="btn btn-default">Cancel</button>
-                                            <button type='button' class="btn btn-primary">View More</button>
-                                        </div>
-                                    </div>
+                                   
 
                                 </div>
                                 <!--                                            /.modal-content -->

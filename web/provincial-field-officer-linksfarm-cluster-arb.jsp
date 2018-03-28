@@ -48,18 +48,14 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
-            <%if ((Integer) session.getAttribute("userType") == 2) {%>
-            <%@include file="jspf/point-person-sidebar.jspf" %>
-            <%} else if ((Integer) session.getAttribute("userType") == 3) {%>
+            <%if ((Integer) session.getAttribute("userType") == 3) {%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
-            <%} else if ((Integer) session.getAttribute("userType") == 4) {%>
-            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
             <%} else if ((Integer) session.getAttribute("userType") == 5) {%>
             <%@include file="jspf/central-sidebar.jspf"%>
             <%}%>
 
             <%
-                int cityMunCode = (Integer) request.getAttribute("cityMunDesc");
+                int cityMunCode = (Integer) request.getAttribute("cityMunCode");
                 ARBODAO dao = new ARBODAO();
                 ARBDAO dao2 = new ARBDAO();
                 CropDAO dao3 = new CropDAO();
@@ -121,6 +117,7 @@
                                                     <th>ARBO</th>
                                                     <th>Gender</th>
                                                     <th>Education Level</th>
+                                                    <th></th>
                                                 </tr>
                                             </tfoot>
                                         </table>

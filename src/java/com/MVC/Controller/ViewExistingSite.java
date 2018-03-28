@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Z40
  */
-public class ViewSite extends BaseServlet {
+public class ViewExistingSite extends BaseServlet {
 
 
     @Override
@@ -28,10 +28,10 @@ public class ViewSite extends BaseServlet {
         
         int id = Integer.parseInt(request.getParameter("id"));
  
-        int cityMunDesc = id;
+        int cityMunCode = id;
 
-        request.setAttribute("cityMunDesc", cityMunDesc);
-        request.getRequestDispatcher("provincial-field-officer-view-new-project-site.jsp").forward(request, response);
+        request.setAttribute("cityMunCode", cityMunCode);
+        request.getRequestDispatcher("provincial-field-officer-view-exisitng-project-site.jsp").forward(request, response);
         
     }
 }

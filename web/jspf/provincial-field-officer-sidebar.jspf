@@ -49,6 +49,8 @@
 
     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
     ArrayList<CityMun> cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
+    ArrayList<CityMun> cityMunListSites = addressDAO.getAllProjectSites(arboListProvince.get(0).getArboProvince());
+    ArrayList<CityMun> cityMunListNonSites = addressDAO.getAllNonProjectSites(arboListProvince.get(0).getArboProvince());
 
     ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(arbListProvince);
     ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListProvince);

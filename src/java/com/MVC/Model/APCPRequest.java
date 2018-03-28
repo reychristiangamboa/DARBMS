@@ -289,9 +289,18 @@ public class APCPRequest {
 
     public double getAccumulatedOSBalancePerRequest() {
         double value = 0;
+        double value2 = 0;
+        double value3 = 0;
+        
         for (APCPRelease r : this.releases) {
             value += r.getTotalOSBalance();
         }
+        for(Repayment rep : this.repayments){
+            value2 += rep.getAmount();
+        }
+        
+        value3 = value - value2;
+        
         return value;
     }
 

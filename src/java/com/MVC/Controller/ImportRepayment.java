@@ -7,6 +7,7 @@ package com.MVC.Controller;
 
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.DAO.ARBDAO;
+import com.MVC.Model.APCPRequest;
 import com.MVC.Model.Repayment;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -43,6 +44,16 @@ public class ImportRepayment extends BaseServlet {
         ArrayList repaymentHolder = readExcelFile(request.getParameter("file"));
         ArrayList store = new ArrayList();
         
+        APCPRequest req = dao.getRequestByID(Integer.parseInt(request.getParameter("requestID")));
+        
+        double amountLimit = req.getLoanAmount()-sumRepayments2(req.getRepayments());
+        
+        if(repaymentExceedLimit(req,repaymentHolder)){
+            request.setAttribute("errMessage", "REPAYMENT/S amount (Php " + sumRepayments(repaymentHolder) + ") exceeds REQUEST amount (Php " + amountLimit + "). Try again.");
+            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
+        }
+        
         for(int i = 1; i < repaymentHolder.size(); i++){
             store = (ArrayList)repaymentHolder.get(i);
             
@@ -78,10 +89,56 @@ public class ImportRepayment extends BaseServlet {
             dao.addRepayment(r);
         }
         
+        
         request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
         request.setAttribute("success", "Repayments successfully imported!");
-        request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
+        request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
         
+    }
+    
+    public static boolean repaymentExceedLimit(APCPRequest req, ArrayList repaymentHolder) {
+        ArrayList store = new ArrayList();
+        double limit = 0;
+        double sumCurrentRepayment = 0;
+        double finalLimit = 0;
+
+        for (int i = 1; i < repaymentHolder.size(); i++) {
+            store = (ArrayList) repaymentHolder.get(i);
+            limit += Double.parseDouble(store.get(3).toString());
+        }
+
+        for (Repayment rep : req.getRepayments()) {
+            sumCurrentRepayment += rep.getAmount();
+        }
+        
+        finalLimit = req.getLoanAmount() - sumCurrentRepayment;
+
+        if (limit > finalLimit) {
+            return true;
+        }
+
+        return false;
+    }
+    
+    public static double sumRepayments(ArrayList repaymentHolder){
+        ArrayList store = new ArrayList();
+        double limit = 0;
+
+        for (int i = 1; i < repaymentHolder.size(); i++) {
+            store = (ArrayList) repaymentHolder.get(i);
+            limit += Double.parseDouble(store.get(3).toString());
+        }
+
+        return limit;
+    }
+    
+    public static double sumRepayments2(ArrayList<Repayment> repayments) {
+        double sumCurrentRepayments = 0;
+        for (Repayment rep : repayments) {
+            sumCurrentRepayments += rep.getAmount();
+        }
+
+        return sumCurrentRepayments;
     }
     
     public static ArrayList readExcelFile(String file) {

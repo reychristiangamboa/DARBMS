@@ -181,10 +181,10 @@
                                                             %>
                                                             <tr>
 
-                                                                <td><%out.print(arb.getFLName());%></td>
+                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
                                                                 <td><%out.print(currency.format(d.getDisbursedAmount()));%></td>
-                                                                <td><%out.print(d.getOSBalance());%></td>
-                                                                <td><%out.print(f.format(d.getDateDisbursed()));%></td>
+                                                                <td><%out.print(currency.format(d.getOSBalance()));%></td>
+                                                                <td><%out.print(d.getDateDisbursed());%></td>
 
                                                             </tr>
                                                             <%}%>
@@ -271,7 +271,12 @@
                                             <div class="col-xs-4">
                                                 <div class="form-group">
                                                     <label for="">O/S Balance</label>
-                                                    <input type="text" class="form-control numberOnly" name="OSBalance" required>
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <i>&#8369;</i>
+                                                        </div>
+                                                        <input type="text" class="form-control numberOnly" name="OSBalance" autocomplete="off" required>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">

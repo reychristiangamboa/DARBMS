@@ -48,13 +48,29 @@ public class RecordDisbursement extends BaseServlet {
         }
 
         finalLimit = release.getReleaseAmount() - limit;
-        double finalVal = Double.parseDouble(request.getParameter("disbursementAmount")) * arbIDs.length;
+
+        String[] vals = request.getParameter("disbursementAmount").split(",");
+        StringBuilder sb = new StringBuilder();
+        for (String val : vals) {
+            sb.append(val);
+        }
+        
+        String[] vals2 = request.getParameter("OSBalance").split(",");
+        StringBuilder sb2 = new StringBuilder();
+        for (String val : vals2) {
+            sb2.append(val);
+        }
+
+        String finAmount = sb.toString();
+        String OSBalance = sb2.toString();
+
+        double finalVal = Double.parseDouble(finAmount) * arbIDs.length;
 
         if (finalVal > finalLimit) {
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
             request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
             request.setAttribute("errMessage", "Disbursement amount (Php " + finalVal + ") exceeds Release amount (Php " + finalLimit + "). Try again.");
-            request.getRequestDispatcher("point-person-monitor-disbursement.jsp").forward(request, response);
+            request.getRequestDispatcher("monitor-disbursement.jsp").forward(request, response);
         } else {
             for (String arbID : arbIDs) {
                 Disbursement d = new Disbursement();
@@ -62,16 +78,8 @@ public class RecordDisbursement extends BaseServlet {
                 d.setArbID(Integer.parseInt(arbID));
                 d.setReleaseID(Integer.parseInt(request.getParameter("releaseID")));
 
-                String[] vals = request.getParameter("disbursementAmount").split(",");
-                StringBuilder sb = new StringBuilder();
-                for (String val : vals) {
-                    sb.append(val);
-                }
-
-                String finAmount = sb.toString();
-
                 d.setDisbursedAmount(Double.parseDouble(finAmount));
-                d.setOSBalance(Double.parseDouble(request.getParameter("OSBalance")));
+                d.setOSBalance(Double.parseDouble(OSBalance));
 
                 java.sql.Date disbursedDate = null;
 
@@ -92,7 +100,7 @@ public class RecordDisbursement extends BaseServlet {
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
             request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
             request.setAttribute("success", "Disbursement successfully recorded!");
-            request.getRequestDispatcher("point-person-monitor-disbursement.jsp").forward(request, response);
+            request.getRequestDispatcher("monitor-disbursement.jsp").forward(request, response);
 
         }
 

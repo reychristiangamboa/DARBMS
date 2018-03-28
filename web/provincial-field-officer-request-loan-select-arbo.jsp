@@ -49,34 +49,20 @@
 
                                             <tr>
                                                 <th>ARBO Name</th>
-                                                <th>No. of <br> Members</th>
-                                                <th>Total Approved <br> Amount</th>
-                                                <th>Cumulative <br> Releases</th>
-                                                <th><%out.print(year);%> Release</th>
-                                                <th>Date Released</th>
-                                                <th>O/S Balance</th>
-                                                <th>Past Due <br> Amount</th>
-                                                <th>Reason for Past Due</th>
+                                                <th>Address</th>
+                                                <th>No. of Members</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            <%
-                                                for (ARBO arbo : qualifiedARBOs) {
-                                                    if (!capdevDAO.checkPastDueAccount(arbo.getArboID())) {
-                                            %>
+                                            <%for (ARBO arbo : arboListProvince) {%>
+                                            <%if (arbo.getAPCPQualified() == 1) {%>
                                             <tr>
-                                                <td><a href="SelectARBORequest?id=<%out.print(arbo.getArboID());%>"> <%=arbo.getArboName()%></a></td>
-                                                <td><%=arbDAO.getAllARBsARBO(arbo.getArboID()).size()%></td>
-                                                <td><%-- total requested amount --%> </td>
-                                                <td><%-- cumulative amount --%> </td>
-                                                <td><%-- current year release --%> </td>
-                                                <td><%-- date released --%> </td>
-                                                <td><%-- O/S Balance --%> </td>
-                                                <td><%-- Past Due Amount --%> </td>
-                                                <td><%-- Reason for Past Due --%> </td>
-
+                                                <td><a href="SelectARBORequest?id=<%out.print(arbo.getArboID());%>"> <%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(arbo.getFullAddress());%></td>
+                                                <td><%out.print(arboDAO.getARBCount(arbo.getArboID()));%></td>
                                             </tr>
+
                                             <%}%>
                                             <%}%>
                                         </tbody>
@@ -102,7 +88,7 @@
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
-                                                <th>Leader</th>
+                                                <th>Address</th>
                                                 <th>No. of Members</th>
                                             </tr>
                                         </thead>
@@ -112,8 +98,8 @@
                                             <%if (arbo.getAPCPQualified() == 0) {%>
                                             <tr>
                                                 <td><a href="SelectARBORequest?id=<%out.print(arbo.getArboID());%>"> <%out.print(arbo.getArboName());%></a></td>
-                                                <td>Internet Explorer 4.0</td>
-                                                <td>Win 95+</td>
+                                                <td><%out.print(arbo.getFullAddress());%></td>
+                                                <td><%out.print(arboDAO.getARBCount(arbo.getArboID()));%></td>
                                             </tr>
 
                                             <%}%>
@@ -133,7 +119,7 @@
 
             </div>
             <!-- /.content-wrapper -->
-            
+
         </div>
         <%@include file="jspf/footer.jspf" %>
     </body>

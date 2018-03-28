@@ -7,6 +7,7 @@ package com.MVC.Controller;
 
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.Model.APCPRelease;
+import com.MVC.Model.APCPRequest;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -42,41 +43,99 @@ public class ImportRelease extends BaseServlet {
         ArrayList cellStoreArrayList = new ArrayList();
 
         APCPRequestDAO dao = new APCPRequestDAO();
+        APCPRequest req = dao.getRequestByID(Integer.parseInt(request.getParameter("requestID")));
+        
+        double amountLimit = req.getLoanAmount()-sumReleases2(req.getReleases());
 
-        for (int i = 1; i < releaseHolder.size(); i++) {
-            cellStoreArrayList = (ArrayList) releaseHolder.get(i);
+        if (releasesExceedLimit(req, releaseHolder)) {
+            request.setAttribute("errMessage", "RELEASE/S amount (Php " + sumReleases(releaseHolder) + ") exceeds REQUEST amount (Php " + amountLimit + "). Try again.");
+            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
+        } else {
+            for (int i = 1; i < releaseHolder.size(); i++) {
+                cellStoreArrayList = (ArrayList) releaseHolder.get(i);
 
-            APCPRelease r = new APCPRelease();
+                APCPRelease r = new APCPRelease();
 
-            r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
-            r.setReleaseAmount(Double.parseDouble(cellStoreArrayList.get(0).toString()));
+                r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
+                r.setReleaseAmount(Double.parseDouble(cellStoreArrayList.get(0).toString()));
 
-            java.sql.Date releaseDate = null;
+                java.sql.Date releaseDate = null;
 
-            String excelDate = cellStoreArrayList.get(1).toString(); // Parsing of Excel Date to Java Date
-            String[] dateArr = excelDate.split("-");
+                String excelDate = cellStoreArrayList.get(1).toString(); // Parsing of Excel Date to Java Date
+                String[] dateArr = excelDate.split("-");
 
-            int val = getValOfMonth(dateArr[1]);
-            String finalDate = dateArr[2] + "-" + val + "-" + dateArr[0];
+                int val = getValOfMonth(dateArr[1]);
+                String finalDate = dateArr[2] + "-" + val + "-" + dateArr[0];
 
-            try {
-                java.util.Date parsedReleaseDate = sdf.parse(finalDate);
-                releaseDate = new java.sql.Date(parsedReleaseDate.getTime());
-            } catch (ParseException ex) {
-                Logger.getLogger(ImportRelease.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    java.util.Date parsedReleaseDate = sdf.parse(finalDate);
+                    releaseDate = new java.sql.Date(parsedReleaseDate.getTime());
+                } catch (ParseException ex) {
+                    Logger.getLogger(ImportRelease.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                r.setReleaseDate(releaseDate);
+                r.setReleasedBy((Integer) session.getAttribute("userID"));
+
+                if (!dao.requestHasRelease(req)) {
+                    dao.updateRequestStatus(req.getRequestID(), 5);
+                }
+
+                dao.addRequestRelease(r);
+
             }
 
-            r.setReleaseDate(releaseDate);
-            r.setReleasedBy((Integer) session.getAttribute("userID"));
-
-            dao.addRequestRelease(r);
-
+            request.setAttribute("success", "Request Releases successfully imported!");
+            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
         }
 
-        request.setAttribute("success", "Request Releases successfully imported!");
-        request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-        request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
+    }
 
+    public static boolean releasesExceedLimit(APCPRequest req, ArrayList releaseHolder) {
+        ArrayList store = new ArrayList();
+        double limit = 0;
+        double sumCurrentReleases = 0;
+        double finalLimit = 0;
+
+        for (int i = 1; i < releaseHolder.size(); i++) {
+            store = (ArrayList) releaseHolder.get(i);
+            limit += Double.parseDouble(store.get(0).toString());
+        }
+
+        for (APCPRelease rel : req.getReleases()) {
+            sumCurrentReleases += rel.getReleaseAmount();
+        }
+        
+        finalLimit = req.getLoanAmount() - sumCurrentReleases;
+
+        if (limit > finalLimit) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static double sumReleases(ArrayList releaseHolder) {
+        ArrayList store = new ArrayList();
+        double limit = 0;
+
+        for (int i = 1; i < releaseHolder.size(); i++) {
+            store = (ArrayList) releaseHolder.get(i);
+            limit += Double.parseDouble(store.get(0).toString());
+        }
+
+        return limit;
+    }
+
+    public static double sumReleases2(ArrayList<APCPRelease> releaseHolder) {
+        double sumCurrentReleases = 0;
+        for (APCPRelease rel : releaseHolder) {
+            sumCurrentReleases += rel.getReleaseAmount();
+        }
+
+        return sumCurrentReleases;
     }
 
     public static ArrayList readExcelFile(String file) {

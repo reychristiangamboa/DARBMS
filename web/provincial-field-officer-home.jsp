@@ -56,7 +56,7 @@
             <%}else if((Integer)session.getAttribute("userType") == 5){%>
             <%@include file="jspf/central-sidebar.jspf"%>
             <%}%>
-            
+
             <%
             CropDAO cropDAO = new CropDAO();
     AddressDAO addressDAO = new AddressDAO();
@@ -116,7 +116,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Provincial Field Officer Home
+                        Dashboard: <%out.print(addressDAO.getProvOffice((Integer)session.getAttribute("provOfficeCode")).getProvDesc());%>
                     </h1>
                 </section>
 
@@ -845,9 +845,9 @@
                                                 <div class="description-block border-right">
                                                     <h5 class="description-header"><%=currency.format(apcpRequestDAO.getTotalApprovedAmount(approvedRequests))%></h5>
                                                     <span class="description-text">TOTAL APPROVED AMOUNT</span>
-                                                    <div class="row text-center">
+<!--                                                    <div class="row text-center">
                                                         <a class="btn btn-submit" data-toggle="modal" data-target="#totalApprovedAmount">View More</a>
-                                                    </div>
+                                                    </div>-->
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
@@ -857,7 +857,7 @@
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title"></h4>
+                                                            <h4 class="modal-title">TOTAL APPROVED AMOUNT</h4>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="row">
@@ -866,34 +866,52 @@
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>Loan Tracking No.</th>
-                                                                                <th>Past Due Amount</th>
-                                                                                <th>Reason for Past Due</th>
-                                                                                <th>Other Reason</th>
-                                                                                <th>Date Recorded</th>
-                                                                                <th>Date Settled</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>Approved Amount</th>
+                                                                                <th>Approved Date</th>
+                                                                                <th>Approved By</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-
+                                                                            <%
+                                                                                for (APCPRequest r : provincialRequests) {
+                                                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                                                            %>
                                                                             <tr>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
-                                                                                <td></td>
+                                                                                
+                                                                                
+                                                                                <%if (r.getRequestStatus() == 4) {%>
+                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
+                                                                                <td><%out.print(arbo.getArboName());%></td>
+                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
+                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
+                                                                                <%} else if (r.getRequestStatus() == 5) {%>
+                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
+                                                                                <td><%out.print(arbo.getArboName());%></td>
+                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
+                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
+                                                                                <%} else if (r.getRequestStatus() == 7) {%>
+                                                                                <td><%out.print(r.getLoanTrackingNo());%></td>
+                                                                                <td><%out.print(arbo.getArboName());%></td>
+                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
+                                                                                <td><%out.print(uDAO.searchUser(r.getApprovedBy()).getFullName());%></td>
+                                                                                <%}else{%>
+                                                                                
+                                                                                
                                                                             </tr>
+                                                                            <%}}%>
 
                                                                         </tbody>
                                                                         <tfoot>
                                                                             <tr>
-
-                                                                                <th>ARB Name</th>
-                                                                                <th>Past Due Amount</th>
-                                                                                <th>Reason for Past Due</th>
-                                                                                <th>Date Settled</th>
-                                                                                <th>Recorded By</th>
-                                                                                <th>Date Recorded</th>
+                                                                                <th>Loan Tracking No.</th>
+                                                                                <th>ARBO Name</th>
+                                                                                <th>Approved Amount</th>
+                                                                                <th>Approved Date</th>
+                                                                                <th>Approved By</th>
                                                                             </tr>
                                                                         </tfoot>
                                                                     </table>
@@ -916,9 +934,9 @@
                                                 <div class="description-block">
                                                     <h5 class="description-header"><%=currency.format(apcpRequestDAO.getTotalPastDueAmount(provincialRequests))%></h5>
                                                     <span class="description-text">TOTAL PAST DUE AMOUNT</span>
-                                                    <div class="row text-center">
+<!--                                                    <div class="row text-center">
                                                         <a class="btn btn-submit" data-toggle="modal" data-target="#totalPastDue">View More</a>
-                                                    </div>
+                                                    </div>-->
                                                 </div>
                                                 <!-- /.description-block -->
                                             </div>
@@ -1354,7 +1372,7 @@
                 var ctx2 = $('#lineCanvas').get(0).getContext('2d');
             <%
                 Chart line = new Chart();
-                String json2 = line.getCropHistory(crops);
+                String json2 = line.getCropHistory(crops,arbListProvince);
             %>
                 new Chart(ctx2, <%out.print(json2);%>);
 

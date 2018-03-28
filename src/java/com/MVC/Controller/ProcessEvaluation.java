@@ -65,11 +65,11 @@ public class ProcessEvaluation extends BaseServlet {
         if(eDAO.setEvaluationRating(rating, e.getEvaluationID())){
             request.setAttribute("arb", arb);
             request.setAttribute("success", arb.getFLName() + " successfully evaluated!");
-            request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
+            request.getRequestDispatcher("arb-profile.jsp").forward(request, response);
         }else{
             request.setAttribute("arb", arb);
             request.setAttribute("errMessage", "Error in evaluating " + arb.getFLName() + ".");
-            request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
+            request.getRequestDispatcher("arb-profile.jsp").forward(request, response);
         }
     }
 

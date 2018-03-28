@@ -108,9 +108,8 @@ public class SendCAPDEVProposal extends BaseServlet {
                 int arbID = arbDAO.getARBID(fN, mN, lN);
                 ARB arb = arbDAO.getARBByID(arbID);
 
-                if (arb.getArboID() == arbo.getArboID()) {
-                    arbList.add(arb);
-                }
+                arbList.add(arb);
+
             }
 
             capdevDAO.addCAPDEVPlanActivityParticipants(arbList, newlyAddedActivityID);

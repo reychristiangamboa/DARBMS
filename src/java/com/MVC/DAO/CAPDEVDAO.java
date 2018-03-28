@@ -559,7 +559,7 @@ public class CAPDEVDAO {
         return planList;
     }
     
-    public ArrayList<CAPDEVPlan> getAllProvincialCAPDEVPlanByStatusPastDue(int status, int regCode) {
+    public ArrayList<CAPDEVPlan> getAllProvincialCAPDEVPlanByStatusPastDue(int status, int provOfficeCode) {
 
         ArrayList<CAPDEVPlan> planList = new ArrayList();
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -572,10 +572,10 @@ public class CAPDEVDAO {
                     + "JOIN apcp_requests r ON c.requestID=r.requestID "
                     + "JOIN ref_requestStatus rs ON r.requestStatus=rs.requestStatus "
                     + "JOIN arbos a ON r.arboID=a.arboID "
-                    + "WHERE c.planStatus = ? AND a.arboRegion = ? AND c.pastDueAccountID IS NOT NULL";
+                    + "WHERE c.planStatus = ? AND a.provOfficeCode = ? AND c.pastDueAccountID IS NOT NULL";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, status);
-            p.setInt(2, regCode);
+            p.setInt(2, provOfficeCode);
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 CAPDEVPlan cp = new CAPDEVPlan();
@@ -1170,7 +1170,7 @@ public class CAPDEVDAO {
             con.setAutoCommit(false);
             String query = "select * from capdev_plans p "
                     + "join ref_planStatus s on p.planStatus=s.planStatus "
-                    + "where AND p.planStatus=4 AND p.pastDueAccountID IS NOT NULL";
+                    + "where p.planStatus=4 AND p.pastDueAccountID IS NOT NULL AND p.assignedTo=?";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, userID);
             ResultSet rs = p.executeQuery();

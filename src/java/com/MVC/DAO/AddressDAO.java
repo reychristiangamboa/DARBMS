@@ -258,6 +258,66 @@ public class AddressDAO {
         }
         return citymunList;
     }
+    
+    public ArrayList<CityMun> getAllProjectSites(int provinceID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<CityMun> citymunList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.refcitymun WHERE provCode=? AND isProjectSite=1";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, provinceID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                CityMun cm = new CityMun();
+                cm.setCityMunCode(rs.getInt("cityMunCode"));
+                cm.setCityMunDesc(rs.getString("cityMunDesc"));
+                citymunList.add(cm);
+            }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citymunList;
+    }
+    
+    public ArrayList<CityMun> getAllNonProjectSites(int provinceID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<CityMun> citymunList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.refcitymun WHERE provCode=? AND isProjectSite=0";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, provinceID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                CityMun cm = new CityMun();
+                cm.setCityMunCode(rs.getInt("cityMunCode"));
+                cm.setCityMunDesc(rs.getString("cityMunDesc"));
+                citymunList.add(cm);
+            }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citymunList;
+    }
 
     public ArrayList<CityMun> getAllCityMunsMultipleProv(ArrayList<Integer> provinceIDs) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -354,14 +414,17 @@ public class AddressDAO {
         return barangayList;
     }
 
-    public int getBrgyCode(String brgyDesc) {
+    public int getBrgyCode(String brgyDesc, int cityMunCode, int provCode, int regCode) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         int id = 0;
         try {
-            String query = "SELECT * FROM `dar-bms`.refbrgy WHERE `brgyDesc` LIKE ?";
+            String query = "SELECT * FROM `dar-bms`.refbrgy WHERE `brgyDesc` LIKE ? AND cityMunCode=? AND provCode=? AND regCode=?";
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "%" + brgyDesc + "%");
+            pstmt.setString(1,brgyDesc);
+            pstmt.setInt(2,cityMunCode);
+            pstmt.setInt(3,provCode);
+            pstmt.setInt(4,regCode);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 id = rs.getInt("brgyCode");
@@ -377,14 +440,16 @@ public class AddressDAO {
         return id;
     }
 
-    public int getCityMunCode(String cityMunDesc) {
+    public int getCityMunCode(String cityMunDesc,int provCode, int regCode) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         int id = 0;
         try {
-            String query = "SELECT * FROM `dar-bms`.refcitymun WHERE `citymunDesc` LIKE ?";
+            String query = "SELECT * FROM `dar-bms`.refcitymun WHERE `citymunDesc` LIKE ? AND provCode=? AND regCode=?";
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "%" + cityMunDesc + "%");
+            pstmt.setString(1, cityMunDesc);
+            pstmt.setInt(2,provCode);
+            pstmt.setInt(3,regCode);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 id = rs.getInt("cityMunCode");
@@ -403,14 +468,15 @@ public class AddressDAO {
         return id;
     }
 
-    public int getProvCode(String provDesc) {
+    public int getProvCode(String provDesc, int regCode) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         int id = 0;
         try {
-            String query = "SELECT * FROM `dar-bms`.refprovince WHERE `provDesc` LIKE ?";
+            String query = "SELECT * FROM `dar-bms`.refprovince WHERE `provDesc` LIKE ? AND regCode=?";
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "%" + provDesc + "%");
+            pstmt.setString(1, provDesc);
+            pstmt.setInt(2,regCode);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 id = rs.getInt("provCode");
@@ -461,9 +527,9 @@ public class AddressDAO {
         Connection con = myFactory.getConnection();
         int id = 0;
         try {
-            String query = "SELECT * FROM `dar-bms`.refregion WHERE `regDesc`LIKE ?";
+            String query = "SELECT * FROM `dar-bms`.refregion WHERE `regDesc` LIKE ?";
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, "%" + regionDesc + "%");
+            pstmt.setString(1, regionDesc);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 id = rs.getInt("regCode");

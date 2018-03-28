@@ -105,8 +105,8 @@
                         </div>
                         <!-- /.col -->
                     </div>
-                                            
-                                            <div class="row">
+
+                    <div class="row">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -117,7 +117,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example3" class="table table-bordered table-striped modTable">
+                                    <table id="example5" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -129,20 +129,21 @@
 
                                         <tbody>
 
+                                            <%
+                                                for(CAPDEVPlan p : assignedPlansPastDue){
+                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
+                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                            %>
                                             <tr>
-                                                <td><a href="modal-default" class="btn"data-toggle="modal" data-target="#modal-default">ARB</a></a></td>
-                                                <td>Internet
-                                                    Explorer 4.0
-                                                </td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
-                                                <td>Win 95+</td>
+                                                <td><a href="MonitorCAPDEVAttendance?id=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><%out.print(p.getActivities().size());%></td>
+                                                <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
+                                            <%}%>
 
                                         </tbody>
-                                        
+
                                         <tfoot>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -219,7 +220,7 @@
                         <!-- /.col -->
                     </div>                        
 
-                    
+
                     <!-- /.row -->
                 </section>
                 <!-- /.content -->

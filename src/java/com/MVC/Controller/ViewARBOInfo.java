@@ -5,8 +5,6 @@
  */
 package com.MVC.Controller;
 
-import com.MVC.DAO.ARBODAO;
-import com.MVC.Model.ARBO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -18,18 +16,12 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Z40
  */
-public class ProceedClusterARB extends BaseServlet {
+public class ViewARBOInfo extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         int id = Integer.parseInt(request.getParameter("id"));
-
-        int cityMunCode = id;
-
-        request.setAttribute("cityMunCode", cityMunCode);
-        request.getRequestDispatcher("provincial-field-officer-linksfarm-cluster-arb.jsp").forward(request, response);
-
+        request.setAttribute("requestID", id);
+        request.getRequestDispatcher("arbo-request-info.jsp").forward(request, response);
     }
-
 }
