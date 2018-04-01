@@ -26,24 +26,50 @@ public class FilterCAPDEVRequests extends BaseServlet {
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        if (request.getParameter("selectAll") != null) { // IS CHECKED
+        if (request.getParameter("filterBy").equals("All")) { // IS CHECKED
             request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
-        } else {
-            ArrayList<Integer> cityMunIDs = new ArrayList();
-            String[] cityValStr = request.getParameterValues("cities[]");
-            for (String id : cityValStr) {
-                cityMunIDs.add(Integer.parseInt(id));
+        
+        } else if(request.getParameter("filterBy").equals("provinces")){
+            ArrayList<Integer> provinceIDs = new ArrayList();
+            String[] provinceValStr = request.getParameterValues("provinces[]");
+            for (String id : provinceValStr) {
+                provinceIDs.add(Integer.parseInt(id));
             }
 
             CAPDEVDAO capdevDAO = new CAPDEVDAO();
             APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
 
-            ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllCityMunCAPDEVPlanByStatus(1, cityMunIDs);
-            ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllCityMunCAPDEVPlanByStatus(2, cityMunIDs);
-            ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllCityMunCAPDEVPlanByStatus(3, cityMunIDs);
-            ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllCityMunCAPDEVPlanByStatus(5, cityMunIDs);
+            ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1, provinceIDs);
+            ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, provinceIDs);
+            ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, provinceIDs);
+            ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, provinceIDs);
             
-            ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllCityMunRequestsByStatus(1, cityMunIDs);
+            ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, provinceIDs);
+            
+            request.setAttribute("requested", requestedRequests);
+            request.setAttribute("pending", pendingPlans);
+            request.setAttribute("approved", approvedPlans);
+            request.setAttribute("implemented", implementedPlans);
+            request.setAttribute("disapproved", disapprovedPlans);
+            
+            request.getRequestDispatcher("view-filtered-capdev-status.jsp").forward(request, response);
+        
+        } else if(request.getParameter("filterBy").equals("regions")){
+            ArrayList<Integer> regionIDs = new ArrayList();
+            String[] regionValStr = request.getParameterValues("regions[]");
+            for (String id : regionValStr) {
+                regionIDs.add(Integer.parseInt(id));
+            }
+
+            CAPDEVDAO capdevDAO = new CAPDEVDAO();
+            APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+
+            ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(1, regionIDs);
+            ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(2, regionIDs);
+            ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(3, regionIDs);
+            ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(5, regionIDs);
+            
+            ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(1, regionIDs);
             
             request.setAttribute("requested", requestedRequests);
             request.setAttribute("pending", pendingPlans);

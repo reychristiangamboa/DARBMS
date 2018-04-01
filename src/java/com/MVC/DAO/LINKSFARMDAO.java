@@ -8,6 +8,7 @@ package com.MVC.DAO;
 import com.MVC.Database.DBConnectionFactory;
 import com.MVC.Model.ARB;
 import com.MVC.Model.CAPDEVActivity;
+import com.MVC.Model.CAPDEVPlan;
 import com.MVC.Model.Cluster;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,6 +57,41 @@ public class LINKSFARMDAO {
             Logger.getLogger(LINKSFARMDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
+    }
+    
+    public ArrayList<Cluster> getClustersBySite(int projectSite) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Cluster> clusterList = new ArrayList();
+        
+        try {
+            String query = "SELECT * FROM `dar-bms`.clusters c "
+                    + "JOIN refcitymun r ON c.clusterSite=r.citymunCode "
+                    + "WHERE c.clusterSite=? ";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, projectSite);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Cluster c = new Cluster();
+                c.setClusterID(rs.getInt("clusterID"));
+                c.setClusterName(rs.getString("clusterName"));
+                c.setClusterSite(projectSite);
+                c.setClusterSiteDesc(rs.getString("cityMunDesc"));
+                c.setClusterMembers(getClusterMembersByID(rs.getInt("clusterID")));
+                clusterList.add(c);
+            }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(LINKSFARMDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(LINKSFARMDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return clusterList;
     }
     
     public Cluster getClusterByID(int clusterID) {
@@ -262,6 +298,136 @@ public class LINKSFARMDAO {
             Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return caList;
+    }
+    
+    public int addCAPDEVPlan(CAPDEVPlan cp, int userID) {
+
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "INSERT INTO `dar-bms`.`capdev_plans` "
+                    + "(`clusterID`,`planDTN`,`createdBy`) "
+                    + "VALUES (?,?,?);";
+            PreparedStatement p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+            p.setInt(1, cp.getClusterID());
+            p.setString(2, cp.getPlanDTN());
+            p.setInt(3, userID);
+            p.executeUpdate();
+
+            ResultSet rs = p.getGeneratedKeys();
+            if (rs.next()) {
+                int n = rs.getInt(1);
+                p.close();
+                con.commit();
+                con.close();
+                return n;
+            }
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(LINKSFARMDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(LINKSFARMDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
+    public ArrayList<CAPDEVPlan> getAllLINKSFARMCAPDEVPlanByStatus(int status) {
+
+        ArrayList<CAPDEVPlan> planList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        CAPDEVDAO dao = new CAPDEVDAO();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM capdev_plans c "
+                    + "JOIN ref_planStatus ps ON c.planStatus=ps.planStatus "
+                    + "JOIN clusters cl ON c.clusterID=cl.clusterID "
+                    + "WHERE c.planStatus = ? AND c.clusterID IS NOT NULL";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, status);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                CAPDEVPlan cp = new CAPDEVPlan();
+                cp.setPlanID(rs.getInt("planID"));
+                cp.setRequestID(rs.getInt("requestID"));
+                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                cp.setPlanStatus(rs.getInt("planStatus"));
+                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
+                cp.setPlanDTN(rs.getString("planDTN"));
+                cp.setAssignedTo(rs.getInt("assignedTo"));
+                cp.setCreatedBy(rs.getInt("createdBy"));
+                cp.setApprovedBy(rs.getInt("approvedBy"));
+                cp.setClusterID(rs.getInt("clusterID"));
+                cp.setActivities(dao.getCAPDEVPlanActivities(rs.getInt("planID")));
+                planList.add(cp);
+            }
+            con.commit();
+            rs.close();
+            p.close();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(LINKSFARMDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(LINKSFARMDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return planList;
+    }
+    
+    public ArrayList<CAPDEVPlan> getAssignedRequestCAPDEVPlans(int userID) {
+
+        ArrayList<CAPDEVPlan> cpList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        CAPDEVDAO dao = new CAPDEVDAO();
+        try {
+            con.setAutoCommit(false);
+            String query = "select * from capdev_plans p "
+                    + "join ref_planStatus s on p.planStatus=s.planStatus "
+                    + "where p.assignedTo=? AND p.planStatus=4 AND p.clusterID IS NOT NULL";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, userID);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                CAPDEVPlan cp = new CAPDEVPlan();
+                cp = new CAPDEVPlan();
+                cp.setPlanID(rs.getInt("planID"));
+                cp.setRequestID(rs.getInt("requestID"));
+                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                cp.setPlanStatus(rs.getInt("planStatus"));
+                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
+                cp.setPlanDTN(rs.getString("planDTN"));
+                cp.setAssignedTo(rs.getInt("assignedTo"));
+                cp.setCreatedBy(rs.getInt("createdBy"));
+                cp.setApprovedBy(rs.getInt("approvedBy"));
+                cp.setClusterID(rs.getInt("clusterID"));
+                cp.setActivities(dao.getCAPDEVPlanActivities(rs.getInt("planID")));
+                cpList.add(cp);
+            }
+            con.commit();
+            rs.close();
+            p.close();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(LINKSFARMDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(LINKSFARMDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cpList;
     }
 
 }

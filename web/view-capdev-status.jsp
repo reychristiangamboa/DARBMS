@@ -48,6 +48,7 @@
                 CAPDEVDAO capdevDAO = new CAPDEVDAO();
                 UserDAO uDAO = new UserDAO();
     
+                ArrayList<Region> regionList = addressDAO.getAllRegions();
                 ArrayList<Province> perProvinceList = addressDAO.getAllProvinces((Integer) session.getAttribute("regOfficeCode"));
                 ArrayList<CityMun> cityMunList = new ArrayList();
 
@@ -119,7 +120,8 @@
                     </div>
 
                     <%}%>
-                    <%if(userType == 3){%>
+
+                    <%if(userType == 4){%>
                     <div class="row">
                         <div class="col-xs-6">
                             <div class="box">
@@ -127,72 +129,77 @@
                                 <form method="post" role="form">
                                     <div class="box-body">
                                         <div class="row">
-                                            <div class="col-xs-2">
-                                                <div class="form-group">
-                                                    <label for="actName">Select All</label>
-                                                    <input type="checkbox" id="filterBy" name="selectAll" value="Yes">
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-4">
-                                                <div class="form-group">
-                                                    <label for="actName">Cities / Municipalities</label>
-                                                    <select name="cities[]" id="cities" class="form-control select2" multiple="multiple">
-                                                        <%for(CityMun city : cityMunList){%>
-                                                        <option value="<%=city.getCityMunCode()%>"><%out.print(city.getCityMunDesc());%></option>
-                                                        <%}%>
-                                                    </select>
-                                                </div>
+                                            <div class="col-xs-12">
+                                                <input type="radio" id="filterBy" name="filterBy" value="All" checked onclick="document.getElementById('provinces').disabled = true;document.getElementById('cities').disabled = true;">
+                                                <label for="actName">Select All</label>
+                                                &nbsp;&nbsp;
+                                                <input type="radio" id="filterBy" name="filterBy" value="provinces" onclick="document.getElementById('provinces').disabled = false;document.getElementById('cities').disabled = true;">
+                                                <label for="actName">Provinces</label>
                                             </div>
                                         </div>
-
-
-                                    </div>
-                                    <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequests'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i>Filter</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-                    <%}else if(userType == 4){%>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <div class="box">
-                                <div class="box-header"><h3 class="box-title">Filter</h3></div>
-                                <form method="post" role="form">
-                                    <div class="box-body">
                                         <div class="row">
-                                            <div class="col-xs-2">
-                                                <div class="form-group">
-                                                    <label for="actName">Select All</label>
-                                                    <input type="checkbox" id="filterBy" name="selectAll" value="Yes">
-                                                </div>
-                                            </div>
                                             <div class="col-xs-4">
                                                 <div class="form-group">
                                                     <label for="actName">Provinces</label>
-                                                    <select name="provinces[]" id="provinces" onchange="chg()" class="form-control select2" multiple="multiple">
+                                                    <select name="provinces[]" id="provinces" onchange="chg()" class="form-control select2" multiple="multiple" disabled>
                                                         <%for(Province p : perProvinceList){%>
                                                         <option value="<%=p.getProvCode()%>"><%out.print(p.getProvDesc());%></option>
                                                         <%}%>
                                                     </select>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-footer">
+                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequests'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i> Filter</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <%}else if(userType == 5){%>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="box">
+                                <div class="box-header"><h3 class="box-title">Filter</h3></div>
+                                <form method="post" role="form">
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <input type="radio" id="filterBy" name="filterBy" value="All" checked onclick="document.getElementById('regions').disabled = true;document.getElementById('provinces').disabled = true;">
+                                                <label for="actName">Select All</label>
+                                                &nbsp;&nbsp;
+                                                <input type="radio" id="filterBy" name="filterBy" value="regions" onclick="document.getElementById('regions').disabled = false;document.getElementById('provinces').disabled = true;">
+                                                <label for="actName">Regions</label>
+                                                &nbsp;&nbsp;
+                                                <input type="radio" id="filterBy" name="filterBy" value="provinces" onclick="document.getElementById('provinces').disabled = false;document.getElementById('provinces').disabled = false;">
+                                                <label for="actName">Provinces</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-xs-4">
                                                 <div class="form-group">
-                                                    <label for="actName">Cities / Municipalities</label>
-                                                    <select name="cities[]" id="cities" class="form-control select2" multiple="multiple" disabled>
+                                                    <label for="actName">Regions</label>
+                                                    <select name="regions[]" id="regions" onchange="chg2()" class="form-control select2" multiple="multiple" disabled>
+                                                        <%for(Region r : regionList){%>
+                                                        <option value="<%=r.getRegCode()%>"><%out.print(r.getRegDesc());%></option>
+                                                        <%}%>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label for="actName">Provinces</label>
+                                                    <select name="provinces[]" id="provinces" onchange="chg()" class="form-control select2" multiple="multiple" disabled>
 
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
                                     <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequests'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i>Filter</button>
+                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequests'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i> Filter</button>
                                     </div>
                                 </form>
 
@@ -287,8 +294,8 @@
                                     <table id="example5" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
                                             </tr>
@@ -302,8 +309,12 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><a href="MonitorCAPDEVAttendance?id=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <%if(userType == 4){ // RFO%>
+                                                <td><a href="ViewCAPDEVProposal?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}%>
+                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
@@ -313,8 +324,8 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>        
                                             </tr>
@@ -345,10 +356,10 @@
                                     <table id="example6" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>
+                                                <th>Status</th>    
                                             </tr>
                                         </thead>
 
@@ -360,8 +371,12 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><a href="ProceedAssignPointPerson?planID=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <%if(userType == 3){%>
+                                                <td><a href="ProceedAssignPointPerson?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}%>
+                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
@@ -371,10 +386,10 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>        
+                                                <th>Status</th>         
                                             </tr>
 
                                         </tfoot>
@@ -403,11 +418,10 @@
                                     <table id="apcp3" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>
-                                                <th>Type</th>
+                                                <th>Status</th>    
                                             </tr>
                                         </thead>
 
@@ -420,12 +434,11 @@
                                             %>
                                             <tr>
                                                 <!--WITH CAPDEV-->
-                                                <td><a href="ViewCAPDEVProposal?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
-
                                             </tr>
                                             <%
                                                }
@@ -434,11 +447,10 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>
-                                                <th>Type</th>
+                                                <th>Status</th>    
                                             </tr>
 
                                         </tfoot>
@@ -465,10 +477,10 @@
                                     <table id="example3" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>
+                                                <th>Status</th>    
                                             </tr>
                                         </thead>
 
@@ -480,8 +492,8 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
@@ -491,10 +503,10 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>        
+                                                <th>Status</th>           
                                             </tr>
 
                                         </tfoot>
@@ -519,8 +531,10 @@
         <%@include file="jspf/footer.jspf" %>
         <script>
 
-            function chg() {
-                var values = $('#provinces').val();
+
+
+            function chg2() {
+                var values = $('#regions').val();
 
                 for (i = 0; i < values.length; i++) {
                     if (i === 0) {
@@ -534,11 +548,11 @@
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
-                        document.getElementById('cities').innerHTML = xhttp.responseText;
+                        document.getElementById('provinces').innerHTML = xhttp.responseText;
                     }
                 };
 
-                var url = "RegionalCityFilterRefresh?";
+                var url = "RegionalProvincesFilterRefresh?";
                 for (i = 0; i < values.length; i++) {
                     if (i === 0) {
                         url += "valajax=" + values[i];
@@ -554,21 +568,7 @@
 
             $(document).ready(function () {
 
-                var update_pizza = function () {
-                    if ($("#filterBy").is(":checked")) {
 
-                        $('#cities').prop('disabled', 'disabled');
-                        $('#provinces').prop('disabled', 'disabled');
-
-                    } else {
-                        $('#cities').prop('disabled', false);
-                        $('#provinces').prop('disabled', false);
-                        $('#cities').val() = '';
-                    }
-                };
-
-                $(update_pizza);
-                $("#filterBy").change(update_pizza);
 
                 $("a[name='btn1']").click(function () {
                     $("div[id='1']").toggle();

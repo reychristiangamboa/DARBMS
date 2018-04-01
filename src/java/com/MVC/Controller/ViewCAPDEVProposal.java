@@ -21,12 +21,20 @@ public class ViewCAPDEVProposal extends BaseServlet {
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int planID = Integer.parseInt(request.getParameter("planID"));
-        int requestID = Integer.parseInt(request.getParameter("requestID"));
-        request.setAttribute("requestID", requestID);
+        int linksfarm = 0;
+        
+        if(request.getParameter("linksfarm") != null){
+            linksfarm = 1;
+        }
+        
         request.setAttribute("planID", planID);
-        request.getRequestDispatcher("regional-field-officer-view-capdev-plan.jsp").forward(request, response);
-    }
+        if (linksfarm > 0) {
+            request.setAttribute("linksfarm", 1);
+            request.getRequestDispatcher("regional-field-officer-view-linksfarm-capdev-plan.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("regional-field-officer-view-capdev-plan.jsp").forward(request, response);
+        }
 
-    
+    }
 
 }

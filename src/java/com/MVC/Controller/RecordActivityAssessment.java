@@ -43,7 +43,6 @@ public class RecordActivityAssessment extends BaseServlet {
 
         int activityID = Integer.parseInt(request.getParameter("activityID"));
         int planID = Integer.parseInt(request.getParameter("planID"));
-        int requestID = Integer.parseInt(request.getParameter("requestID"));
 
         ca.setActivityID(activityID);
         ca.setActive(1);
@@ -66,13 +65,11 @@ public class RecordActivityAssessment extends BaseServlet {
         if (cDAO.recordAssessment(ca) && cDAO.checkIfPresent(arbIDs, activityID)) {
             request.setAttribute("success", "Activity Assessment recorded!");
             request.setAttribute("planID", planID);
-            request.setAttribute("requestID", requestID);
             request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);
             
         } else{
             request.setAttribute("errMessage", "Unable to record Activity Assessment.");
             request.setAttribute("planID", planID);
-        request.setAttribute("requestID", requestID);
             request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);
         }
 

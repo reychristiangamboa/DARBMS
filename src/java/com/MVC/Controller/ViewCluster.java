@@ -5,6 +5,8 @@
  */
 package com.MVC.Controller;
 
+import com.MVC.DAO.LINKSFARMDAO;
+import com.MVC.Model.Cluster;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -14,17 +16,19 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author ijJPN
+ * @author Rey Christian
  */
-public class ReviewCAPDEVAssessment extends BaseServlet {
+public class ViewCluster extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        int planID = Integer.parseInt(request.getParameter("planID"));
-        request.setAttribute("planID", planID);
-        request.getRequestDispatcher("review-capdev-assessment.jsp").forward(request, response);
+        LINKSFARMDAO dao = new LINKSFARMDAO();
+        Cluster c = new Cluster();
+        c = dao.getClusterByID(Integer.parseInt(request.getParameter("clusterID")));
         
+        request.setAttribute("cluster", c);
+        request.getRequestDispatcher("cluster-profile.jsp").forward(request, response);
         
     }
 

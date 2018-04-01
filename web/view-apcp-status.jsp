@@ -37,6 +37,8 @@
             <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
             <%} else if (userType == 5) {%>
             <%@include file="jspf/central-sidebar.jspf"%>
+            <%} else if (userType == 2) {%>
+            <%@include file="jspf/point-person-sidebar.jspf"%>
             <%}%>
 
             <%
@@ -48,7 +50,9 @@
                 CAPDEVDAO capdevDAO = new CAPDEVDAO();
                 UserDAO uDAO = new UserDAO();
     
+                ArrayList<Region> regionList = addressDAO.getAllRegions();
                 ArrayList<Province> perProvinceList = addressDAO.getAllProvinces((Integer) session.getAttribute("regOfficeCode"));
+                ArrayList<Province> provincesRegion = addressDAO.getAllProvOfficesRegion((Integer) session.getAttribute("regOfficeCode"));
                 ArrayList<CityMun> cityMunList = new ArrayList();
 
                 
@@ -59,7 +63,7 @@
                 ArrayList<APCPRequest> releasedRequests = new ArrayList();
                 ArrayList<APCPRequest> forReleaseRequests = new ArrayList();
     
-                if(userType == 3){
+                if(userType == 3 || userType == 2){
                     ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
                     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
                     cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
@@ -114,7 +118,8 @@
                         <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
                     </div>
                     <%}%>
-                    <%if(userType == 3){%>
+
+                    <%if(userType == 4){%>
                     <div class="row">
                         <div class="col-xs-6">
                             <div class="box">
@@ -122,35 +127,36 @@
                                 <form method="post" role="form">
                                     <div class="box-body">
                                         <div class="row">
-                                            <div class="col-xs-2">
-                                                <div class="form-group">
-                                                    <label for="actName">Select All</label>
-                                                    <input type="checkbox" id="filterBy" name="selectAll" value="Yes">
-                                                </div>
+                                            <div class="col-xs-12">
+                                                <input type="radio" id="filterBy" name="filterBy" value="All" checked onclick="document.getElementById('provinces').disabled = true;document.getElementById('cities').disabled = true;">
+                                                <label for="actName">Select All</label>
+                                                &nbsp;&nbsp;
+                                                <input type="radio" id="filterBy" name="filterBy" value="provinces" onclick="document.getElementById('provinces').disabled = false;document.getElementById('cities').disabled = true;">
+                                                <label for="actName">Provinces</label>
                                             </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-xs-4">
                                                 <div class="form-group">
-                                                    <label for="actName">Cities / Municipalities</label>
-                                                    <select name="cities[]" id="cities" class="form-control select2" multiple="multiple">
-                                                        <%for(CityMun city : cityMunList){%>
-                                                        <option value="<%=city.getCityMunCode()%>"><%out.print(city.getCityMunDesc());%></option>
+                                                    <label for="actName">Provinces</label>
+                                                    <select name="provinces[]" id="provinces" class="form-control select2" multiple="multiple" disabled>
+                                                        <%for(Province p : provincesRegion){%>
+                                                        <option value="<%=p.getProvCode()%>"><%out.print(p.getProvDesc());%></option>
                                                         <%}%>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
                                     <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'FilterLoanRequests'" class="btn btn-success pull-right"> <i class="fa fa-filter margin-r-5"></i>Filter</button>
+                                        <button type="submit" onclick="form.action = 'FilterLoanRequests'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i> Filter</button>
                                     </div>
                                 </form>
 
                             </div>
                         </div>
                     </div>
-                    <%}else if(userType == 4){%>
+                    <%}else if(userType == 5){%>
                     <div class="row">
                         <div class="col-xs-6">
                             <div class="box">
@@ -158,33 +164,37 @@
                                 <form method="post" role="form">
                                     <div class="box-body">
                                         <div class="row">
-                                            <div class="col-xs-2">
-                                                <div class="form-group">
-                                                    <label for="actName">Select All</label>
-                                                    <input type="checkbox" id="filterBy" name="selectAll" value="Yes">
-                                                </div>
+                                            <div class="col-xs-12">
+                                                <input type="radio" id="filterBy" name="filterBy" value="All" checked onclick="document.getElementById('regions').disabled = true;document.getElementById('provinces').disabled = true;">
+                                                <label for="actName">Select All</label>
+                                                &nbsp;&nbsp;
+                                                <input type="radio" id="filterBy" name="filterBy" value="regions" onclick="document.getElementById('regions').disabled = false;document.getElementById('provinces').disabled = true;">
+                                                <label for="actName">Regions</label>
+                                                &nbsp;&nbsp;
+                                                <input type="radio" id="filterBy" name="filterBy" value="provinces" onclick="document.getElementById('provinces').disabled = false;document.getElementById('provinces').disabled = false;">
+                                                <label for="actName">Provinces</label>
                                             </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-xs-4">
                                                 <div class="form-group">
-                                                    <label for="actName">Provinces</label>
-                                                    <select name="provinces[]" id="provinces" onchange="chg()" class="form-control select2" multiple="multiple">
-                                                        <%for(Province p : perProvinceList){%>
-                                                        <option value="<%=p.getProvCode()%>"><%out.print(p.getProvDesc());%></option>
+                                                    <label for="actName">Regions</label>
+                                                    <select name="regions[]" id="regions" onchange="chg2()" class="form-control select2" multiple="multiple" disabled>
+                                                        <%for(Region r : regionList){%>
+                                                        <option value="<%=r.getRegCode()%>"><%out.print(r.getRegDesc());%></option>
                                                         <%}%>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">
                                                 <div class="form-group">
-                                                    <label for="actName">Cities / Municipalities</label>
-                                                    <select name="cities[]" id="cities" class="form-control select2" multiple="multiple" disabled>
+                                                    <label for="actName">Provinces</label>
+                                                    <select name="provinces[]" id="provinces" class="form-control select2" multiple="multiple" disabled>
 
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
                                     <div class="box-footer">
                                         <button type="submit" onclick="form.action = 'FilterLoanRequests'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i> Filter</button>
@@ -195,8 +205,7 @@
                         </div>
                     </div>
                     <%}%>
-                    
-                    
+
                     <div class="row">
                         <div class="col-lg-4 col-xs-6" >
                             <!-- small box -->
@@ -331,7 +340,6 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-
                                                 <td><a href="CheckRequirements?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
@@ -351,7 +359,7 @@
                         </div>
                         <!-- /.col -->
                     </div>
-                                        
+
                     <div class="row" id="2" style="display:none;">
                         <!--CLEARED-->
                         <div class="col-xs-12">
@@ -385,9 +393,9 @@
                                             <tr>
                                                 <%if (userType==3){%>
                                                 <td><a data-toggle="modal" data-target="#cleared-modal<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <%}if (userType == 4 || userType == 2){%>
+                                                    <%}else if (userType == 4 || userType == 5 || userType == 2){%>
                                                 <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <%}%>
+                                                    <%}%>
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
@@ -473,9 +481,9 @@
                                             <tr>
                                                 <%if(userType==3){%>
                                                 <td><a data-toggle="modal" data-target="#endorsed-modal<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <%}if (userType == 4 || userType == 2){%>
+                                                    <%}if (userType == 4 || userType == 5 || userType == 2){%>
                                                 <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <%}%>
+                                                    <%}%>
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
@@ -564,9 +572,9 @@
                                             <tr>
                                                 <%if(userType==3){%>
                                                 <td><a href="SchedulePreRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <%}else if (userType == 4 || userType == 2){%>
+                                                    <%}else if (userType == 4 || userType == 2 || userType == 5){%>
                                                 <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <%}%>
+                                                    <%}%>
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
@@ -619,9 +627,11 @@
                                             %>
 
                                             <tr>
-                                                <%if (userType == 4 || userType == 3){%>
+                                                <%if (userType == 4 || userType == 3 || userType == 5){%>
                                                 <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <%}%>
+                                                    <%}else if(userType == 2){%>
+                                                <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}%>
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
@@ -673,9 +683,7 @@
                                             %>
 
                                             <tr>
-                                                <%if (userType == 4 || userType == 3){%>
                                                 <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <%}%>
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
@@ -705,9 +713,9 @@
         </div>
         <%@include file="jspf/footer.jspf" %>
         <script>
-            
-            function chg() {
-                var values = $('#provinces').val();
+
+            function chg2() {
+                var values = $('#regions').val();
 
                 for (i = 0; i < values.length; i++) {
                     if (i === 0) {
@@ -717,15 +725,15 @@
                     }
 
                 }
-                
+
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
-                        document.getElementById('cities').innerHTML = xhttp.responseText;
+                        document.getElementById('provinces').innerHTML = xhttp.responseText;
                     }
                 };
 
-                var url = "RegionalCityFilterRefresh?";
+                var url = "RegionalProvincesFilterRefresh?";
                 for (i = 0; i < values.length; i++) {
                     if (i === 0) {
                         url += "valajax=" + values[i];
@@ -734,28 +742,13 @@
                     }
                 }
 
-                
+
                 xhttp.open("GET", url, true);
                 xhttp.send();
             }
-            
+
             $(document).ready(function () {
 
-                var update_pizza = function () {
-                    if ($("#filterBy").is(":checked")) {
-
-                        $('#cities').prop('disabled', 'disabled');
-                        $('#provinces').prop('disabled', 'disabled');
-
-                    } else {
-                        $('#cities').prop('disabled', false);
-                        $('#provinces').prop('disabled', false);
-                        $('#cities').val() = '';
-                    }
-                };
-
-                $(update_pizza);
-                $("#filterBy").change(update_pizza);
 
                 $("a[name='btn1']").click(function () {
                     $("div[id='1']").toggle();

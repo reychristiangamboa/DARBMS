@@ -32,10 +32,12 @@
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
     UserDAO uDAO = new UserDAO();
     EvaluationDAO eDAO = new EvaluationDAO();
+    LINKSFARMDAO linksfarmDAO = new LINKSFARMDAO();
     
     
     ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
     
+    ArrayList<CAPDEVPlan> assignedLINKSFARMPlans = linksfarmDAO.getAssignedRequestCAPDEVPlans((Integer)session.getAttribute("userID"));
     ArrayList<CAPDEVPlan> assignedPlans = capdevDAO.getAssignedRequestCAPDEVPlans((Integer)session.getAttribute("userID"));
     ArrayList<CAPDEVPlan> assignedPlansPastDue = capdevDAO.getAssignedRequestCAPDEVPlansPastDue((Integer)session.getAttribute("userID"));
     ArrayList<CAPDEVPlan> assignedPROs = capdevDAO.getAllAssignedPreReleasePlans((Integer)session.getAttribute("userID"));
@@ -77,7 +79,7 @@
                 </a>
             </li>
             <li>
-                <a href="point-person-view-apcp.jsp">
+                <a href="view-apcp.jsp">
                     <i class="fa fa-edit"></i> <span> View APCP</span>
                 </a>
             </li>

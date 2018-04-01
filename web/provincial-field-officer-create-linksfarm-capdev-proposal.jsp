@@ -48,7 +48,6 @@
                     <%}%>
                     <div class="row">
                         <div class="col-xs-12">
-
                             <!-- /.box -->
                             <div class="box">
                                 <form role="form" method="post" action="SendLINKSFARMCAPDEVProposal">
@@ -65,15 +64,15 @@
                                                 <label for=""> &nbsp;</label>
                                                 <button type="button" class="add_field_button btn btn-primary" id="addDependent"><i class="fa fa-user-plus"></i> Add Activity</button>
                                             </div>
-                                        </div>
-                                        
-                                        <div class="input_fields_wrap" id="wrapper">
 
+                                        </div>
+                                        <div class="input_fields_wrap" id="wrapper">
+                                            
 
                                         </div>
                                     </div>
                                     <div class="box-footer">
-                                        <input type="hidden" name="clusterID" value="<%=c.getClusterID()%>">
+                                        <input type="hidden" name="clusterID" value="<%out.print(c.getClusterID());%>">
                                         <button type="submit" name="manual" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
                                     </div>
                                 </form>
@@ -88,25 +87,12 @@
             <!-- /.content-wrapper -->
         </div>
         <%@include file="jspf/footer.jspf" %>
-        <script>
-            var ctx = $('#barCanvas').get(0).getContext('2d');
-            <%
-                    Chart bar = new Chart();
-                    String json = bar.getBarChartEducation(c.getClusterMembers());
-            %>
-            new Chart(ctx, <%out.print(json);%>);
-
-            var ctx3 = $('#pieCanvas').get(0).getContext('2d');
-            <%
-                    Chart pie = new Chart();
-                    String json3 = pie.getPieChartGender(c.getClusterMembers());
-            %>
-            new Chart(ctx3, <%out.print(json3);%>);
+        <script type="text/javascript">
 
             $(document).ready(function () {
                 var max_fields = 9; //maximum input boxes allowed
-                var wrapper = $(".input_fields_wrap"); //Fields wrapper
-                var add_button = $(".add_field_button"); //Add button ID
+                var wrapper = $("#wrapper"); //Fields wrapper
+                var add_button = $("#addDependent"); //Add button ID
                 var x = 0; //initlal text box count
                 $(add_button).click(function (e) { //on add input button click
                     e.preventDefault();

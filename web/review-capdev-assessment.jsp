@@ -30,8 +30,17 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/provincial-field-officer-sidebar.jspf" %>
+            <%if ((Integer) session.getAttribute("userType") == 3) {%>
+            <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
+            <%} else if ((Integer) session.getAttribute("userType") == 4) {%>
+            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
+            <%} else if ((Integer) session.getAttribute("userType") == 5) {%>
+            <%@include file="jspf/central-sidebar.jspf"%>
+            <%}%>
             <%
+                CAPDEVDAO capdevDAO = new CAPDEVDAO();
+                APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+                ARBODAO arboDAO = new ARBODAO();
                 CAPDEVPlan p = capdevDAO.getCAPDEVPlan((Integer)request.getAttribute("planID"));
                 APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                 ARBO a = arboDAO.getARBOByID(r.getArboID());
@@ -47,9 +56,6 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="field-officer-arbo-list.jsp"><i class="fa fa-dashboard"></i> Home</a></li>
-                    </ol>
 
                 </section>
 
@@ -59,7 +65,7 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">ARBO Information</h3>
+                                    <h3 class="box-title">CAPDEV Information</h3>
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
                                     </div>  
@@ -83,13 +89,13 @@
                                         <div class="tab-content no-padding">
                                             <%for(CAPDEVActivity b : caList){%>
                                             <div class="chart tab-pane <%if(count2 == 0){out.print("active");}%>" id="activity<%out.print(b.getActivityID());%>" style="position: relative;">
-                                                
+
                                                 <div class="box-body">
 
                                                     <div class="row">
                                                         <div class="col-xs-12">
 
-                                                            <div class="form-group col-xs-6">
+                                                            <div class="form-group col-xs-4">
                                                                 <label>Date:</label>
 
                                                                 <div class="input-group date">
@@ -101,23 +107,67 @@
                                                                 <!-- /.input group -->
                                                             </div>
 
+                                                            <div class="form-group col-xs-4">
+                                                                <label>Activity Type: </label>
+                                                                <input type="text" class="form-control" value="<%=b.getActivityCategoryDesc()%>" disabled>
+                                                            </div>
+                                                            
+                                                            <div class="form-group col-xs-4">
+                                                                <label for="">Technical Assistant: </label>
+                                                                <%if(p.getPlanStatus() != 5){%>
+                                                                <input type="text" class="form-control" value="Not yet implemented." disabled>
+                                                                <%}else{%>
+                                                                <input type="text" class="form-control" value="<%=b.getTechnicalAssistant()%>" disabled>
+                                                                <%}%>
+                                                            </div>
+
                                                             <div class="row col-xs-12">
                                                                 <div class="col-xs-12">
                                                                     <label for=''>Observations</label>
+                                                                    <%if(p.getPlanStatus() != 5){%>
+                                                                    <textarea class="form-control" rows="3" disabled>Not yet implemented.</textarea>
+                                                                    <%}else{%>
                                                                     <textarea class="form-control" rows="3" disabled><%out.print(b.getObservations());%></textarea>
+                                                                    <%}%>
                                                                 </div>
 
                                                             </div>
                                                             <div class="row col-xs-12">
                                                                 <div class="col-xs-12">
                                                                     <label for=''>Recommendations</label>
+                                                                    <%if(p.getPlanStatus() != 5){%>
+                                                                    <textarea class="form-control" rows="3" disabled>Not yet implemented.</textarea>
+                                                                    <%}else{%>
                                                                     <textarea class="form-control" rows="3" disabled><%out.print(b.getRecommendation());%></textarea>
+                                                                    <%}%>
                                                                 </div>
 
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <hr>
+                                                    <%if(p.getPlanStatus() != 5){%>
+                                                    <div class="row" style="margin-top:20px;">
+                                                        <div class="col-xs-12">
+                                                            <h4 style="margin-bottom:-10px">Participants</h4>
+                                                            <hr>
+                                                            <table class="table table-bordered table-striped modTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ARB</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <%for(ARB arb : b.getArbList()){%>
+                                                                    <tr>
+                                                                        <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFullName());%></a></td>
+                                                                    </tr>
+                                                                    <%}%>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <%}else{%>
                                                     <div class="row" style="margin-top:20px;">
                                                         <div class="col-xs-12">
                                                             <div class="col-xs-6">
@@ -128,14 +178,14 @@
                                                                 <table id="attendance<%out.print(count2);%>" class="table table-bordered table-striped">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>ARB Full Name</th>
+                                                                            <th>ARB</th>
                                                                         </tr>
                                                                     </thead>
 
                                                                     <tbody>
                                                                         <%for(ARB pARB : present){%>
                                                                         <tr>
-                                                                            <td><%out.print(pARB.getFullName());%></td>
+                                                                            <td><a href="ViewARB?id=<%out.print(pARB.getArbID());%>"><%out.print(pARB.getFullName());%></a></td>
                                                                         </tr>
                                                                         <%}%>
                                                                     </tbody>
@@ -150,14 +200,14 @@
                                                                 <table id="attendance<%out.print(count2);%>" class="table table-bordered table-striped">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>ARB Full Name</th>
+                                                                            <th>ARB</th>
                                                                         </tr>
                                                                     </thead>
 
                                                                     <tbody>
                                                                         <%for(ARB aARB : absent){%>
                                                                         <tr>
-                                                                            <td><%out.print(aARB.getFullName());%></td>
+                                                                            <td><a href="ViewARB?id=<%out.print(aARB.getArbID());%>"><%out.print(aARB.getFullName());%></a></td>
                                                                         </tr>
                                                                         <%}%>
                                                                     </tbody>
@@ -166,18 +216,12 @@
                                                             </div>                                                               
                                                         </div>
                                                     </div>
+                                                    <%}%>
 
                                                 </div>
-                                                <div class="chart tab-pane" id="info" style="position: relative;">
 
-
-                                                </div>
-                                                <div class="chart tab-pane" id="history" style="position: relative;">
-
-
-                                                </div>
                                             </div>
-                                             <%count2++;%>                         
+                                            <%count2++;%>                         
                                             <%}%>
                                         </div>
                                         <hr>        
@@ -189,7 +233,9 @@
                                 </div>
                                 <div class="box-footer">
                                     <div class= "pull-right">
+                                        <%if((Integer)session.getAttribute("userType") == 3){%>
                                         <a class="btn btn-primary" href="CreateCAPDEVProposal?id=<%out.print(p.getRequestID());%>">Create CAPDEV Proposal</a>
+                                        <%}%>
                                     </div>
                                 </div>
                             </div>

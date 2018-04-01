@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Rey Christian
  */
-public class ApproveCAPDEVProposal extends BaseServlet {
+public class DisapproveCAPDEVProposal extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,19 +28,26 @@ public class ApproveCAPDEVProposal extends BaseServlet {
             linksfarm = Integer.parseInt(request.getParameter("linksfarm"));
         }
 
-        if (capdevDAO.updatePlanStatus(Integer.parseInt(request.getParameter("planID")), 2)) {
+        if (capdevDAO.updatePlanStatus(Integer.parseInt(request.getParameter("planID")), 3)) {
             if (linksfarm > 0) {
-                request.setAttribute("success", "CAPDEV Plan approved!");
+                request.setAttribute("errMessage", "CAPDEV Plan disapproved!");
                 request.getRequestDispatcher("view-linksfarm-capdev-status.jsp").forward(request, response);
             } else {
-                request.setAttribute("success", "CAPDEV Plan approved!");
+                request.setAttribute("errMessage", "CAPDEV Plan disapproved!");
                 request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
             }
 
         } else {
-            request.setAttribute("errMessage", "Error in approving CAPDEV plan. Try again.");
-            request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
+            if (linksfarm > 0) {
+                request.setAttribute("errMessage", "Error in disapproving CAPDEV Plan.");
+                request.getRequestDispatcher("view-linksfarm-capdev-status.jsp").forward(request, response);
+            } else {
+                request.setAttribute("errMessage", "Error in disapproving CAPDEV Plan.");
+                request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
+            }
         }
     }
+
+    
 
 }

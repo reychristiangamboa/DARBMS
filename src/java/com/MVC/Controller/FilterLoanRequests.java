@@ -24,23 +24,23 @@ public class FilterLoanRequests extends BaseServlet {
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        if (request.getParameter("selectAll") != null) { // IS CHECKED
+        if (request.getParameter("filterBy").equals("All")) { // IS CHECKED
             request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
-        } else {
-            ArrayList<Integer> cityMunIDs = new ArrayList();
-            String[] cityValStr = request.getParameterValues("cities[]");
-            for (String id : cityValStr) {
-                cityMunIDs.add(Integer.parseInt(id));
+        } else if(request.getParameter("filterBy").equals("provinces")){
+            ArrayList<Integer> provinceIDs = new ArrayList();
+            String[] provinceValStr = request.getParameterValues("provinces[]");
+            for (String id : provinceValStr) {
+                provinceIDs.add(Integer.parseInt(id));
             }
 
             APCPRequestDAO dao = new APCPRequestDAO();
 
-            ArrayList<APCPRequest> requestedRequests = dao.getAllCityMunRequestsByStatus(1, cityMunIDs);
-            ArrayList<APCPRequest> clearedRequests = dao.getAllCityMunRequestsByStatus(2, cityMunIDs);
-            ArrayList<APCPRequest> endorsedRequests = dao.getAllCityMunRequestsByStatus(3, cityMunIDs);
-            ArrayList<APCPRequest> approvedRequests = dao.getAllCityMunRequestsByStatus(4, cityMunIDs);
-            ArrayList<APCPRequest> releasedRequests = dao.getAllCityMunRequestsByStatus(5, cityMunIDs);
-            ArrayList<APCPRequest> forReleaseRequests = dao.getAllCityMunRequestsByStatus(7, cityMunIDs);
+            ArrayList<APCPRequest> requestedRequests = dao.getAllProvincialRequestsByStatus(1, provinceIDs);
+            ArrayList<APCPRequest> clearedRequests = dao.getAllProvincialRequestsByStatus(2, provinceIDs);
+            ArrayList<APCPRequest> endorsedRequests = dao.getAllProvincialRequestsByStatus(3, provinceIDs);
+            ArrayList<APCPRequest> approvedRequests = dao.getAllProvincialRequestsByStatus(4, provinceIDs);
+            ArrayList<APCPRequest> releasedRequests = dao.getAllProvincialRequestsByStatus(5, provinceIDs);
+            ArrayList<APCPRequest> forReleaseRequests = dao.getAllProvincialRequestsByStatus(7, provinceIDs);
 
             request.setAttribute("requested", requestedRequests);
             request.setAttribute("cleared", clearedRequests);
@@ -49,7 +49,30 @@ public class FilterLoanRequests extends BaseServlet {
             request.setAttribute("released", releasedRequests);
             request.setAttribute("forRelease", forReleaseRequests);
             request.getRequestDispatcher("view-filtered-apcp-status.jsp").forward(request, response);
+        
+        }  else if(request.getParameter("filterBy").equals("regions")){
+            ArrayList<Integer> regionIDs = new ArrayList();
+            String[] regionValStr = request.getParameterValues("regions[]");
+            for (String id : regionValStr) {
+                regionIDs.add(Integer.parseInt(id));
+            }
 
+            APCPRequestDAO dao = new APCPRequestDAO();
+
+            ArrayList<APCPRequest> requestedRequests = dao.getAllRegionalRequestsByStatus(1, regionIDs);
+            ArrayList<APCPRequest> clearedRequests = dao.getAllRegionalRequestsByStatus(2, regionIDs);
+            ArrayList<APCPRequest> endorsedRequests = dao.getAllRegionalRequestsByStatus(3, regionIDs);
+            ArrayList<APCPRequest> approvedRequests = dao.getAllRegionalRequestsByStatus(4, regionIDs);
+            ArrayList<APCPRequest> releasedRequests = dao.getAllRegionalRequestsByStatus(5, regionIDs);
+            ArrayList<APCPRequest> forReleaseRequests = dao.getAllRegionalRequestsByStatus(7, regionIDs);
+
+            request.setAttribute("requested", requestedRequests);
+            request.setAttribute("cleared", clearedRequests);
+            request.setAttribute("endorsed", endorsedRequests);
+            request.setAttribute("approved", approvedRequests);
+            request.setAttribute("released", releasedRequests);
+            request.setAttribute("forRelease", forReleaseRequests);
+            request.getRequestDispatcher("view-filtered-apcp-status.jsp").forward(request, response);
         }
 
     }

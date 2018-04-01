@@ -47,7 +47,9 @@
                 APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
                 CAPDEVDAO capdevDAO = new CAPDEVDAO();
                 UserDAO uDAO = new UserDAO();
+                LINKFSFARMDAO lfDAO = new LINKSFARMDAO();
     
+                ArrayList<Region> regionList = addressDAO.getAllRegions();
                 ArrayList<Province> perProvinceList = addressDAO.getAllProvinces((Integer) session.getAttribute("regOfficeCode"));
                 ArrayList<CityMun> cityMunList = new ArrayList();
 
@@ -57,35 +59,14 @@
                 ArrayList<CAPDEVPlan> approvedPlans = new ArrayList();
                 ArrayList<CAPDEVPlan> disapprovedPlans = new ArrayList();
                 ArrayList<CAPDEVPlan> implementedPlans = new ArrayList();
+                ArrayList<APCPRequest> requestedRequests = new ArrayList();
     
-                if(userType == 3){
-                    ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
-                    ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
-                    cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
-                    
-                    allPlans = capdevDAO.getAllProvincialCAPDEVPlan((Integer) session.getAttribute("provOfficeCode"));
-                    pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
-                    approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
-                    disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
-                    implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
-                } else if(userType == 4){
-                    ArrayList<ARBO> arboListRegion = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
-                    ArrayList<ARB> arbListRegion = arbDAO.getAllARBsOfARBOs(arboListRegion);
-                    allPlans = capdevDAO.getAllRegionalCAPDEVPlan((Integer) session.getAttribute("regOfficeCode"));
-                    pendingPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
-                    approvedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(2, (Integer) session.getAttribute("regOfficeCode"));
-                    disapprovedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
-                    implementedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(5, (Integer) session.getAttribute("regOfficeCode"));
-                } else if (userType == 5){
-                    allPlans = capdevDAO.getAllCAPDEVPlan();
-                    pendingPlans = capdevDAO.getAllCAPDEVPlanByStatus(1);
-                    approvedPlans = capdevDAO.getAllCAPDEVPlanByStatus(2);
-                    disapprovedPlans = capdevDAO.getAllCAPDEVPlanByStatus(3);
-                    implementedPlans = capdevDAO.getAllCAPDEVPlanByStatus(5);
-                }
-   
-    
-
+                
+                pendingPlans = lfDAO.getAllLINKSFARMCAPDEVPlanByStatus(1);
+                approvedPlans = lfDAO.getAllLINKSFARMCAPDEVPlanByStatus(2);
+                disapprovedPlans = lfDAO.getAllLINKSFARMCAPDEVPlanByStatus(3);
+                implementedPlans = lfDAO.getAllLINKSFARMCAPDEVPlanByStatus(5);
+            
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -96,9 +77,7 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="field-officer-arbo-list.jsp"><i class="fa fa-dashboard"></i> Home</a></li>
-                    </ol>
+
 
                 </section>
 
@@ -117,102 +96,6 @@
                     </div>
 
                     <%}%>
-                    
-                    <%
-                        ArrayList<APCPRequest> requestedRequests2 = (ArrayList)request.getAttribute("requested");
-                        ArrayList<CAPDEVPlan> pendingPlans2 = (ArrayList)request.getAttribute("pending");
-                        ArrayList<CAPDEVPlan> approvedPlans2 = (ArrayList)request.getAttribute("approved");
-                        ArrayList<CAPDEVPlan> implementedPlans2 = (ArrayList)request.getAttribute("implemented");
-                        ArrayList<CAPDEVPlan> disapprovedPlans2 = (ArrayList)request.getAttribute("disapproved");
-                    %>
-                    
-                    
-                    <%if(userType == 4){%>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <div class="box">
-                                <div class="box-header"><h3 class="box-title">Filter</h3></div>
-                                <form method="post" role="form">
-                                    <div class="box-body">
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <input type="radio" id="filterBy" name="filterBy" value="All" checked onclick="document.getElementById('provinces').disabled = true;document.getElementById('cities').disabled = true;">
-                                                <label for="actName">Select All</label>
-                                                &nbsp;&nbsp;
-                                                <input type="radio" id="filterBy" name="filterBy" value="provinces" onclick="document.getElementById('provinces').disabled = false;document.getElementById('cities').disabled = true;">
-                                                <label for="actName">Provinces</label>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-4">
-                                                <div class="form-group">
-                                                    <label for="actName">Provinces</label>
-                                                    <select name="provinces[]" id="provinces" onchange="chg()" class="form-control select2" multiple="multiple" disabled>
-                                                        <%for(Province p : perProvinceList){%>
-                                                        <option value="<%=p.getProvCode()%>"><%out.print(p.getProvDesc());%></option>
-                                                        <%}%>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequests'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i> Filter</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-                    <%}else if(userType == 5){%>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <div class="box">
-                                <div class="box-header"><h3 class="box-title">Filter</h3></div>
-                                <form method="post" role="form">
-                                    <div class="box-body">
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <input type="radio" id="filterBy" name="filterBy" value="All" checked onclick="document.getElementById('regions').disabled = true;document.getElementById('provinces').disabled = true;">
-                                                <label for="actName">Select All</label>
-                                                &nbsp;&nbsp;
-                                                <input type="radio" id="filterBy" name="filterBy" value="regions" onclick="document.getElementById('regions').disabled = false;document.getElementById('provinces').disabled = true;">
-                                                <label for="actName">Regions</label>
-                                                &nbsp;&nbsp;
-                                                <input type="radio" id="filterBy" name="filterBy" value="provinces" onclick="document.getElementById('provinces').disabled = false;document.getElementById('provinces').disabled = false;">
-                                                <label for="actName">Provinces</label>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-4">
-                                                <div class="form-group">
-                                                    <label for="actName">Regions</label>
-                                                    <select name="regions[]" id="regions" onchange="chg2()" class="form-control select2" multiple="multiple" disabled>
-                                                        <%for(Region r : regionList){%>
-                                                        <option value="<%=r.getRegCode()%>"><%out.print(r.getRegDesc());%></option>
-                                                        <%}%>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-4">
-                                                <div class="form-group">
-                                                    <label for="actName">Provinces</label>
-                                                    <select name="provinces[]" id="provinces" onchange="chg()" class="form-control select2" multiple="multiple" disabled>
-
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequests'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i> Filter</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-                    <%}%>
 
                     <div class="row">
                         <div class="col-lg-3 col-xs-6" >
@@ -220,7 +103,7 @@
                             <a href="#" name="btn1">
                                 <div class="small-box bg-yellow">
                                     <div class="inner">
-                                        <h3><%=pendingPlans2.size()%></h3>
+                                        <h3><%=pendingPlans.size()%></h3>
 
                                         <h4>Pending </h4>
                                     </div>
@@ -236,7 +119,7 @@
                             <a href="#" name="btn2">
                                 <div class="small-box bg-aqua">
                                     <div class="inner">
-                                        <h3><%=approvedPlans2.size()%></h3>
+                                        <h3><%=approvedPlans.size()%></h3>
 
                                         <h4>Approved </h4>
 
@@ -253,7 +136,7 @@
                             <a href="#" name="btn3">
                                 <div class="small-box bg-red">
                                     <div class="inner">
-                                        <h3><%=disapprovedPlans2.size()%></h3>
+                                        <h3><%=disapprovedPlans.size()%></h3>
 
                                         <h4>Disapproved </h4>
 
@@ -270,7 +153,7 @@
                             <a href="#" name="btn4">
                                 <div class="small-box bg-green">
                                     <div class="inner">
-                                        <h3><%=implementedPlans2.size()%></h3>
+                                        <h3><%=implementedPlans.size()%></h3>
 
                                         <h4>Implemented </h4>
                                     </div>
@@ -283,11 +166,7 @@
                         <!-- ./col -->
                         <!-- ./col -->
                     </div>
-                    <div class="row text-center">
-                        <div class="col-xs-12">
-                            <a name="all" href="#">Select All <i class="fa fa-chevron-down"></i></a>
-                        </div>
-                    </div>
+
 
                     <!--PENDING-->
                     <div class="row" id="1" style="display:none;">
@@ -304,8 +183,8 @@
                                     <table id="example5" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>Cluster Name</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
                                             </tr>
@@ -314,13 +193,16 @@
                                         <tbody>
 
                                             <%
-                                                for(CAPDEVPlan p : pendingPlans2){
-                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
-                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                                for(CAPDEVPlan p : pendingPlans){
+                                                    Cluster c = lfDAO.getClusterByID(p.getClusterID());
                                             %>
                                             <tr>
-                                                <td><a href="MonitorCAPDEVAttendance?id=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <%if(userType == 4){ // RFO%>
+                                                <td><a href="ViewCAPDEVProposal?planID=<%out.print(p.getPlanID());%>&linksfarm=1"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}%>
+                                                <td><a href="ViewCluster?clusterID=<%=c.getClusterID()%>"><%=c.getClusterName()%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
@@ -330,8 +212,8 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>Cluster Name</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>        
                                             </tr>
@@ -362,23 +244,26 @@
                                     <table id="example6" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>Cluster Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>
+                                                <th>Status</th>  
                                             </tr>
                                         </thead>
 
                                         <tbody>
 
                                             <%
-                                                for(CAPDEVPlan p : approvedPlans2){
-                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
-                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                                for(CAPDEVPlan p : approvedPlans){
+                                                    Cluster c = lfDAO.getClusterByID(p.getClusterID());
                                             %>
                                             <tr>
-                                                <td><a href="ProceedAssignPointPerson?planID=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <%if(userType == 3){%>
+                                                <td><a href="ProceedAssignPointPerson?planID=<%out.print(p.getPlanID());%>&linksfarm=1"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}%>
+                                                <td><a href="ViewCluster?clusterID=<%=c.getClusterID()%>"><%=c.getClusterName()%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
@@ -388,10 +273,10 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>Cluster Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>        
+                                                <th>Status</th>       
                                             </tr>
 
                                         </tfoot>
@@ -420,29 +305,26 @@
                                     <table id="apcp3" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>Cluster Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>
-                                                <th>Type</th>
+                                                <th>Status</th>  
                                             </tr>
                                         </thead>
 
                                         <tbody id="proposals">
 
                                             <%
-                                                for(CAPDEVPlan p : disapprovedPlans2){
-                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
-                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                                for(CAPDEVPlan p : disapprovedPlans){
+                                                    Cluster c = lfDAO.getClusterByID(p.getClusterID());
                                             %>
                                             <tr>
                                                 <!--WITH CAPDEV-->
-                                                <td><a href="ViewCAPDEVProposal?planID=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><a href="ViewCluster?clusterID=<%=c.getClusterID()%>"><%=c.getClusterName()%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
-
                                             </tr>
                                             <%
                                                }
@@ -451,11 +333,10 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>Cluster Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>
-                                                <th>Type</th>
+                                                <th>Status</th>    
                                             </tr>
 
                                         </tfoot>
@@ -482,23 +363,22 @@
                                     <table id="example3" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>Cluster Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>
+                                                <th>Status</th>   
                                             </tr>
                                         </thead>
 
                                         <tbody>
 
                                             <%
-                                                for(CAPDEVPlan p : implementedPlans2){
-                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
-                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                                for(CAPDEVPlan p : implementedPlans){
+                                                    Cluster c = lfDAO.getClusterByID(p.getClusterID());
                                             %>
                                             <tr>
-                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                <td><a href="ViewCluster?clusterID=<%=c.getClusterID()%>"><%=c.getClusterName()%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
@@ -508,10 +388,10 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>Cluster Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>        
+                                                <th>Status</th>         
                                             </tr>
 
                                         </tfoot>
@@ -535,6 +415,8 @@
         </div>
         <%@include file="jspf/footer.jspf" %>
         <script>
+
+
 
             function chg2() {
                 var values = $('#regions').val();
@@ -570,6 +452,7 @@
             }
 
             $(document).ready(function () {
+
 
 
                 $("a[name='btn1']").click(function () {

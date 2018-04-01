@@ -103,6 +103,18 @@
                     <li><a href="view-apcp-status.jsp"><i class="fa fa-edit"></i> View APCP Status</a></li>
                 </ul>
             </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-users"></i> <span> LINKSFARM</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="view-linksfarm-capdev-status.jsp"><i class="fa fa-edit"></i>View CAPDEV Proposals</a></li>
+                </ul>
+            </li>
+            
             <li>
                 <a href="edit-profile.jsp">
                     <i class="fa fa-edit"></i> <span> Edit Profile</span>

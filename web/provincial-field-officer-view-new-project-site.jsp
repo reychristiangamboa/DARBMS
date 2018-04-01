@@ -60,13 +60,18 @@
 
             <%
                 int cityMunCode = (Integer) request.getAttribute("cityMunCode");
+                
                 ARBODAO dao = new ARBODAO();
                 ARBDAO dao2 = new ARBDAO();
                 CropDAO dao3 = new CropDAO();
                 AddressDAO dao4 = new AddressDAO();
+                LINKSFARMDAO dao5 = new LINKSFARMDAO();
+                
                 ArrayList<ARB> allArbPerCity = dao2.getAllARBsByCityMun(cityMunCode);
                 ArrayList<Crop> crops = dao3.getAllCropsByARBList(allArbPerCity);
                 CityMun city = dao4.getCityMun(cityMunCode);
+                
+                ArrayList<Cluster> clusterList = dao5.getClustersBySite(cityMunCode);
 
             %>
 
@@ -90,7 +95,7 @@
 
                                     <ul class="list-group list-group-unbordered">
                                         <li class="list-group-item">
-                                            <b>No. of ARBs</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=allArbPerCity.size()%></a>
+                                            <b>No. of Clusters</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=clusterList.size()%></a>
                                         </li>
                                         <%if((Integer)session.getAttribute("userType") == 3){%>
                                         <li class="list-group-item text-center">
@@ -114,7 +119,7 @@
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
-                                            <h4 class="modal-title">Agrarian Reform Beneficiaries</h4>
+                                            <h4 class="modal-title">Clusters</h4>
 
                                         </div>
                                         <div class="modal-body" id="modalBody">
@@ -123,26 +128,26 @@
                                                     <table id="arbTable" class="table table-bordered table-striped">
                                                         <thead>
                                                             <tr>
-                                                                <th>Full Name</th>
-                                                                <th>Address</th>
+                                                                <th>ID</th>
+                                                                <th>Cluster Name</th>
                                                             </tr>
                                                         </thead>
 
                                                         <tbody>
                                                             <%
-                                                                for (ARB arb : allArbPerCity) {
+                                                                for (Cluster cluster : clusterList) {
                                                             %>
                                                             <tr>
-                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFullName());%></a></td>
-                                                                <td><%out.print(arb.getFullAddress());%></td>
+                                                                <td><%=cluster.getClusterID()%></a></td>
+                                                                <td><a href="ViewCluster?clusterID=<%=cluster.getClusterID()%>"><%=cluster.getClusterName()%></a></td>
                                                             </tr>
                                                             <%}%>
                                                         </tbody>
 
                                                         <tfoot>
                                                             <tr>
-                                                                <th>Full Name</th>
-                                                                <th>Address</th>
+                                                                <th>ID</th>
+                                                                <th>Cluster Name</th>
                                                             </tr>
                                                         </tfoot>
 
@@ -150,8 +155,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
                                     <!--                                            /.modal-content -->
                                 </div>

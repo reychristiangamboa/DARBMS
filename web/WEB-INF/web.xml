@@ -344,6 +344,30 @@
         <servlet-name>CreateLINKSFARMCAPDEVProposal</servlet-name>
         <servlet-class>com.MVC.Controller.CreateLINKSFARMCAPDEVProposal</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProvincialCitiesFilterRefresh</servlet-name>
+        <servlet-class>com.MVC.Controller.ProvincialCitiesFilterRefresh</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RegionalProvincesFilterRefresh</servlet-name>
+        <servlet-class>com.MVC.Controller.RegionalProvincesFilterRefresh</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewCluster</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewCluster</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SendLINKSFARMCAPDEVProposal</servlet-name>
+        <servlet-class>com.MVC.Controller.SendLINKSFARMCAPDEVProposal</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DisapproveCAPDEVProposal</servlet-name>
+        <servlet-class>com.MVC.Controller.DisapproveCAPDEVProposal</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReviewLINKSFARMCAPDEVAssessment</servlet-name>
+        <servlet-class>com.MVC.Controller.ReviewLINKSFARMCAPDEVAssessment</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -687,6 +711,30 @@
     <servlet-mapping>
         <servlet-name>CreateLINKSFARMCAPDEVProposal</servlet-name>
         <url-pattern>/CreateLINKSFARMCAPDEVProposal</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProvincialCitiesFilterRefresh</servlet-name>
+        <url-pattern>/ProvincialCitiesFilterRefresh</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegionalProvincesFilterRefresh</servlet-name>
+        <url-pattern>/RegionalProvincesFilterRefresh</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewCluster</servlet-name>
+        <url-pattern>/ViewCluster</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SendLINKSFARMCAPDEVProposal</servlet-name>
+        <url-pattern>/SendLINKSFARMCAPDEVProposal</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DisapproveCAPDEVProposal</servlet-name>
+        <url-pattern>/DisapproveCAPDEVProposal</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReviewLINKSFARMCAPDEVAssessment</servlet-name>
+        <url-pattern>/ReviewLINKSFARMCAPDEVAssessment</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

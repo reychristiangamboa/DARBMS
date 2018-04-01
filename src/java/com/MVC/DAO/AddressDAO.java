@@ -256,6 +256,40 @@ public class AddressDAO {
         }
         return provinceList;
     }
+    
+    public ArrayList<Province> getAllProvOfficesMultipleReg(ArrayList<Integer> regionIDs) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Province> provList = new ArrayList();
+
+        try {
+            for (int id : regionIDs) {
+                String query = "SELECT * FROM `dar-bms`.ref_provoffice WHERE regCode=?";
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, id);
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    Province p = new Province();
+                    p.setProvCode(rs.getInt("provOfficeCode"));
+                    p.setProvDesc(rs.getString("provOfficeDesc"));
+                    p.setRegCode(rs.getInt("regCode"));
+                    provList.add(p);
+                }
+                pstmt.close();
+                rs.close();
+            }
+
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return provList;
+    }
 
     public ArrayList<CityMun> getAllCityMuns(int provinceID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();

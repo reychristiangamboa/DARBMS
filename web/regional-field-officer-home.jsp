@@ -962,7 +962,7 @@
                                                                             <tr>
                                                                                 <td><%=arbo.getArboName()%></td>
                                                                                 <td><%=req.getLoanTrackingNo()%></td>
-                                                                                <td><%=pda.getPastDueAmount()%></td>
+                                                                                <td><%=currency.format(pda.getPastDueAmount())%></td>
                                                                                 <td><%=pda.getReasonPastDueDesc()%></td>
                                                                                 <td><%=pda.getOtherReason()%></td>
                                                                                 <td><%=pda.getDateRecorded()%></td>
@@ -1010,7 +1010,7 @@
                         <div class=" col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border" >
-                                    <h3 class="box-title">APCP Requests</h3>
+                                    <h3 class="box-title"><a href="view-apcp-status.jsp">Agrarian Production Credit Program Requests</a></h3>
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
@@ -1174,7 +1174,7 @@
                         <div class=" col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border" >
-                                    <h3 class="box-title">CAPDEV Proposals</h3>
+                                    <h3 class="box-title"><a href="view-capdev-status.jsp">Capacity Development Proposals</a></h3>
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
@@ -1246,9 +1246,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <table id="example5" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped export">
                                         <thead>
                                             <tr>
+                                                <th>Region</th>
+                                                <th>Province</th>
                                                 <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
                                                 <th>No. of Activities</th>
@@ -1263,15 +1265,19 @@
                                                     CAPDEVDAO capdao = new CAPDEVDAO();
                                             %>
                                             <tr>
+                                                <td><%out.print(arbo2.getArboRegionDesc());%></td>
+                                                <td><%out.print(arbo2.getArboProvinceDesc());%></td>
                                                 <td><%out.print(arbo2.getArboName());%></td>
-                                                <td><%out.print(cp.getPlanDTN());%></td>
-                                                <td><%out.print(capdao.getCAPDEVPlanActivities(cp.getPlanID()).size());%>                                               </td>
+                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(cp.getPlanID());%>"><%out.print(cp.getPlanDTN());%></a></td>
+                                                <td><%out.print(capdao.getCAPDEVPlanActivities(cp.getPlanID()).size());%></td>
                                                 <td><%out.print(cp.getPlanStatusDesc());%></td>
                                             </tr>
                                             <%}%>
                                         </tbody>
                                         <tfoot>
                                             <tr>
+                                                <th>Region</th>
+                                                <th>Province</th>
                                                 <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
                                                 <th>No. of Activities</th>

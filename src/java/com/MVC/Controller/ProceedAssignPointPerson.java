@@ -21,6 +21,9 @@ public class ProceedAssignPointPerson extends BaseServlet {
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int planID = Integer.parseInt(request.getParameter("planID"));
+        if(request.getParameter("linksfarm") != null){
+            request.setAttribute("linksfarm", 1);
+        }
         request.setAttribute("planID", planID);
         request.getRequestDispatcher("provincial-field-officer-approved-capdev-proposals.jsp").forward(request, response);
     }

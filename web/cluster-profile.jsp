@@ -76,7 +76,18 @@
                         Project Site
                     </h1>
                 </section>
-                <section class="content-header">
+                <section class="content">
+                    <%if(request.getAttribute("success") != null){%>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
+                    </div>
+                    <%}else if(request.getAttribute("errMessage") != null){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                    </div>
+                    <%}%>
                     <div class="row">
                         <div class="col-md-3">
 
@@ -447,8 +458,8 @@
                                                                             <td><%=arb.getFullName()%></td>
                                                                             <td><%=dao.getARBOByID(arb.getArboID()).getArboName()%></td>
                                                                             <td><%=c.getCropTypeDesc()%></td>                                                                        
-                                                                            <td><%=f.format(c.getStartDate())%></td>                                                                        
-                                                                            <td><%=f.format(c.getEndDate())%></td>
+                                                                            <td><%=c.getStartDate()%></td>                                                                        
+                                                                            <td><%=c.getEndDate()%></td>
                                                                         </tr>
                                                                         <%}%>
                                                                     </tbody>
@@ -457,6 +468,8 @@
                                                                             <th>ARB Name</th>
                                                                             <th>ARBO Name</th>
                                                                             <th>Crop</th>
+                                                                            <th>Start Date</th>
+                                                                            <th>End Date</th>
                                                                         </tr>
                                                                     </tfoot>
                                                                 </table>
@@ -484,7 +497,7 @@
                                 <div class="box-header with-border" >
                                     <h3 class="box-title">CAPDEV Visuals</h3>
                                     <div class="box-tools pull-right">
-                                        <a class="btn btn-link" type="button" href="CreateLINKSFARMCAPDEVProposal?clusterID=<%out.print(cluster.getClusterID());%>"><i class="fa fa-plus"></i> Create LINKSFARM CAPDEV</a>
+                                        <a class="btn btn-link" href="CreateLINKSFARMCAPDEVProposal?clusterID=<%out.print(cluster.getClusterID());%>"><i class="fa fa-plus"></i> Create LINKSFARM CAPDEV</a>
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"></button>
                                     </div>
                                 </div>

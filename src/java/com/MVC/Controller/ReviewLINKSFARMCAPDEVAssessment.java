@@ -5,7 +5,6 @@
  */
 package com.MVC.Controller;
 
-import com.MVC.DAO.CAPDEVDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -15,27 +14,18 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author ijJPN
+ * @author Rey Christian
  */
-public class SendCAPDEVAssessment extends BaseServlet {
+public class ReviewLINKSFARMCAPDEVAssessment extends BaseServlet {
 
-    @Override
+@Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
         int planID = Integer.parseInt(request.getParameter("planID"));
-        CAPDEVDAO dao = new CAPDEVDAO();
-        
-        if(dao.updatePlanStatus(planID, 5)){
-            request.setAttribute("success", "CAPDEV Assessment sent!");
-            request.getRequestDispatcher("point-person-view-capdev-plans.jsp").forward(request, response);
-        }else{
-            request.setAttribute("errMessage", "Error in sending CAPDEV assessment.");
-            request.getRequestDispatcher("point-person-view-capdev-plans.jsp").forward(request, response);
-        }
+        request.setAttribute("planID", planID);
+        request.getRequestDispatcher("review-linksfarm-capdev-assessment.jsp").forward(request, response);
         
         
     }
-
-    
 
 }

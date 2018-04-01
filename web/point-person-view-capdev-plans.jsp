@@ -39,9 +39,6 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-                    <ol class="breadcrumb">
-                        <li><a href="field-officer-arbo-list.jsp"><i class="fa fa-dashboard"></i> Home</a></li>
-                    </ol>
 
                 </section>
 
@@ -218,7 +215,63 @@
                             <!-- /.box -->
                         </div>
                         <!-- /.col -->
-                    </div>                        
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><strong>Assigned LINKSFARM CAPDEV Proposals</strong></h3>
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>                         
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">             
+                                    <table class="table table-bordered table-striped modTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Plan DTN</th>
+                                                <th>Cluster Name</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                            <%
+                                                for(CAPDEVPlan p : assignedLINKSFARMPlans){
+                                                    Cluster c = linksfarmDAO.getClusterByID(p.getClusterID());
+                                            %>
+                                            <tr>
+                                                <td><a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                <td><%out.print(c.getClusterName());%></td>
+                                                <td><%out.print(p.getActivities().size());%></td>
+                                                <td><%out.print(p.getPlanStatusDesc());%></td>
+                                            </tr>
+                                            <%}%>
+
+                                        </tbody>
+
+                                        <tfoot>
+                                            <tr>
+                                                <th>Plan DTN</th>
+                                                <th>Cluster Name</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>       
+                                            </tr>
+
+                                        </tfoot>
+
+                                    </table>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
 
 
                     <!-- /.row -->
@@ -226,12 +279,6 @@
                 <!-- /.content -->
             </div>
         </div>
-        <!-- /.row -->
-
-        <!-- /.content -->
-
-
-        <!-- /.content-wrapper -->
 
         <%@include file="jspf/footer.jspf" %>
 

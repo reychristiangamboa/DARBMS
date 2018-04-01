@@ -377,7 +377,7 @@
 
 
                                                         </div>
-                                                        
+
 
                                                     </div>
                                                     <div class="modal-footer">
@@ -645,8 +645,7 @@
                                         <!-- /.tab-content -->
                                     </div>
                                     <!-- /.nav-tabs-custom -->
-                                    <%if ((Integer) session.getAttribute(
-                                                "userType") == 2) {%>
+                                    <%if ((Integer) session.getAttribute("userType") == 2) {%>
                                     <div class="box-footer">
                                         <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation">Add Evaluation</button>
                                     </div>
@@ -931,112 +930,156 @@
                                 <div class="box-body">
                                     <div class="nav-tabs-custom">
                                         <ul class="nav nav-tabs">
-                                            <li class="active"><a href="#timeline" data-toggle="tab">Timeline</a></li>
-
+                                            <li class="active"><a href="#attendance" data-toggle="tab">Attendance</a></li>
                                         </ul>
-
                                         <div class="tab-content" style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
-                                            <div class="active tab-pane" id="timeline">
+                                            <div class="tab-pane" id="attendance" >
+                                                <!-- The timeline -->
+                                                <%ArrayList<CAPDEVActivity> myActivities2 = arbCapdevDAO.getLINKSFARMCAPDEVActivityHistoryByARB(arb.getArbID());%>
+                                                <%CAPDEVActivity attendance2 = new CAPDEVActivity();%>
+                                                <div class="progress">
+                                                    <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: <%out.print(attendance2.getAttendanceRate(myActivities2));%>%">
+                                                        <%out.print(attendance2.getAttendance(myActivities2));%> / <%out.print(myActivities2.size());%>
+                                                    </div> 
+                                                </div> 
+
+                                                <%
+
+                                                    boolean firstInstance24 = true;
+                                                    Date date24 = null;
+                                                %>
+
                                                 <ul class="timeline timeline-inverse">
+                                                    <%for (CAPDEVActivity act : myActivities2) {%>
+                                                    <%
+                                                        boolean dateChanged = false;
+
+                                                        if (firstInstance24) { // FIRST INSTANCE
+                                                            date24 = act.getActivityDate();
+                                                        }
+                                                    %>
+
+                                                    <%
+                                                        if (date24.compareTo(act.getActivityDate()) != 0) { // NEW DATE, change currDate
+                                                            date24 = act.getActivityDate();
+                                                            dateChanged = true;
+                                                            System.out.print("Date changed!");
+                                                        }
+                                                    %>
                                                     <!-- timeline time label -->
-                                                    <li class="time-label">
-                                                        <span class="bg-red">
-                                                            INTERVENTION: RICE TRAINING 101
-                                                        </span>
-                                                    </li>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-envelope bg-blue"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
-
-                                                            <div class="timeline-body">
-                                                                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                                                                weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                                                                jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                                                                quora plaxo ideeli hulu weebly balihoo...
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-primary btn-xs">Read more</a>
-                                                                <a class="btn btn-danger btn-xs">Delete</a>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-user bg-aqua"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
-
-                                                            <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
-                                                            </h3>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline item -->
-                                                    <li>
-                                                        <i class="fa fa-comments bg-yellow"></i>
-
-                                                        <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
-
-                                                            <div class="timeline-body">
-                                                                Take me to your leader!
-                                                                Switzerland is small and neutral!
-                                                                We are more like Germany, ambitious and misunderstood!
-                                                            </div>
-                                                            <div class="timeline-footer">
-                                                                <a class="btn btn-warning btn-flat btn-xs">View comment</a>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <!-- END timeline item -->
-                                                    <!-- timeline time label -->
+                                                    <%if (firstInstance24 || dateChanged) {%>
                                                     <li class="time-label">
                                                         <span class="bg-green">
-                                                            3 Jan. 2014
+                                                            <%out.print(f.format(date24));%>
                                                         </span>
                                                     </li>
-                                                    <!-- /.timeline-label -->
-                                                    <!-- timeline item -->
+                                                    <%firstInstance24 = false;%>
+                                                    <%}%>
                                                     <li>
-                                                        <i class="fa fa-camera bg-purple"></i>
-
+                                                        <%if (act.getIsPresent() == 1) {%>
+                                                        <i class='fa fa-check bg-green'></i>
+                                                        <%} else if (act.getIsPresent() == 0) {%>
+                                                        <i class='fa fa-times bg-red'></i>
+                                                        <%}%>
                                                         <div class="timeline-item">
-                                                            <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
-
-                                                            <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
-
+                                                            <h3 class="timeline-header">
+                                                                <a href="#" data-toggle='modal' data-target='#activity<%out.print(act.getActivityID());%>'><%out.print(act.getActivityName());%></a>
+                                                            </h3>
                                                             <div class="timeline-body">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                                                <img src="http://placehold.it/150x100" alt="..." class="margin">
+                                                                <p><%out.print(act.getActivityDesc());%></p>
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <!-- END timeline item -->
+                                                    <div class="modal fade" id="activity<%out.print(act.getActivityID());%>">
+                                                        <div class="modal-dialog modal-md">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span></button>
+                                                                    <h4 class="modal-title">Activity Details</h4>
+                                                                </div>
+
+
+                                                                <div class="modal-body" id="modalBody">
+
+                                                                    <div class="row">
+                                                                        <div class="col-xs-4">
+                                                                            <div class="form-group">
+                                                                                <label for="">Activity Title</label>
+                                                                                <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(act.getActivityName());%>" disabled>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-8">
+                                                                            <div class="form-group">
+                                                                                <label for="">Activity Description</label>
+                                                                                <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(act.getActivityDesc());%>" disabled>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-4">
+                                                                            <div class="form-group">
+                                                                                <label for="">Activity Date</label>
+                                                                                <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(f.format(act.getActivityDate()));%>" disabled>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xs-4">
+                                                                            <div class="form-group">
+                                                                                <label for="">No. of Participants</label>
+                                                                                <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(act.getArbList().size());%>" disabled>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-12">
+                                                                            <div class="form-group">
+                                                                                <label for="">Observations</label>
+                                                                                <textarea id="" cols="30" rows="3" class="form-control" disabled><%if (act.getObservations() != null) {
+                                                                                        out.print(act.getObservations());
+                                                                                    } else {
+                                                                                        out.print("N/A");
+                                                                                    };%></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-12">
+                                                                            <div class="form-group">
+                                                                                <label for="">Recommendation</label>
+                                                                                <textarea id="" cols="30" rows="3" class="form-control" disabled><%if (act.getRecommendation() != null) {
+                                                                                        out.print(act.getRecommendation());
+                                                                                    } else {
+                                                                                        out.print("N/A");
+                                                                                    };%></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <div class="pull-right">
+                                                                        <button type='button' class="btn btn-default">Cancel</button>
+                                                                        <button type='button' class="btn btn-primary">View More</button>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <!--                                            /.modal-content -->
+                                                        </div>
+                                                        <!--                                        /.modal-dialog -->
+                                                    </div>
+                                                    <%}%>
                                                     <li>
                                                         <i class="fa fa-clock-o bg-gray"></i>
                                                     </li>
                                                 </ul>
                                             </div>
-                                            <!-- /.tab-pane -->
-
                                         </div>
-                                        <!-- /.tab-content -->
                                     </div>
-                                    <!-- /.nav-tabs-custom -->
-
                                 </div>
+
                             </div>
 
                             <!-- /.col -->

@@ -35,6 +35,11 @@
                 CAPDEVPlan p = capdevDAO.getCAPDEVPlan((Integer)request.getAttribute("planID"));
                 APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                 ARBO a = arboDAO.getARBOByID(r.getArboID());
+                int linksfarm = 0;
+                
+                if((Integer)request.getAttribute("linksfarm") != null){
+                    linksfarm = (Integer)request.getAttribute("linksfarm");
+                }
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -55,6 +60,7 @@
                 <section class="content">
                     <div class="row">
                         <div class="col-xs-12">
+                            <%if(linksfarm == 0){%>
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">ARBO Information</h3>
@@ -75,7 +81,7 @@
                                             <li><a href="#history" data-toggle="tab">CAPDEV History</a></li>
                                         </ul>
 
-                                          <%@include file="jspf/arboInfo.jspf"%>
+                                        <%@include file="jspf/arboInfo.jspf"%>
                                     </div>
                                     <hr>        
                                 </div>
@@ -84,6 +90,7 @@
 
 
                             </div>
+                            <%}%>
                             <!-- /.box -->
                             <div class="box">
                                 <div class="box-header with-border">
@@ -126,6 +133,9 @@
                                     </div>
                                     <div class="box-footer">
                                         <div class="btn-group pull-right">
+                                            <%if((Integer)request.getAttribute("linksfarm") != null){%>
+                                            <input type="hidden" name="linksfarm" value="1">
+                                            <%}%>
                                             <input type="hidden" name="planID" value="<%out.print(p.getPlanID());%>">
                                             <button type="submit" onclick="form.action = 'AssignPointPerson'" class="btn btn-success">Submit</button>
                                         </div>
@@ -142,19 +152,19 @@
             <!-- /.content-wrapper -->
         </div>
         <%@include file="jspf/footer.jspf" %>
-        
-            <script>
+
+        <script>
             var ctx = $('#barCanvas').get(0).getContext('2d');
             <%
-                    Chart bar = new Chart();
-                    String json = bar.getBarChartEducation(arbList);
+                Chart bar = new Chart();
+                String json = bar.getBarChartEducation(arbList);
             %>
             new Chart(ctx, <%out.print(json);%>);
 
             var ctx3 = $('#pieCanvas').get(0).getContext('2d');
             <%
-                    Chart pie = new Chart();
-                    String json3 = pie.getPieChartGender(arbList);
+                Chart pie = new Chart();
+                String json3 = pie.getPieChartGender(arbList);
             %>
             new Chart(ctx3, <%out.print(json3);%>);
 

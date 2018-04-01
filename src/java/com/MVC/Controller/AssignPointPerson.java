@@ -25,12 +25,22 @@ public class AssignPointPerson extends BaseServlet {
         
         int planID = Integer.parseInt(request.getParameter("planID"));
         int pointPersonID = Integer.parseInt(request.getParameter("pointPersonID"));
+        int linksfarm = 0;
+        
+        if (request.getParameter("linksfarm") != null) {
+            linksfarm = Integer.parseInt(request.getParameter("linksfarm"));
+        }
         
         CAPDEVDAO dao = new CAPDEVDAO();
         
         if(dao.assignPointPerson(planID, pointPersonID) && dao.updatePlanStatus(planID, 4)){
-            request.setAttribute("success", "Point Person successfully assigned to CAPDEV Plan!");
-            request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
+            if (linksfarm > 0) {
+                request.setAttribute("success", "Point Person successfully assigned to CAPDEV Plan!");
+                request.getRequestDispatcher("view-linksfarm-capdev-status.jsp").forward(request, response);
+            } else {
+                request.setAttribute("success", "Point Person successfully assigned to CAPDEV Plan!");
+                request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
+            }
         }else{
             request.setAttribute("errMessage", "Error in assigning Point Person to CAPDEV Plan.");
             request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);

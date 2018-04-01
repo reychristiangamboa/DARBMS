@@ -16,9 +16,6 @@
             <%@include file="jspf/point-person-sidebar.jspf" %>
 
             <%
-                APCPRequest r = apcpRequestDAO.getRequestByID((Integer)request.getAttribute("requestID"));
-                ARBO a = arboDAO.getARBOByID(r.getArboID());
-                ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
                 ArrayList<CAPDEVActivity> caList = capdevDAO.getCAPDEVPlanActivities((Integer)request.getAttribute("planID"));
             %>
 
@@ -125,7 +122,6 @@
                                                             </div>
                                                             <div class="box-footer">
                                                                 <input type="hidden" value="<%=b.getActivityID()%>" name="activityID">
-                                                                <input type="hidden" value="<%=r.getRequestID()%>" name="requestID">
                                                                 <input type="hidden" value="<%=(Integer)request.getAttribute("planID")%>" name="planID">
                                                                 <button class="btn btn-success pull-right" onclick="form.action = 'RecordActivityAssessment'" >Submit</button>
                                                             </div>

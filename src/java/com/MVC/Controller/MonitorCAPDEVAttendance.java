@@ -20,16 +20,16 @@ public class MonitorCAPDEVAttendance extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-        int planID = Integer.parseInt(request.getParameter("planID"));
-        int requestID = Integer.parseInt(request.getParameter("requestID"));
-        request.setAttribute("planID", planID);
-        request.setAttribute("requestID", requestID);
-        request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);
-        
-        
-    }
 
-    
+        int planID = Integer.parseInt(request.getParameter("planID"));
+        if (request.getParameter("requestID") != null) {
+            int requestID = Integer.parseInt(request.getParameter("requestID"));
+            request.setAttribute("requestID", requestID);
+        }
+
+        request.setAttribute("planID", planID);
+        request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);
+
+    }
 
 }

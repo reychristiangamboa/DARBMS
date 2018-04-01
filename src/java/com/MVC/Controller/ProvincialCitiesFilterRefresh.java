@@ -17,9 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author ijJPN
+ * @author Rey Christian
  */
-public class RegionalCityFilterRefresh extends BaseServlet {
+public class ProvincialCitiesFilterRefresh extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

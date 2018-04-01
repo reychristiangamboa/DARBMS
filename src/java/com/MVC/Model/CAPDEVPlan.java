@@ -23,6 +23,7 @@ public class CAPDEVPlan {
     private int approvedBy;
     private int planStatus;
     private String planStatusDesc;
+    private int clusterID;
     
     private ArrayList<CAPDEVActivity> activities = new ArrayList();
     
@@ -107,11 +108,14 @@ public class CAPDEVPlan {
     public void setAssignedTo(int assignedTo) {
         this.assignedTo = assignedTo;
     }
-    
-    
-    
-    
-    
+
+    public int getClusterID() {
+        return clusterID;
+    }
+
+    public void setClusterID(int clusterID) {
+        this.clusterID = clusterID;
+    }
     
 }
 
