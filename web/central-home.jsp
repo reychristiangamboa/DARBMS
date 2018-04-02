@@ -320,7 +320,7 @@
                                                                                     <td><%out.print(arboDAO.getARBCount(arbo.getArboID()));%></td>
                                                                                 </tr>
                                                                                 <%}%>
-                                                                            </tbody>
+                                                                            </tbody>    
                                                                             <tfoot>
                                                                                 <tr>
                                                                                     <th>ARBO Name</th>
@@ -1231,7 +1231,7 @@
                                                 <td><%out.print(arbo2.getArboProvinceDesc());%></td>
                                                 <td><%out.print(arbo2.getArboName());%></td>
                                                 <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(cp.getPlanID());%>"><%out.print(cp.getPlanDTN());%></a></td>
-                                                <td><%out.print(capdao.getCAPDEVPlanActivities(cp.getPlanID()).size());%>                                               </td>
+                                                <td><%out.print(capdao.getCAPDEVPlanActivities(cp.getPlanID()).size());%></td>
                                                 <td><%out.print(cp.getPlanStatusDesc());%></td>
                                             </tr>
                                             <%}%>

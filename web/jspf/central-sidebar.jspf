@@ -30,10 +30,9 @@
     CAPDEVDAO capdevDAO = new CAPDEVDAO();
     UserDAO uDAO = new UserDAO();
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
-    ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince(1);
-    ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs(1);
 
     ArrayList<ARBO> arboList = arboDAO.getAllARBOs();
+    System.out.println(arboList.size());
     ArrayList<ARB> allArbsList = arbDAO.getAllARBsOfARBOs(arboList);
 
     ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(allArbsList);

@@ -1908,7 +1908,7 @@ public class APCPRequestDAO {
             PreparedStatement pstmt = con.prepareStatement(query);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                if (rs.getInt("ltn") == ltn) {
+                if (rs.getInt("loanTrackingNo") == ltn) {
                     success = true;
                 }
             }

@@ -48,6 +48,7 @@
                 CAPDEVDAO capdevDAO = new CAPDEVDAO();
                 UserDAO uDAO = new UserDAO();
     
+                ArrayList<Region> regionList = addressDAO.getAllRegions();
                 ArrayList<Province> perProvinceList = addressDAO.getAllProvinces((Integer) session.getAttribute("regOfficeCode"));
                 ArrayList<CityMun> cityMunList = new ArrayList();
 

@@ -31,8 +31,10 @@ public class AddARB extends BaseServlet {
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        
         if (request.getParameter("manual") != null) {
-
+            
+            ArrayList<Dependent> dependentList = new ArrayList();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
             System.out.println(request.getParameter("memberSince"));
@@ -122,32 +124,35 @@ public class AddARB extends BaseServlet {
                     cropList.add(c);
                 }
 
-                String[] names = request.getParameterValues("dependentName[]");
-                String[] birthdays = request.getParameterValues("dependentBirthday[]");
-                String[] el = request.getParameterValues("dependentEL[]");
-                String[] re = request.getParameterValues("dependentR[]");
-                System.out.println(re[0]);
-                ArrayList<Dependent> dependentList = new ArrayList();
-                
-                for (int x = 0; x < names.length; x++) {
+                if (request.getParameterValues("dependentName[]") != null) {
+                    String[] names = request.getParameterValues("dependentName[]");
+                    String[] birthdays = request.getParameterValues("dependentBirthday[]");
+                    String[] el = request.getParameterValues("dependentEL[]");
+                    String[] re = request.getParameterValues("dependentR[]");
+                    System.out.println(re[0]);
+                    
 
-                    Dependent d = new Dependent();
-                    d.setName(names[x]);
-                    d.setEducationLevel(Integer.parseInt(el[x]));
-                    d.setRelationshipType(Integer.parseInt(re[x]));
+                    for (int x = 0; x < names.length; x++) {
 
-                    java.sql.Date birthday = null;
+                        Dependent d = new Dependent();
+                        d.setName(names[x]);
+                        d.setEducationLevel(Integer.parseInt(el[x]));
+                        d.setRelationshipType(Integer.parseInt(re[x]));
 
-                    try {
-                        java.util.Date parsedBirthday = sdf.parse(birthdays[x]);
-                        birthday = new java.sql.Date(parsedBirthday.getTime());
-                    } catch (ParseException ex) {
-                        Logger.getLogger(AddARB.class.getName()).log(Level.SEVERE, null, ex);
+                        java.sql.Date birthday = null;
+
+                        try {
+                            java.util.Date parsedBirthday = sdf.parse(birthdays[x]);
+                            birthday = new java.sql.Date(parsedBirthday.getTime());
+                        } catch (ParseException ex) {
+                            Logger.getLogger(AddARB.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        d.setBirthday(birthday);
+
+                        dependentList.add(d);
+
                     }
-
-                    d.setBirthday(birthday);
-
-                    dependentList.add(d);
 
                 }
 

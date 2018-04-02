@@ -79,7 +79,7 @@
                 </a>
             </li>
             <li>
-                <a href="view-apcp.jsp">
+                <a href="view-apcp-status.jsp">
                     <i class="fa fa-edit"></i> <span> View APCP</span>
                 </a>
             </li>

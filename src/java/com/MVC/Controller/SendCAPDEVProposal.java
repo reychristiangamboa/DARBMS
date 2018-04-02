@@ -59,7 +59,6 @@ public class SendCAPDEVProposal extends BaseServlet {
         }
 
         ARBO arbo = arboDAO.getARBOByID(Integer.parseInt(request.getParameter("requestID")));
-
         CAPDEVPlan capdevPlan = new CAPDEVPlan();
 
         capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
@@ -104,11 +103,20 @@ public class SendCAPDEVProposal extends BaseServlet {
                 String lN = cellStoreArrayList.get(0).toString();
                 String fN = cellStoreArrayList.get(1).toString();
                 String mN = cellStoreArrayList.get(2).toString();
+                boolean isPart = false;
 
                 int arbID = arbDAO.getARBID(fN, mN, lN);
-                ARB arb = arbDAO.getARBByID(arbID);
 
-                arbList.add(arb);
+                for (ARB arb : arbList) {
+                    if (arb.getArbID() == arbID) {
+                        isPart = true;
+                    }
+                }
+
+                if (arbID > 0 && isPart) {
+                    ARB arb = arbDAO.getARBByID(arbID);
+                    arbList.add(arb);
+                }
 
             }
 

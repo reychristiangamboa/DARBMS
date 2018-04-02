@@ -100,7 +100,7 @@
                                             <div class="col-xs-4">
                                                 <div class="form-group">
                                                     <label for="Gender">Gender</label>
-                                                    <select name="gender" id="Gender" class="form-control">
+                                                    <select name="gender" id="Gender" class="form-control" required>
                                                         <option value="M">Male</option>
                                                         <option value="F">Female</option>
                                                     </select>
@@ -113,7 +113,7 @@
                                                         <div class="input-group-addon">
                                                             <i class="fa fa-calendar"></i>
                                                         </div>
-                                                        <input type="date" name="memberSince" class="form-control pull-right">
+                                                        <input type="date" name="memberSince" class="form-control pull-right" required>
                                                     </div>
                                                 </div>    
                                             </div>
@@ -143,7 +143,7 @@
                                             <div class="col-xs-3">
                                                 <div class="form-group">
                                                     <label for="">Unit No. Street</label>
-                                                    <input type="text" class="form-control" name="arbUnitNumStreet" />
+                                                    <input type="text" class="form-control" name="arbUnitNumStreet" required/>
                                                 </div>
                                             </div>
                                             <div class="col-xs-2">
@@ -196,7 +196,7 @@
                                             <div class="col-xs-4">
                                                 <div class="form-group">
                                                     <label for="landArea">Land Area</label>
-                                                    <input type="text" name="landArea" class="form-control" id="landArea" placeholder="Ex. 3 Acres">    
+                                                    <input type="text" name="landArea" class="form-control" id="landArea" placeholder="Ex. 3 Acres" required>    
                                                 </div>
                                             </div>
                                         </div>
