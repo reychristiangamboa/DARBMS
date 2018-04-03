@@ -10,11 +10,13 @@ import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.DAO.ARBDAO;
 import com.MVC.DAO.ARBODAO;
 import com.MVC.DAO.CAPDEVDAO;
+import com.MVC.DAO.LINKSFARMDAO;
 import com.MVC.Model.APCPRequest;
 import com.MVC.Model.ARB;
 import com.MVC.Model.ARBO;
 import com.MVC.Model.CAPDEVActivity;
 import com.MVC.Model.CAPDEVPlan;
+import com.MVC.Model.Cluster;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -44,23 +46,27 @@ public class RecordActivityAssessment extends BaseServlet {
         ARBDAO arbDAO = new ARBDAO();
         APCPRequestDAO rDAO = new APCPRequestDAO();
         ARBODAO arboDAO = new ARBODAO();
+        LINKSFARMDAO dao = new LINKSFARMDAO();
 
         ArrayList arbHolder = readExcelFile(request.getParameter("file"));
         ArrayList cellStoreArrayList = new ArrayList();
 
         int activityID = Integer.parseInt(request.getParameter("activityID"));
         int planID = Integer.parseInt(request.getParameter("planID"));
+        int clusterID = 0;
+        Cluster c = new Cluster();
+        
+
+        if (request.getParameter("clusterID") != null) {
+            clusterID = Integer.parseInt(request.getParameter("clusterID"));
+            c = dao.getClusterByID(clusterID);
+        }
 
         CAPDEVPlan plan = cDAO.getCAPDEVPlan(planID);
         APCPRequest req = rDAO.getRequestByID(plan.getRequestID());
         ARBO arbo = arboDAO.getARBOByID(req.getArboID());
-        ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(arbo.getArboID());
 
-        ca.setActivityID(activityID);
-        ca.setActive(1);
-        ca.setTechnicalAssistant(request.getParameter("TA"));
-        ca.setObservations(request.getParameter("observations"));
-        ca.setRecommendation(request.getParameter("recommendation"));
+        ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(arbo.getArboID());
 
         for (int a = 1; a < arbHolder.size(); a++) {
 
@@ -70,12 +76,20 @@ public class RecordActivityAssessment extends BaseServlet {
             String mN = cellStoreArrayList.get(2).toString();
 
             boolean isPart = false;
-            
+
             int arbID = arbDAO.getARBID(fN, mN, lN);
-            
-            for(ARB arb : arbList){
-                if(arb.getArbID() == arbID){
-                    isPart = true;
+
+            if (clusterID > 0) {
+                for (ARB arb : c.getClusterMembers()) {
+                    if (arb.getArbID() == arbID) {
+                        isPart = true;
+                    }
+                }
+            } else {
+                for (ARB arb : arbList) {
+                    if (arb.getArbID() == arbID) {
+                        isPart = true;
+                    }
                 }
             }
 
@@ -85,15 +99,27 @@ public class RecordActivityAssessment extends BaseServlet {
 
         }
 
-        if (cDAO.recordAssessment(ca) && cDAO.checkIfPresent(arbIDs, activityID)) {
-            request.setAttribute("success", "Activity Assessment recorded!");
+        if (arbIDs.isEmpty()) {
+            request.setAttribute("errMessage", "There are no valid participants in the Excel.");
             request.setAttribute("planID", planID);
             request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);
-
         } else {
-            request.setAttribute("errMessage", "Unable to record Activity Assessment.");
-            request.setAttribute("planID", planID);
-            request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);
+            ca.setActivityID(activityID);
+            ca.setActive(1);
+            ca.setTechnicalAssistant(request.getParameter("TA"));
+            ca.setObservations(request.getParameter("observations"));
+            ca.setRecommendation(request.getParameter("recommendation"));
+
+            if (cDAO.recordAssessment(ca) && cDAO.checkIfPresent(arbIDs, activityID)) {
+                request.setAttribute("success", "Activity Assessment recorded!");
+                request.setAttribute("planID", planID);
+                request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);
+
+            } else {
+                request.setAttribute("errMessage", "Unable to record Activity Assessment.");
+                request.setAttribute("planID", planID);
+                request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);
+            }
         }
 
     }

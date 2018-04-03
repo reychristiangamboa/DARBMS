@@ -31,7 +31,7 @@ public class ViewExistingSite extends BaseServlet {
         int cityMunCode = id;
 
         request.setAttribute("cityMunCode", cityMunCode);
-        request.getRequestDispatcher("provincial-field-officer-view-exisitng-project-site.jsp").forward(request, response);
+        request.getRequestDispatcher("provincial-field-officer-view-existing-project-site.jsp").forward(request, response);
         
     }
 }

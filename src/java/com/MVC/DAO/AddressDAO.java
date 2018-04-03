@@ -380,6 +380,64 @@ public class AddressDAO {
         }
         return citymunList;
     }
+    
+    public ArrayList<CityMun> getAllProjectSitesC() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<CityMun> citymunList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.refcitymun WHERE isProjectSite=1";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                CityMun cm = new CityMun();
+                cm.setCityMunCode(rs.getInt("cityMunCode"));
+                cm.setCityMunDesc(rs.getString("cityMunDesc"));
+                citymunList.add(cm);
+            }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citymunList;
+    }
+    
+    public ArrayList<CityMun> getAllNonProjectSitesC() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<CityMun> citymunList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.refcitymun WHERE isProjectSite=0";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                CityMun cm = new CityMun();
+                cm.setCityMunCode(rs.getInt("cityMunCode"));
+                cm.setCityMunDesc(rs.getString("cityMunDesc"));
+                citymunList.add(cm);
+            }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citymunList;
+    }
 
     public ArrayList<CityMun> getAllCityMunsMultipleProv(ArrayList<Integer> provinceIDs) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();

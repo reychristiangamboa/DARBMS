@@ -121,6 +121,9 @@
 
                                                             </div>
                                                             <div class="box-footer">
+                                                                <%if((Integer)request.getAttribute("clusterID") != null){%>
+                                                                <input type="hidden" value="<%=(Integer)request.getAttribute("clusterID")%>" name="clusterID">
+                                                                <%}%>
                                                                 <input type="hidden" value="<%=b.getActivityID()%>" name="activityID">
                                                                 <input type="hidden" value="<%=(Integer)request.getAttribute("planID")%>" name="planID">
                                                                 <button class="btn btn-success pull-right" onclick="form.action = 'RecordActivityAssessment'" >Submit</button>

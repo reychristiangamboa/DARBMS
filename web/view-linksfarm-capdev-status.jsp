@@ -47,7 +47,7 @@
                 APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
                 CAPDEVDAO capdevDAO = new CAPDEVDAO();
                 UserDAO uDAO = new UserDAO();
-                LINKFSFARMDAO lfDAO = new LINKSFARMDAO();
+                LINKSFARMDAO lfDAO = new LINKSFARMDAO();
     
                 ArrayList<Region> regionList = addressDAO.getAllRegions();
                 ArrayList<Province> perProvinceList = addressDAO.getAllProvinces((Integer) session.getAttribute("regOfficeCode"));

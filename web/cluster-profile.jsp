@@ -102,10 +102,10 @@
                                             <b>No. of ARBs</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=cluster.getClusterMembers().size()%></a>
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Location</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=cluster.getClusterSiteDesc()%></a>
+                                            <b>Location</b> <a class="pull-right"><%=cluster.getClusterSiteDesc()%></a>
                                         </li>
                                         <li class="list-group-item">
-                                            <b>Crops</b> <a class="pull-right" data-toggle="modal" data-target="#arbs">Crops</a>
+                                            <b>Crops</b> <a class="pull-right" data-toggle="modal" data-target="#crops">Crops</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -157,6 +157,61 @@
                                             </div>
                                         </div>
 
+
+                                    </div>
+                                    <!--                                            /.modal-content -->
+                                </div>
+                                <!--                                        /.modal-dialog -->
+                            </div>
+
+                            <div class="modal fade" id="crops">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <h4 class="modal-title">Agrarian Reform Beneficiaries</h4>
+
+                                        </div>
+
+
+                                        <div class="modal-body" id="modalBody">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <table id="arbTable" class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Full Name</th>
+                                                                <th>Address</th>
+                                                                <th>Crops</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            <%
+                                                                for (ARB arb : cluster.getClusterMembers()) {
+                                                            %>
+                                                            <tr>
+                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFullName());%></a></td>
+                                                                <td><%out.print(arb.getFullAddress());%></td>
+                                                                <td><%out.print(arb.printAllCrops());%></td>
+                                                            </tr>
+                                                            <%}%>
+                                                        </tbody>
+
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th>Full Name</th>
+                                                                <th>Address</th>
+                                                                <th>Crops</th>
+                                                            </tr>
+                                                        </tfoot>
+
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                     </div>
                                     <!--                                            /.modal-content -->
@@ -673,7 +728,7 @@
                 var ctx2 = $('#lineCanvas').get(0).getContext('2d');
             <%
                 Chart line = new Chart();
-                String json2 = line.getCropHistory(crops,cluster.getClusterMembers());
+                String json2 = line.getCropHistory2(crops,cluster.getClusterMembers());
             %>
                 new Chart(ctx2, <%out.print(json2);%>);
 

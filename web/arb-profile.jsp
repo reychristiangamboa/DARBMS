@@ -967,7 +967,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="row">
-                                                                        <div class="col-xs-8">
+                                                                        <div class="col-xs-12">
                                                                             <div class="form-group">
                                                                                 <label for="">Activity Description</label>
                                                                                 <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(act.getActivityDesc());%>" disabled>
@@ -1014,12 +1014,7 @@
                                                                     </div>
 
                                                                 </div>
-                                                                <div class="modal-footer">
-                                                                    <div class="pull-right">
-                                                                        <button type='button' class="btn btn-default">Cancel</button>
-                                                                        <button type='button' class="btn btn-primary">View More</button>
-                                                                    </div>
-                                                                </div>
+                                                                
 
                                                             </div>
                                                             <!--                                            /.modal-content -->

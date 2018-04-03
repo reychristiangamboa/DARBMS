@@ -23,7 +23,11 @@ public class MonitorCAPDEVAttendance extends BaseServlet {
 
         int planID = Integer.parseInt(request.getParameter("planID"));
         
-
+        if(request.getParameter("clusterID") != null){
+            int clusterID = Integer.parseInt(request.getParameter("clusterID"));
+            request.setAttribute("clusterID", clusterID);
+        }
+        
         request.setAttribute("planID", planID);
         request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);
 

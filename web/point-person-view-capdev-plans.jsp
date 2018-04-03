@@ -245,7 +245,7 @@
                                                     Cluster c = linksfarmDAO.getClusterByID(p.getClusterID());
                                             %>
                                             <tr>
-                                                <td><a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                <td><a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>&clusterID=<%out.print(c.getClusterID());%>"><%out.print(p.getPlanDTN());%></a></td>
                                                 <td><a href="ViewCluster?clusterID=<%=c.getClusterID()%>"><%=c.getClusterName()%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>

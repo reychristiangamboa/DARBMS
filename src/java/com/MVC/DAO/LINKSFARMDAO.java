@@ -239,6 +239,7 @@ public class LINKSFARMDAO {
             pstmt.close();
             con.commit();
             con.close();
+            success = true;
 
         } catch (Exception ex) {
             try {

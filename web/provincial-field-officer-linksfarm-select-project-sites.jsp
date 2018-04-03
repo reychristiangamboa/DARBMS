@@ -49,8 +49,32 @@
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
 
+            <%int userType = (Integer) session.getAttribute("userType");%>
             <%@include file="jspf/field-officer-navbar.jspf"%>
+            <%if((Integer)session.getAttribute("userType")==3){%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
+            <%}else if((Integer)session.getAttribute("userType")==5){%>
+            <%@include file="jspf/central-sidebar.jspf"%>
+            <%}%>
+
+            <%
+            AddressDAO addressDAO = new AddressDAO();
+            ARBDAO arbDAO = new ARBDAO();
+            ARBODAO arboDAO = new ARBODAO();
+            
+            ArrayList<CityMun> cityMunListSites = new ArrayList();
+            ArrayList<CityMun> cityMunListNonSites = new ArrayList();
+            
+            if(userType == 3){
+                ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
+                cityMunListSites = addressDAO.getAllProjectSites(arboListProvince.get(0).getArboProvince());
+                cityMunListNonSites = addressDAO.getAllNonProjectSites(arboListProvince.get(0).getArboProvince());
+            }else if(userType == 5){
+                cityMunListSites = addressDAO.getAllProjectSitesC();
+                cityMunListNonSites = addressDAO.getAllNonProjectSitesC();
+            }
+            
+            %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -64,10 +88,22 @@
                 <!-- Main content -->
                 <section class="content">
 
-                    <div class="row">
+                    <%if(request.getAttribute("success") != null){%>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
+                    </div>
+                    <%}else if(request.getAttribute("errMessage") != null){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                    </div>
+                    <%}%>
 
+                    <div class="row">
                         <div class="col-md-12">
                             <!-- /.col -->
+                            <%if((Integer)session.getAttribute("userType") == 3){%>
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Project Site</h3>
@@ -80,7 +116,7 @@
 
                                     <div class="box-body">
                                         <%
-                                            AddressDAO cityMunCode = new AddressDAO();
+                                            
                                             for (CityMun cm : cityMunListSites) {
                                                 ArrayList<ARB> arbListCityMun = arbDAO.getAllARBsByCityMun(cm.getCityMunCode());
                                                 
@@ -104,6 +140,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <%}%>
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Non Project Site</h3>

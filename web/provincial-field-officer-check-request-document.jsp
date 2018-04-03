@@ -39,17 +39,17 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    
+
                     <h1>
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-           
+
                 </section>
 
                 <!-- Main content -->
                 <section class="content">
-                    
+
                     <%if(request.getAttribute("success") != null){%>
                     <div class="alert alert-success alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -185,7 +185,9 @@
                                     <div class="box-footer">
                                         <%if (userType == 3) {  %>
                                         <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
+                                        <%if(r.getFarmPlanDate() != null && r.getBusinessPlanDate() != null && r.getBankRequirementsDate() != null){%>
                                         <button type="submit" onclick="form.action = 'ClearAPCPRequest'" name="manual" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
+                                        <%}%>
                                         <%}%>
                                     </div>
                                 </form>

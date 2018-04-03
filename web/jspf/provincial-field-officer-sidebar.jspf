@@ -161,6 +161,9 @@
                 <ul class="treeview-menu">
                     <li><a href="provincial-field-officer-linksfarm-select-project-sites.jsp"><i class="fa fa-dot-circle-o"></i>Select Project Site</a></li>
                 </ul>
+                <ul class="treeview-menu">
+                    <li><a href="view-linksfarm-capdev-status.jsp"><i class="fa fa-dot-circle-o"></i>View LINKSFARM CAPDEV</a></li>
+                </ul>
             </li>
             <li>
                 <a href="provincial-field-officer-manage-past-due-reasons.jsp">

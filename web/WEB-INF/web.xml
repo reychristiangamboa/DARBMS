@@ -372,6 +372,10 @@
         <servlet-name>ImportLINKSFARMEvaluation</servlet-name>
         <servlet-class>com.MVC.Controller.ImportLINKSFARMEvaluation</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ApproveProjectSite</servlet-name>
+        <servlet-class>com.MVC.Controller.ApproveProjectSite</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -743,6 +747,10 @@
     <servlet-mapping>
         <servlet-name>ImportLINKSFARMEvaluation</servlet-name>
         <url-pattern>/ImportLINKSFARMEvaluation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ApproveProjectSite</servlet-name>
+        <url-pattern>/ApproveProjectSite</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

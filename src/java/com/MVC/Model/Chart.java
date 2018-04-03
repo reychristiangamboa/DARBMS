@@ -249,6 +249,88 @@ public class Chart {
 
         return new LineChart(data).toJson();
     }
+    
+    public String getCropHistory2(ArrayList<Crop> crops, ArrayList<ARB> arbList) {
+
+        System.out.println(crops.size());
+        ArrayList<String> dates = new ArrayList();
+
+        long l = System.currentTimeMillis();
+        Date d = new Date(l);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(d);
+        int year = calendar.get(Calendar.YEAR);
+
+        String lastYear = Integer.toString(year - 1);
+        String thisYear = Integer.toString(year);
+        String nextYear = Integer.toString(year + 1);
+
+        int month = calendar.get(Calendar.MONTH);
+        CropDAO cDAO = new CropDAO();
+
+        if (month >= 7) { // if current month is JULY onwards
+            dates.add(thisYear + "-07-31");
+            dates.add(thisYear + "-08-31");
+            dates.add(thisYear + "-09-30");
+            dates.add(thisYear + "-10-31");
+            dates.add(thisYear + "-11-30");
+            dates.add(thisYear + "-12-31");
+            dates.add(nextYear + "-01-31");
+            dates.add(nextYear + "-02-28");
+            dates.add(nextYear + "-03-31");
+            dates.add(nextYear + "-04-30");
+            dates.add(nextYear + "-05-31");
+            dates.add(nextYear + "-06-30");
+        } else {
+            dates.add(lastYear + "-07-31");
+            dates.add(lastYear + "-08-31");
+            dates.add(lastYear + "-09-30");
+            dates.add(lastYear + "-10-31");
+            dates.add(lastYear + "-11-30");
+            dates.add(lastYear + "-12-31");
+            dates.add(thisYear + "-01-31");
+            dates.add(thisYear + "-02-28");
+            dates.add(thisYear + "-03-31");
+            dates.add(thisYear + "-04-30");
+            dates.add(thisYear + "-05-31");
+            dates.add(thisYear + "-06-30");
+        }
+
+        LineData data = new LineData();
+
+        for (Crop arbC : crops) {
+            LineDataset dataset = new LineDataset();
+            dataset.setBorderColor(Color.random());
+            dataset.setBackgroundColor(Color.TRANSPARENT);
+            dataset.setLabel(arbC.getCropTypeDesc());
+            for (ARB arb : arbList) {
+                for (String date : dates) {
+                    dataset.addData(cDAO.getCountOfCropsByMonth2(arbC, date, arb.getArbID()));
+                }
+            }
+            data.addDataset(dataset);
+        }
+        
+        ArrayList<String> stringLabels = new ArrayList();
+        stringLabels.add("July");
+        stringLabels.add("August");
+        stringLabels.add("September");
+        stringLabels.add("October");
+        stringLabels.add("November");
+        stringLabels.add("December");
+        stringLabels.add("January");
+        stringLabels.add("February");
+        stringLabels.add("March");
+        stringLabels.add("April");
+        stringLabels.add("May");
+        stringLabels.add("June");
+
+        for (String label : stringLabels) {
+            data.addLabel(label);
+        }
+
+        return new LineChart(data).toJson();
+    }
 
     public String getAPCPRating(ArrayList<Evaluation> apcpEvaluations) {
 
@@ -470,7 +552,7 @@ public class Chart {
             int count = 0;
             stringLabels.add(reason.getReasonPastDueDesc());
             for (APCPRequest r : unsettledProvincialRequests) {
-                ArrayList<PastDueAccount> unsettled = dao2.getAllUnsettledPastDueAccountsByRequest(r.getRequestID());
+                ArrayList<PastDueAccount> unsettled = r.getUnsettledPastDueAccounts();
                 for (PastDueAccount pda : unsettled) {
                     if (pda.getReasonPastDue() == reason.getReasonPastDue()) {
                         count++;

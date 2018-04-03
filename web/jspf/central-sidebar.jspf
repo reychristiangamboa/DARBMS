@@ -106,6 +106,18 @@
                     <li><a href="central-view-new-requesting-arbo.jsp"><i class="fa fa-dot-circle-o"></i>  View New Requesting ARBOs</a></li>
                 </ul>
             </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-users"></i> <span> LINKSFARM</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="view-linksfarm-capdev-status.jsp"><i class="fa fa-edit"></i>View CAPDEV Proposals</a></li>
+                    <li><a href="provincial-field-officer-linksfarm-select-project-sites.jsp"><i class="fa fa-edit"></i>View Project Sites</a></li>
+                </ul>
+            </li>
             <li>
                 <a href="central-manage-capdev-activities.jsp">
                     <i class="fa fa-edit"></i> <span> Manage CAPDEV Activities</span>

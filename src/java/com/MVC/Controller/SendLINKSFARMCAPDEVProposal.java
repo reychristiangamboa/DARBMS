@@ -50,7 +50,9 @@ public class SendLINKSFARMCAPDEVProposal extends BaseServlet {
         ARBODAO arboDAO = new ARBODAO();
         ARBDAO arbDAO = new ARBDAO();
         LINKSFARMDAO linksFarmDAO = new LINKSFARMDAO();
-        
+
+        boolean missing = false;
+
         Cluster c = linksFarmDAO.getClusterByID(Integer.parseInt(request.getParameter("clusterID")));
 
         String[] activities = request.getParameterValues("activities[]");
@@ -58,66 +60,115 @@ public class SendLINKSFARMCAPDEVProposal extends BaseServlet {
         String[] files = request.getParameterValues("file[]");
 
         if (files.length != activities.length) {
-            request.setAttribute("errMessage", "Error in processing participants.");
-            request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
-        }
+            request.setAttribute("errMessage", "Activity length does not match Participants length!");
+            request.setAttribute("cluster", c);
+            request.getRequestDispatcher("provincial-field-officer-create-linksfarm-capdev-proposal.jsp").forward(request, response);
+        } else {
 
-        ARBO arbo = arboDAO.getARBOByID(Integer.parseInt(request.getParameter("requestID")));
+            for (int i = 0; i < files.length; i++) {
 
-        CAPDEVPlan capdevPlan = new CAPDEVPlan();
+                ArrayList arbHolder = readExcelFile(files[i]);
+                ArrayList cellStoreArrayList = new ArrayList();
+                ArrayList<ARB> arbList = new ArrayList();
 
-        capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
-        capdevPlan.setPlanDTN(request.getParameter("dtn"));
+                for (int a = 1; a < arbHolder.size(); a++) {
 
-        int planID = 0;
+                    cellStoreArrayList = (ArrayList) arbHolder.get(a);
+                    String lN = cellStoreArrayList.get(0).toString();
+                    String fN = cellStoreArrayList.get(1).toString();
+                    String mN = cellStoreArrayList.get(2).toString();
+                    boolean isPart = false;
 
-        planID = linksFarmDAO.addCAPDEVPlan(capdevPlan, (Integer)session.getAttribute("userID"));
+                    int arbID = arbDAO.getARBID(fN, mN, lN);
 
-        for (int i = 0; i < activities.length; i++) {
+                    for (ARB arb : c.getClusterMembers()) {
+                        if (arb.getArbID() == arbID) {
+                            isPart = true;
+                        }
+                    }
 
-            CAPDEVActivity activity = new CAPDEVActivity();
-            ArrayList<ARB> arbList = new ArrayList();
-            ArrayList arbHolder = readExcelFile(files[i]);
+                    if (arbID > 0 && isPart) {
+                        ARB arb = arbDAO.getARBByID(arbID);
+                        arbList.add(arb);
+                    }
 
-            ArrayList cellStoreArrayList = new ArrayList();
-
-            java.sql.Date activityDate = null;
-
-            try {
-                java.util.Date parsedActivityDate = sdf.parse(activityDates[i]);
-                activityDate = new java.sql.Date(parsedActivityDate.getTime());
-            } catch (ParseException ex) {
-                Logger.getLogger(SendCAPDEVProposal.class.getName()).log(Level.SEVERE, null, ex);
+                    if (arbList.isEmpty()) {
+                        missing = true;
+                    }
+                }
             }
 
-            int activityType = Integer.parseInt(activities[i]);
-            activity.setActivityType(activityType);
-            activity.setPlanID(planID);
-            activity.setActivityDate(activityDate);
+            if (missing) {
+                request.setAttribute("errMessage", "There are no valid participants in the Excel.");
+                request.setAttribute("cluster", c);
+                request.getRequestDispatcher("provincial-field-officer-create-linksfarm-capdev-proposal.jsp").forward(request, response);
+            } else {
+                CAPDEVPlan capdevPlan = new CAPDEVPlan();
 
-            int newlyAddedActivityID = capdevDAO.addCAPDEVPlanActivity(activity);
+                capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
+                capdevPlan.setPlanDTN(request.getParameter("dtn"));
 
-            for (int a = 1; a < arbHolder.size(); a++) {
+                int planID = 0;
 
-                cellStoreArrayList = (ArrayList) arbHolder.get(a);
-                String lN = cellStoreArrayList.get(0).toString();
-                String fN = cellStoreArrayList.get(1).toString();
-                String mN = cellStoreArrayList.get(2).toString();
+                planID = linksFarmDAO.addCAPDEVPlan(capdevPlan, (Integer) session.getAttribute("userID"));
 
-                int arbID = arbDAO.getARBID(fN, mN, lN);
-                ARB arb = arbDAO.getARBByID(arbID);
+                for (int i = 0; i < activities.length; i++) {
 
-                arbList.add(arb);
+                    CAPDEVActivity activity = new CAPDEVActivity();
+                    ArrayList<ARB> arbList = new ArrayList();
+                    ArrayList arbHolder = readExcelFile(files[i]);
 
+                    ArrayList cellStoreArrayList = new ArrayList();
+
+                    java.sql.Date activityDate = null;
+
+                    try {
+                        java.util.Date parsedActivityDate = sdf.parse(activityDates[i]);
+                        activityDate = new java.sql.Date(parsedActivityDate.getTime());
+                    } catch (ParseException ex) {
+                        Logger.getLogger(SendCAPDEVProposal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    int activityType = Integer.parseInt(activities[i]);
+                    activity.setActivityType(activityType);
+                    activity.setPlanID(planID);
+                    activity.setActivityDate(activityDate);
+
+                    int newlyAddedActivityID = capdevDAO.addCAPDEVPlanActivity(activity);
+
+                    for (int a = 1; a < arbHolder.size(); a++) {
+
+                        cellStoreArrayList = (ArrayList) arbHolder.get(a);
+                        String lN = cellStoreArrayList.get(0).toString();
+                        String fN = cellStoreArrayList.get(1).toString();
+                        String mN = cellStoreArrayList.get(2).toString();
+                        boolean isPart = false;
+
+                        int arbID = arbDAO.getARBID(fN, mN, lN);
+
+                        for (ARB arb : c.getClusterMembers()) {
+                            if (arb.getArbID() == arbID) {
+                                isPart = true;
+                            }
+                        }
+
+                        if (arbID > 0 && isPart) {
+                            ARB arb = arbDAO.getARBByID(arbID);
+                            arbList.add(arb);
+                        }
+
+                    }
+
+                    capdevDAO.addCAPDEVPlanActivityParticipants(arbList, newlyAddedActivityID);
+
+                }
+
+                request.setAttribute("success", "CAPDEV plan submitted!");
+                request.getRequestDispatcher("view-linksfarm-capdev-status.jsp").forward(request, response);
             }
-
-            capdevDAO.addCAPDEVPlanActivityParticipants(arbList, newlyAddedActivityID);
 
         }
 
-        request.setAttribute("success", "CAPDEV plan submitted!");
-        request.setAttribute("cluster", c);
-        request.getRequestDispatcher("cluster-profile.jsp").forward(request, response);
     }
 
     public static ArrayList readExcelFile(String fileName) {
@@ -145,7 +196,5 @@ public class SendLINKSFARMCAPDEVProposal extends BaseServlet {
         }
         return cellArrayListHolder;
     }
-
-    
 
 }

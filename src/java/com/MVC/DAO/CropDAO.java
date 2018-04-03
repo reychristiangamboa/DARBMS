@@ -51,7 +51,7 @@ public class CropDAO {
         return cropList;
     }
 
-    public ArrayList<Crop> getCropHistory(ArrayList<ARB> arbList){
+    public ArrayList<Crop> getCropHistory(ArrayList<ARB> arbList) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<Crop> cropHistoryList = new ArrayList();
@@ -88,7 +88,7 @@ public class CropDAO {
         }
         return cropHistoryList;
     }
-    
+
     public ArrayList<Crop> getAllCropsByARBList(ArrayList<ARB> arbList) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -110,7 +110,7 @@ public class CropDAO {
                     c.setCropTypeDesc(rs.getString("cropTypeDesc"));
                     c.setStartDate(rs.getDate("startDate"));
                     c.setEndDate(rs.getDate("endDate"));
-                    if(!checkIfCropExist(cropList, c)){
+                    if (!checkIfCropExist(cropList, c)) {
                         cropList.add(c);
                     }
                 }
@@ -130,8 +130,8 @@ public class CropDAO {
     }
 
     public boolean checkIfCropExist(ArrayList<Crop> list, Crop c) {
-        for(Crop C : list){
-            if(c.getCropType() == C.getCropType()){
+        for (Crop C : list) {
+            if (c.getCropType() == C.getCropType()) {
                 return true;
             }
         }
@@ -148,16 +148,50 @@ public class CropDAO {
                     + "WHERE `cropTag` = ? "
                     + "AND " + "'" + d + "'"
                     + " between `startDate` "
-                    + "AND `endDate` AND `arbID`=?;";
+                    + "AND `endDate`;";
 
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, c.getCropType());
-            pstmt.setInt(2, arbID);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 count++;
             }
+
+            pstmt.close();
             rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CropDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CropDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
+
+    public double getCountOfCropsByMonth2(Crop c, String d, int arbID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Crop> cropList = new ArrayList();
+        double count = 0;
+        try {
+            String query = "SELECT * FROM crops "
+                    + "WHERE `cropTag` = ? "
+                    + "AND " + "'" + d + "'"
+                    + " between `startDate` "
+                    + "AND `endDate` AND `arbID`=?;";
+
+            try (PreparedStatement pstmt = con.prepareStatement(query)) {
+                pstmt.setInt(1, c.getCropType());
+                pstmt.setInt(2, arbID);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        count++;
+                    }
+                }
+            }
             con.close();
         } catch (SQLException ex) {
             try {

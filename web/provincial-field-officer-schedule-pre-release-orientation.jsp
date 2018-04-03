@@ -31,21 +31,22 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-         
+
                 </section>
-                <%if(request.getAttribute("success") != null){%>
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
-                </div>
-                <%}else if(request.getAttribute("errMessage") != null){%>
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
-                </div>
-                <%}%>
+
                 <!-- Main content -->
                 <section class="content">
+                    <%if(request.getAttribute("success") != null){%>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
+                    </div>
+                    <%}else if(request.getAttribute("errMessage") != null){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                    </div>
+                    <%}%>
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box">
@@ -78,13 +79,13 @@
                             <!-- /.box -->
                             <div class="box">
                                 <form role="form" method="post" action="SendSchedulePreRelease">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Schedule Pre-release Orientation</h3>
-                                    <div class="col-xs-3 pull-right">
-                                        <input type="text" name="dtn" class="form-control" placeholder="Pre-Release Orientation DTN" required/>
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Schedule Pre-release Orientation</h3>
+                                        <div class="col-xs-3 pull-right">
+                                            <input type="text" name="dtn" class="form-control" placeholder="Pre-Release Orientation DTN" required/>
+                                        </div>
                                     </div>
-                                </div>
-                                
+
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-xs-4">
@@ -134,24 +135,24 @@
             <!-- /.content-wrapper -->
         </div>
         <%@include file="jspf/footer.jspf" %>
-        
-            <script>
+
+        <script>
             var ctx = $('#barCanvas').get(0).getContext('2d');
             <%
-                    Chart bar = new Chart();
-                    String json = bar.getBarChartEducation(arbList);
+                Chart bar = new Chart();
+                String json = bar.getBarChartEducation(arbList);
             %>
             new Chart(ctx, <%out.print(json);%>);
 
             var ctx3 = $('#pieCanvas').get(0).getContext('2d');
             <%
-                    Chart pie = new Chart();
-                    String json3 = pie.getPieChartGender(arbList);
+                Chart pie = new Chart();
+                String json3 = pie.getPieChartGender(arbList);
             %>
             new Chart(ctx3, <%out.print(json3);%>);
 
         </script>
-        
+
         <script>
             $(document).ready(function () {
                 var max_fields = 9; //maximum input boxes allowed
