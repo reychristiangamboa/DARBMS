@@ -32,7 +32,6 @@ public class ARBODAO {
                     + "JOIN refprovince p ON c.provCode=p.provCode "
                     + "JOIN refregion r ON c.regCode=r.regCode "
                     + "JOIN ref_provoffice po ON a.provOfficeCode=po.provOfficeCode "
-                    + "JOIN users u ON u.provOfficeCode=po.provOfficeCode "
                     + "WHERE a.arboID=?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, id);

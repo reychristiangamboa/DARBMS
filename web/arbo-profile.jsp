@@ -60,6 +60,7 @@
 
             <%
                 ARBO arbo = (ARBO) request.getAttribute("arbo");
+                System.out.print(arbo.getArboName());
                 ARBODAO dao = new ARBODAO();
                 ARBDAO dao2 = new ARBDAO();
                 CropDAO dao3 = new CropDAO();
