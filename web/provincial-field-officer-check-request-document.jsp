@@ -23,6 +23,8 @@
             <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
             <%} else if (userType == 5) {%>
             <%@include file="jspf/central-sidebar.jspf"%>
+            <%} else if (userType == 2) {%>
+            <%@include file="jspf/point-person-sidebar.jspf"%>
             <%}%>
             <%
                 ARBODAO arboDAO = new ARBODAO();

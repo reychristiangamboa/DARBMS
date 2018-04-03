@@ -22,10 +22,7 @@ public class MonitorCAPDEVAttendance extends BaseServlet {
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         int planID = Integer.parseInt(request.getParameter("planID"));
-        if (request.getParameter("requestID") != null) {
-            int requestID = Integer.parseInt(request.getParameter("requestID"));
-            request.setAttribute("requestID", requestID);
-        }
+        
 
         request.setAttribute("planID", planID);
         request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);

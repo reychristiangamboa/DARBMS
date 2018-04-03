@@ -318,6 +318,29 @@ public class Chart {
 
         return new LineChart(data).toJson();
     }
+    
+    public String getLINKSFARMRating(ArrayList<Evaluation> arbEvaluations) {
+
+        SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+        LineData data = new LineData();
+        LineDataset dataset = new LineDataset();
+        dataset.setBorderColor(Color.random());
+        dataset.addPointBackgroundColor(Color.DARK_GREEN);
+        dataset.setBackgroundColor(Color.TRANSPARENT);
+        dataset.setLabel("LINKSFARM Rating");
+
+        Calendar cal = Calendar.getInstance();
+
+        for (Evaluation e : arbEvaluations) {
+
+            data.addLabel(f.format(e.getEvaluationDate()));
+            dataset.addData(e.getRating());
+        }
+
+        data.addDataset(dataset);
+
+        return new LineChart(data).toJson();
+    }
 
     public String getLineChart() {
         ArrayList<Double> doubleFigures = new ArrayList();

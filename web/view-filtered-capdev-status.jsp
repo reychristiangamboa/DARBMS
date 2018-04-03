@@ -305,8 +305,8 @@
                                     <table id="example5" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
                                             </tr>
@@ -320,8 +320,12 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><a href="MonitorCAPDEVAttendance?id=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <%if(userType == 4){ // RFO%>
+                                                <td><a href="ViewCAPDEVProposal?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}%>
+                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
@@ -331,10 +335,10 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>        
+                                                <th>Status</th>       
                                             </tr>
 
                                         </tfoot>
@@ -363,8 +367,8 @@
                                     <table id="example6" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
                                             </tr>
@@ -378,8 +382,12 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><a href="ProceedAssignPointPerson?planID=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <%if(userType == 3){%>
+                                                <td><a href="ProceedAssignPointPerson?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}%>
+                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
@@ -389,10 +397,10 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>        
+                                                <th>Status</th>       
                                             </tr>
 
                                         </tfoot>
@@ -421,11 +429,10 @@
                                     <table id="apcp3" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
-                                                <th>Type</th>
                                             </tr>
                                         </thead>
 
@@ -436,14 +443,13 @@
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
-                                            <tr>
+                                           <tr>
                                                 <!--WITH CAPDEV-->
-                                                <td><a href="ViewCAPDEVProposal?planID=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
-
                                             </tr>
                                             <%
                                                }
@@ -452,11 +458,10 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
-                                                <th>Type</th>
                                             </tr>
 
                                         </tfoot>
@@ -483,8 +488,8 @@
                                     <table id="example3" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
                                             </tr>
@@ -498,8 +503,8 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
@@ -509,10 +514,10 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>        
+                                                <th>Status</th>       
                                             </tr>
 
                                         </tfoot>

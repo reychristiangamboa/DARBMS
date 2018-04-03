@@ -195,7 +195,7 @@ public class EvaluationDAO {
         return 0;
     }
 
-    public boolean setEvaluationRating(double rating, int id) {
+    public boolean setEvaluationRating(double rating, int id, int userID) {
         PreparedStatement p = null;
         Connection con = null;
         boolean success = false;
@@ -203,10 +203,11 @@ public class EvaluationDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE `evaluations` SET rating=? WHERE evaluationID=?";
+            String query = "UPDATE `evaluations` SET rating=?, evaluatedBy=? WHERE evaluationID=?";
             p = con.prepareStatement(query);
             p.setDouble(1, rating);
-            p.setInt(2, id);
+            p.setInt(2, userID);
+            p.setInt(3, id);
             p.executeUpdate();
             success = true;
 
@@ -410,5 +411,44 @@ public class EvaluationDAO {
             Logger.getLogger(EvaluationDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return qrs;
+    }
+    
+    public boolean addLINKSFARMEvaluation(Evaluation e){
+        PreparedStatement p = null;
+        Connection con = null;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        con = myFactory.getConnection();
+        boolean success = false;
+        try {
+            con.setAutoCommit(false);
+            String query = "INSERT INTO `dar-bms`.`evaluations` (`arbID`, `evaluationDate`, `evaluationStartDate`, "
+                    + "`evaluationEndDate`, `evaluationDTN`, `evaluationType`,`rating`, `evaluatedBy`) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?);";
+            p = con.prepareStatement(query);
+            p.setInt(1, e.getArbID());
+            p.setDate(2, e.getEvaluationDate());
+            p.setDate(3, e.getEvaluationStartDate());
+            p.setDate(4, e.getEvaluationEndDate());
+            p.setString(5, e.getEvaluationDTN());
+            p.setInt(6, e.getEvaluationType());
+            p.setDouble(7, e.getRating());
+            p.setInt(8, e.getEvaluatedBy());
+
+            p.executeUpdate();
+            
+            p.close();
+            con.commit();
+            con.close();
+            success = true;
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(EvaluationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(EvaluationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
     }
 }

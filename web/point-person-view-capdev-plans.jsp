@@ -60,8 +60,8 @@
                                     <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
                                             </tr>
@@ -75,8 +75,8 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><a href="MonitorCAPDEVAttendance?planID="<%out.print(p.getPlanID());%></a></td>
+                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
@@ -86,10 +86,10 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>        
+                                                <th>Status</th>       
                                             </tr>
 
                                         </tfoot>
@@ -117,8 +117,8 @@
                                     <table id="example5" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
                                             </tr>
@@ -132,8 +132,8 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><a href="MonitorCAPDEVAttendance?id=<%out.print(p.getPlanID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><a href="MonitorCAPDEVAttendance?planID="<%out.print(p.getPlanID());%></a></td>
+                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
@@ -143,10 +143,10 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>        
+                                                <th>Status</th>      
                                             </tr>
 
                                         </tfoot>
@@ -174,8 +174,8 @@
                                     <table id="example1" class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
                                             </tr>
@@ -189,8 +189,8 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><a href="MonitorPreReleaseAttendance?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><a href="MonitorPreReleaseAttendance?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>
@@ -200,10 +200,10 @@
 
                                         <tfoot>
                                             <tr>
-                                                <th>ARBO Name</th>
                                                 <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>        
+                                                <th>Status</th>      
                                             </tr>
 
                                         </tfoot>
@@ -246,7 +246,7 @@
                                             %>
                                             <tr>
                                                 <td><a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
-                                                <td><%out.print(c.getClusterName());%></td>
+                                                <td><a href="ViewCluster?clusterID=<%=c.getClusterID()%>"><%=c.getClusterName()%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                             </tr>

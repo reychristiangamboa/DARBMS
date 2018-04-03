@@ -72,6 +72,10 @@ public class ViewReport extends BaseServlet {
             request.setAttribute("evaluation", e);
             request.setAttribute("arbID", Integer.parseInt(request.getParameter("arbID")));
             request.getRequestDispatcher("report-arb-overall-rating.jsp").forward(request, response);
+        }else if(Integer.parseInt(request.getParameter("reportType")) == 6){
+            request.setAttribute("evaluation", e);
+            request.setAttribute("arbID", Integer.parseInt(request.getParameter("arbID")));
+            request.getRequestDispatcher("report-arb-linksfarm-rating.jsp").forward(request, response);
         }
 
     }

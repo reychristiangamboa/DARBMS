@@ -358,7 +358,7 @@
                                                 <td><%out.print(r.getLoanReason());%></td>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
-                                                <td><%out.print(f.format(r.getDateRequested()));%></td>
+                                                <td><%out.print(r.getDateRequested());%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
                                                 <td><%out.print(r.getRequestStatusDesc());%></td>
                                             </tr>

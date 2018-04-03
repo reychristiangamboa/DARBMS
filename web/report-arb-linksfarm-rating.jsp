@@ -44,17 +44,14 @@
                     arb = arbDAO.getARBByID(arbID);
                 }
                 
-                ArrayList<Evaluation> filteredEvaluations = rDAO.getFilteredEvaluationPerARBIDByType(arbID,3,e.getEvaluationStartDate(),e.getEvaluationEndDate());
-                System.out.print(requests.size());
-                
-                
+                ArrayList<Evaluation> filteredEvaluations = rDAO.getFilteredEvaluationPerARBIDByType(arbID,4,e.getEvaluationStartDate(),e.getEvaluationEndDate());
             %>
 
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        REPORT<small> CAPDEV RATING: <%out.print(arb.getFullName());%></small>
+                        REPORT<small> OVERALL RATING: <%out.print(arb.getFullName());%></small>
                     </h1>
                 </section>
 
@@ -64,7 +61,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <h2 class="page-header">
-                                <i class="fa fa-globe"></i> CAPDEV RATING: <%out.print(arb.getFullName());%>
+                                <i class="fa fa-globe"></i> OVERALL RATING: <%out.print(arb.getFullName());%>
                                 <div class="pull-right">
                                     <small><%out.print(f.format(e.getEvaluationStartDate()));%>-<%out.print(f.format(e.getEvaluationEndDate()));%></small>
                                 </div>
@@ -128,10 +125,10 @@
         <script>
             $(function () {
 
-                var ctx = $('#lineCAPDEV').get(0).getContext('2d');
+                var ctx = $('#lineARB').get(0).getContext('2d');
 
             <%Chart chart = new Chart();%>
-            <%String json = chart.getCAPDEVRating(filteredEvaluations);%>
+            <%String json = chart.getLINKSFARMRating(filteredEvaluations);%>
                 new Chart(ctx, <%out.print(json);%>);
             });
 

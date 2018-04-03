@@ -251,7 +251,6 @@
                                                                     <option value="1">ARB</option>
                                                                     <option value="2">APCP</option>
                                                                     <option value="3">CAPDEV</option>
-                                                                    <option value="4">LINKSFARM</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -264,7 +263,38 @@
                                                         <input type="hidden" id="end" name="end" >
                                                         <input type="hidden" id="maxDate" name="maxDate">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary" onclick="form.action = 'AddEvaluation?id=<%out.print(arb.getArbID());%>'">Submit</button>
+                                                        <button type="submit" id="submitEval" class="btn btn-primary" onclick="form.action = 'AddEvaluation?id=<%out.print(arb.getArbID());%>'">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                                <div class="modal fade" id="import-evaluation">
+                                    <div class="modal-dialog modal-md">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title">Import Evaluation</h4>
+                                            </div>
+                                            <form method="post">
+                                                <div class="modal-body">
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <input type="file" class="form-control" name="file">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <div class="pull-right">
+                                                        <button type="submit" id="submitEval" class="btn btn-primary" onclick="form.action = 'ImportLINKSFARMEvaluation?id=<%out.print(arb.getArbID());%>'">Submit</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -414,6 +444,7 @@
                                             <li class="active"><a href="#apcp" data-toggle="tab">APCP Rating</a></li>
                                             <li><a href="#capdev" data-toggle="tab">CAPDEV</a></li>
                                             <li><a href="#overall" data-toggle="tab">Overall</a></li>
+                                            <li id="linksfarmTab"><a href="#linksfarm" data-toggle="tab">LINKSFARM</a></li>
                                         </ul>
 
                                         <div class="tab-content">
@@ -426,6 +457,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <%if ((Integer) session.getAttribute("userType") == 2) {%>
+                                                <div class="box-footer">
+                                                    <button id="addEval" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation">Add Evaluation</button>
+                                                </div>
+                                                <%}%>
                                             </div>
                                             <div class="modal fade" id="modalAPCP">
                                                 <div class="modal-dialog modal-lger">
@@ -491,7 +527,7 @@
                                                 </div>
                                                 <!-- /.modal-dialog -->
                                             </div>
-                                            <!-- /.tab-pane -->
+
                                             <div class="tab-pane" id="capdev">
                                                 <div class="box-body">
                                                     <div class="chart">
@@ -501,6 +537,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <%if ((Integer) session.getAttribute("userType") == 2) {%>
+                                                <div class="box-footer">
+                                                    <button id="addEval" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation">Add Evaluation</button>
+                                                </div>
+                                                <%}%>
                                             </div>
                                             <div class="modal fade" id="modalCAPDEV">
                                                 <div class="modal-dialog modal-lger">
@@ -566,7 +607,7 @@
                                                 </div>
                                                 <!-- /.modal-dialog -->
                                             </div>
-                                            <!-- /.tab-pane -->
+
                                             <div class="tab-pane" id="overall">
                                                 <div class="box-body">
                                                     <div class="chart">
@@ -576,6 +617,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <%if ((Integer) session.getAttribute("userType") == 2) {%>
+                                                <div class="box-footer">
+                                                    <button id="addEval" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation">Add Evaluation</button>
+                                                </div>
+                                                <%}%>
                                             </div>
                                             <div class="modal fade" id="overallRate">
                                                 <div class="modal-dialog modal-lger">
@@ -641,15 +687,91 @@
                                                 </div>
                                                 <!-- /.modal-dialog -->
                                             </div>
+
+                                            <div class="tab-pane" id="linksfarm">
+                                                <div class="box-body">
+                                                    <div class="chart">
+                                                        <canvas id="lineLINKSFARM" style="height:250px"></canvas>
+                                                        <div class="row text-center">
+                                                            <a class="btn btn-submit" data-toggle="modal" data-target="#linksfarmRate">View More</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <%if ((Integer) session.getAttribute("userType") == 2) {%>
+                                                <div class="box-footer">
+                                                    <button id="importEval" class="btn btn-primary pull-right" data-toggle="modal" data-target="#import-evaluation">Import Evaluation</button>
+                                                </div>
+                                                <%}%>
+                                            </div>
+                                            <div class="modal fade" id="linksfarmRate">
+                                                <div class="modal-dialog modal-lger">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title"></h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table class="table table-bordered table-striped modTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Evaluation DTN</th>
+                                                                        <th>Rating</th>
+                                                                        <th>Evaluation Date</th>
+                                                                        <th>Evaluation Start & End</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <%
+
+                                                                        for (Evaluation evalArb : linksfarmEvaluations) {
+                                                                    %>
+                                                                    <tr>
+                                                                        <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(evalArb.getEvaluationDTN());%> </a></td>
+                                                                        <td><%out.print(evalArb.getRating());%></td>
+                                                                        <td><%out.print(evalArb.getEvaluationDate());%></td>
+                                                                        <td><%out.print(evalArb.getEvaluationStartDate() + "-" + evalArb.getEvaluationEndDate());%></td>
+                                                                    </tr>
+                                                                    <%}%>
+
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th>Evaluation DTN</th>
+                                                                        <th>Rating</th>
+                                                                        <th>Evaluation Date</th>
+                                                                        <th>Evaluation Start & End</th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                            <div class="pull-right">
+                                                                <button type="button" class="btn btn-default" id="dr-totalAccumulatedReleaseReport3">
+                                                                    <span>
+                                                                        <i class="fa fa-calendar"></i> Date range picker
+                                                                    </span>
+                                                                    <i class="fa fa-caret-down"></i>
+                                                                </button>
+
+                                                                <input type="hidden" name="reportType" value="6">
+                                                                <input type="hidden" id="start-totalAccumulatedReleaseReport3" name="start">
+                                                                <input type="hidden" id="end-totalAccumulatedReleaseReport3" name="end">
+                                                                <input type="hidden" value="<%=arb.getArbID()%>" name="arbID">
+                                                                <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>                
                                         </div>
                                         <!-- /.tab-content -->
                                     </div>
                                     <!-- /.nav-tabs-custom -->
-                                    <%if ((Integer) session.getAttribute("userType") == 2) {%>
-                                    <div class="box-footer">
-                                        <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation">Add Evaluation</button>
-                                    </div>
-                                    <%}%>
+
                                 </div>
                             </div>
 
@@ -1171,6 +1293,24 @@
                         }
                 );
 
+                $('#dr-totalAccumulatedReleaseReport3').daterangepicker(
+                        {
+                            minDate: moment().startOf('year'),
+                            maxDate: moment().endOf('year'),
+                            ranges: {
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+                                'This Year': [moment().startOf('year'), moment().endOf('year')]
+                            }
+
+                        },
+                        function (start, end) {
+                            $('#dr-totalAccumulatedReleaseReport3 span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                            $('#start-totalAccumulatedReleaseReport3').val(start.format('YYYY-MM-DD'));
+                            $('#end-totalAccumulatedReleaseReport3').val(end.format('YYYY-MM-DD'));
+                        }
+                );
+
 
             });
 
@@ -1201,6 +1341,7 @@
                 var ctx = $('#lineAPCPRating').get(0).getContext('2d');
                 var ctx2 = $('#lineCAPDEV').get(0).getContext('2d');
                 var ctx3 = $('#lineARB').get(0).getContext('2d');
+                var ctx4 = $('#lineLINKSFARM').get(0).getContext('2d');
             <%
                 Chart chart = new Chart();
             %>
@@ -1208,10 +1349,12 @@
                 String json = chart.getAPCPRating(apcpEvaluations);
                 String json2 = chart.getCAPDEVRating(capdevEvaluations);
                 String json3 = chart.getARBRating(arbEvaluations);
+                String json4 = chart.getLINKSFARMRating(linksfarmEvaluations);
             %>
                 new Chart(ctx, <%out.print(json);%>);
                 new Chart(ctx2, <%out.print(json2);%>);
                 new Chart(ctx3, <%out.print(json3);%>);
+                new Chart(ctx4, <%out.print(json4);%>);
             });
         </script>
 

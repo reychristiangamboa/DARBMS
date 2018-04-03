@@ -44,7 +44,7 @@
                     arb = arbDAO.getARBByID(arbID);
                 }
                 
-                ArrayList<Evaluation> filteredEvaluations = rDAO.getAllFilteredReleasesByRequests(arbID,1,e.getEvaluationStartDate(),e.getEvaluationEndDate());
+                ArrayList<Evaluation> filteredEvaluations = rDAO.getFilteredEvaluationPerARBIDByType(arbID,1,e.getEvaluationStartDate(),e.getEvaluationEndDate());
                 
                 
                 

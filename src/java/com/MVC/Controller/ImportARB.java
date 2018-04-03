@@ -82,7 +82,7 @@ public class ImportARB extends BaseServlet {
                     java.util.Date parsedDate = sdf.parse(finalMemberSince);
                     memberSince = new java.sql.Date(parsedDate.getTime());
                 } catch (ParseException ex) {
-                    Logger.getLogger(ImportPastDueAccount.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ImportARB.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 arb.setMemberSince(memberSince);
 

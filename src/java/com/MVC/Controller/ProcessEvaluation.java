@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -27,6 +28,8 @@ public class ProcessEvaluation extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        HttpSession session = request.getSession();
 
         EvaluationDAO eDAO = new EvaluationDAO();
         Evaluation e = eDAO.getEvaluationByID(Integer.parseInt(request.getParameter("evaluationID")));
@@ -62,7 +65,7 @@ public class ProcessEvaluation extends BaseServlet {
         
         double rating = calculateAverage(ratings);
         
-        if(eDAO.setEvaluationRating(rating, e.getEvaluationID())){
+        if(eDAO.setEvaluationRating(rating, e.getEvaluationID(), (Integer)session.getAttribute("userID"))){
             request.setAttribute("arb", arb);
             request.setAttribute("success", arb.getFLName() + " successfully evaluated!");
             request.getRequestDispatcher("arb-profile.jsp").forward(request, response);

@@ -368,6 +368,10 @@
         <servlet-name>ReviewLINKSFARMCAPDEVAssessment</servlet-name>
         <servlet-class>com.MVC.Controller.ReviewLINKSFARMCAPDEVAssessment</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ImportLINKSFARMEvaluation</servlet-name>
+        <servlet-class>com.MVC.Controller.ImportLINKSFARMEvaluation</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -735,6 +739,10 @@
     <servlet-mapping>
         <servlet-name>ReviewLINKSFARMCAPDEVAssessment</servlet-name>
         <url-pattern>/ReviewLINKSFARMCAPDEVAssessment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportLINKSFARMEvaluation</servlet-name>
+        <url-pattern>/ImportLINKSFARMEvaluation</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
