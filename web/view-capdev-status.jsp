@@ -372,7 +372,7 @@
                                             %>
                                             <tr>
                                                 <%if(userType == 3){%>
-                                                <td><a href="ProceedAssignPointPerson?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                <td><a href="ProceedAssignPointPerson?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(p.getPlanDTN());%></a></td>
                                                     <%}else{%>
                                                 <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
                                                     <%}%>

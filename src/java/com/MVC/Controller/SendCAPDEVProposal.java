@@ -63,11 +63,65 @@ public class SendCAPDEVProposal extends BaseServlet {
             ARBO arbo = arboDAO.getARBOByID(Integer.parseInt(request.getParameter("requestID")));
             ArrayList<ARB> allARBs = arbDAO.getAllARBsARBO(arbo.getArboID());
 
-            for (int i = 0; i < files.length; i++) {
+//            for (int i = 0; i < files.length; i++) {
+//
+//                ArrayList arbHolder = readExcelFile(files[i]);
+//                ArrayList cellStoreArrayList = new ArrayList();
+//                ArrayList<ARB> arbList = new ArrayList();
+//
+//                for (int a = 1; a < arbHolder.size(); a++) {
+//
+//                    cellStoreArrayList = (ArrayList) arbHolder.get(a);
+//                    String lN = cellStoreArrayList.get(0).toString();
+//                    String fN = cellStoreArrayList.get(1).toString();
+//                    String mN = cellStoreArrayList.get(2).toString();
+//                    boolean isPart = false;
+//
+//                    int arbID = arbDAO.getARBID(fN, mN, lN);
+//
+//                    for (ARB arb : allARBs) {
+//                        if (arb.getArbID() == arbID) {
+//                            isPart = true;
+//                        }
+//                    }
+//
+//                    if (arbID > 0 && isPart) {
+//                        System.out.println(arbID);
+//                        ARB arb = arbDAO.getARBByID(arbID);
+//                        arbList.add(arb);
+//                    }
+//
+//                    if (arbList.isEmpty()) {
+//                        missing = true;
+//                    }
+//                }
+//            }
+//            if (missing) {
+//                request.setAttribute("errMessage", "There are no valid participants in the Excel.");
+//                request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+//                request.getRequestDispatcher("provincial-field-officer-create-capdev-proposal.jsp").forward(request, response);
+//            } else {
+            CAPDEVPlan capdevPlan = new CAPDEVPlan();
 
-                ArrayList arbHolder = readExcelFile(files[i]);
-                ArrayList cellStoreArrayList = new ArrayList();
+            capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
+            capdevPlan.setPlanDTN(request.getParameter("dtn"));
+
+            int planID = 0;
+
+            if (request.getParameter("pastDueID") != null) {
+                capdevPlan.setPastDueAccountID(Integer.parseInt(request.getParameter("pastDueID")));
+                planID = capdevDAO.addCAPDEVPlanForPastDue(capdevPlan, (Integer) session.getAttribute("userID"));
+            } else {
+                planID = capdevDAO.addCAPDEVPlan(capdevPlan, (Integer) session.getAttribute("userID"));
+            }
+
+            for (int i = 0; i < activities.length; i++) {
+
+                CAPDEVActivity activity = new CAPDEVActivity();
                 ArrayList<ARB> arbList = new ArrayList();
+                ArrayList arbHolder = readExcelFile(files[i]);
+
+                ArrayList cellStoreArrayList = new ArrayList();
 
                 for (int a = 1; a < arbHolder.size(); a++) {
 
@@ -79,96 +133,34 @@ public class SendCAPDEVProposal extends BaseServlet {
 
                     int arbID = arbDAO.getARBID(fN, mN, lN);
 
-                    for (ARB arb : allARBs) {
-                        if (arb.getArbID() == arbID) {
-                            isPart = true;
-                        }
-                    }
+                    ARB arb = arbDAO.getARBByID(arbID);
+                    arbList.add(arb);
 
-                    if (arbID > 0 && isPart) {
-                        ARB arb = arbDAO.getARBByID(arbID);
-                        arbList.add(arb);
-                    }
-
-                    if (arbList.isEmpty()) {
-                        missing = true;
-                    }
                 }
+
+                java.sql.Date activityDate = null;
+
+                try {
+                    java.util.Date parsedActivityDate = sdf.parse(activityDates[i]);
+                    activityDate = new java.sql.Date(parsedActivityDate.getTime());
+                } catch (ParseException ex) {
+                    Logger.getLogger(SendCAPDEVProposal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                int activityType = Integer.parseInt(activities[i]);
+                activity.setActivityType(activityType);
+                activity.setPlanID(planID);
+                activity.setActivityDate(activityDate);
+
+                int newlyAddedActivityID = capdevDAO.addCAPDEVPlanActivity(activity);
+
+                capdevDAO.addCAPDEVPlanActivityParticipants(arbList, newlyAddedActivityID);
+
             }
 
-            if (missing) {
-                request.setAttribute("errMessage", "There are no valid participants in the Excel.");
-                request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-                request.getRequestDispatcher("provincial-field-officer-create-capdev-proposal.jsp").forward(request, response);
-            } else {
-                CAPDEVPlan capdevPlan = new CAPDEVPlan();
-
-                capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
-                capdevPlan.setPlanDTN(request.getParameter("dtn"));
-
-                int planID = 0;
-
-                if (request.getParameter("pastDueID") != null) {
-                    capdevPlan.setPastDueAccountID(Integer.parseInt(request.getParameter("pastDueID")));
-                    planID = capdevDAO.addCAPDEVPlanForPastDue(capdevPlan, (Integer) session.getAttribute("userID"));
-                } else {
-                    planID = capdevDAO.addCAPDEVPlan(capdevPlan, (Integer) session.getAttribute("userID"));
-                }
-
-                for (int i = 0; i < activities.length; i++) {
-
-                    CAPDEVActivity activity = new CAPDEVActivity();
-                    ArrayList<ARB> arbList = new ArrayList();
-                    ArrayList arbHolder = readExcelFile(files[i]);
-
-                    ArrayList cellStoreArrayList = new ArrayList();
-
-                    for (int a = 1; a < arbHolder.size(); a++) {
-
-                        cellStoreArrayList = (ArrayList) arbHolder.get(a);
-                        String lN = cellStoreArrayList.get(0).toString();
-                        String fN = cellStoreArrayList.get(1).toString();
-                        String mN = cellStoreArrayList.get(2).toString();
-                        boolean isPart = false;
-
-                        int arbID = arbDAO.getARBID(fN, mN, lN);
-
-                        for (ARB arb : allARBs) {
-                            if (arb.getArbID() == arbID) {
-                                isPart = true;
-                            }
-                        }
-
-                        if (arbID > 0 && isPart) {
-                            ARB arb = arbDAO.getARBByID(arbID);
-                            arbList.add(arb);
-                        }
-
-                    }
-
-                    java.sql.Date activityDate = null;
-
-                    try {
-                        java.util.Date parsedActivityDate = sdf.parse(activityDates[i]);
-                        activityDate = new java.sql.Date(parsedActivityDate.getTime());
-                    } catch (ParseException ex) {
-                        Logger.getLogger(SendCAPDEVProposal.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                    int activityType = Integer.parseInt(activities[i]);
-                    activity.setActivityType(activityType);
-                    activity.setPlanID(planID);
-                    activity.setActivityDate(activityDate);
-
-                    int newlyAddedActivityID = capdevDAO.addCAPDEVPlanActivity(activity);
-
-                    capdevDAO.addCAPDEVPlanActivityParticipants(arbList, newlyAddedActivityID);
-
-                }
-
-                request.setAttribute("success", "CAPDEV plan submitted!");
-                request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
-            }
+            request.setAttribute("success", "CAPDEV plan submitted!");
+            request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
+//            }
 
         }
 

@@ -76,16 +76,16 @@ public class SendSchedulePreRelease extends BaseServlet {
 
                 int arbID = arbDAO.getARBID(fN, mN, lN);
 
-                for (ARB arb : arbList1) {
-                    if (arb.getArbID() == arbID) {
-                        isPart = true;
-                    }
-                }
+//                for (ARB arb : arbList1) {
+//                    if (arb.getArbID() == arbID) {
+//                        isPart = true;
+//                    }
+//                }
 
-                if (arbID > 0 && isPart) {
+//                if (arbID > 0 && isPart) {
                     ARB arb = arbDAO.getARBByID(arbID);
                     arbList.add(arb);
-                }
+//                }
 
             }
 

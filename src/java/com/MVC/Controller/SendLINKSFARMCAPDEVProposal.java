@@ -81,20 +81,19 @@ public class SendLINKSFARMCAPDEVProposal extends BaseServlet {
 
                     int arbID = arbDAO.getARBID(fN, mN, lN);
 
-                    for (ARB arb : c.getClusterMembers()) {
-                        if (arb.getArbID() == arbID) {
-                            isPart = true;
-                        }
-                    }
+//                    for (ARB arb : c.getClusterMembers()) {
+//                        if (arb.getArbID() == arbID) {
+//                            isPart = true;
+//                        }
+//                    }
+//                    if (arbID > 0 && isPart) {
+                    ARB arb = arbDAO.getARBByID(arbID);
+                    arbList.add(arb);
+//                    }
 
-                    if (arbID > 0 && isPart) {
-                        ARB arb = arbDAO.getARBByID(arbID);
-                        arbList.add(arb);
-                    }
-
-                    if (arbList.isEmpty()) {
-                        missing = true;
-                    }
+//                    if (arbList.isEmpty()) {
+//                        missing = true;
+//                    }
                 }
             }
 
@@ -146,16 +145,15 @@ public class SendLINKSFARMCAPDEVProposal extends BaseServlet {
 
                         int arbID = arbDAO.getARBID(fN, mN, lN);
 
-                        for (ARB arb : c.getClusterMembers()) {
-                            if (arb.getArbID() == arbID) {
-                                isPart = true;
-                            }
-                        }
-
-                        if (arbID > 0 && isPart) {
-                            ARB arb = arbDAO.getARBByID(arbID);
-                            arbList.add(arb);
-                        }
+//                        for (ARB arb : c.getClusterMembers()) {
+//                            if (arb.getArbID() == arbID) {
+//                                isPart = true;
+//                            }
+//                        }
+//                        if (arbID > 0 && isPart) {
+                        ARB arb = arbDAO.getARBByID(arbID);
+                        arbList.add(arb);
+//                        }
 
                     }
 

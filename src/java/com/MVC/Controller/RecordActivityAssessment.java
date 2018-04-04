@@ -55,7 +55,6 @@ public class RecordActivityAssessment extends BaseServlet {
         int planID = Integer.parseInt(request.getParameter("planID"));
         int clusterID = 0;
         Cluster c = new Cluster();
-        
 
         if (request.getParameter("clusterID") != null) {
             clusterID = Integer.parseInt(request.getParameter("clusterID"));
@@ -79,23 +78,7 @@ public class RecordActivityAssessment extends BaseServlet {
 
             int arbID = arbDAO.getARBID(fN, mN, lN);
 
-            if (clusterID > 0) {
-                for (ARB arb : c.getClusterMembers()) {
-                    if (arb.getArbID() == arbID) {
-                        isPart = true;
-                    }
-                }
-            } else {
-                for (ARB arb : arbList) {
-                    if (arb.getArbID() == arbID) {
-                        isPart = true;
-                    }
-                }
-            }
-
-            if (arbID > 0 && isPart) {
-                arbIDs.add(arbID);
-            }
+            arbIDs.add(arbID);
 
         }
 

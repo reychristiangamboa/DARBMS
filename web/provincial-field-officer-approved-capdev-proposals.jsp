@@ -35,6 +35,7 @@
                 CAPDEVPlan p = capdevDAO.getCAPDEVPlan((Integer)request.getAttribute("planID"));
                 APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                 ARBO a = arboDAO.getARBOByID(r.getArboID());
+                ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
                 int linksfarm = 0;
                 
                 if((Integer)request.getAttribute("linksfarm") != null){
@@ -60,7 +61,7 @@
                 <section class="content">
                     <div class="row">
                         <div class="col-xs-12">
-                            <%if(linksfarm == 0){%>
+                            <%if(linksfarm == 0 && (Integer)request.getAttribute("requestID")!= null){%>
                             <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title">ARBO Information</h3>
@@ -85,6 +86,7 @@
                                     </div>
                                     <hr>        
                                 </div>
+
                                 <!-- /.box-body -->
 
 
@@ -154,20 +156,28 @@
         <%@include file="jspf/footer.jspf" %>
 
         <script>
+            <%if(linksfarm == 0){%>
             var ctx = $('#barCanvas').get(0).getContext('2d');
             <%
-                Chart bar = new Chart();
-                String json = bar.getBarChartEducation(arbList);
+                
+                
+                    Chart bar = new Chart();
+                    String json = bar.getBarChartEducation(arbList);
+                
+                
             %>
             new Chart(ctx, <%out.print(json);%>);
 
             var ctx3 = $('#pieCanvas').get(0).getContext('2d');
             <%
-                Chart pie = new Chart();
-                String json3 = pie.getPieChartGender(arbList);
+                
+                    Chart pie = new Chart();
+                    String json3 = pie.getPieChartGender(arbList);
+                
+                
             %>
             new Chart(ctx3, <%out.print(json3);%>);
-
+<%}%>
         </script>
     </body>
 </html>

@@ -75,7 +75,7 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><a href="MonitorCAPDEVAttendance?planID="<%out.print(p.getPlanID());%>><%out.print(p.getPlanDTN());%></a></td>
+                                                <td><a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
                                                 <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
@@ -132,7 +132,7 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><a href="MonitorCAPDEVAttendance?planID="<%out.print(p.getPlanID());%>><%out.print(p.getPlanDTN());%></a></td>
+                                                <td><a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
                                                 <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>

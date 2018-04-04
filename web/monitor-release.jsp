@@ -572,7 +572,7 @@
                                                         <div class="input-group-addon">
                                                             <i>&#8369;</i>
                                                         </div>
-                                                        <input type="text" class="form-control numberOnly" name="pastDueAmount" autocomplete="off" required disabled>
+                                                        <input type="text" class="form-control numberOnly" name="pastDueAmount" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                             </div>

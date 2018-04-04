@@ -81,6 +81,9 @@ public class Login extends BaseServlet {
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             }
 
+        } else {    //  NO USER EXISTS
+            request.setAttribute("error", "Invalid username or password. Try again.");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
         }
     }
 }

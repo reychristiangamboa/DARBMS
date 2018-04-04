@@ -61,7 +61,7 @@
                                             <li><a href="#history" data-toggle="tab">CAPDEV History</a></li>
                                         </ul>
 
-                                      <%@include file="jspf/arboInfo.jspf"%>
+                                        <%@include file="jspf/arboInfo.jspf"%>
                                     </div>
                                     <hr>        
                                 </div>
@@ -86,7 +86,7 @@
                                         </thead>
 
                                         <tbody>
-                                            <%for(CAPDEVActivity activity : p.getActivities()){%>
+                                            <%for(CAPDEVActivity activity : caList){%>
                                             <tr>
                                                 <td><a data-toggle="modal" data-target="#cleared-modal"></a><%out.print(activity.getActivityName());%></td>
                                                 <td><%out.print(activity.getActivityDate());%></td>
@@ -99,7 +99,6 @@
                                 </div>
                                 <form method="post">
                                     <div class="box-footer">
-                                        <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
                                         <input type="hidden" name="planID" value="<%out.print((Integer)request.getAttribute("planID"));%>">
                                         <div class="btn-group pull-right">
                                             <button type="submit" name="disapprove" onclick="form.action = 'DisapproveCAPDEVProposal'" class="btn btn-danger">Disapprove</button>
@@ -117,12 +116,24 @@
 
             </div>
             <!-- /.content-wrapper -->
-            
+
         </div>
         <%@include file="jspf/footer.jspf" %>
         <script>
             $(document).ready(function () {
+                var ctx = $('#barCanvas').get(0).getContext('2d');
+            <%
+                    Chart bar = new Chart();
+                    String json = bar.getBarChartEducation(arbList);
+            %>
+                new Chart(ctx, <%out.print(json);%>);
 
+                var ctx3 = $('#pieCanvas').get(0).getContext('2d');
+            <%
+                    Chart pie = new Chart();
+                    String json3 = pie.getPieChartGender(arbList);
+            %>
+                new Chart(ctx3, <%out.print(json3);%>);
             });
         </script>
     </body>

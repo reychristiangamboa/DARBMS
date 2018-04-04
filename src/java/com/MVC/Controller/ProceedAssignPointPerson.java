@@ -24,6 +24,9 @@ public class ProceedAssignPointPerson extends BaseServlet {
         if(request.getParameter("linksfarm") != null){
             request.setAttribute("linksfarm", 1);
         }
+        if(request.getParameter("requestID") != null){
+            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+        }
         request.setAttribute("planID", planID);
         request.getRequestDispatcher("provincial-field-officer-approved-capdev-proposals.jsp").forward(request, response);
     }
