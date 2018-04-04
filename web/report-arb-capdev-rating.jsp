@@ -45,7 +45,7 @@
                 }
                 
                 ArrayList<Evaluation> filteredEvaluations = rDAO.getFilteredEvaluationPerARBIDByType(arbID,3,e.getEvaluationStartDate(),e.getEvaluationEndDate());
-                System.out.print(requests.size());
+                
                 
                 
             %>

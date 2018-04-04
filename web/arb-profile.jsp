@@ -505,23 +505,29 @@
                                                                 </tfoot>
                                                             </table>
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                            <div class="pull-right">
-                                                                <button type="button" class="btn btn-default" id="dr-totalYearReleaseReport">
-                                                                    <span>
-                                                                        <i class="fa fa-calendar"></i> Date range picker
-                                                                    </span>
-                                                                    <i class="fa fa-caret-down"></i>
-                                                                </button>
+                                                        <form method="post">
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                                <div class="pull-right">
+                                                                    <button type="button" class="btn btn-default" id="dr-totalYearReleaseReport">
+                                                                        <span>
+                                                                            <i class="fa fa-calendar"></i> Date range picker
+                                                                        </span>
+                                                                        <i class="fa fa-caret-down"></i>
+                                                                    </button>
 
-                                                                <input type="hidden" name="reportType" value="3">
-                                                                <input type="hidden" id="start-totalYearReleaseReport" name="start">
-                                                                <input type="hidden" id="end-totalYearReleaseReport" name="end">
-                                                                <input type="hidden" value="<%=arb.getArbID()%>" name="arbID">
-                                                                <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+
+                                                                    <input type="hidden" name="reportType" value="3">
+                                                                    <input type="hidden" id="start-totalYearReleaseReport" name="start">
+                                                                    <input type="hidden" id="end-totalYearReleaseReport" name="end">
+                                                                    <input type="hidden" value="<%=arb.getArbID()%>" name="arbID">
+                                                                    <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>    
+
+
+
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        </form>
                                                     </div>
                                                     <!-- /.modal-content -->
                                                 </div>
@@ -585,23 +591,29 @@
                                                                 </tfoot>
                                                             </table>
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                            <div class="pull-right">
-                                                                <button type="button" class="btn btn-default" id="dr-totalAccumulatedReleaseReport">
-                                                                    <span>
-                                                                        <i class="fa fa-calendar"></i> Date range picker
-                                                                    </span>
-                                                                    <i class="fa fa-caret-down"></i>
-                                                                </button>
+                                                        <form method="post">
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                                <div class="pull-right">
+                                                                    <button type="button" class="btn btn-default" id="dr-totalAccumulatedReleaseReport">
+                                                                        <span>
+                                                                            <i class="fa fa-calendar"></i> Date range picker
+                                                                        </span>
+                                                                        <i class="fa fa-caret-down"></i>
+                                                                    </button>
 
-                                                                <input type="hidden" name="reportType" value="4">
-                                                                <input type="hidden" id="start-totalAccumulatedReleaseReport" name="start">
-                                                                <input type="hidden" id="end-totalAccumulatedReleaseReport" name="end">
-                                                                <input type="hidden" value="<%=arb.getArbID()%>" name="arbID">
-                                                                <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+
+                                                                    <input type="hidden" name="reportType" value="4">
+                                                                    <input type="hidden" id="start-totalAccumulatedReleaseReport" name="start">
+                                                                    <input type="hidden" id="end-totalAccumulatedReleaseReport" name="end">
+                                                                    <input type="hidden" value="<%=arb.getArbID()%>" name="arbID">
+                                                                    <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+
+
+
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        </form>
                                                     </div>
                                                     <!-- /.modal-content -->
                                                 </div>
@@ -665,23 +677,29 @@
                                                                 </tfoot>
                                                             </table>
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                            <div class="pull-right">
-                                                                <button type="button" class="btn btn-default" id="dr-totalAccumulatedReleaseReport2">
-                                                                    <span>
-                                                                        <i class="fa fa-calendar"></i> Date range picker
-                                                                    </span>
-                                                                    <i class="fa fa-caret-down"></i>
-                                                                </button>
+                                                        <form method="post">
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                                <div class="pull-right">
+                                                                    <button type="button" class="btn btn-default" id="dr-totalAccumulatedReleaseReport2">
+                                                                        <span>
+                                                                            <i class="fa fa-calendar"></i> Date range picker
+                                                                        </span>
+                                                                        <i class="fa fa-caret-down"></i>
+                                                                    </button>
 
-                                                                <input type="hidden" name="reportType" value="5">
-                                                                <input type="hidden" id="start-totalAccumulatedReleaseReport2" name="start">
-                                                                <input type="hidden" id="end-totalAccumulatedReleaseReport2" name="end">
-                                                                <input type="hidden" value="<%=arb.getArbID()%>" name="arbID">
-                                                                <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+
+                                                                    <input type="hidden" name="reportType" value="5">
+                                                                    <input type="hidden" id="start-totalAccumulatedReleaseReport2" name="start">
+                                                                    <input type="hidden" id="end-totalAccumulatedReleaseReport2" name="end">
+                                                                    <input type="hidden" value="<%=arb.getArbID()%>" name="arbID">
+                                                                    <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>    
+
+
+
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        </form>
                                                     </div>
                                                     <!-- /.modal-content -->
                                                 </div>
@@ -745,23 +763,29 @@
                                                                 </tfoot>
                                                             </table>
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                            <div class="pull-right">
-                                                                <button type="button" class="btn btn-default" id="dr-totalAccumulatedReleaseReport3">
-                                                                    <span>
-                                                                        <i class="fa fa-calendar"></i> Date range picker
-                                                                    </span>
-                                                                    <i class="fa fa-caret-down"></i>
-                                                                </button>
+                                                        <form method="post">
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                                <div class="pull-right">
+                                                                    <button type="button" class="btn btn-default" id="dr-totalAccumulatedReleaseReport3">
+                                                                        <span>
+                                                                            <i class="fa fa-calendar"></i> Date range picker
+                                                                        </span>
+                                                                        <i class="fa fa-caret-down"></i>
+                                                                    </button>
 
-                                                                <input type="hidden" name="reportType" value="6">
-                                                                <input type="hidden" id="start-totalAccumulatedReleaseReport3" name="start">
-                                                                <input type="hidden" id="end-totalAccumulatedReleaseReport3" name="end">
-                                                                <input type="hidden" value="<%=arb.getArbID()%>" name="arbID">
-                                                                <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+
+                                                                    <input type="hidden" name="reportType" value="6">
+                                                                    <input type="hidden" id="start-totalAccumulatedReleaseReport3" name="start">
+                                                                    <input type="hidden" id="end-totalAccumulatedReleaseReport3" name="end">
+                                                                    <input type="hidden" value="<%=arb.getArbID()%>" name="arbID">
+                                                                    <button type="submit" class="btn btn-default" onclick="form.action = 'ViewReport'">Generate Report</button>
+
+
+
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        </form>
                                                     </div>
                                                     <!-- /.modal-content -->
                                                 </div>
@@ -1014,7 +1038,7 @@
                                                                     </div>
 
                                                                 </div>
-                                                                
+
 
                                                             </div>
                                                             <!--                                            /.modal-content -->

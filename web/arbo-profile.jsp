@@ -738,7 +738,7 @@
 
                                             <div class="tab-pane" id="pastDue">
                                                 <div class="box-body">
-                                                    <canvas id="pieCanvas" style="height:250px"></canvas>
+                                                    <canvas id="pieCanvasPastDue" style="height:250px"></canvas>
                                                 </div>
                                             </div>
                                         </div>
@@ -954,6 +954,13 @@
                 String json4 = pie2.getPieChartDisbursement(arbListARBO);
             %>
                 new Chart(ctx4, <%out.print(json4);%>);
+                
+                    var ctx5 = $('#pieCanvasPastDue').get(0).getContext('2d');
+            <%
+                Chart pie3 = new Chart();
+                String json5 = pie3.getPieChartPastDue(arboReleasedRequest);
+            %>
+                new Chart(ctx5, <%out.print(json5);%>);
 
 
             });

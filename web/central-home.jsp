@@ -741,7 +741,7 @@
                                                                                 <td><%=currency.format(req.getLoanAmount())%></td>
                                                                                 <td><%=currency.format(req.getTotalReleasedAmount())%></td>
                                                                                 <td><%=currency.format(req.getYearlyReleasedAmount())%></td>
-                                                                                <td><%if(req.getDateLastRelease()!= null) out.print(req.getDateLastRelease());%></td>
+                                                                                <td><%if(req.getDateLastRelease()!= null){ out.print(req.getDateLastRelease());}%></td>
                                                                                 <td><%=currency.format(req.getTotalOSBalance())%></td>
                                                                                 <td><%=currency.format(req.getTotalPastDueAmount())%></td>
                                                                                 <td><%=req.printAllPastDueReasons()%></td>
