@@ -48,7 +48,9 @@ public class Login extends BaseServlet {
                 session.setAttribute("userType", u.getUserType());
                 session.setAttribute("userTypeDesc", u.getUserTypeDesc());
                 session.setAttribute("regOfficeCode", u.getRegOfficeCode());
+                session.setAttribute("regOfficeDesc", u.getRegDesc());
                 session.setAttribute("provOfficeCode", u.getProvOfficeCode());
+                session.setAttribute("provOfficeDesc", u.getProvOfficeDesc());
 
                 if (u.getActive() == 1) {   //  ACTIVATED ACCOUNTS
 

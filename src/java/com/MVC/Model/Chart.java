@@ -28,6 +28,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Locale;
 
 /**
@@ -168,92 +169,10 @@ public class Chart {
         return new BarChart(data, options).toJson();
     }
 
-    public String getCropHistory(ArrayList<Crop> crops, ArrayList<ARB> arbList) {
+    public String getCropHistory(ArrayList<Crop> crops, ArrayList<ARB> arbList) throws ParseException {
 
-        System.out.println(crops.size());
-        ArrayList<String> dates = new ArrayList();
-
-        long l = System.currentTimeMillis();
-        Date d = new Date(l);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(d);
-        int year = calendar.get(Calendar.YEAR);
-
-        String lastYear = Integer.toString(year - 1);
-        String thisYear = Integer.toString(year);
-        String nextYear = Integer.toString(year + 1);
-
-        int month = calendar.get(Calendar.MONTH);
-        CropDAO cDAO = new CropDAO();
-
-        if (month >= 7) { // if current month is JULY onwards
-            dates.add(thisYear + "-07-31");
-            dates.add(thisYear + "-08-31");
-            dates.add(thisYear + "-09-30");
-            dates.add(thisYear + "-10-31");
-            dates.add(thisYear + "-11-30");
-            dates.add(thisYear + "-12-31");
-            dates.add(nextYear + "-01-31");
-            dates.add(nextYear + "-02-28");
-            dates.add(nextYear + "-03-31");
-            dates.add(nextYear + "-04-30");
-            dates.add(nextYear + "-05-31");
-            dates.add(nextYear + "-06-30");
-        } else {
-            dates.add(lastYear + "-07-31");
-            dates.add(lastYear + "-08-31");
-            dates.add(lastYear + "-09-30");
-            dates.add(lastYear + "-10-31");
-            dates.add(lastYear + "-11-30");
-            dates.add(lastYear + "-12-31");
-            dates.add(thisYear + "-01-31");
-            dates.add(thisYear + "-02-28");
-            dates.add(thisYear + "-03-31");
-            dates.add(thisYear + "-04-30");
-            dates.add(thisYear + "-05-31");
-            dates.add(thisYear + "-06-30");
-        }
-
-        LineData data = new LineData();
-
-        for (Crop arbC : crops) {
-            LineDataset dataset = new LineDataset();
-            dataset.setBorderColor(Color.random());
-            dataset.setBackgroundColor(Color.TRANSPARENT);
-            dataset.setLabel(arbC.getCropTypeDesc());
-            for (ARB arb : arbList) {
-                for (String date : dates) {
-                    dataset.addData(cDAO.getCountOfCropsByMonth(arbC, date, arb.getArbID()));
-                }
-            }
-            data.addDataset(dataset);
-        }
-        
-        ArrayList<String> stringLabels = new ArrayList();
-        stringLabels.add("July");
-        stringLabels.add("August");
-        stringLabels.add("September");
-        stringLabels.add("October");
-        stringLabels.add("November");
-        stringLabels.add("December");
-        stringLabels.add("January");
-        stringLabels.add("February");
-        stringLabels.add("March");
-        stringLabels.add("April");
-        stringLabels.add("May");
-        stringLabels.add("June");
-
-        for (String label : stringLabels) {
-            data.addLabel(label);
-        }
-
-        return new LineChart(data).toJson();
-    }
-    
-    public String getCropHistory2(ArrayList<Crop> crops, ArrayList<ARB> arbList) {
-
-        System.out.println(crops.size());
-        ArrayList<String> dates = new ArrayList();
+        ArrayList<Date> dates = new ArrayList();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         long l = System.currentTimeMillis();
         Date d = new Date(l);
@@ -268,49 +187,109 @@ public class Chart {
         int month = calendar.get(Calendar.MONTH);
         CropDAO cDAO = new CropDAO();
 
+        java.util.Date javaDate = null;
+        java.sql.Date sqlDate = null;
+        String date = "";
+
         if (month >= 7) { // if current month is JULY onwards
-            dates.add(thisYear + "-07-31");
-            dates.add(thisYear + "-08-31");
-            dates.add(thisYear + "-09-30");
-            dates.add(thisYear + "-10-31");
-            dates.add(thisYear + "-11-30");
-            dates.add(thisYear + "-12-31");
-            dates.add(nextYear + "-01-31");
-            dates.add(nextYear + "-02-28");
-            dates.add(nextYear + "-03-31");
-            dates.add(nextYear + "-04-30");
-            dates.add(nextYear + "-05-31");
-            dates.add(nextYear + "-06-30");
+            sqlDate = java.sql.Date.valueOf(thisYear + "-07-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(thisYear + "-08-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(thisYear + "-09-30");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(thisYear + "-10-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(thisYear + "-11-30");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(thisYear + "-12-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(nextYear + "-01-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(nextYear + "-02-28");
+            dates.add(sqlDate);
+            
+            sqlDate = java.sql.Date.valueOf(nextYear + "-03-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(nextYear + "-04-30");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(nextYear + "-05-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(nextYear + "-06-30");
+            dates.add(sqlDate);
         } else {
-            dates.add(lastYear + "-07-31");
-            dates.add(lastYear + "-08-31");
-            dates.add(lastYear + "-09-30");
-            dates.add(lastYear + "-10-31");
-            dates.add(lastYear + "-11-30");
-            dates.add(lastYear + "-12-31");
-            dates.add(thisYear + "-01-31");
-            dates.add(thisYear + "-02-28");
-            dates.add(thisYear + "-03-31");
-            dates.add(thisYear + "-04-30");
-            dates.add(thisYear + "-05-31");
-            dates.add(thisYear + "-06-30");
+            sqlDate = java.sql.Date.valueOf(lastYear + "-07-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(lastYear + "-08-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(lastYear + "-09-30");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(lastYear + "-10-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(lastYear + "-11-30");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(lastYear + "-12-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(thisYear + "-01-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(thisYear + "-02-28");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(thisYear + "-03-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(thisYear + "-04-30");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(thisYear + "-05-31");
+            dates.add(sqlDate);
+
+            sqlDate = java.sql.Date.valueOf(thisYear + "-06-30");
+            dates.add(sqlDate);
+
         }
 
         LineData data = new LineData();
 
-        for (Crop arbC : crops) {
+        for (Crop arbC : crops) { // CROP TYPE
             LineDataset dataset = new LineDataset();
             dataset.setBorderColor(Color.random());
             dataset.setBackgroundColor(Color.TRANSPARENT);
             dataset.setLabel(arbC.getCropTypeDesc());
-            for (ARB arb : arbList) {
-                for (String date : dates) {
-                    dataset.addData(cDAO.getCountOfCropsByMonth2(arbC, date, arb.getArbID()));
+
+            for (Date dateSQL : dates) { // LOOP THROUGH DATES
+                int totalCount = 0;
+                for (ARB arb : arbList) { // PER ARB
+                    for (Crop arbCrops : arb.getCrops()) { // ACCESS ARB CROPS
+                        // CHECKS IF dateSQL BETWEEN startDate AND endDate AND cropType == arbCropType
+                        if (arbCrops.getStartDate().compareTo(dateSQL) * dateSQL.compareTo(arbCrops.getEndDate()) >= 0 && arbC.getCropType() == arbCrops.getCropType()) {
+                            totalCount++;
+                        }
+                    }
                 }
+                dataset.addData(totalCount);
             }
+
             data.addDataset(dataset);
         }
-        
+
         ArrayList<String> stringLabels = new ArrayList();
         stringLabels.add("July");
         stringLabels.add("August");
@@ -400,7 +379,7 @@ public class Chart {
 
         return new LineChart(data).toJson();
     }
-    
+
     public String getLINKSFARMRating(ArrayList<Evaluation> arbEvaluations) {
 
         SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");

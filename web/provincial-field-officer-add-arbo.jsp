@@ -23,8 +23,8 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong>APCP</strong> 
-                        <small>Region I</small>
+                        <strong>Add ARBO</strong> 
+                        <small><%out.print((String)session.getAttribute("provOfficeDesc") + ", " + (String)session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
                     
 
@@ -32,12 +32,6 @@
 
                 <!-- Main content -->
                 <section class="content">
-                    <%if (request.getAttribute("errMessage") != null) {%>
-                    <p class="text text-center text-danger"><%=request.getAttribute("errMessage")%></p>
-                    <%}%>
-                    <%if (request.getAttribute("success") != null) {%>
-                    <p class="text text-center text-success"><%=request.getAttribute("success")%></p>
-                    <%}%>
                     <div class='row'>
                         <div class='col-xs-6'>
                             <div class='box'>

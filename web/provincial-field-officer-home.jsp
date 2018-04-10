@@ -49,66 +49,61 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
-            <%if((Integer)session.getAttribute("userType") == 3){%>
+            <%if ((Integer) session.getAttribute("userType") == 3) {%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
-            <%}else if((Integer)session.getAttribute("userType") == 4){%>
+            <%} else if ((Integer) session.getAttribute("userType") == 4) {%>
             <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
-            <%}else if((Integer)session.getAttribute("userType") == 5){%>
+            <%} else if ((Integer) session.getAttribute("userType") == 5) {%>
             <%@include file="jspf/central-sidebar.jspf"%>
             <%}%>
 
             <%
-            CropDAO cropDAO = new CropDAO();
-    AddressDAO addressDAO = new AddressDAO();
-    ARBODAO arboDAO = new ARBODAO();
-    ARBDAO arbDAO = new ARBDAO();
-    APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
-    CAPDEVDAO capdevDAO = new CAPDEVDAO();
-    UserDAO uDAO = new UserDAO();
-    
-    ArrayList<EducationLevel> educationLevel = arbDAO.getAllEducationLevel();
-    ArrayList<RelationshipType> relationshipType = arbDAO.getAllRelationshipType();
-    
-    
-    APCPRelease apcpRelease = new APCPRelease();
-    
-    ArrayList<Crop> allCrops = cropDAO.getAllCrops(); 
-    ArrayList<Region> regionList = addressDAO.getAllRegions();
+                CropDAO cropDAO = new CropDAO();
+                AddressDAO addressDAO = new AddressDAO();
+                ARBODAO arboDAO = new ARBODAO();
+                ARBDAO arbDAO = new ARBDAO();
+                APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+                CAPDEVDAO capdevDAO = new CAPDEVDAO();
+                UserDAO uDAO = new UserDAO();
 
-    
-    ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
-    ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
-    ArrayList<ARBO> qualifiedARBOs = arboDAO.getAllQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<EducationLevel> educationLevel = arbDAO.getAllEducationLevel();
+                ArrayList<RelationshipType> relationshipType = arbDAO.getAllRelationshipType();
 
+                APCPRelease apcpRelease = new APCPRelease();
 
-    ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
-    ArrayList<CityMun> cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
+                ArrayList<Crop> allCrops = cropDAO.getAllCrops();
+                ArrayList<Region> regionList = addressDAO.getAllRegions();
 
-    ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(arbListProvince);
-    ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListProvince);
-    
-    ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer)session.getAttribute("provOfficeCode"));
-    ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
-    ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
-    ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
-    ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4, (Integer) session.getAttribute("provOfficeCode"));
-    ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
-    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7, (Integer) session.getAttribute("provOfficeCode"));
-    
-    ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(provincialRequests);
-    
-    
-    ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
-    ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
-    
-    ArrayList<CAPDEVPlan> allPlans = capdevDAO.getAllProvincialCAPDEVPlan((Integer) session.getAttribute("provOfficeCode"));
-    ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
-    ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
-    ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
-    ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<ARBO> qualifiedARBOs = arboDAO.getAllQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
 
-    
-    ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
+                ArrayList<CityMun> cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
+
+                ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(arbListProvince);
+                ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListProvince);
+
+                ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7, (Integer) session.getAttribute("provOfficeCode"));
+
+                ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(provincialRequests);
+
+                ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
+                ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
+
+                ArrayList<CAPDEVPlan> allPlans = capdevDAO.getAllProvincialCAPDEVPlan((Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
+
+                ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.getAttribute("provOfficeCode"));
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -116,7 +111,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Dashboard: <%out.print(addressDAO.getProvOffice((Integer)session.getAttribute("provOfficeCode")).getProvDesc());%>
+                        Dashboard: <%out.print(addressDAO.getProvOffice((Integer) session.getAttribute("provOfficeCode")).getProvDesc());%>
                     </h1>
                 </section>
 
@@ -199,7 +194,7 @@
                                                                                 <td><%out.print(arb.getArbStatusDesc());%></td>
                                                                             </tr>
                                                                             <%}
-                                                                                    }%>
+                                                                                }%>
 
                                                                         </tbody>
                                                                         <tfoot>
@@ -245,7 +240,7 @@
                                                                                 <td><%out.print(arb.getArbStatusDesc());%></td>
                                                                             </tr>
                                                                             <%}
-                                                                                    }%>
+                                                                                }%>
 
                                                                         </tbody>
                                                                         <tfoot>
@@ -520,7 +515,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <%          
+                                                        <%
                                                             for (APCPRequest r : releasedRequests) {
                                                                 ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                                         %>
@@ -593,11 +588,11 @@
                                                                                     <td><%=pda.getOtherReason()%></td>
                                                                                     <td><%=pda.getDateRecorded()%></td>
                                                                                     <td>
-                                                                                        <%if(pda.getDateSettled() != null){
-                                                                                            out.print(pda.getDateSettled());
-                                                                                        }else{
-                                                                                            out.print("Unsettled");
-                                                                                        }%>
+                                                                                        <%if (pda.getDateSettled() != null) {
+                                                                                                out.print(pda.getDateSettled());
+                                                                                            } else {
+                                                                                                out.print("Unsettled");
+                                                                                            }%>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <%}%>
@@ -672,8 +667,8 @@
                                                                         </thead>
                                                                         <tbody>
                                                                             <%
-                                                                                for(APCPRequest req : provincialRequests){
-                                                                                    for(APCPRelease rel : req.getReleases()){
+                                                                                for (APCPRequest req : provincialRequests) {
+                                                                                    for (APCPRelease rel : req.getReleases()) {
                                                                                         ARBO arbo = arboDAO.getARBOByID(req.getArboID());
                                                                                         User u = uDAO.searchUser(rel.getReleasedBy());
                                                                             %>
@@ -685,7 +680,7 @@
                                                                                 <td><%=u.getFullName()%></td>
                                                                             </tr>
                                                                             <%
-                                                                                    }                                                                            
+                                                                                    }
                                                                                 }
                                                                             %>
                                                                         </tbody>
@@ -798,9 +793,9 @@
                                                                         </thead>
                                                                         <tbody>
                                                                             <%
-                                                                            ReportsDAO rDAO = new ReportsDAO();
-                                                                            ArrayList<APCPRequest> accumulatedRequests = rDAO.getAllAccumulatedARBORequests(arboListProvince);
-                                                                                for(APCPRequest req : accumulatedRequests){
+                                                                                ReportsDAO rDAO = new ReportsDAO();
+                                                                                ArrayList<APCPRequest> accumulatedRequests = rDAO.getAllAccumulatedARBORequests(arboListProvince);
+                                                                                for (APCPRequest req : accumulatedRequests) {
                                                                                     ARBO arbo = arboDAO.getARBOByID(req.getArboID());
                                                                             %>
                                                                             <tr>
@@ -811,7 +806,9 @@
                                                                                 <td><%=currency.format(req.getLoanAmount())%></td>
                                                                                 <td><%=currency.format(req.getTotalReleasedAmount())%></td>
                                                                                 <td><%=currency.format(req.getYearlyReleasedAmount())%></td>
-                                                                                <td><%if(req.getDateLastRelease()!= null) out.print(req.getDateLastRelease());%></td>
+                                                                                <td><%if (req.getDateLastRelease() != null) {
+                                                                                        out.print(req.getDateLastRelease());
+                                                                                    }%></td>
                                                                                 <td><%=currency.format(req.getTotalOSBalance())%></td>
                                                                                 <td><%=currency.format(req.getTotalPastDueAmount())%></td>
                                                                                 <td><%=req.printAllPastDueReasons()%></td>
@@ -982,11 +979,11 @@
                                                                         </thead>
                                                                         <tbody>
                                                                             <%
-                                                                                for(PastDueAccount pda : pdaByRequestList){
+                                                                                for (PastDueAccount pda : pdaByRequestList) {
                                                                                     APCPRequest req = apcpRequestDAO.getRequestByID(pda.getRequestID());
                                                                                     ARBO arbo = arboDAO.getARBOByID(req.getArboID());
                                                                             %>
-                                                                            <%if(pda.getActive() == 1){%>
+                                                                            <%if (pda.getActive() == 1) {%>
                                                                             <tr>
                                                                                 <td><%=arbo.getArboName()%></td>
                                                                                 <td><%=req.getLoanTrackingNo()%></td>
@@ -1394,7 +1391,7 @@
                 var ctx2 = $('#lineCanvas').get(0).getContext('2d');
             <%
                 Chart line = new Chart();
-                String json2 = line.getCropHistory(crops,arbListProvince);
+                String json2 = line.getCropHistory(crops, arbListProvince);
             %>
                 new Chart(ctx2, <%out.print(json2);%>);
 

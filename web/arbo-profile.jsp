@@ -937,7 +937,7 @@
                 var ctx2 = $('#lineCanvas').get(0).getContext('2d');
             <%
                 Chart line = new Chart();
-                String json2 = line.getCropHistory2(crops,arbListARBO);
+                String json2 = line.getCropHistory(crops,arbListARBO);
             %>
                 new Chart(ctx2, <%out.print(json2);%>);
 

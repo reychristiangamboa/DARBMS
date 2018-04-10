@@ -35,7 +35,6 @@
     ArrayList<EducationLevel> educationLevel = arbDAO.getAllEducationLevel();
     ArrayList<RelationshipType> relationshipType = arbDAO.getAllRelationshipType();
     
-    
     APCPRelease apcpRelease = new APCPRelease();
     
     ArrayList<Crop> allCrops = cropDAO.getAllCrops(); 

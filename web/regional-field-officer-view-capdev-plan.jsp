@@ -17,10 +17,10 @@
             <%@include file="jspf/regional-field-officer-sidebar.jspf" %>
 
             <%
-                APCPRequest r = apcpRequestDAO.getRequestByID((Integer)request.getAttribute("requestID"));
+                APCPRequest r = apcpRequestDAO.getRequestByID((Integer) request.getAttribute("requestID"));
                 ARBO a = arboDAO.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
-                ArrayList<CAPDEVActivity> caList = capdevDAO.getCAPDEVPlanActivities((Integer)request.getAttribute("planID"));
+                ArrayList<CAPDEVActivity> caList = capdevDAO.getCAPDEVPlanActivities((Integer) request.getAttribute("planID"));
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -86,9 +86,9 @@
                                         </thead>
 
                                         <tbody>
-                                            <%for(CAPDEVActivity activity : caList){%>
+                                            <%for (CAPDEVActivity activity : caList) {%>
                                             <tr>
-                                                <td><a data-toggle="modal" data-target="#cleared-modal"></a><%out.print(activity.getActivityName());%></td>
+                                                <td><%out.print(activity.getActivityName());%></td>
                                                 <td><%out.print(activity.getActivityDate());%></td>
                                                 <td><%out.print(activity.getArbList().size());%></td>
                                             </tr>
@@ -97,15 +97,85 @@
 
                                     </table>   
                                 </div>
-                                <form method="post">
-                                    <div class="box-footer">
-                                        <input type="hidden" name="planID" value="<%out.print((Integer)request.getAttribute("planID"));%>">
-                                        <div class="btn-group pull-right">
-                                            <button type="submit" name="disapprove" onclick="form.action = 'DisapproveCAPDEVProposal'" class="btn btn-danger">Disapprove</button>
-                                            <button type="submit" name="approve" onclick="form.action = 'ApproveCAPDEVProposal'" class="btn btn-success">Approve</button>
-                                        </div>
+
+                                <div class="box-footer">
+                                    <div class="btn-group pull-right">
+                                        <button type="button" name="disapprove" class="btn btn-danger" data-toggle="modal" data-target="#disapprove">Disapprove</button>
+                                        <button type="button" name="approve" class="btn btn-success" data-toggle="modal" data-target="#approve">Approve</button>
                                     </div>
-                                </form>
+                                </div>
+
+
+                                <div class="modal fade" id="disapprove">
+                                    <div class="modal-dialog modal-sm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">Confirm Disapproval</h4>
+
+                                            </div>
+
+
+                                            <div class="modal-body" id="modalBody">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <form method="post">
+                                                <div class="box-footer">
+                                                    <input type="hidden" name="planID" value="<%out.print((Integer) request.getAttribute("planID"));%>">
+                                                    <div class="pull-right">
+                                                        <button type="submit" name="disapprove" onclick="form.action = 'DisapproveCAPDEVProposal'" class="btn btn-danger">Disapprove</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+
+                                        </div>
+                                        <!--                                            /.modal-content -->
+                                    </div>
+                                    <!--                                        /.modal-dialog -->
+                                </div>
+                                <div class="modal fade" id="approve">
+                                    <div class="modal-dialog modal-sm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">Confirm Approval</h4>
+
+                                            </div>
+
+
+                                            <div class="modal-body" id="modalBody">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <form method="post">
+                                                <div class="box-footer">
+                                                    <input type="hidden" name="planID" value="<%out.print((Integer) request.getAttribute("planID"));%>">
+                                                    <div class="btn-group pull-right">
+                                                        <button type="submit" name="approve" onclick="form.action = 'ApproveCAPDEVProposal'" class="btn btn-success">Approve</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+
+                                        </div>
+                                        <!--                                            /.modal-content -->
+                                    </div>
+                                    <!--                                        /.modal-dialog -->
+                                </div>
 
                             </div>
                         </div>
@@ -123,15 +193,15 @@
             $(document).ready(function () {
                 var ctx = $('#barCanvas').get(0).getContext('2d');
             <%
-                    Chart bar = new Chart();
-                    String json = bar.getBarChartEducation(arbList);
+                Chart bar = new Chart();
+                String json = bar.getBarChartEducation(arbList);
             %>
                 new Chart(ctx, <%out.print(json);%>);
 
                 var ctx3 = $('#pieCanvas').get(0).getContext('2d');
             <%
-                    Chart pie = new Chart();
-                    String json3 = pie.getPieChartGender(arbList);
+                Chart pie = new Chart();
+                String json3 = pie.getPieChartGender(arbList);
             %>
                 new Chart(ctx3, <%out.print(json3);%>);
             });

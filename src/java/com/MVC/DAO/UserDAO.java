@@ -26,7 +26,11 @@ public class UserDAO {
         Connection con = myFactory.getConnection();
         User u = new User();
         try {
-            String query = "SELECT * FROM `dar-bms`.users u JOIN ref_userType t ON u.userType=t.userType WHERE `email`=?";
+            String query = "SELECT * FROM `dar-bms`.users u "
+                    + "JOIN ref_userType t ON u.userType=t.userType "
+                    + "JOIN ref_provOffice p ON u.provOfficeCode=p.provOfficeCode "
+                    + "JOIN refregion r ON u.regOfficeCode=r.regCode "
+                    + "WHERE `email`=?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setString(1, email);
             ResultSet rs = pstmt.executeQuery();
@@ -41,7 +45,9 @@ public class UserDAO {
                 u.setUserTypeDesc(rs.getString("userTypeDesc"));
                 u.setActive(rs.getInt("active"));
                 u.setProvOfficeCode(rs.getInt("provOfficeCode"));
+                u.setProvOfficeDesc(rs.getString("provOfficeDesc"));
                 u.setRegOfficeCode(rs.getInt("regOfficeCode"));
+                u.setRegDesc(rs.getString("regDesc"));
             } else {
                 return null;
             }
