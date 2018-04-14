@@ -33,51 +33,64 @@ public class ImportARBO extends BaseServlet {
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         if (request.getParameter("import") != null) {
-            
+
             HttpSession session = request.getSession();
-            
+
             AddressDAO addressDAO = new AddressDAO();
             ARBODAO arboDAO = new ARBODAO();
             ArrayList<ARBO> arboList = new ArrayList();
 
             ArrayList dataHolder = readExcelFile(request.getParameter("file"));
-            
+
             ArrayList cellStoreArrayList = new ArrayList();
 
             for (int i = 1; i < dataHolder.size(); i++) {
-                
+
                 cellStoreArrayList = (ArrayList) dataHolder.get(i);
                 ARBO arbo = new ARBO();
                 arbo.setArboName(cellStoreArrayList.get(0).toString()); // GET ARBO NAME
-                
-                
-                int regCode = addressDAO.getRegCode(cellStoreArrayList.get(3).toString()); // GET REGION, TURN INTO INT
+
+                int arboType = arboDAO.getARBOType(cellStoreArrayList.get(1).toString());
+                arbo.setArboType(arboType);
+
+                int regCode = addressDAO.getRegCode(cellStoreArrayList.get(4).toString()); // GET REGION, TURN INTO INT
                 arbo.setArboRegion(regCode);
-                int provCode = addressDAO.getProvCode(cellStoreArrayList.get(2).toString(),regCode); // GET PROVINCE, TURN INTO INT
+                int provCode = addressDAO.getProvCode(cellStoreArrayList.get(3).toString(), regCode); // GET PROVINCE, TURN INTO INT
                 arbo.setArboProvince(provCode);
-                int cityMunCode = addressDAO.getCityMunCode(cellStoreArrayList.get(1).toString(),provCode,regCode); // GET CITY, TURN INTO INT
+                int cityMunCode = addressDAO.getCityMunCode(cellStoreArrayList.get(2).toString(), provCode, regCode); // GET CITY, TURN INTO INT
                 arbo.setArboCityMun(cityMunCode);
-                
-                if(cellStoreArrayList.get(4).toString().equalsIgnoreCase("No")){
+
+                if (cellStoreArrayList.get(5).toString().equalsIgnoreCase("No")) {
                     arbo.setAPCPQualified(0);
-                }else if(cellStoreArrayList.get(4).toString().equalsIgnoreCase("Yes")){
+                } else if (cellStoreArrayList.get(5).toString().equalsIgnoreCase("Yes")) {
                     arbo.setAPCPQualified(1);
                 }
-                
-                arbo.setProvOfficeCode((Integer)session.getAttribute("provOfficeCode"));
-                
-                
-                
+
+                String id = String.valueOf(provCode);
+                int size = arboDAO.getAllARBOsByProvince(provCode).size();
+                int counter = size + 1;
+
+                if (size <= 9) {
+                    id += "00" + counter;
+                } else if (size >= 10) {
+                    id += "0" + counter;
+                } else if (size >= 100) {
+                    id += counter;
+                }
+
+                int finalID = Integer.parseInt(id);
+
+                arbo.setArboID(finalID);
+
+                arbo.setProvOfficeCode((Integer) session.getAttribute("provOfficeCode"));
+
+                arboDAO.addARBO(arbo);
                 arboList.add(arbo);
             }
             
-            if (arboDAO.addARBOExcel(arboList)) {
-                request.setAttribute("success", "ARBOs imported!");
-                request.getRequestDispatcher("provincial-field-officer-add-arbo.jsp").forward(request, response);
-            } else {
-                request.setAttribute("errMessage", "Error in importing ARBO. Try again.");
-                request.getRequestDispatcher("provincial-field-officer-add-arbo.jsp").forward(request, response);
-            }
+            session.setAttribute("arboList", arboList);
+            request.getRequestDispatcher("provincial-field-officer-add-arbo.jsp").forward(request, response);
+
         }
     }
 

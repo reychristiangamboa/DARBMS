@@ -48,9 +48,6 @@ public class RecordActivityAssessment extends BaseServlet {
         ARBODAO arboDAO = new ARBODAO();
         LINKSFARMDAO dao = new LINKSFARMDAO();
 
-        ArrayList arbHolder = readExcelFile(request.getParameter("file"));
-        ArrayList cellStoreArrayList = new ArrayList();
-
         int activityID = Integer.parseInt(request.getParameter("activityID"));
         int planID = Integer.parseInt(request.getParameter("planID"));
         int clusterID = 0;
@@ -67,19 +64,26 @@ public class RecordActivityAssessment extends BaseServlet {
 
         ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(arbo.getArboID());
 
-        for (int a = 1; a < arbHolder.size(); a++) {
+        if (request.getParameter("import") != null) {
+            ArrayList arbHolder = readExcelFile(request.getParameter("file"));
+            ArrayList cellStoreArrayList = new ArrayList();
 
-            cellStoreArrayList = (ArrayList) arbHolder.get(a);
-            String lN = cellStoreArrayList.get(0).toString();
-            String fN = cellStoreArrayList.get(1).toString();
-            String mN = cellStoreArrayList.get(2).toString();
+            for (int a = 1; a < arbHolder.size(); a++) {
 
-            boolean isPart = false;
+                cellStoreArrayList = (ArrayList) arbHolder.get(a);
+                String lN = cellStoreArrayList.get(0).toString();
+                String fN = cellStoreArrayList.get(1).toString();
+                String mN = cellStoreArrayList.get(2).toString();
 
-            int arbID = arbDAO.getARBID(fN, mN, lN);
+                int arbID = arbDAO.getARBID(fN, mN, lN);
 
-            arbIDs.add(arbID);
-
+                arbIDs.add(arbID);
+            }
+        }else if(request.getParameter("manual") != null){
+            String[] attendees = request.getParameterValues("attended");
+            for(String attendee : attendees){
+                arbIDs.add(Integer.parseInt(attendee));
+            }
         }
 
         if (arbIDs.isEmpty()) {

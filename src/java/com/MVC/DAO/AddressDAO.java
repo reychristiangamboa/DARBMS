@@ -258,36 +258,17 @@ public class AddressDAO {
     }
     
     public ArrayList<Province> getAllProvOfficesMultipleReg(ArrayList<Integer> regionIDs) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
+        ArrayList<Province> allProvOffices = getAllProvOffices();
         ArrayList<Province> provList = new ArrayList();
-
-        try {
-            for (int id : regionIDs) {
-                String query = "SELECT * FROM `dar-bms`.ref_provoffice WHERE regCode=?";
-                PreparedStatement pstmt = con.prepareStatement(query);
-                pstmt.setInt(1, id);
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    Province p = new Province();
-                    p.setProvCode(rs.getInt("provOfficeCode"));
-                    p.setProvDesc(rs.getString("provOfficeDesc"));
-                    p.setRegCode(rs.getInt("regCode"));
+        
+        for(Province p : allProvOffices){
+            for(int id :regionIDs){
+                if(p.getRegCode() == id){
                     provList.add(p);
                 }
-                pstmt.close();
-                rs.close();
             }
-
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return provList;
     }
 
@@ -300,6 +281,35 @@ public class AddressDAO {
             String query = "SELECT * FROM `dar-bms`.refcitymun WHERE provCode=?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, provinceID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                CityMun cm = new CityMun();
+                cm.setCityMunCode(rs.getInt("cityMunCode"));
+                cm.setCityMunDesc(rs.getString("cityMunDesc"));
+                citymunList.add(cm);
+            }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return citymunList;
+    }
+    
+    public ArrayList<CityMun> getAllCityMuns() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<CityMun> citymunList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.refcitymun";
+            PreparedStatement pstmt = con.prepareStatement(query);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 CityMun cm = new CityMun();
@@ -439,69 +449,19 @@ public class AddressDAO {
         return citymunList;
     }
 
-    public ArrayList<CityMun> getAllCityMunsMultipleProv(ArrayList<Integer> provinceIDs) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        ArrayList<CityMun> citymunList = new ArrayList();
-
-        try {
-            for (int id : provinceIDs) {
-                String query = "SELECT * FROM `dar-bms`.refcitymun WHERE provCode=?";
-                PreparedStatement pstmt = con.prepareStatement(query);
-                pstmt.setInt(1, id);
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    CityMun cm = new CityMun();
-                    cm.setCityMunCode(rs.getInt("cityMunCode"));
-                    cm.setCityMunDesc(rs.getString("cityMunDesc"));
-                    citymunList.add(cm);
-                }
-                pstmt.close();
-                rs.close();
-            }
-
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return citymunList;
-    }
-
     public ArrayList<CityMun> getAllCityMunsByID(ArrayList<Integer> cityMunCodeList) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        ArrayList<CityMun> citymunList = new ArrayList();
-
-        try {
-            String query = "SELECT * FROM `dar-bms`.refcitymun WHERE cityMunCode=?";
-            for (int cityMunCode : cityMunCodeList) {
-                PreparedStatement pstmt = con.prepareStatement(query);
-                pstmt.setInt(1, cityMunCode);
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    CityMun cm = new CityMun();
-                    cm.setCityMunCode(rs.getInt("cityMunCode"));
-                    cm.setCityMunDesc(rs.getString("cityMunDesc"));
-                    citymunList.add(cm);
+        ArrayList<CityMun> allCityMun = getAllCityMuns();
+        ArrayList<CityMun> list = new ArrayList();
+        
+        for(CityMun c : allCityMun){
+            for(int id : cityMunCodeList){
+                if(c.getCityMunCode() == id){
+                    list.add(c);
                 }
-                pstmt.close();
-                rs.close();
             }
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return citymunList;
+        
+        return list;
     }
 
     public ArrayList<Barangay> getAllBarangays(int cityID) {

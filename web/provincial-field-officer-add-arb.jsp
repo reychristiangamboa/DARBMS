@@ -19,7 +19,18 @@
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
 
             <%
-            ARBO arbo = (ARBO) request.getAttribute("arbo");
+                ARBO arbo = new ARBO();
+                String source = "";
+                if (request.getAttribute("arbo") != null) {
+                    arbo = (ARBO) request.getAttribute("arbo");
+                } else if (session.getAttribute("arbo") != null) {
+                    arbo = (ARBO) session.getAttribute("arbo");
+                }
+
+                if (request.getAttribute("source") != null) {
+                    source = (String) request.getAttribute("source");
+                }
+
             %>
 
             <div class="content-wrapper">
@@ -174,7 +185,7 @@
                                                 <div class="form-group">
                                                     <label for="">Region</label>
                                                     <select class="form-control" id="regionDrop" name="arbRegion" onchange="chg()" style="width: 100%;" required>
-                                                        <%for(Region r: regionList){%>
+                                                        <%for (Region r : regionList) {%>
                                                         <option value="<%out.print(r.getRegCode());%>"> <%out.print(r.getRegDesc());%> </option>
                                                         <%}%>
                                                     </select>
@@ -187,7 +198,7 @@
                                                 <div class="form-group">
                                                     <label>Education Level</label>
                                                     <select name="educationalLevel" class="form-control" style="width: 100%;" required>
-                                                        <%for(EducationLevel e : educationLevel){%>
+                                                        <%for (EducationLevel e : educationLevel) {%>
                                                         <option value="<%=e.getEducationLevel()%>"><%out.print(e.getEducationLevelDesc());%></option>
                                                         <%}%>
                                                     </select>    
@@ -197,6 +208,12 @@
                                                 <div class="form-group">
                                                     <label for="landArea">Land Area</label>
                                                     <input type="text" name="landArea" class="form-control" id="landArea" placeholder="Ex. 3 Acres" required>    
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <div class="form-group">
+                                                    <label for="tin">Taxpayer's Identification No.</label>
+                                                    <input type="text" name="tin" class="form-control" id="tin" placeholder="Ex. 3 Acres" required>    
                                                 </div>
                                             </div>
                                         </div>
@@ -219,8 +236,17 @@
                                     <!-- /.box-body -->
 
                                     <div class="box-footer">
+                                        <%if (request.getAttribute("arbo") != null) {%>
                                         <input type="hidden" name="arboID" value="<%out.print(arbo.getArboID());%>">
+                                        <%}%>
                                         <button type="submit" name="manual" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
+                                        <%if (request.getAttribute("source") != null) {%>
+                                        <%if (source.equalsIgnoreCase("profile")) {%>
+                                        <a class="btn btn-success" href="ViewARBO?id=<%out.print(arbo.getArboID());%>">Confirm</a>
+                                        <%} else if (source.equalsIgnoreCase("import")) {%>
+                                        <a class="btn btn-success" href="provincial-field-officer-imported-arbo-list">Confirm</a>
+                                        <%}%>
+                                        <%}%>
                                     </div>
                                 </form>
 
@@ -304,7 +330,7 @@
                     e.preventDefault();
                     if (x < max_fields) { //max input box allowed
                         x++; //text box increment
-                        $(wrapper).append('<div class="row"><div class="col-xs-3"><div class="form-group"><label for="">Name</label><input type="text" name="dependentName[]" class="form-control" required></div></div><div class="col-xs-3"><label>Birthday</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dependentBirthday[]" class="form-control pull-right" id="datepicker"></div></div><div class="col-xs-3"><div class="form-group"><label for="EL">Education Level</label><select name="dependentEL[]" class="form-control" id="EL" style="width:100%;"><%for(EducationLevel e1 : educationLevel){%><option value="<%=e1.getEducationLevel()%>"><%out.print(e1.getEducationLevelDesc());%></option><%}%></select></div></div><div class="col-xs-3"><div class="form-group"><label for="Re">Relationship</label><select name="dependentR[]" class="form-control" id="Re" style="width:100%;"><%for(RelationshipType r : relationshipType){%><option value="<%=r.getRelationshipType()%>"><%out.print(r.getRelationshipTypeDesc());%></option><%}%></select></div></div></div>');
+                        $(wrapper).append('<div class="row"><div class="col-xs-3"><div class="form-group"><label for="">Name</label><input type="text" name="dependentName[]" class="form-control" required></div></div><div class="col-xs-3"><label>Birthday</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dependentBirthday[]" class="form-control pull-right" id="datepicker"></div></div><div class="col-xs-3"><div class="form-group"><label for="EL">Education Level</label><select name="dependentEL[]" class="form-control" id="EL" style="width:100%;"><%for (EducationLevel e1 : educationLevel) {%><option value="<%=e1.getEducationLevel()%>"><%out.print(e1.getEducationLevelDesc());%></option><%}%></select></div></div><div class="col-xs-3"><div class="form-group"><label for="Re">Relationship</label><select name="dependentR[]" class="form-control" id="Re" style="width:100%;"><%for (RelationshipType r : relationshipType) {%><option value="<%=r.getRelationshipType()%>"><%out.print(r.getRelationshipTypeDesc());%></option><%}%></select></div></div></div>');
                     }
                 });
 
@@ -312,7 +338,7 @@
                     e.preventDefault();
                     if (y < max_fields) { //max input box allowed
                         y++; //text box increment
-                        $(wrapper2).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Crop">Crop</label><select id="select" class="form-control" name="crops[]" style="width: 100%;"><%for(Crop c : allCrops){%><option value="<%out.print(c.getCropType());%>"><%out.print(c.getCropTypeDesc());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label for="">Start Date: </label><input type="date" name="startDate[]" class="form-control" required /></div></div><div class="col-xs-4"><div class="form-group"><label for="">End Date: </label><input type="date" name="endDate[]" class="form-control" /></div></div></div>');
+                        $(wrapper2).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Crop">Crop</label><select id="select" class="form-control" name="crops[]" style="width: 100%;"><%for (Crop c : allCrops) {%><option value="<%out.print(c.getCropType());%>"><%out.print(c.getCropTypeDesc());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label for="">Start Date: </label><input type="date" name="startDate[]" class="form-control" required /></div></div><div class="col-xs-4"><div class="form-group"><label for="">End Date: </label><input type="date" name="endDate[]" class="form-control" /></div></div></div>');
                     }
                 });
             });

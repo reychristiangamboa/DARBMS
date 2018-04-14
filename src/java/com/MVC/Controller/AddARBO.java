@@ -31,19 +31,30 @@ public class AddARBO extends BaseServlet {
             ARBODAO arboDAO = new ARBODAO();
             ARBO arbo = new ARBO();
 
+            String id = String.valueOf(Integer.parseInt(request.getParameter("arboProvince")));
+            int size = arboDAO.getAllARBOsByProvince(Integer.parseInt(request.getParameter("arboProvince"))).size();
+            int counter = size + 1;
+
+            if (size <= 9) {
+                id += "00" + counter;
+            } else if (size >= 10) {
+                id += "0" + counter;
+            } else if (size >= 100) {
+                id += counter;
+            }
+
+            int finalID = Integer.parseInt(id);
+
+            arbo.setArboID(finalID);
             arbo.setArboName(request.getParameter("arboName"));
+            arbo.setArboType(Integer.parseInt(request.getParameter("arboType")));
             arbo.setArboCityMun(Integer.parseInt(request.getParameter("arboCityMun")));
             arbo.setArboProvince(Integer.parseInt(request.getParameter("arboProvince")));
             arbo.setArboRegion(Integer.parseInt(request.getParameter("arboRegion")));
             arbo.setProvOfficeCode((Integer) session.getAttribute("provOfficeCode"));
 
-            if (arboDAO.addARBO(arbo)) {
-                request.setAttribute("success", "ARBO added!");
-                request.getRequestDispatcher("provincial-field-officer-add-arbo.jsp").forward(request, response);
-            } else {
-                request.setAttribute("errMessage", "Error in adding ARBO. Try again.");
-                request.getRequestDispatcher("provincial-field-officer-add-arbo.jsp").forward(request, response);
-            }
+            session.setAttribute("arbo", arbo);
+            request.getRequestDispatcher("provincial-field-officer-add-arb.jsp").forward(request, response);
 
         }
     }

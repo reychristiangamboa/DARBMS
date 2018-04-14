@@ -277,10 +277,6 @@
         <servlet-class>com.MVC.Controller.FilterCAPDEVRequests</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>FilterRegionalCAPDEVProposals</servlet-name>
-        <servlet-class>com.MVC.Controller.FilterRegionalCAPDEVProposals</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>RegionalCityFilterRefresh</servlet-name>
         <servlet-class>com.MVC.Controller.RegionalCityFilterRefresh</servlet-class>
     </servlet>
@@ -290,6 +286,7 @@
     </servlet>
     <servlet>
         <servlet-name>ViewReport</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewReport</servlet-class>
         <servlet-class>com.MVC.Controller.ViewReport</servlet-class>
     </servlet>
     <servlet>
@@ -375,6 +372,10 @@
     <servlet>
         <servlet-name>ApproveProjectSite</servlet-name>
         <servlet-class>com.MVC.Controller.ApproveProjectSite</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ConfirmImportARBO</servlet-name>
+        <servlet-class>com.MVC.Controller.ConfirmImportARBO</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -751,6 +752,10 @@
     <servlet-mapping>
         <servlet-name>ApproveProjectSite</servlet-name>
         <url-pattern>/ApproveProjectSite</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConfirmImportARBO</servlet-name>
+        <url-pattern>/ConfirmImportARBO</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

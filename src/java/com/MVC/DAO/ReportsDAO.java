@@ -87,8 +87,11 @@ public class ReportsDAO {
 
             String query = "SELECT * FROM apcp_requests r "
                     + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN ref_loanReason l ON r.loanReason=l.loanReason "
+                    + "JOIN ref_apcpType t ON r.apcpType=t.apcpType "
                     + "JOIN arbos a ON r.arboID=a.arboID "
-                    + "WHERE a.arboID = ? AND (r.requestStatus =4 OR r.requestStatus =5 OR r.requestStatus =7) ORDER BY r.arboID ";
+                    + "WHERE a.arboID = ? AND (r.requestStatus =4 OR r.requestStatus =5 "
+                    + "OR r.requestStatus =7) ORDER BY r.arboID ";
             for (ARBO arbo : arboList) {
                 PreparedStatement pstmt = con.prepareStatement(query);
                 pstmt.setInt(1, arbo.getArboID());
@@ -107,7 +110,11 @@ public class ReportsDAO {
                     r.setRequestedTo(rs.getInt("requestedTo"));
                     r.setHectares(rs.getDouble("hectares"));
                     r.setLoanAmount(rs.getDouble("loanAmount"));
-                    r.setLoanReason(rs.getString("loanReason"));
+                    r.setApcpType(rs.getInt("apcpType"));
+                    r.setApcpTypeDesc(rs.getString("apcpTypeDesc"));
+                    r.setLoanReason(rs.getInt("loanReason"));
+                    r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
+                    r.setOtherLoanReason(rs.getString("otherLoanReason"));
                     r.setRemarks(rs.getString("remarks"));
                     r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
                     r.setRequestStatus(rs.getInt("requestStatus"));
@@ -123,7 +130,6 @@ public class ReportsDAO {
             }
             boolean firstInstance = true;
             APCPRequest request = new APCPRequest();
-            System.out.println(apcpRequest.size());
             for (APCPRequest req : apcpRequest) {
 
                 if (firstInstance) {
@@ -206,6 +212,8 @@ public class ReportsDAO {
 
             String query = "SELECT * FROM apcp_requests r "
                     + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN ref_loanReason l ON r.loanReason=l.loanReason "
+                    + "JOIN ref_apcpType t ON r.apcpType=t.apcpType "
                     + "JOIN arbos a ON r.arboID=a.arboID "
                     + "WHERE a.arboID = ? AND (r.requestStatus =4 OR r.requestStatus =5 OR r.requestStatus =7) ORDER BY r.arboID ";
             for (ARBO arbo : arboList) {
@@ -226,7 +234,11 @@ public class ReportsDAO {
                     r.setRequestedTo(rs.getInt("requestedTo"));
                     r.setHectares(rs.getDouble("hectares"));
                     r.setLoanAmount(rs.getDouble("loanAmount"));
-                    r.setLoanReason(rs.getString("loanReason"));
+                    r.setApcpType(rs.getInt("apcpType"));
+                    r.setApcpTypeDesc(rs.getString("apcpTypeDesc"));
+                    r.setLoanReason(rs.getInt("loanReason"));
+                    r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
+                    r.setOtherLoanReason(rs.getString("otherLoanReason"));
                     r.setRemarks(rs.getString("remarks"));
                     r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
                     r.setRequestStatus(rs.getInt("requestStatus"));

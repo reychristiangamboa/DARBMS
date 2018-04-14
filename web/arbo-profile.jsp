@@ -60,7 +60,6 @@
 
             <%
                 ARBO arbo = (ARBO) request.getAttribute("arbo");
-                System.out.print(arbo.getArboName());
                 ARBODAO dao = new ARBODAO();
                 ARBDAO dao2 = new ARBDAO();
                 CropDAO dao3 = new CropDAO();
@@ -107,11 +106,11 @@
                                             </p>
                                         </li>
                                         <li class="list-group-item">
-                                            <b><i class="fa fa-user margin-r-5"></i>Members</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%=dao.getARBCount(arbo.getArboID())%></a>
+                                            <b><i class="fa fa-user margin-r-5"></i>Members</b> <a class="pull-right" data-toggle="modal" data-target="#arbs"><%out.print(arbo.getArbList().size());%></a>
                                         </li>
                                         <%if((Integer)session.getAttribute("userType") == 3){%>
                                         <li class="list-group-item text-center">
-                                            <a class="btn btn-primary btn-lg" href="ProceedAddARB?id=<%out.print(arbo.getArboID());%>"><i class="fa fa-user-plus margin-r-5"></i>Add ARB</a>
+                                            <a class="btn btn-primary btn-lg" href="ProceedAddARB?id=<%out.print(arbo.getArboID());%>&source=profile"><i class="fa fa-user-plus margin-r-5"></i>Add ARB</a>
                                         </li>
                                         <%}%>
                                     </ul>

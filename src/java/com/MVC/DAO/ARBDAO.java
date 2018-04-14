@@ -50,6 +50,8 @@ public class ARBDAO {
                 arb.setFirstName(rs.getString("firstName"));
                 arb.setMiddleName(rs.getString("middleName"));
                 arb.setLastName(rs.getString("lastName"));
+                arb.setTIN(rs.getInt("TIN"));
+                arb.setBirthday(rs.getDate("birthday"));
                 arb.setMemberSince(rs.getDate("memberSince"));
                 arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
                 arb.setBrgyCode(rs.getInt("brgyCode"));
@@ -110,6 +112,8 @@ public class ARBDAO {
                 arb.setFirstName(rs.getString("firstName"));
                 arb.setMiddleName(rs.getString("middleName"));
                 arb.setLastName(rs.getString("lastName"));
+                arb.setTIN(rs.getInt("TIN"));
+                arb.setBirthday(rs.getDate("birthday"));
                 arb.setMemberSince(rs.getDate("memberSince"));
                 arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
                 arb.setBrgyCode(rs.getInt("brgyCode"));
@@ -147,6 +151,21 @@ public class ARBDAO {
     }
 
     public ArrayList<ARB> getAllARBsOfARBOs(ArrayList<ARBO> arboList) {
+        ArrayList<ARB> allARBs = getAllARBs();
+        ArrayList<ARB> list = new ArrayList();
+        
+        for(ARB arb : allARBs){
+            for(ARBO arbo : arboList){
+                if(arb.getArboID() == arbo.getArboID()){
+                    list.add(arb);
+                }
+            }
+        }
+        
+        return list;
+    }
+
+    public ArrayList<ARB> getAllARBs() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<ARB> arbList = new ArrayList();
@@ -158,44 +177,44 @@ public class ARBDAO {
                     + "JOIN `dar-bms`.refbrgy b ON a.brgyCode=b.brgyCode "
                     + "JOIN `dar-bms`.refcitymun c ON a.cityMunCode=c.citymunCode "
                     + "JOIN `dar-bms`.refprovince p ON a.provCode=p.provCode "
-                    + "JOIN `dar-bms`.refregion r ON a.regCode=r.regCode "
-                    + "WHERE `arboID`=?";
-            for (ARBO arbo : arboList) {
-                PreparedStatement pstmt = con.prepareStatement(query);
-                pstmt.setInt(1, arbo.getArboID());
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    ARB arb = new ARB();
-                    arb.setArbID(rs.getInt("arbID"));
-                    arb.setArboID(rs.getInt("arboID"));
-                    arb.setFirstName(rs.getString("firstName"));
-                    arb.setMiddleName(rs.getString("middleName"));
-                    arb.setLastName(rs.getString("lastName"));
-                    arb.setMemberSince(rs.getDate("memberSince"));
-                    arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
-                    arb.setBrgyCode(rs.getInt("brgyCode"));
-                    arb.setBrgyDesc(rs.getString("brgyDesc"));
-                    arb.setCityMunCode(rs.getInt("cityMunCode"));
-                    arb.setCityMunDesc(rs.getString("citymunDesc"));
-                    arb.setProvCode(rs.getInt("provCode"));
-                    arb.setProvDesc(rs.getString("provDesc"));
-                    arb.setRegCode(rs.getInt("regCode"));
-                    arb.setRegDesc(rs.getString("regDesc"));
-                    arb.setGender(rs.getString("gender"));
-                    arb.setEducationLevel(rs.getInt("educationLevel"));
-                    arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
-                    arb.setLandArea(rs.getDouble("landArea"));
-                    arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
-                    arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
-                    arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
-                    arb.setArbStatus(rs.getInt("arbStatus"));
-                    arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
-                    arb.setClusterID(rs.getInt("clusterID"));
-                    arbList.add(arb);
-                }
-                pstmt.close();
-                rs.close();
+                    + "JOIN `dar-bms`.refregion r ON a.regCode=r.regCode ";
+
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ARB arb = new ARB();
+                arb.setArbID(rs.getInt("arbID"));
+                arb.setArboID(rs.getInt("arboID"));
+                arb.setFirstName(rs.getString("firstName"));
+                arb.setMiddleName(rs.getString("middleName"));
+                arb.setLastName(rs.getString("lastName"));
+                arb.setTIN(rs.getInt("TIN"));
+                arb.setBirthday(rs.getDate("birthday"));
+                arb.setMemberSince(rs.getDate("memberSince"));
+                arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
+                arb.setBrgyCode(rs.getInt("brgyCode"));
+                arb.setBrgyDesc(rs.getString("brgyDesc"));
+                arb.setCityMunCode(rs.getInt("cityMunCode"));
+                arb.setCityMunDesc(rs.getString("citymunDesc"));
+                arb.setProvCode(rs.getInt("provCode"));
+                arb.setProvDesc(rs.getString("provDesc"));
+                arb.setRegCode(rs.getInt("regCode"));
+                arb.setRegDesc(rs.getString("regDesc"));
+                arb.setGender(rs.getString("gender"));
+                arb.setEducationLevel(rs.getInt("educationLevel"));
+                arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
+                arb.setLandArea(rs.getDouble("landArea"));
+                arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
+                arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
+                arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
+                arb.setArbStatus(rs.getInt("arbStatus"));
+                arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
+                arb.setClusterID(rs.getInt("clusterID"));
+                arbList.add(arb);
             }
+            pstmt.close();
+            rs.close();
+
             con.close();
         } catch (SQLException ex) {
             try {
@@ -325,17 +344,18 @@ public class ARBDAO {
         return dependentList;
     }
 
-    public int addARB(ARB arb) {
+    public boolean addARB(ARB arb) {
         PreparedStatement pstmt = null;
         Connection con = null;
+        boolean success = false;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`arbs` (`arboID`, `arboRepresentative`, `firstName`, `middleName`, "
                     + "`lastName`, `memberSince`,`arbUnitNumStreet`,`brgyCode`,`cityMunCode`,`provCode`,`regCode`, "
-                    + "`gender`, `educationLevel`, `landArea`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-            pstmt = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+                    + "`gender`, `educationLevel`, `landArea`,`TIN`,`arbID`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+            pstmt = con.prepareStatement(query);
             pstmt.setInt(1, arb.getArboID());
             pstmt.setInt(2, arb.getArboRepresentative());
             pstmt.setString(3, arb.getFirstName());
@@ -350,18 +370,14 @@ public class ARBDAO {
             pstmt.setString(12, arb.getGender());
             pstmt.setInt(13, arb.getEducationLevel());
             pstmt.setDouble(14, arb.getLandArea());
-
+            pstmt.setInt(15, arb.getTIN());
+            pstmt.setInt(16, arb.getArbID());
             pstmt.executeUpdate();
-            ResultSet rs = pstmt.getGeneratedKeys();
 
-            if (rs.next()) {
-                int n = rs.getInt(1);
-                pstmt.close();
-                rs.close();
-                con.commit();
-                con.close();
-                return n;
-            }
+            pstmt.close();
+            con.commit();
+            con.close();
+            success = true;
 
         } catch (Exception ex) {
             try {
@@ -371,7 +387,7 @@ public class ARBDAO {
             }
             Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return success;
     }
 
     public boolean addCrops(int arbID, ArrayList<Crop> cropList) {
@@ -470,7 +486,7 @@ public class ARBDAO {
         }
         return id;
     }
-    
+
     public int getRelationshipType(String relationshipType) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -706,16 +722,16 @@ public class ARBDAO {
         return false;
     }
 
-    public boolean checkIfARBExists(ARB arb1){
+    public boolean checkIfARBExists(ARB arb1) {
         boolean success = false;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
-        
+
         try {
             String query = "SELECT * FROM arbs";
             PreparedStatement p = con.prepareStatement(query);
             ResultSet rs = p.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 ARB arb = new ARB();
                 arb.setArbID(rs.getInt("arbID"));
                 arb.setArboID(rs.getInt("arboID"));
@@ -734,11 +750,11 @@ public class ARBDAO {
                 arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
                 arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
                 arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
-                
-                if(arb1.toString().equalsIgnoreCase(arb.toString())){
+
+                if (arb1.toString().equalsIgnoreCase(arb.toString())) {
                     success = true;
                 }
-                
+
             }
             rs.close();
             p.close();
@@ -751,10 +767,10 @@ public class ARBDAO {
             }
             Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return success;
     }
-    
+
     public ArrayList<EducationLevel> getAllEducationLevel() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -782,7 +798,7 @@ public class ARBDAO {
         }
         return educations;
     }
-    
+
     public ArrayList<RelationshipType> getAllRelationshipType() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -810,5 +826,5 @@ public class ARBDAO {
         }
         return type;
     }
-    
+
 }

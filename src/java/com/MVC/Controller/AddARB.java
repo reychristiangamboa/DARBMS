@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -31,23 +32,46 @@ public class AddARB extends BaseServlet {
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        
         if (request.getParameter("manual") != null) {
-            
+
+            HttpSession session = request.getSession();
+
             ArrayList<Dependent> dependentList = new ArrayList();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-            System.out.println(request.getParameter("memberSince"));
 
             ARBDAO arbDAO = new ARBDAO();
             ARBODAO arboDAO = new ARBODAO();
 
-            int arboID = Integer.parseInt(request.getParameter("arboID"));
-            ARBO arbo = arboDAO.getARBOByID(arboID);
-
             ARB arb = new ARB();
 
-            arb.setArboID(arboID);
+            
+
+            ARBO arbo = new ARBO();
+            if (request.getParameter("arboID") != null) {
+                int arboID = Integer.parseInt(request.getParameter("arboID"));
+                arbo = arboDAO.getARBOByID(arboID);
+                arb.setArboID(arboID);
+            } else {
+                arbo = (ARBO) session.getAttribute("arbo");
+                arboDAO.addARBO(arbo);
+                arb.setArboID(arbo.getArboID());
+            }
+            
+            String id = String.valueOf(arbo.getArboID());
+            int size = arbo.getArbList().size();
+            int counter = size + 1;
+
+            if (size <= 9) {
+                id += "00" + counter;
+            } else if (size >= 10) {
+                id += "0" + counter;
+            } else if (size >= 100) {
+                id += counter;
+            }
+
+            int finalID = Integer.parseInt(id);
+
+            arb.setArbID(finalID);
 
             if (request.getParameter("arboRep").equals("Yes")) {
                 arb.setArboRepresentative(1);
@@ -85,7 +109,8 @@ public class AddARB extends BaseServlet {
                 request.setAttribute("arbo", arbo);
                 request.getRequestDispatcher("provincial-field-officer-add-arb.jsp").forward(request, response);
             } else {
-                int arbID = arbDAO.addARB(arb);
+                
+                arbDAO.addARB(arb);
 
                 String[] crops = request.getParameterValues("crops[]");
                 String[] startDateArr = request.getParameterValues("startDate[]");
@@ -130,7 +155,6 @@ public class AddARB extends BaseServlet {
                     String[] el = request.getParameterValues("dependentEL[]");
                     String[] re = request.getParameterValues("dependentR[]");
                     System.out.println(re[0]);
-                    
 
                     for (int x = 0; x < names.length; x++) {
 
@@ -156,8 +180,8 @@ public class AddARB extends BaseServlet {
 
                 }
 
-                if (arbDAO.addCrops(arbID, cropList)) {
-                    if (arbDAO.addDependents(arbID, dependentList)) {
+                if (arbDAO.addCrops(arb.getArbID(), cropList)) {
+                    if (arbDAO.addDependents(arb.getArbID(), dependentList)) {
                         request.setAttribute("success", "ARB added!");
                         request.setAttribute("arbo", arbo);
                         request.getRequestDispatcher("provincial-field-officer-add-arb.jsp").forward(request, response);

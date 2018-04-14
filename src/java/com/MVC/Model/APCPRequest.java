@@ -17,7 +17,11 @@ public class APCPRequest {
 
     private int requestID;
     private int arboID;
-    private String loanReason;
+    private int apcpType;
+    private String apcpTypeDesc;
+    private int loanReason;
+    private String loanReasonDesc;
+    private String otherLoanReason;
     private double loanAmount;
     private double hectares;
     private Date dateRequested;
@@ -31,6 +35,7 @@ public class APCPRequest {
     private String remarks;
     private int requestStatus;
     private String requestStatusDesc;
+    private int isNewAccessingRequest;
     private Date farmPlanDate;
     private Date businessPlanDate;
     private Date bankRequirementsDate;
@@ -39,6 +44,7 @@ public class APCPRequest {
     private ArrayList<PastDueAccount> unsettledPastDueAccounts = new ArrayList();
     private ArrayList<APCPRelease> releases = new ArrayList();
     private ArrayList<Repayment> repayments = new ArrayList();
+    private ArrayList<ARB> recipients = new ArrayList();
 
     private double totalReleasedAmount;
     private double yearlyReleasedAmount;
@@ -58,17 +64,50 @@ public class APCPRequest {
     public int getArboID() {
         return arboID;
     }
+    
 
     public void setArboID(int arboID) {
         this.arboID = arboID;
     }
 
-    public String getLoanReason() {
+    public int getApcpType() {
+        return apcpType;
+    }
+
+    public void setApcpType(int apcpType) {
+        this.apcpType = apcpType;
+    }
+
+    public String getApcpTypeDesc() {
+        return apcpTypeDesc;
+    }
+
+    public void setApcpTypeDesc(String apcpTypeDesc) {
+        this.apcpTypeDesc = apcpTypeDesc;
+    }
+
+    public int getLoanReason() {
         return loanReason;
     }
 
-    public void setLoanReason(String loanReason) {
+    public void setLoanReason(int loanReason) {
         this.loanReason = loanReason;
+    }
+
+    public String getLoanReasonDesc() {
+        return loanReasonDesc;
+    }
+
+    public void setLoanReasonDesc(String loanReasonDesc) {
+        this.loanReasonDesc = loanReasonDesc;
+    }
+    
+    public String getOtherLoanReason() {
+        return otherLoanReason;
+    }
+
+    public void setOtherLoanReason(String loanReason) {
+        this.otherLoanReason = loanReason;
     }
 
     public double getLoanAmount() {
@@ -151,6 +190,14 @@ public class APCPRequest {
         this.requestStatusDesc = requestStatusDesc;
     }
 
+    public int getIsNewAccessingRequest() {
+        return isNewAccessingRequest;
+    }
+
+    public void setIsNewAccessingRequest(int isNewAccessingRequest) {
+        this.isNewAccessingRequest = isNewAccessingRequest;
+    }
+    
     public int getRequestedTo() {
         return requestedTo;
     }
@@ -222,9 +269,16 @@ public class APCPRequest {
     public void setUnsettledPastDueAccounts(ArrayList<PastDueAccount> unsettledPastDueAccounts) {
         this.unsettledPastDueAccounts = unsettledPastDueAccounts;
     }
-    
-    
 
+    public ArrayList<ARB> getRecipients() {
+        return recipients;
+    }
+
+    public void setRecipients(ArrayList<ARB> recipients) {
+        this.recipients = recipients;
+    }
+    
+    
     public double getTotalPDAAmountPerRequest() {
         double val = 0;
         for (PastDueAccount pda : this.unsettledPastDueAccounts) {

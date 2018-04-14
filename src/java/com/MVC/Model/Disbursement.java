@@ -21,6 +21,7 @@ public class Disbursement {
     private double OSBalance;
     private Date dateDisbursed;
     private int disbursedBy;
+    private ArrayList<Repayment> arbRepayments = new ArrayList();
 
     public int getDisbursementID() {
         return disbursementID;
@@ -77,6 +78,16 @@ public class Disbursement {
     public void setDisbursedBy(int disbursedBy) {
         this.disbursedBy = disbursedBy;
     }
+
+    public ArrayList<Repayment> getArbRepayments() {
+        return arbRepayments;
+    }
+
+    public void setArbRepayments(ArrayList<Repayment> arbRepayments) {
+        this.arbRepayments = arbRepayments;
+    }
+    
+    
     
     
 

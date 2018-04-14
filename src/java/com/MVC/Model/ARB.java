@@ -13,10 +13,12 @@ import java.util.ArrayList;
  * @author Rey Christian
  */
 public class ARB {
-    
+
     private int arbID;
     private int arboID;
     private int arboRepresentative;
+    private int TIN;
+    private Date birthday;
     private String firstName;
     private String middleName;
     private String lastName;
@@ -43,7 +45,8 @@ public class ARB {
     private int arbActive;
     private int isPresent;
     private int clusterID;
-    
+    private ArrayList<CAPDEVActivity> activities = new ArrayList();
+    private ArrayList<Repayment> repayments = new ArrayList();
 
     public ARB() {
     }
@@ -70,6 +73,22 @@ public class ARB {
 
     public void setArboRepresentative(int arboRepresentative) {
         this.arboRepresentative = arboRepresentative;
+    }
+
+    public int getTIN() {
+        return TIN;
+    }
+
+    public void setTIN(int TIN) {
+        this.TIN = TIN;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
     public String getFirstName() {
@@ -199,7 +218,7 @@ public class ARB {
     public void setCurrentCrops(ArrayList<Crop> currentCrops) {
         this.currentCrops = currentCrops;
     }
-    
+
     public String getGender() {
         return gender;
     }
@@ -207,7 +226,7 @@ public class ARB {
     public void setGender(String gender) {
         this.gender = gender;
     }
-    
+
     public int getEducationLevel() {
         return educationLevel;
     }
@@ -223,7 +242,7 @@ public class ARB {
     public void setEducationLevelDesc(String educationLevelDesc) {
         this.educationLevelDesc = educationLevelDesc;
     }
-    
+
     public double getLandArea() {
         return landArea;
     }
@@ -255,7 +274,7 @@ public class ARB {
     public void setArbStatusDesc(String arbStatusDesc) {
         this.arbStatusDesc = arbStatusDesc;
     }
-    
+
     public int getArbActive() {
         return arbActive;
     }
@@ -263,16 +282,16 @@ public class ARB {
     public void setArbActive(int arbActive) {
         this.arbActive = arbActive;
     }
-    
-    public String getFullName(){
+
+    public String getFullName() {
         return this.firstName + " " + this.middleName + " " + this.lastName;
     }
-    
-    public String getFLName(){
+
+    public String getFLName() {
         return this.firstName + " " + this.lastName;
     }
-    
-    public String getFullAddress(){
+
+    public String getFullAddress() {
         return this.arbUnitNumStreet + ", " + this.cityMunDesc + ", " + this.brgyDesc + ", " + this.provDesc + ", " + this.regDesc;
     }
 
@@ -283,10 +302,10 @@ public class ARB {
     public void setIsPresent(int isPresent) {
         this.isPresent = isPresent;
     }
-    
-    public String printAllCrops(){
+
+    public String printAllCrops() {
         StringBuilder sb = new StringBuilder();
-        for(Crop c : currentCrops){
+        for (Crop c : currentCrops) {
             sb.append(c.getCropTypeDesc() + " ");
         }
         return sb.toString();
@@ -299,25 +318,39 @@ public class ARB {
     public void setClusterID(int clusterID) {
         this.clusterID = clusterID;
     }
+
+    public ArrayList<CAPDEVActivity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(ArrayList<CAPDEVActivity> activities) {
+        this.activities = activities;
+    }
+
+    public ArrayList<Repayment> getRepayments() {
+        return repayments;
+    }
+
+    public void setRepayments(ArrayList<Repayment> repayments) {
+        this.repayments = repayments;
+    }
     
     
 
     @Override
     public String toString() {
-        return this.firstName + " " 
-                + this.middleName + " " 
-                + this.lastName + " " 
-                + this.gender + " " 
-                + this.arbUnitNumStreet + " " 
-                + this.brgyCode + " " 
-                + this.cityMunCode + " " 
-                + this.provCode + " " 
-                + this.regCode + " " 
-                + this.landArea + " " 
-                + this.memberSince + " " 
+        return this.firstName + " "
+                + this.middleName + " "
+                + this.lastName + " "
+                + this.gender + " "
+                + this.arbUnitNumStreet + " "
+                + this.brgyCode + " "
+                + this.cityMunCode + " "
+                + this.provCode + " "
+                + this.regCode + " "
+                + this.landArea + " "
+                + this.memberSince + " "
                 + this.educationLevel;
     }
-    
-    
 
 }

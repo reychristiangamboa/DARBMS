@@ -64,7 +64,23 @@ public class ImportARB extends BaseServlet {
             for (int i = 1; i < arbHolder.size(); i++) {
                 storeARB = (ArrayList) arbHolder.get(i);
                 ARB arb = new ARB();
+
+                String id = String.valueOf(arbo.getArboID());
+                int size = arbo.getArbList().size();
+                int counter = size + 1;
+
+                if (size <= 9) {
+                    id += "00" + counter;
+                } else if (size >= 10) {
+                    id += "0" + counter;
+                } else if (size >= 100) {
+                    id += counter;
+                }
+
+                int finalID = Integer.parseInt(id);
                 
+                arb.setArbID(finalID);
+
                 arb.setArboRepresentative(0);
                 arb.setArboID(arboID);
 
@@ -93,10 +109,9 @@ public class ImportARB extends BaseServlet {
                 arb.setBrgyCode(addressDAO.getBrgyCode(storeARB.get(6).toString(), arb.getCityMunCode(), arb.getProvCode(), arb.getRegCode()));
                 arb.setEducationLevel(arbDAO.getEducationalLevel(storeARB.get(10).toString()));
                 arb.setLandArea(Double.parseDouble(storeARB.get(11).toString()));
-                
-                
+                arb.setTIN(Integer.parseInt(storeARB.get(12).toString()));
 
-                int arbID = arbDAO.addARB(arb);
+                arbDAO.addARB(arb);
 
                 ArrayList<Dependent> dependentList = new ArrayList();
                 for (int j = 1; j < dependentHolder.size(); j++) {
@@ -125,7 +140,7 @@ public class ImportARB extends BaseServlet {
                     }
                 }
 
-                arbDAO.addDependents(arbID, dependentList);
+                arbDAO.addDependents(arb.getArbID(), dependentList);
 
                 ArrayList<Crop> cropList = new ArrayList();
                 for (int x = 1; x < cropHolder.size(); x++) {
@@ -133,7 +148,7 @@ public class ImportARB extends BaseServlet {
                     Crop c = new Crop();
 
                     if (storeCrop.get(3).toString().equalsIgnoreCase(arb.getFullName())) {
-                        c.setArbID(arbID);
+                        c.setArbID(arb.getArbID());
                         c.setCropType(arbDAO.getCrop(storeCrop.get(0).toString()));
 
                         java.sql.Date startDate = null;
@@ -161,15 +176,13 @@ public class ImportARB extends BaseServlet {
                             Logger.getLogger(ImportARB.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         c.setEndDate(endDate);
-                        System.out.println(c.getStartDate());
-                        System.out.println(c.getEndDate());
                     }
-                    
+
                     cropList.add(c);
                 }
-                
-                arbDAO.addCrops(arbID, cropList);
-                
+
+                arbDAO.addCrops(arb.getArbID(), cropList);
+
                 count++;
 
             }

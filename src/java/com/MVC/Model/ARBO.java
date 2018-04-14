@@ -5,6 +5,8 @@
  */
 package com.MVC.Model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Rey Christian
@@ -13,6 +15,8 @@ public class ARBO {
     
     private int arboID;
     private String arboName;
+    private int arboType;
+    private String arboTypeDesc;
     private int arboCityMun;
     private String arboCityMunDesc;
     private int arboProvince;
@@ -22,6 +26,7 @@ public class ARBO {
     private int provOfficeCode;
     private String provOfficeCodeDesc;
     private int APCPQualified;
+    private ArrayList<ARB> arbList = new ArrayList();
 
     public int getArboID() {
         return arboID;
@@ -114,6 +119,32 @@ public class ARBO {
     public void setAPCPQualified(int APCPQualified) {
         this.APCPQualified = APCPQualified;
     }
+
+    public int getArboType() {
+        return arboType;
+    }
+
+    public void setArboType(int arboType) {
+        this.arboType = arboType;
+    }
+
+    public String getArboTypeDesc() {
+        return arboTypeDesc;
+    }
+
+    public void setArboTypeDesc(String arboTypeDesc) {
+        this.arboTypeDesc = arboTypeDesc;
+    }
+
+    public ArrayList<ARB> getArbList() {
+        return arbList;
+    }
+
+    public void setArbList(ArrayList<ARB> arbList) {
+        this.arbList = arbList;
+    }
+    
+    
     
     
     

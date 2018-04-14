@@ -41,7 +41,11 @@ public class RequestLoan extends BaseServlet {
         apcpRequest.setArboID(Integer.parseInt(request.getParameter("arboID")));
         apcpRequest.setHectares(Double.parseDouble(request.getParameter("land")));
         apcpRequest.setLoanAmount(Double.parseDouble(finLoan));
-        apcpRequest.setLoanReason(request.getParameter("reason"));
+        
+        apcpRequest.setLoanReason(Integer.parseInt(request.getParameter("reason")));
+        apcpRequest.setOtherLoanReason(request.getParameter("otherReason"));
+        apcpRequest.setApcpType(Integer.parseInt(request.getParameter("apcpType")));
+        
         apcpRequest.setRemarks(request.getParameter("remarks"));
         apcpRequest.setRequestStatus(1);
 

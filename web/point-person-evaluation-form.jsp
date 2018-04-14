@@ -58,7 +58,7 @@
                                     <h3 class="box-title"><strong><%out.print(e.getEvaluationTypeDesc());%> Evaluation</strong></h3>
                                 </div>
                                 <!--                                 /.box-header -->
-                                <form role="form" method="post" action="AddARBO">
+                                <form method="post">
                                     <div class="box-body">
                                         <div class="row">
                                             <div class="col-xs-12">

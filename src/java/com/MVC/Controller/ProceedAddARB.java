@@ -22,6 +22,13 @@ public class ProceedAddARB extends BaseServlet {
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
         int arboID = Integer.parseInt(request.getParameter("id"));
+        String source = request.getParameter("source");
+        
+        if(source.equalsIgnoreCase("import")){
+            request.setAttribute("source", "import");
+        }else if(source.equalsIgnoreCase("profile")){
+            request.setAttribute("source", "profile");
+        }
         
         ARBODAO arboDAO = new ARBODAO();
         ARBO arbo = new ARBO();

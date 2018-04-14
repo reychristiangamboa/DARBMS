@@ -1,4 +1,4 @@
-    /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Rey Christian
  */
 public class APCPRelease {
-    
+
     private int releaseID;
     private int requestID;
     private ArrayList<Disbursement> disbursements = new ArrayList();
@@ -46,15 +46,15 @@ public class APCPRelease {
     public void setDisbursements(ArrayList<Disbursement> disbursements) {
         this.disbursements = disbursements;
     }
-    
-    public double getTotalOSBalance(){
+
+    public double getTotalOSBalance() {
         double value = 0;
-        for(Disbursement d : this.disbursements){
+        for (Disbursement d : this.disbursements) {
             value += d.getOSBalance();
         }
         return value;
     }
-    
+
     public double getReleaseAmount() {
         return releaseAmount;
     }
@@ -94,6 +94,5 @@ public class APCPRelease {
     public void setReleasedBy(int releasedBy) {
         this.releasedBy = releasedBy;
     }
-    
-    
+
 }

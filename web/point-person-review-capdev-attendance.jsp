@@ -16,7 +16,7 @@
             <%@include file="jspf/point-person-sidebar.jspf" %>
 
             <%
-                ArrayList<CAPDEVActivity> caList = capdevDAO.getCAPDEVPlanActivities((Integer)request.getAttribute("planID"));
+                ArrayList<CAPDEVActivity> caList = capdevDAO.getCAPDEVPlanActivities((Integer) request.getAttribute("planID"));
             %>
 
             <div class="content-wrapper">
@@ -25,19 +25,19 @@
                         <strong>APCP</strong> 
                         <small>Region I</small>
                     </h1>
-                    
+
 
                 </section>
                 <section class="content">
-                    <%if(request.getAttribute("success") != null){%>
+                    <%if (request.getAttribute("success") != null) {%>
                     <div class="alert alert-success alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String) request.getAttribute("success"));%></h4>
                     </div>
-                    <%}else if(request.getAttribute("errMessage") != null){%>
+                    <%} else if (request.getAttribute("errMessage") != null) {%>
                     <div class="alert alert-danger alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String) request.getAttribute("errMessage"));%></h4>
                     </div>
                     <%}%>
                     <div class='row'>
@@ -54,16 +54,20 @@
 
                                                 <% int count = 0;  %>
                                                 <ul class="nav nav-tabs pull-left">
-                                                    <%for(CAPDEVActivity a1 : caList){%>
-                                                    <li <%if(count == 0){out.print("class='active'");}%>><a href="#activity<%out.print(a1.getActivityID());%>" data-toggle="tab"><%out.print(a1.getActivityName());%></a></li>
+                                                    <%for (CAPDEVActivity a1 : caList) {%>
+                                                    <li <%if (count == 0) {
+                                                            out.print("class='active'");
+                                                        }%>><a href="#activity<%out.print(a1.getActivityID());%>" data-toggle="tab"><%out.print(a1.getActivityName());%></a></li>
                                                         <%count++;%>
                                                         <%}%>
                                                 </ul>
 
                                                 <% int count2 = 0;  %>
                                                 <div class="tab-content no-padding">
-                                                    <%for(CAPDEVActivity b : caList){%>
-                                                    <div class="chart tab-pane <%if(count2 == 0){out.print("active");}%>" id="activity<%out.print(b.getActivityID());%>" style="position: relative; height: 300px;">
+                                                    <%for (CAPDEVActivity b : caList) {%>
+                                                    <div class="chart tab-pane <%if (count2 == 0) {
+                                                            out.print("active");
+                                                        }%>" id="activity<%out.print(b.getActivityID());%>" style="position: relative; height: 300px;">
                                                         <%count2++;%>
                                                         <form method="post">
                                                             <div class="box-body">
@@ -80,22 +84,54 @@
                                                                     <div class="col-xs-4">
                                                                         <div class="form-group">
                                                                             <label for="">Technical Assistant</label>
-                                                                            <%if(b.getTechnicalAssistant() != null){%>
+                                                                            <%if (b.getTechnicalAssistant() != null) {%>
                                                                             <input type="text" name="TA" class="form-control" value="<%=b.getTechnicalAssistant()%>">
-                                                                            <%}else{%>
+                                                                            <%} else {%>
                                                                             <input type="text" name="TA" class="form-control" required>
                                                                             <%}%>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
-
-
                                                                 <div class="row">
                                                                     <div class="col-xs-4">
-
+                                                                        <input type="radio" name="import" checked onclick="document.getElementById('manualAttendance').style.display = 'none';document.getElementById('importAttendance').style.display = 'block'">
+                                                                        <label for="">Import Attendees</label>
+                                                                        &nbsp;&nbsp;
+                                                                        <input type="radio" name="manual" onclick="document.getElementById('manualAttendance').style.display = 'block';document.getElementById('importAttendance').style.display = 'none'">
+                                                                        <label for="">Check Attendees</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-xs-4" id="importAttendance">
                                                                         <label for="">Upload Participants</label>
                                                                         <input type="file" name="file">
+                                                                    </div>
+                                                                    <div class="col-xs-12" id="manualAttendance">
+                                                                        <table class="table table-striped table-bordered modTable">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <td>Name</td>
+                                                                                    <td>Address</td>
+                                                                                    <td>Action</td>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <%for (ARB arb : b.getArbList()) {%>
+                                                                                <tr>
+                                                                                    <td><%out.print(arb.getFullName());%></td>
+                                                                                    <td><%out.print(arb.getFullAddress());%></td>
+                                                                                    <td><input type="checkbox" name="attended" value="<%out.print(arb.getArbID());%>"></td>
+                                                                                </tr>
+                                                                                <%}%>
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <td>Name</td>
+                                                                                    <td>Address</td>
+                                                                                    <td>Action</td>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
                                                                     </div>
                                                                 </div>
 
@@ -103,17 +139,17 @@
                                                                 <div class="row">
                                                                     <div class="col-xs-6">
                                                                         <label for="">Observations</label>
-                                                                        <%if(b.getObservations() != null){%>
+                                                                        <%if (b.getObservations() != null) {%>
                                                                         <textarea class="form-control" name="observations" id="" rows="2"><%out.print(b.getObservations());%></textarea>
-                                                                        <%}else{%>
+                                                                        <%} else {%>
                                                                         <textarea class="form-control" name="observations" id="" rows="2"></textarea>
                                                                         <%}%>
                                                                     </div>
                                                                     <div class="col-xs-6">
                                                                         <label for="">Recommendations</label>
-                                                                        <%if(b.getRecommendation() != null){%>
+                                                                        <%if (b.getRecommendation() != null) {%>
                                                                         <textarea class="form-control" name="recommendation" id="" rows="2"><%out.print(b.getRecommendation());%></textarea>
-                                                                        <%}else{%>
+                                                                        <%} else {%>
                                                                         <textarea class="form-control" name="recommendation" id="" rows="2"></textarea>
                                                                         <%}%>
                                                                     </div>
@@ -121,11 +157,11 @@
 
                                                             </div>
                                                             <div class="box-footer">
-                                                                <%if((Integer)request.getAttribute("clusterID") != null){%>
-                                                                <input type="hidden" value="<%=(Integer)request.getAttribute("clusterID")%>" name="clusterID">
+                                                                <%if ((Integer) request.getAttribute("clusterID") != null) {%>
+                                                                <input type="hidden" value="<%=(Integer) request.getAttribute("clusterID")%>" name="clusterID">
                                                                 <%}%>
                                                                 <input type="hidden" value="<%=b.getActivityID()%>" name="activityID">
-                                                                <input type="hidden" value="<%=(Integer)request.getAttribute("planID")%>" name="planID">
+                                                                <input type="hidden" value="<%=(Integer) request.getAttribute("planID")%>" name="planID">
                                                                 <button class="btn btn-success pull-right" onclick="form.action = 'RecordActivityAssessment'" >Submit</button>
                                                             </div>
                                                         </form>
@@ -139,11 +175,11 @@
                                             <div class="box-footer">
                                                 <div class="pull-right">
                                                     <%
-                                                        if(capdevDAO.checkIfAssessmentsComplete(caList)){
+                                                        if (capdevDAO.checkIfAssessmentsComplete(caList)) {
                                                     %>
                                                     <input type="hidden" id="lol" value="true">
                                                     <%}%>
-                                                    <input type="hidden" value="<%=(Integer)request.getAttribute("planID")%>" name="planID">
+                                                    <input type="hidden" value="<%=(Integer) request.getAttribute("planID")%>" name="planID">
                                                     <button class="btn btn-success" id="sendCapdevAssessment" onclick="form.action = 'SendCAPDEVAssessment'" disabled>Submit</button>
                                                 </div>  
                                             </div>
@@ -164,7 +200,7 @@
         <script>
             $(function () {
                 var lolVal = $('#lol').val();
-                if(lolVal){
+                if (lolVal) {
                     $('#sendCapdevAssessment').removeAttr('disabled');
                 }
             });

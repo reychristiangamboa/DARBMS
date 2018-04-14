@@ -6,7 +6,9 @@
 package com.MVC.DAO;
 
 import com.MVC.Database.DBConnectionFactory;
+import com.MVC.Model.APCPRequest;
 import com.MVC.Model.ARB;
+import com.MVC.Model.ARBO;
 import com.MVC.Model.CAPDEVActivity;
 import com.MVC.Model.CAPDEVPlan;
 import com.MVC.Model.PastDueAccount;
@@ -276,51 +278,18 @@ public class CAPDEVDAO {
     }
 
     public ArrayList<CAPDEVPlan> getAllProvincialCAPDEVPlanByStatus(int status, ArrayList<Integer> provinceIDs) {
-
+        ArrayList<CAPDEVPlan> allCAPDEVPlans = getAllCAPDEVPlanByStatus(status);
         ArrayList<CAPDEVPlan> planList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            for (int provinceID : provinceIDs) {
-                String query = "SELECT * FROM capdev_plans c "
-                        + "JOIN ref_planStatus ps ON c.planStatus=ps.planStatus "
-                        + "JOIN apcp_requests r ON c.requestID=r.requestID "
-                        + "JOIN ref_requestStatus rs ON r.requestStatus=rs.requestStatus "
-                        + "JOIN arbos a ON r.arboID=a.arboID "
-                        + "WHERE c.planStatus = ? AND a.provOfficeCode = ?";
-                PreparedStatement p = con.prepareStatement(query);
-                p.setInt(1, status);
-                p.setInt(2, provinceID);
-                ResultSet rs = p.executeQuery();
-                while (rs.next()) {
-                    CAPDEVPlan cp = new CAPDEVPlan();
-                    cp.setPlanID(rs.getInt("planID"));
-                    cp.setRequestID(rs.getInt("requestID"));
-                    cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                    cp.setPlanStatus(rs.getInt("planStatus"));
-                    cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                    cp.setPlanDTN(rs.getString("planDTN"));
-                    cp.setAssignedTo(rs.getInt("assignedTo"));
-                    cp.setCreatedBy(rs.getInt("createdBy"));
-                    cp.setApprovedBy(rs.getInt("approvedBy"));
-                    cp.setClusterID(rs.getInt("clusterID"));
-                    cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                    planList.add(cp);
+        APCPRequestDAO dao = new APCPRequestDAO();
+        ARBODAO dao2 = new ARBODAO();
+        for (CAPDEVPlan c : allCAPDEVPlans) {
+            for (int id : provinceIDs) {
+                APCPRequest r = dao.getRequestByID(c.getRequestID());
+                ARBO a = dao2.getARBOByID(r.getArboID());
+                if (a.getProvOfficeCode() == id) {
+                    planList.add(c);
                 }
-                rs.close();
-                p.close();
             }
-
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return planList;
@@ -523,51 +492,18 @@ public class CAPDEVDAO {
 
     public ArrayList<CAPDEVPlan> getAllRegionalCAPDEVPlanByStatus(int status, ArrayList<Integer> regionIDs) {
 
+        ArrayList<CAPDEVPlan> allCAPDEVPlans = getAllCAPDEVPlanByStatus(status);
         ArrayList<CAPDEVPlan> planList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            for (int regCode : regionIDs) {
-                String query = "SELECT * FROM capdev_plans c "
-                        + "JOIN ref_planStatus ps ON c.planStatus=ps.planStatus "
-                        + "JOIN apcp_requests r ON c.requestID=r.requestID "
-                        + "JOIN ref_requestStatus rs ON r.requestStatus=rs.requestStatus "
-                        + "JOIN arbos a ON r.arboID=a.arboID "
-                        + "JOIN ref_provffice p ON a.provOfficeCode=p.provOfficeCode "
-                        + "WHERE c.planStatus = ? AND p.regCode = ? AND c.pastDueAccountID IS NULL";
-                PreparedStatement p = con.prepareStatement(query);
-                p.setInt(1, status);
-                p.setInt(2, regCode);
-                ResultSet rs = p.executeQuery();
-                while (rs.next()) {
-                    CAPDEVPlan cp = new CAPDEVPlan();
-                    cp.setPlanID(rs.getInt("planID"));
-                    cp.setRequestID(rs.getInt("requestID"));
-                    cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                    cp.setPlanStatus(rs.getInt("planStatus"));
-                    cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                    cp.setPlanDTN(rs.getString("planDTN"));
-                    cp.setAssignedTo(rs.getInt("assignedTo"));
-                    cp.setCreatedBy(rs.getInt("createdBy"));
-                    cp.setApprovedBy(rs.getInt("approvedBy"));
-                    cp.setClusterID(rs.getInt("clusterID"));
-                    cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                    planList.add(cp);
+        APCPRequestDAO dao = new APCPRequestDAO();
+        ARBODAO dao2 = new ARBODAO();
+        for (CAPDEVPlan c : allCAPDEVPlans) {
+            for (int id : regionIDs) {
+                APCPRequest r = dao.getRequestByID(c.getRequestID());
+                ARBO a = dao2.getARBOByID(r.getArboID());
+                if (a.getArboRegion()== id) {
+                    planList.add(c);
                 }
-                rs.close();
-                p.close();
             }
-
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return planList;
@@ -954,7 +890,7 @@ public class CAPDEVDAO {
         }
         return caList;
     }
-    
+
     public ArrayList<CAPDEVActivity> getLINKSFARMCAPDEVActivityHistoryByARB(int arbID) {
 
         ArrayList<CAPDEVActivity> caList = new ArrayList();

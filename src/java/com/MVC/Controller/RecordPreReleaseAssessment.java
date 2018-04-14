@@ -37,9 +37,6 @@ public class RecordPreReleaseAssessment extends BaseServlet {
         ARBDAO arbDAO = new ARBDAO();
         APCPRequestDAO rDAO = new APCPRequestDAO();
 
-        ArrayList arbHolder = readExcelFile(request.getParameter("file"));
-        ArrayList cellStoreArrayList = new ArrayList();
-
         int activityID = Integer.parseInt(request.getParameter("activityID"));
         int planID = Integer.parseInt(request.getParameter("planID"));
         int requestID = Integer.parseInt(request.getParameter("requestID"));
@@ -50,16 +47,26 @@ public class RecordPreReleaseAssessment extends BaseServlet {
         ca.setObservations(request.getParameter("observations"));
         ca.setRecommendation(request.getParameter("recommendation"));
 
-        for (int a = 1; a < arbHolder.size(); a++) {
+        if (request.getParameter("import") != null) {
+            ArrayList arbHolder = readExcelFile(request.getParameter("file"));
+            ArrayList cellStoreArrayList = new ArrayList();
 
-            cellStoreArrayList = (ArrayList) arbHolder.get(a);
-            String lN = cellStoreArrayList.get(0).toString();
-            String fN = cellStoreArrayList.get(1).toString();
-            String mN = cellStoreArrayList.get(2).toString();
+            for (int a = 1; a < arbHolder.size(); a++) {
 
-            int arbID = arbDAO.getARBID(fN, mN, lN);
+                cellStoreArrayList = (ArrayList) arbHolder.get(a);
+                String lN = cellStoreArrayList.get(0).toString();
+                String fN = cellStoreArrayList.get(1).toString();
+                String mN = cellStoreArrayList.get(2).toString();
 
-            arbIDs.add(arbID);
+                int arbID = arbDAO.getARBID(fN, mN, lN);
+
+                arbIDs.add(arbID);
+            }
+        }else if(request.getParameter("manual") != null){
+            String[] attendees = request.getParameterValues("attended");
+            for(String attendee : attendees){
+                arbIDs.add(Integer.parseInt(attendee));
+            }
         }
 
         if (cDAO.recordAssessment(ca) && cDAO.checkIfPresent(arbIDs, activityID) && rDAO.updateRequestStatus(requestID, 7) && cDAO.updatePlanStatus(planID, 5)) {

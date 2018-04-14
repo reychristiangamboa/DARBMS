@@ -16,7 +16,7 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/provincial-field-officer-sidebar.jspf" %>
+            <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -24,14 +24,25 @@
                 <section class="content-header">
                     <h1>
                         <strong>Add ARBO</strong> 
-                        <small><%out.print((String)session.getAttribute("provOfficeDesc") + ", " + (String)session.getAttribute("regOfficeDesc"));%></small>
+                        <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
-                    
+
 
                 </section>
 
                 <!-- Main content -->
                 <section class="content">
+                    <%if (request.getAttribute("success") != null) {%>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String) request.getAttribute("success"));%></h4>
+                    </div>
+                    <%} else if (request.getAttribute("errMessage") != null) {%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String) request.getAttribute("errMessage"));%></h4>
+                    </div>
+                    <%}%>
                     <div class='row'>
                         <div class='col-xs-6'>
                             <div class='box'>
@@ -40,7 +51,6 @@
                                 </div>
                                 <form role='form' method="post" action="ImportARBO">
                                     <div class='box-body'>
-
                                         <div class='box-body'>
                                             <div class="row">
                                                 <div class="col-xs-3">
@@ -77,7 +87,16 @@
                                                 <div class="form-group">
                                                     <label for="">Name of ARBO</label>
                                                     <input type="text" name="arboName" class="form-control" id='' placeholder="">
-                                                    <input type="hidden" name="provOfficeCode" value="<%out.print((Integer)session.getAttribute("provOfficeCode"));%>">
+                                                    <input type="hidden" name="provOfficeCode" value="<%out.print((Integer) session.getAttribute("provOfficeCode"));%>">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <div class="form-group">
+                                                    <label for="">Type</label>
+                                                    <select name="arboType" id="" class="form-control">
+                                                        <option value="1">Organization</option>
+                                                        <option value="2">Cooperative</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -104,10 +123,10 @@
                                                     <label for="">Region</label>
                                                     <select class="form-control" id="regionDrop" name="arboRegion" onchange="chg()" style="width: 100%;" required>
                                                         <option value="0">--Select--</option>
-                                                             <%for(Region r: regionList){%>
-                                                             
-                                                                <option value="<%out.print(r.getRegCode());%>"> <%out.print(r.getRegDesc());%> </option>
-                                                             <%}%>
+                                                        <%for (Region r : regionList) {%>
+
+                                                        <option value="<%out.print(r.getRegCode());%>"> <%out.print(r.getRegDesc());%> </option>
+                                                        <%}%>
                                                     </select>
                                                 </div>
                                             </div>
