@@ -765,5 +765,9 @@ public class Chart {
 
         return new BarChart(data).toJson();
     }
+    
+    public String getBarChartGender(ArrayList<ARB> arbList) {
+        
+    }
 
 }

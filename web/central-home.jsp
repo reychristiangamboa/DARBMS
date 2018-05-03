@@ -53,9 +53,15 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Dashboard: Central
+                        <strong><i class="fa fa-dashboard"></i> Dashboard: Central</strong>
                     </h1>
                 </section>
+
+                <%
+                    if(request.getAttribute("filteredARBGender") != null){
+                        allArbsList = (ArrayList<ARB>)request.getAttribute("filteredARBGender");
+                    }
+                %>
 
                 <!-- Main content -->
                 <section class="content">
@@ -66,7 +72,7 @@
                             <!-- /.col -->
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">ARB Visuals</h3>
+                                    <h3 class="box-title">Agrarian Reform Beneficiary (ARB) Visuals</h3>
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
@@ -83,130 +89,212 @@
 
                                         <div class="tab-content">
                                             <div class="active tab-pane" id="gender">
+
+                                                <form id="drillDownGenderForm">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <input type="radio" id="drillDownGender" name="filterBy" value="All" checked onclick="document.getElementById('regions').disabled = true;document.getElementById('provinces').disabled = true;">
+                                                            <label for="actName">Select All</label>
+                                                            &nbsp;&nbsp;
+                                                            <input type="radio" id="drillDownGender" name="filterBy" value="regions" onclick="document.getElementById('regions').disabled = false;document.getElementById('provinces').disabled = true;">
+                                                            <label for="actName">Regions</label>
+                                                            &nbsp;&nbsp;
+                                                            <input type="radio" id="drillDownGender" name="filterBy" value="provinces" onclick="document.getElementById('regions').disabled = false;document.getElementById('provinces').disabled = false;">
+                                                            <label for="actName">Provinces</label>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row">
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label for="actName">Regions</label>
+                                                                <select name="regions[]" id="regions" onchange="chg2()" class="form-control select2" multiple="multiple" disabled>
+                                                                    <%for(Region r : regionList){%>
+                                                                    <option value="<%=r.getRegCode()%>"><%out.print(r.getRegDesc());%></option>
+                                                                    <%}%>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label for="actName">Provinces</label>
+                                                                <select name="provinces[]" id="provinces" class="form-control select2" multiple="multiple" disabled>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <label for="">&nbsp;</label>
+                                                            <button type="submit" onclick="form.action = 'DashboardFilterGender'" class="btn btn-success"><i class="fa fa-filter margin-r-5"></i> Filter</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                                 <div class="row">
                                                     <div class="col-xs-3"></div>
                                                     <div class="col-xs-6">
-                                                        <div class="box-body">
+                                                        <div class="box-body" id="genderCanvas">
                                                             <canvas id="pieCanvas"></canvas>
                                                             <div class="row text-center">
                                                                 <a class="btn btn-submit" data-toggle="modal" data-target="#modalPie">View More</a>
                                                             </div>
+                                                            <div class="modal fade" id="modalPie">
+                                                                <div class="modal-dialog modal-lger">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span></button>
+                                                                            <h4 class="modal-title">Agrarian Reform Beneficiaries</h4>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="row">
+                                                                                <div class="col-xs-12">
+                                                                                    <table class="table table-bordered table-striped modTable">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Male</th>
+                                                                                                <th>ARBO</th>
+                                                                                                <th>Address</th>
+                                                                                                <th>Land Area</th>
+                                                                                                <th>ARB Rating</th>
+                                                                                                <th>ARB Status</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <%
+                                                                                                ARBODAO arbol = new ARBODAO();
+                                                                                                for (ARB arb : allArbsList) {
+                                                                                                    if (arb.getGender().equalsIgnoreCase("M")) {
+                                                                                            %>
+                                                                                            <tr>
+                                                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
+                                                                                                <td><%out.print(arbol.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                                                                <td><%out.print(arb.getFullAddress());%></td>
+                                                                                                <td><%out.print(arb.getLandArea());%></td>
+                                                                                                <td><%out.print(arb.getArbRating());%></td>
+                                                                                                <td><%out.print(arb.getArbStatusDesc());%></td>
+                                                                                            </tr>
+                                                                                            <%
+                                                                                                    }
+                                                                                                }
+                                                                                            %>
+
+                                                                                        </tbody>
+                                                                                        <tfoot>
+                                                                                            <tr>
+                                                                                                <th>Male</th>
+                                                                                                <th>ARBO</th>
+                                                                                                <th>Address</th> 
+                                                                                                <th>Land Area</th>
+                                                                                                <th>ARB Rating</th>
+                                                                                                <th>ARB Status</th>
+                                                                                            </tr>
+                                                                                        </tfoot>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-xs-12">
+                                                                                    <table class="table table-bordered table-striped modTable">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <th>Female</th>
+                                                                                                <th>ARBO</th>
+                                                                                                <th>Address</th>
+                                                                                                <th>Land Area</th>
+                                                                                                <th>ARB Rating</th>
+                                                                                                <th>ARB Status</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <%
+                                                                                                ARBODAO arboll = new ARBODAO();
+                                                                                                for (ARB arb : allArbsList) {
+                                                                                                    if (arb.getGender().equalsIgnoreCase("F")) {
+                                                                                            %>
+                                                                                            <tr>
+                                                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
+                                                                                                <td><%out.print(arboll.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                                                                <td><%out.print(arb.getFullAddress());%></td>
+                                                                                                <td><%out.print(arb.getLandArea());%></td>
+                                                                                                <td><%out.print(arb.getArbRating());%></td>
+                                                                                                <td><%out.print(arb.getArbStatusDesc());%></td>
+                                                                                            </tr>
+                                                                                            <%}
+                                                                                    }%>
+
+                                                                                        </tbody>
+                                                                                        <tfoot>
+                                                                                            <tr>
+                                                                                                <th>Female</th>
+                                                                                                <th>ARBO</th>
+                                                                                                <th>Address</th> 
+                                                                                                <th>Land Area</th>
+                                                                                                <th>ARB Rating</th>
+                                                                                                <th>ARB Status</th>
+                                                                                            </tr>
+                                                                                        </tfoot>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- /.modal-content -->
+                                                                </div>
+                                                                <!-- /.modal-dialog -->
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-3"></div>
                                                 </div>
-
                                             </div>
-                                            <div class="modal fade" id="modalPie">
-                                                <div class="modal-dialog modal-lger">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title"></h4>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="col-xs-12">
-                                                                <div class="col-xs-12">
-                                                                    <table class="table table-bordered table-striped modTable">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Male</th>
-                                                                                <th>ARBO</th>
-                                                                                <th>Address</th>
-                                                                                <th>Land Area</th>
-                                                                                <th>ARB Rating</th>
-                                                                                <th>ARB Status</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <%
-                                                                                ARBODAO arbol = new ARBODAO();
-                                                                                for (ARB arb : allArbsList) {
-                                                                                    if (arb.getGender().equalsIgnoreCase("M")) {
-                                                                            %>
-                                                                            <tr>
-                                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
-                                                                                <td><%out.print(arbol.getARBOByID(arb.getArboID()).getArboName());%></td>
-                                                                                <td><%out.print(arb.getFullAddress());%></td>
-                                                                                <td><%out.print(arb.getLandArea());%></td>
-                                                                                <td><%out.print(arb.getArbRating());%></td>
-                                                                                <td><%out.print(arb.getArbStatusDesc());%></td>
-                                                                            </tr>
-                                                                            <%}
-                                                                                    }%>
 
-                                                                        </tbody>
-                                                                        <tfoot>
-                                                                            <tr>
-                                                                                <th>Male</th>
-                                                                                <th>ARBO</th>
-                                                                                <th>Address</th> 
-                                                                                <th>Land Area</th>
-                                                                                <th>ARB Rating</th>
-                                                                                <th>ARB Status</th>
-
-                                                                            </tr>
-                                                                        </tfoot>
-                                                                    </table>
-                                                                </div>
-                                                                <div class="col-xs-12">
-                                                                    <table class="table table-bordered table-striped modTable">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Female</th>
-                                                                                <th>ARBO</th>
-                                                                                <th>Address</th>
-                                                                                <th>Land Area</th>
-                                                                                <th>ARB Rating</th>
-                                                                                <th>ARB Status</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <%
-                                                                                ARBODAO arboll = new ARBODAO();
-                                                                                for (ARB arb : allArbsList) {
-                                                                                    if (arb.getGender().equalsIgnoreCase("F")) {
-                                                                            %>
-                                                                            <tr>
-                                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
-                                                                                <td><%out.print(arboll.getARBOByID(arb.getArboID()).getArboName());%></td>
-                                                                                <td><%out.print(arb.getFullAddress());%></td>
-                                                                                <td><%out.print(arb.getLandArea());%></td>
-                                                                                <td><%out.print(arb.getArbRating());%></td>
-                                                                                <td><%out.print(arb.getArbStatusDesc());%></td>
-                                                                            </tr>
-                                                                            <%}
-                                                                                    }%>
-
-                                                                        </tbody>
-                                                                        <tfoot>
-                                                                            <tr>
-                                                                                <th>Female</th>
-                                                                                <th>ARBO</th>
-                                                                                <th>Address</th> 
-                                                                                <th>Land Area</th>
-                                                                                <th>ARB Rating</th>
-                                                                                <th>ARB Status</th>
-                                                                            </tr>
-                                                                        </tfoot>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-
-
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                        </div>
-                                                    </div>
-                                                    <!-- /.modal-content -->
-                                                </div>
-                                                <!-- /.modal-dialog -->
-                                            </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="educ">
                                                 <div class="box-body" id="bar">
+                                                    <form id="drillDownGenderForm">
+                                                        <div class="row">
+                                                            <div class="col-xs-12">
+                                                                <input type="radio" id="drillDownGender" name="filterBy" value="All" checked onclick="document.getElementById('regions').disabled = true;document.getElementById('provinces').disabled = true;">
+                                                                <label for="actName">Select All</label>
+                                                                &nbsp;&nbsp;
+                                                                <input type="radio" id="drillDownGender" name="filterBy" value="regions" onclick="document.getElementById('regions').disabled = false;document.getElementById('provinces').disabled = true;">
+                                                                <label for="actName">Regions</label>
+                                                                &nbsp;&nbsp;
+                                                                <input type="radio" id="drillDownGender" name="filterBy" value="provinces" onclick="document.getElementById('regions').disabled = false;document.getElementById('provinces').disabled = false;">
+                                                                <label for="actName">Provinces</label>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <div class="form-group">
+                                                                    <label for="actName">Regions</label>
+                                                                    <select name="regions[]" id="regions" onchange="chg2()" class="form-control select2" multiple="multiple" disabled>
+                                                                        <%for(Region r : regionList){%>
+                                                                        <option value="<%=r.getRegCode()%>"><%out.print(r.getRegDesc());%></option>
+                                                                        <%}%>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-4">
+                                                                <div class="form-group">
+                                                                    <label for="actName">Provinces</label>
+                                                                    <select name="provinces[]" id="provinces" class="form-control select2" multiple="multiple" disabled>
+
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-4">
+                                                                <label for="">&nbsp;</label>
+                                                                <button type="submit" onclick="form.action = 'DashboardFilterGender'" class="btn btn-success"><i class="fa fa-filter margin-r-5"></i> Filter</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
                                                     <div class="row">
                                                         <div class="col-xs-2"></div>
                                                         <div class="col-xs-8">
@@ -282,10 +370,9 @@
                                                     <div class="active tab-pane" >
                                                         <div class="col-lg-2 col-xs-6" data-toggle="modal" data-target="#modal-default<%out.print(region.getRegCode());%>">
                                                             <!-- small box -->
-                                                            <div class="small-box bg-yellow">
+                                                            <div class="small-box bg-green">
                                                                 <div class="inner">
                                                                     <h3><%out.print(arboListRegion.size());%></h3>
-
                                                                     <p><%=region.getRegDesc()%></p>
                                                                 </div>
                                                             </div>
@@ -315,7 +402,7 @@
                                                                                 <tr>
                                                                                     <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>" class="btn btn-link"><%out.print(arbo.getArboName());%></a></td>
                                                                                     <td><%out.print(arbo.getFullAddress());%></td>
-                                                                                    <td><%out.print(arboDAO.getARBCount(arbo.getArboID()));%></td>
+                                                                                    <td><%out.print(arbo.getArbList().size());%></td>
                                                                                 </tr>
                                                                                 <%}%>
                                                                             </tbody>    
@@ -424,11 +511,10 @@
 
                                 </div>
                             </div>
-
                             <!-- /.col -->
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">APCP Visuals</h3>
+                                    <h3 class="box-title">Agrarian Production Credit Program (APCP) Visuals</h3>
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
@@ -445,8 +531,8 @@
                                                 <table  class="table table-bordered table-striped export">
                                                     <thead>
                                                         <tr>
-                                                            <th>Loan <br>Tracking No.</th>
-                                                            <th>Name of ARBO</th>
+                                                            <th>Loan <br>Application No.</th>
+                                                            <th>ARBO</th>
                                                             <th>Last Release Date</th>
                                                             <th>Progress</th>
                                                         </tr>
@@ -537,7 +623,7 @@
                                                                             <tfoot>
                                                                                 <tr>
 
-                                                                                    <th>ARB Name</th>
+                                                                                    <th>ARB</th>
                                                                                     <th>Past Due Amount</th>
                                                                                     <th>Reason for Past Due</th>
                                                                                     <th>Date Settled</th>
@@ -596,7 +682,7 @@
                                                                     <table class="table table-bordered table-striped export">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th>Loan Tracking No.</th>
+                                                                                <th>Loan Application No.</th>
                                                                                 <th>ARBO Name</th>
                                                                                 <th>Province</th>
                                                                                 <th>Release Amount</th>
@@ -627,7 +713,7 @@
                                                                         <tfoot>
                                                                             <tr>
 
-                                                                                <th>Loan Tracking No.</th>
+                                                                                <th>Loan Application No.</th>
                                                                                 <th>ARBO Name</th>
                                                                                 <th>Province</th>
                                                                                 <th>Release Amount</th>
@@ -737,7 +823,7 @@
                                                                                 <td><%=arbo.getArboRegionDesc()%></td>
                                                                                 <td><%=arbo.getArboProvinceDesc()%></td>
                                                                                 <td><%=arbo.getArboName()%></td>
-                                                                                <td><%=arboDAO.getARBCount(arbo.getArboID())%></td>
+                                                                                <td><%=arbo.getArbList().size()%></td>
                                                                                 <td><%=currency.format(req.getLoanAmount())%></td>
                                                                                 <td><%=currency.format(req.getTotalReleasedAmount())%></td>
                                                                                 <td><%=currency.format(req.getYearlyReleasedAmount())%></td>
@@ -807,8 +893,8 @@
                                                                     <table class="table table-bordered table-striped export">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th>Loan Tracking No.</th>
-                                                                                <th>ARBO Name</th>
+                                                                                <th>Loan Application No.</th>
+                                                                                <th>ARBO</th>
                                                                                 <th>Approved Amount</th>
                                                                                 <th>Approved Date</th>
                                                                                 <th>Approved By</th>
@@ -855,8 +941,8 @@
                                                                         </tbody>
                                                                         <tfoot>
                                                                             <tr>
-                                                                                <th>Loan Tracking No.</th>
-                                                                                <th>ARBO Name</th>
+                                                                                <th>Loan Application No.</th>
+                                                                                <th>ARBO</th>
                                                                                 <th>Approved Amount</th>
                                                                                 <th>Approved Date</th>
                                                                                 <th>Approved By</th>
@@ -958,28 +1044,22 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
-
-
-                            <!-- /.col -->
                         </div>
                         <!-- /.col -->
                         <div class=" col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border" >
-                                    <h3 class="box-title"><a href="view-apcp-status.jsp">Agrarian Production Credit Program Requests</a></h3>
+                                    <h3 class="box-title"><a href="view-apcp-status.jsp">Agrarian Production Credit Program (APCP) Requests</a></h3>
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                                         </button>
                                     </div>
                                 </div>
                                 <div class="box-body" >
-                                    <div clas="row  color-palette-set">
+                                    <div clas="row">
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green-gradient color-palette">
+                                            <div class="small-box bg-info">
                                                 <div class="inner">
                                                     <h3><%out.print(requestedRequests.size());%></h3>
 
@@ -993,7 +1073,7 @@
                                         </div>
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green-active color-palette">
+                                            <div class="small-box bg-primary">
                                                 <div class="inner">
                                                     <h3><%out.print(clearedRequests.size());%></h3>
 
@@ -1007,7 +1087,7 @@
                                         </div>
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green">
+                                            <div class="small-box bg-navy">
                                                 <div class="inner">
                                                     <h3><%out.print(endorsedRequests.size());%></h3>
 
@@ -1024,7 +1104,7 @@
                                     <div clas="row">
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-yellow">
+                                            <div class="small-box bg-green-gradient">
                                                 <div class="inner">
                                                     <h3><%out.print(approvedRequests.size());%></h3>
 
@@ -1038,7 +1118,7 @@
                                         </div>
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-red">
+                                            <div class="small-box bg-green">
                                                 <div class="inner">
                                                     <h3><%out.print(forReleaseRequests.size());%></h3>
 
@@ -1052,7 +1132,7 @@
                                         </div>
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green">
+                                            <div class="small-box bg-green-active">
                                                 <div class="inner">
                                                     <h3><%out.print(releasedRequests.size());%></h3>
 
@@ -1140,32 +1220,27 @@
                                         </button>
                                     </div>
                                 </div>
-
-
-
-
                                 <div class="box-body" >
-
                                     <div clas="row">
-                                        <a href="provincial-field-officer-view-capdev-status.jsp">
-                                            <div class="col-lg-3 col-xs-6" >
-                                                <!-- small box -->
-                                                <div class="small-box bg-yellow">
-                                                    <div class="inner">
-                                                        <h3><%out.print(requestedRequests.size());%></h3>
 
-                                                        <p>Requested</p>
-                                                    </div>
-                                                    <div class="icon" >
-                                                        <i class="fa fa-keyboard-o"></i>
-                                                    </div>
+                                        <div class="col-lg-3 col-xs-6" >
+                                            <!-- small box -->
+                                            <div class="small-box bg-info">
+                                                <div class="inner">
+                                                    <h3><%out.print(requestedRequests.size());%></h3>
 
+                                                    <p>Requested</p>
                                                 </div>
+                                                <div class="icon" >
+                                                    <i class="fa fa-keyboard-o"></i>
+                                                </div>
+
                                             </div>
-                                        </a>
+                                        </div>
+
                                         <div class="col-lg-3 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-red">
+                                            <div class="small-box bg-warning">
                                                 <div class="inner">
                                                     <h3><%out.print(pendingPlans.size());%></h3>
 
@@ -1179,7 +1254,7 @@
                                         </div>
                                         <div class="col-lg-3 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green">
+                                            <div class="small-box bg-green-gradient">
                                                 <div class="inner">
                                                     <h3><%out.print(approvedPlans.size());%></h3>
 
@@ -1193,7 +1268,7 @@
                                         </div>
                                         <div class="col-lg-3 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-aqua">
+                                            <div class="small-box bg-green-active">
                                                 <div class="inner">
                                                     <h3><%out.print(implementedPlans.size());%></h3>
 
@@ -1267,6 +1342,99 @@
         <%@include file="jspf/footer.jspf" %>
         <script type="text/javascript">
 
+            function chg2() {
+                var values = $('#regions').val();
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        document.getElementById('provinces').innerHTML = xhttp.responseText;
+                    }
+                };
+
+                var url = "RegionalProvincesFilterRefresh?";
+                for (i = 0; i < values.length; i++) {
+                    if (i === 0) {
+                        url += "valajax=" + values[i];
+                    } else {
+                        url += "&valajax=" + values[i];
+                    }
+                }
+
+
+                xhttp.open("GET", url, true);
+                xhttp.send();
+            }
+
+            function refreshGender() {
+
+                var xhttp = new XMLHttpRequest();
+                var url = "DashboardFilterGender?";
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        document.getElementById('AJAX').innerHTML = xhttp.responseText;
+                        //alert(xhttp.getResponseHeader("LOL"));
+                        //alert(xhttp.responseText);
+                    }
+                };
+
+                var filterBy = $('input[name=filterBy]:checked', '#drillDownGenderForm').val();
+
+                // PROVINCES -> ARBs within that PROVINCE/s
+                if (filterBy === 'provinces') {
+                    var values = $('#provinces').val();
+                    for (i = 0; i < values.length; i++) {
+                        if (i === 0) {
+                            url += "province=" + values[i];
+                        } else {
+                            url += "&province=" + values[i];
+                        }
+                    }
+
+                    url += "&filterBy=provinces";
+
+                    xhttp.open("GET", url, true);
+                    xhttp.send();
+
+                    // REGIONS -> ARBs within that REGION/s
+                } else if (filterBy === 'regions') {
+                    var values = $('#regions').val();
+                    for (i = 0; i < values.length; i++) {
+                        if (i === 0) {
+                            url += "region=" + values[i];
+                        } else {
+                            url += "&region=" + values[i];
+                        }
+                    }
+
+                    url += "&filterBy=regions";
+
+                    xhttp.open("GET", url, true);
+                    xhttp.send();
+
+                    // ALL -> Back to normal
+                } else if (filterBy === "All") {
+                    url += "filterBy=all";
+
+                    xhttp.open("GET", url, true);
+                    xhttp.send();
+                }
+
+
+
+                $('#pieCanvas').remove();
+                $('#genderCanvas').append('<canvas id="pieCanvas"</canvas>');
+
+                var ctx = $('#pieCanvas').get(0).getContext('2d');
+            <%
+                Chart bar2 = new Chart();
+                //String json99 = bar2.getBarChartEducation(allArbsList);
+                String json99 = "";
+                json99 = bar2.getPieChartGender(allArbsList);
+            %>
+                new Chart(ctx, <%out.print(json99);%>);
+            }
+
             $(function () {
                 $('#dr-totalYearReleaseReport').daterangepicker(
                         {
@@ -1323,6 +1491,7 @@
                 new Chart(ctx2, <%out.print(json2);%>);
 
                 var ctx3 = $('#pieCanvas').get(0).getContext('2d');
+
             <%
                 Chart pie = new Chart();
                 String json3 = pie.getPieChartGender(allArbsList);
@@ -1335,8 +1504,6 @@
                 String json4 = pie2.getPieChartPastDue(allRequests);
             %>
                 new Chart(ctx4, <%out.print(json4);%>);
-
-
             });
         </script>
     </body>

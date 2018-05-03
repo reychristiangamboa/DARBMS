@@ -32,7 +32,6 @@
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
 
     ArrayList<ARBO> arboList = arboDAO.getAllARBOs();
-    System.out.println(arboList.size());
     ArrayList<ARB> allArbsList = arbDAO.getAllARBsOfARBOs(arboList);
 
     ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(allArbsList);
@@ -47,6 +46,7 @@
     ArrayList<APCPRequest> allRequests = apcpRequestDAO.getAllRequests();
 
     ArrayList<Region> perRegionList = addressDAO.getAllRegions();
+    ArrayList<Province> provOfficeList = addressDAO.getAllProvOffices();
 
     ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
     ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(allRequests);

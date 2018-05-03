@@ -47,8 +47,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong>APCP</strong> 
-                        <small>Region I</small>
+                        <i class="fa fa-money"></i> Monitor Releases
                     </h1>
 
 
@@ -223,6 +222,7 @@
                                                                 <th>Other Reason</th>
                                                                 <th>Date</th>
                                                                 <th>Recorded By</th>
+                                                                <th>Status</th>
                                                             </tr>
                                                         </thead>
 
@@ -240,10 +240,16 @@
                                                                 <%if (p.getDateSettled() != null) {%>
                                                                 <td><%out.print(p.getDateSettled());%></td>
                                                                 <%} else {%>
-                                                                <td><%out.print("Unsettled.");%></td>
+                                                                <td><%out.print("N/A");%></td>
                                                                 <%}%>
 
                                                                 <td><%out.print(u.getFullName());%></td>
+                                                                
+                                                                <%if (p.getDateSettled() != null) {%>
+                                                                <td><%out.print("Unsettled");%></td>
+                                                                <%} else {%>
+                                                                <td><%out.print("Settled");%></td>
+                                                                <%}%>
                                                             </tr>
 
 
@@ -334,6 +340,7 @@
                                                                 <th>Other Reason</th>
                                                                 <th>Date</th>
                                                                 <th>Recorded By</th>
+                                                                <th>Status</th>
                                                             </tr>
 
                                                         </tfoot>

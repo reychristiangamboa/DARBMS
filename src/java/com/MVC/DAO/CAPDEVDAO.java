@@ -1817,7 +1817,6 @@ public class CAPDEVDAO {
     public boolean checkIfAssessmentsComplete(ArrayList<CAPDEVActivity> activities) {
 
         for (CAPDEVActivity act : activities) {
-            System.out.println(act.getActive());
             if (act.getActive() == 0) {
                 return false;
             }

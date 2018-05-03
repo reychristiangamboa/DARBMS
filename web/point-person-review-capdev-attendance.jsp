@@ -22,11 +22,9 @@
             <div class="content-wrapper">
                 <section class="content-header">
                     <h1>
-                        <strong>APCP</strong> 
-                        <small>Region I</small>
+                        <strong><i class="fa fa-check-circle"></i> Check Attendance</strong>
+                        <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
-
-
                 </section>
                 <section class="content">
                     <%if (request.getAttribute("success") != null) {%>
@@ -162,11 +160,15 @@
                                                                 <%}%>
                                                                 <input type="hidden" value="<%=b.getActivityID()%>" name="activityID">
                                                                 <input type="hidden" value="<%=(Integer) request.getAttribute("planID")%>" name="planID">
-                                                                <button class="btn btn-success pull-right" onclick="form.action = 'RecordActivityAssessment'" >Submit</button>
+                                                                <button class="btn btn-primary pull-right" onclick="form.action = 'RecordActivityAssessment'" >Submit Activity Assessment</button>
                                                             </div>
                                                         </form>
                                                     </div>
-
+                                                    <%
+                                                    if (capdevDAO.checkIfAssessmentsComplete(caList)) {
+                                                    %>
+                                                    <input type="hidden" id="lol" value="true">
+                                                    <%}%>
                                                     <%}%>
                                                 </div>
                                             </div>
@@ -174,13 +176,8 @@
                                         <form method="post">
                                             <div class="box-footer">
                                                 <div class="pull-right">
-                                                    <%
-                                                        if (capdevDAO.checkIfAssessmentsComplete(caList)) {
-                                                    %>
-                                                    <input type="hidden" id="lol" value="true">
-                                                    <%}%>
                                                     <input type="hidden" value="<%=(Integer) request.getAttribute("planID")%>" name="planID">
-                                                    <button class="btn btn-success" id="sendCapdevAssessment" onclick="form.action = 'SendCAPDEVAssessment'" disabled>Submit</button>
+                                                    <button class="btn btn-success" id="sendCapdevAssessment" onclick="form.action = 'SendCAPDEVAssessment'">Submit Plan Assessment</button>
                                                 </div>  
                                             </div>
                                         </form>
@@ -199,9 +196,12 @@
 
         <script>
             $(function () {
+                
+                $('#sendCapdevAssessment').hide();
+                
                 var lolVal = $('#lol').val();
                 if (lolVal) {
-                    $('#sendCapdevAssessment').removeAttr('disabled');
+                    $('#sendCapdevAssessment').show();
                 }
             });
         </script>

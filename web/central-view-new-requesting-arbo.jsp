@@ -37,12 +37,9 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong>APCP</strong> 
-                        <small>Region I</small>
+                        <i class="fa fa-plus"></i> New Accessing ARBOs
                     </h1>
-            
-
-                </section>
+            </section>
 
                 <!-- Main content -->
                 <section class="content">

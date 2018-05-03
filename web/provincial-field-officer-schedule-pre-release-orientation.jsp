@@ -28,8 +28,8 @@
                 <section class="content-header">
 
                     <h1>
-                        <strong>APCP</strong> 
-                        <small>Region I</small>
+                        <strong><i class="fa fa-file-text-o"></i> Schedule Pre-Release Orientation</strong> 
+                        <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
 
                 </section>

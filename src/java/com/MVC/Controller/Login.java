@@ -53,7 +53,7 @@ public class Login extends BaseServlet {
                 session.setAttribute("provOfficeDesc", u.getProvOfficeDesc());
 
                 if (u.getActive() == 1) {   //  ACTIVATED ACCOUNTS
-
+                    System.out.println(u.getEmail());
                     LogDAO lDAO = new LogDAO();
                     Log l = new Log();
                     l.setActionBy((Integer) session.getAttribute("userID"));

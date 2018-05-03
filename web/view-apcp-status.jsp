@@ -100,8 +100,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong>APCP</strong> 
-                        <small>Region I</small>
+                        <strong><i class="fa fa-file-text-o"></i> Agrarian Production Credit Program Requests</strong> 
                     </h1>
                 </section>
 
@@ -210,7 +209,7 @@
                         <div class="col-lg-4 col-xs-6" >
                             <!-- small box -->
                             <a href="#" name="btn1">
-                                <div class="small-box bg-aqua">
+                                <div class="small-box bg-info">
                                     <div class="inner">
                                         <h3><%=requestedRequests.size()%></h3>
 
@@ -226,7 +225,7 @@
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn2">
-                                <div class="small-box bg-green">
+                                <div class="small-box bg-primary">
                                     <div class="inner">
                                         <h3><%=clearedRequests.size()%><sup style="font-size: 20px"></sup></h3>
 
@@ -242,7 +241,7 @@
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn3">
-                                <div class="small-box bg-yellow">
+                                <div class="small-box bg-navy">
                                     <div class="inner">
                                         <h3><%=endorsedRequests.size()%></h3>
 
@@ -261,7 +260,7 @@
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn4">
-                                <div class="small-box bg-aqua">
+                                <div class="small-box bg-green-gradient">
                                     <div class="inner">
                                         <h3><%=approvedRequests.size()%></h3>
 
@@ -293,7 +292,7 @@
                         <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn6">
-                                <div class="small-box bg-yellow">
+                                <div class="small-box bg-green-active">
                                     <div class="inner">
                                         <h3><%=releasedRequests.size()%></h3>
 
@@ -312,7 +311,7 @@
                     <div class="row"  id="1" style="display:none;">
                         <!--REQUESTED-->
                         <div class="col-xs-12">
-                            <div class="box">
+                            <div class="box bg-info">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Requested</strong></h3>
                                     <div class="btn-group pull-right">
@@ -346,7 +345,7 @@
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateRequested());%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
-                                                <td><%out.print(r.getRequestStatusDesc());%></td>
+                                                <td><span class="label label-info"><%out.print(r.getRequestStatusDesc());%></span></td>
                                             </tr>
                                             <%}%>
                                         </tbody>
@@ -363,7 +362,7 @@
                     <div class="row" id="2" style="display:none;">
                         <!--CLEARED-->
                         <div class="col-xs-12">
-                            <div class="box">
+                            <div class="box bg-primary">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Cleared</strong></h3>
                                     <div class="btn-group pull-right">
@@ -401,7 +400,7 @@
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateCleared());%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
-                                                <td><%out.print(r.getRequestStatusDesc());%></td>
+                                                <td><span class="label label-primary"><%out.print(r.getRequestStatusDesc());%></span></td>
                                             </tr>
 
                                         <div class="modal fade" id="cleared-modal<%out.print(r.getRequestID());%>">
@@ -410,7 +409,7 @@
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span></button>
-                                                        <h4 class="modal-title">Endorse APCP Request</h4>
+                                                        <h4 class="modal-title">Endorse Agrarian Production Credit Program Request</h4>
                                                     </div>
 
                                                     <form method="post">
@@ -418,7 +417,7 @@
                                                             <div class="row">
                                                                 <div class="col-xs-12">
                                                                     <div class="form-group">
-                                                                        <label for="">Loan Tracking Number</label>
+                                                                        <label for="">Loan Application Number</label>
                                                                         <input type="text" name="ltn" class="form-control">
                                                                     </div>
                                                                 </div>
@@ -447,10 +446,11 @@
                         </div>
                         <!-- /.col -->
                     </div>
+                                        
                     <div class="row" id="3" style="display:none;">
                         <!--ENDORSED-->
                         <div class="col-xs-12">
-                            <div class="box">
+                            <div class="box bg-navy">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Endorsed</strong></h3>
                                     <div class="btn-group pull-right">
@@ -489,7 +489,7 @@
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateEndorsed());%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
-                                                <td><%out.print(r.getRequestStatusDesc());%></td>
+                                                <td><span class="label label-primary" style="background-color: #001F3F"><%out.print(r.getRequestStatusDesc());%></span></td>
                                             </tr>
                                         <div class="modal fade" id="endorsed-modal<%out.print(r.getRequestID());%>">
                                             <div class="modal-dialog modal-sm">
@@ -538,6 +538,7 @@
                         </div>
                         <!-- /.col -->
                     </div>
+                                        
                     <div class="row" id="4" style="display:none;">
                         <!--APPROVED-->
                         <div class="col-xs-12">
@@ -580,7 +581,7 @@
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateApproved());%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
-                                                <td><%out.print(r.getRequestStatusDesc());%></td>
+                                                <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                             </tr>
                                             <%}%>
 
@@ -637,7 +638,7 @@
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateApproved());%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
-                                                <td><%out.print(r.getRequestStatusDesc());%></td>
+                                                <td><span class="label label-success" style="background-color: #00a65a"><%out.print(r.getRequestStatusDesc());%></span></td>
                                             </tr>
                                             <%}%>
                                         </tbody>
@@ -689,7 +690,7 @@
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getReleases().get(r.getReleases().size()-1).getReleaseDate());%></td>
                                                 <td><%out.print(r.getRemarks());%></td>
-                                                <td><%out.print(r.getRequestStatusDesc());%></td>
+                                                <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                             </tr>
                                             <%}%>
                                         </tbody>
@@ -716,15 +717,6 @@
 
             function chg2() {
                 var values = $('#regions').val();
-
-                for (i = 0; i < values.length; i++) {
-                    if (i === 0) {
-                        url += "valajax=" + values[i];
-                    } else {
-                        url += "&valajax=" + values[i];
-                    }
-
-                }
 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {

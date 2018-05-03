@@ -14,14 +14,16 @@
         <div class="wrapper">
             <%@include file="jspf/field-officer-navbar.jspf"%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
-            
+
             <% ArrayList<PastDueAccount> paList = new ArrayList(); %>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1 class="box-title"><i class="fa fa-briefcase"></i> Manage Past Due Reasons</h1>
-
+                    <h1 class="box-title">
+                        <strong><i class="fa fa-briefcase"></i> Manage Past Due Reasons</strong>
+                        <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
+                    </h1>
                 </section>
 
                 <!-- Main content -->

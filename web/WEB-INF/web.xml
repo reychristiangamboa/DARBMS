@@ -287,7 +287,6 @@
     <servlet>
         <servlet-name>ViewReport</servlet-name>
         <servlet-class>com.MVC.Controller.ViewReport</servlet-class>
-        <servlet-class>com.MVC.Controller.ViewReport</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ViewSite</servlet-name>
@@ -376,6 +375,10 @@
     <servlet>
         <servlet-name>ConfirmImportARBO</servlet-name>
         <servlet-class>com.MVC.Controller.ConfirmImportARBO</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DashboardFilterGender</servlet-name>
+        <servlet-class>com.MVC.Controller.DashboardFilterGender</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -654,10 +657,6 @@
         <url-pattern>/FilterCAPDEVRequests</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>FilterRegionalCAPDEVProposals</servlet-name>
-        <url-pattern>/FilterRegionalCAPDEVProposals</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>RegionalCityFilterRefresh</servlet-name>
         <url-pattern>/RegionalCityFilterRefresh</url-pattern>
     </servlet-mapping>
@@ -756,6 +755,10 @@
     <servlet-mapping>
         <servlet-name>ConfirmImportARBO</servlet-name>
         <url-pattern>/ConfirmImportARBO</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DashboardFilterGender</servlet-name>
+        <url-pattern>/DashboardFilterGender</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

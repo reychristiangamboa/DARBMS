@@ -114,7 +114,6 @@
                                                         <option value="3">Provincial Field Officer</option>
                                                         <option value="4">Regional Field Officer</option>
                                                         <option value="5">Central Officer</option>
-                                                        <option value="6">Chief Agrarian Reform Program Officer</option>
                                                     </select>
                                                 </div>
                                             </div>

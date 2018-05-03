@@ -23,11 +23,9 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong>Add ARBO</strong> 
+                        <strong><i class="fa fa-user-plus"></i> Add ARBO</strong> 
                         <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
-
-
                 </section>
 
                 <!-- Main content -->
@@ -103,10 +101,14 @@
 
                                         <div class="row">
                                             <div class="col-xs-4">
-                                                <div class="form-group" id="cityDiv">
-                                                    <label for="">City</label>
-                                                    <select class="form-control" id="cityDrop" name="arboCityMun" style="width: 100%;" disabled required>
+                                                <div class="form-group">
+                                                    <label for="">Region</label>
+                                                    <select class="form-control" id="regionDrop" name="arboRegion" onchange="chg()" style="width: 100%;" required>
+                                                        <option value="0">--Select--</option>
+                                                        <%for (Region r : regionList) {%>
 
+                                                        <option value="<%out.print(r.getRegCode());%>"> <%out.print(r.getRegDesc());%> </option>
+                                                        <%}%>
                                                     </select>
                                                 </div>
                                             </div>
@@ -119,14 +121,10 @@
                                                 </div>
                                             </div>
                                             <div class="col-xs-4">
-                                                <div class="form-group">
-                                                    <label for="">Region</label>
-                                                    <select class="form-control" id="regionDrop" name="arboRegion" onchange="chg()" style="width: 100%;" required>
-                                                        <option value="0">--Select--</option>
-                                                        <%for (Region r : regionList) {%>
+                                                <div class="form-group" id="cityDiv">
+                                                    <label for="">City</label>
+                                                    <select class="form-control" id="cityDrop" name="arboCityMun" style="width: 100%;" disabled required>
 
-                                                        <option value="<%out.print(r.getRegCode());%>"> <%out.print(r.getRegDesc());%> </option>
-                                                        <%}%>
                                                     </select>
                                                 </div>
                                             </div>

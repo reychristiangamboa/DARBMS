@@ -37,7 +37,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong><%out.print(arbo.getArboName());%></strong> 
+                        <strong><i class="fa fa-group"></i> <%out.print(arbo.getArboName());%></strong> 
                         <small><%out.print(arbo.getArboProvinceDesc());%>, <%out.print(arbo.getArboRegionDesc());%></small>
                     </h1>
 

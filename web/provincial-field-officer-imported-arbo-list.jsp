@@ -23,7 +23,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong>Imported ARBO List</strong> 
+                        <strong><i class="fa fa-group"></i> Imported Agrarian Reform Beneficiary Organizations</strong> 
                         <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
 

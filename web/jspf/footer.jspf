@@ -107,6 +107,7 @@
 
 
         $('.table.table-bordered.table-striped.modTable').DataTable();
+        $('.modTable').DataTable();
         $('.table.table-bordered.table-striped.export').DataTable({
             dom: 'Bfrtip',
             buttons: [

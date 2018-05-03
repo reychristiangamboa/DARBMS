@@ -23,12 +23,10 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong>APCP</strong> 
-                        <small>Region I</small>
+                        <strong><i class="fa fa-group"></i> Agrarian Reform Beneficiary Organizations</strong> 
+                        <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
-             
-
-                </section>
+             </section>
 
                 <!-- Main content -->
                 <section class="content">

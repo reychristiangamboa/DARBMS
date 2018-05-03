@@ -85,6 +85,7 @@
                 ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListProvince);
 
                 ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer) session.getAttribute("provOfficeCode"));
+                System.out.print(provincialRequests.size());
                 ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
@@ -111,7 +112,8 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Dashboard: <%out.print(addressDAO.getProvOffice((Integer) session.getAttribute("provOfficeCode")).getProvDesc());%>
+                        <strong><i class="fa fa-dashboard"></i>Dashboard: <%out.print(addressDAO.getProvOffice((Integer) session.getAttribute("provOfficeCode")).getProvDesc());%></strong>
+                        <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
                 </section>
 
@@ -378,7 +380,7 @@
                                                                                     for (ARBO arbo : arboListCityMun) { %>
                                                                                 <tr>
                                                                                     <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>" class="btn btn-link"><%out.print(arbo.getArboName());%></a></td>
-                                                                                    <td><%out.print(arboDAO.getARBCount(arbo.getArboID()));%></td>
+                                                                                    <%--<td><%out.print(arbo.getArbList().size());%></td>--%>
                                                                                 </tr>
                                                                                 <%}%>
                                                                             </tbody>
@@ -802,7 +804,7 @@
                                                                                 <td><%=arbo.getArboRegionDesc()%></td>
                                                                                 <td><%=arbo.getArboProvinceDesc()%></td>
                                                                                 <td><%=arbo.getArboName()%></td>
-                                                                                <td><%=arboDAO.getARBCount(arbo.getArboID())%></td>
+                                                                                <%--<td><%=arbo.getArbList().size()%></td>--%>
                                                                                 <td><%=currency.format(req.getLoanAmount())%></td>
                                                                                 <td><%=currency.format(req.getTotalReleasedAmount())%></td>
                                                                                 <td><%=currency.format(req.getYearlyReleasedAmount())%></td>
@@ -1042,10 +1044,10 @@
                                     </div>
                                 </div>
                                 <div class="box-body" >
-                                    <div clas="row  color-palette-set">
+                                    <div clas="row">
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green-gradient color-palette">
+                                            <div class="small-box bg-info">
                                                 <div class="inner">
                                                     <h3><%out.print(requestedRequests.size());%></h3>
 
@@ -1059,7 +1061,7 @@
                                         </div>
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green-active color-palette">
+                                            <div class="small-box bg-primary">
                                                 <div class="inner">
                                                     <h3><%out.print(clearedRequests.size());%></h3>
 
@@ -1073,7 +1075,7 @@
                                         </div>
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green">
+                                            <div class="small-box bg-navy">
                                                 <div class="inner">
                                                     <h3><%out.print(endorsedRequests.size());%></h3>
 
@@ -1090,7 +1092,7 @@
                                     <div clas="row">
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-yellow">
+                                            <div class="small-box bg-green-gradient">
                                                 <div class="inner">
                                                     <h3><%out.print(approvedRequests.size());%></h3>
 
@@ -1104,7 +1106,7 @@
                                         </div>
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-red">
+                                            <div class="small-box bg-green">
                                                 <div class="inner">
                                                     <h3><%out.print(forReleaseRequests.size());%></h3>
 
@@ -1118,7 +1120,7 @@
                                         </div>
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green">
+                                            <div class="small-box bg-green-active">
                                                 <div class="inner">
                                                     <h3><%out.print(releasedRequests.size());%></h3>
 
@@ -1130,7 +1132,6 @@
 
                                             </div>
                                         </div>
-
                                     </div>
 
                                     <div class="row">
@@ -1213,32 +1214,27 @@
                                         </button>
                                     </div>
                                 </div>
-
-
-
-
                                 <div class="box-body" >
-
                                     <div clas="row">
-                                        <a href="provincial-field-officer-view-capdev-status.jsp">
-                                            <div class="col-lg-3 col-xs-6" >
-                                                <!-- small box -->
-                                                <div class="small-box bg-yellow">
-                                                    <div class="inner">
-                                                        <h3><%out.print(requestedRequests.size());%></h3>
 
-                                                        <p>Requested</p>
-                                                    </div>
-                                                    <div class="icon" >
-                                                        <i class="fa fa-keyboard-o"></i>
-                                                    </div>
+                                        <div class="col-lg-3 col-xs-6" >
+                                            <!-- small box -->
+                                            <div class="small-box bg-info">
+                                                <div class="inner">
+                                                    <h3><%out.print(requestedRequests.size());%></h3>
 
+                                                    <p>Requested</p>
                                                 </div>
+                                                <div class="icon" >
+                                                    <i class="fa fa-keyboard-o"></i>
+                                                </div>
+
                                             </div>
-                                        </a>
+                                        </div>
+
                                         <div class="col-lg-3 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-red">
+                                            <div class="small-box bg-warning">
                                                 <div class="inner">
                                                     <h3><%out.print(pendingPlans.size());%></h3>
 
@@ -1252,7 +1248,7 @@
                                         </div>
                                         <div class="col-lg-3 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green">
+                                            <div class="small-box bg-green-gradient">
                                                 <div class="inner">
                                                     <h3><%out.print(approvedPlans.size());%></h3>
 
@@ -1266,7 +1262,7 @@
                                         </div>
                                         <div class="col-lg-3 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-aqua">
+                                            <div class="small-box bg-green-active">
                                                 <div class="inner">
                                                     <h3><%out.print(implementedPlans.size());%></h3>
 

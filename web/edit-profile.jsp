@@ -28,7 +28,7 @@
             <%}%>
             <div class="content-wrapper">
                 <section class="content-header">
-                    <h1><i class="fa fa-user-plus"></i> Edit Profile</h1>
+                    <h1><i class="fa fa-edit"></i> Edit Profile</h1>
      
                 </section>
                 <section class="content">

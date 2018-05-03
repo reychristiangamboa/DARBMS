@@ -34,7 +34,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        ARBO Profile
+                        <i class="fa fa-plus"></i> New Accessing ARBO
                     </h1>
 
                 </section>

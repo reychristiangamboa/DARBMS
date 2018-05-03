@@ -68,7 +68,8 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Cluster ARBs
+                        <strong><i class="fa fa-group"></i> Cluster Agrarian Reform Beneficiaries</strong>
+                        <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
                 </section>
 

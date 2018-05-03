@@ -41,8 +41,12 @@
         <div class="box-body">
             <div class="row">
                 <div class="col-xs-3">
-                    <label for=''>Loan Tracking No.</label>
+                    <label for=''>Loan Application No.</label>
+                    <%if(r2.getLoanTrackingNo() > 0){%>
                     <input style='border-left: none; border-right: none; border-top: none; background: none;' type='text' class="form-control" id='' value="<%out.print(r2.getLoanTrackingNo());%>" disabled>
+                    <%}else{%>
+                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type='text' class="form-control" id='' value="Not yet endorsed." disabled>
+                    <%}%>
                 </div>
                 
                 <div class="col-xs-3">

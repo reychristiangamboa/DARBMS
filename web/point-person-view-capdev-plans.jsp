@@ -36,10 +36,9 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong>APCP</strong> 
-                        <small>Region I</small>
+                        <strong><i class="fa fa-file-o"></i> View Capacity Development Plans</strong>
+                        <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
-
                 </section>
 
                 <!-- Main content -->

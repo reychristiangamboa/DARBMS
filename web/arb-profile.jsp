@@ -75,9 +75,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>
-                        ARB Profile
-                    </h1>
+                    <h1><i class="fa fa-user"></i> Agrarian Reform Beneficiary Profile</h1>
 
                 </section>
 
@@ -197,13 +195,13 @@
                                     <!--                                        /.modal-dialog -->
                                 </div>
 
-                                <div class="modal fade" id="add-evaluation">
+                                <div class="modal fade" id="add-evaluation-arb">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span></button>
-                                                <h4 class="modal-title">Add Evaluation</h4>
+                                                <h4 class="modal-title">Add Evaluation: Overall</h4>
                                             </div>
                                             <form method="post">
                                                 <div class="modal-body">
@@ -239,19 +237,8 @@
                                                     <div class="row">
                                                         <div class="col-xs-6">
                                                             <div class="form-group">
-                                                                <label>DTN</label>
+                                                                <label>Document Tracking No.</label>
                                                                 <input type="text" name="dtn" class="form-control pull-right">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-6">
-                                                            <div class="form-group">
-                                                                <label>Type</label>
-                                                                <select name="type" class="form-control select2" style="width: 100%;">
-                                                                    <option selected="selected">Select</option>
-                                                                    <option value="1">ARB</option>
-                                                                    <option value="2">APCP</option>
-                                                                    <option value="3">CAPDEV</option>
-                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -262,6 +249,7 @@
                                                         <input type="hidden" id="start" name="start">
                                                         <input type="hidden" id="end" name="end" >
                                                         <input type="hidden" id="maxDate" name="maxDate">
+                                                        <input type="hidden" name="type" value="1">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                         <button type="submit" id="submitEval" class="btn btn-primary" onclick="form.action = 'AddEvaluation?id=<%out.print(arb.getArbID());%>'">Submit</button>
                                                     </div>
@@ -272,6 +260,137 @@
                                     </div>
                                     <!-- /.modal-dialog -->
                                 </div>
+                                <div class="modal fade" id="add-evaluation-apcp">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title">Add Evaluation: APCP</h4>
+                                            </div>
+                                            <form method="post">
+                                                <div class="modal-body">
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Date:</label>
+                                                                <div class="input-group date">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    <input type="date" name="evaluationDate" class="form-control pull-right" id="datepicker">
+                                                                </div>
+                                                                <!-- /.input group -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Evaluation Quarter:</label>
+
+                                                                <div class="input-group">
+                                                                    <button type="button" class="btn btn-default pull-right" id="daterange-btn">
+                                                                        <span>
+                                                                            <i class="fa fa-calendar"></i> Date range picker
+                                                                        </span>
+                                                                        <i class="fa fa-caret-down"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Document Tracking No.</label>
+                                                                <input type="text" name="dtn" class="form-control pull-right">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <div class="pull-right">
+                                                        <input type="hidden" id="start" name="start">
+                                                        <input type="hidden" id="end" name="end" >
+                                                        <input type="hidden" id="maxDate" name="maxDate">
+                                                        <input type="hidden" name="type" value="2">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        <button type="submit" id="submitEval" class="btn btn-primary" onclick="form.action = 'AddEvaluation?id=<%out.print(arb.getArbID());%>'">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                                <div class="modal fade" id="add-evaluation-capdev">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title">Add Evaluation: CAPDEV</h4>
+                                            </div>
+                                            <form method="post">
+                                                <div class="modal-body">
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Date:</label>
+                                                                <div class="input-group date">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    <input type="date" name="evaluationDate" class="form-control pull-right" id="datepicker">
+                                                                </div>
+                                                                <!-- /.input group -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Evaluation Quarter:</label>
+
+                                                                <div class="input-group">
+                                                                    <button type="button" class="btn btn-default pull-right" id="daterange-btn">
+                                                                        <span>
+                                                                            <i class="fa fa-calendar"></i> Date range picker
+                                                                        </span>
+                                                                        <i class="fa fa-caret-down"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Document Tracking No.</label>
+                                                                <input type="text" name="dtn" class="form-control pull-right">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <div class="pull-right">
+                                                        <input type="hidden" id="start" name="start">
+                                                        <input type="hidden" id="end" name="end" >
+                                                        <input type="hidden" id="maxDate" name="maxDate">
+                                                        <input type="hidden" name="type" value="3">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        <button type="submit" id="submitEval" class="btn btn-primary" onclick="form.action = 'AddEvaluation?id=<%out.print(arb.getArbID());%>'">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                                                    
                                 <div class="modal fade" id="import-evaluation">
                                     <div class="modal-dialog modal-md">
                                         <div class="modal-content">
@@ -459,7 +578,7 @@
                                                 </div>
                                                 <%if ((Integer) session.getAttribute("userType") == 2) {%>
                                                 <div class="box-footer">
-                                                    <button id="addEval" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation">Add Evaluation</button>
+                                                    <button id="addEval" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation-apcp">Add Evaluation</button>
                                                 </div>
                                                 <%}%>
                                             </div>
@@ -545,7 +664,7 @@
                                                 </div>
                                                 <%if ((Integer) session.getAttribute("userType") == 2) {%>
                                                 <div class="box-footer">
-                                                    <button id="addEval" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation">Add Evaluation</button>
+                                                    <button id="addEval" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation-capdev">Add Evaluation</button>
                                                 </div>
                                                 <%}%>
                                             </div>
@@ -631,7 +750,7 @@
                                                 </div>
                                                 <%if ((Integer) session.getAttribute("userType") == 2) {%>
                                                 <div class="box-footer">
-                                                    <button id="addEval" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation">Add Evaluation</button>
+                                                    <button id="addEval" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation-arb">Add Evaluation</button>
                                                 </div>
                                                 <%}%>
                                             </div>

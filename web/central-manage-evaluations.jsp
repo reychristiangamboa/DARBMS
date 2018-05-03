@@ -58,7 +58,7 @@
                                             <div class="col-xs-2">
                                                 <div class="form-group">
                                                     <label for="actName">Question Weight</label>
-                                                    <input type="number" class="form-control" name="weight">
+                                                    <input type="number" class="form-control" name="weight" required>
                                                 </div>
                                             </div>
                                         </div>

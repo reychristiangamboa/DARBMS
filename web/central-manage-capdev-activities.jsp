@@ -20,7 +20,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1 class="box-title"><i class="fa fa-briefcase"></i> Manage Past Due Reasons</h1>
+                    <h1 class="box-title"><i class="fa fa-briefcase"></i> Manage CAPDEV Activities</h1>
                     <ol class="breadcrumb">
                         <li><a href="admin-system-logs.jsp"><i class="fa fa-eye"></i> View System Logs</a></li>
                         <li><a href="#"><i class="fa fa-users"></i> Manage Past Due Reasons</a></li>
@@ -68,7 +68,7 @@
                                             <div class="col-xs-6">
                                                 <div class="form-group">
                                                     <label for="actDesc">Activity Description</label>
-                                                    <textarea id="actDesc" rows="2" class="form-control" name="activityDesc"></textarea>
+                                                    <textarea id="actDesc" rows="2" class="form-control" name="activityDesc" required></textarea>
                                                 </div>
                                             </div>
                                         </div>

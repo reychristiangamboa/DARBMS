@@ -40,28 +40,21 @@
             <%
                 int arboID = (Integer) request.getAttribute("arboID");
                 ARBO arbo = arboDAO.getARBOByID(arboID);
-
             %>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong>APCP</strong> 
-                        <small>Region I</small>
+                        <strong><i class="fa fa-money"></i> Request for Loan</strong> 
+                        <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
-               
+
 
                 </section>
 
                 <!-- Main content -->
                 <section class="content">
-                    <%if (request.getAttribute("errMessage") != null) {%>
-                    <p class="text text-center text-danger"><%=request.getAttribute("errMessage")%></p>
-                    <%}%>
-                    <%if (request.getAttribute("success") != null) {%>
-                    <p class="text text-center text-success"><%=request.getAttribute("success")%></p>
-                    <%}%>
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box">
@@ -88,6 +81,18 @@
                                                         <input type="text" class="form-control" id="" placeholder="" value="<%out.print(arboDAO.getARBCount(arboID));%>" disabled>
                                                     </div>
                                                 </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-4">
+                                                    <div class="form-group">
+                                                        <label for="">Type</label>
+                                                        <select name="apcpType" id="" class="form-control select2">
+                                                            <option value="1">Crop Production</option>
+                                                            <option value="2">Livelihood Program</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                                 <div class="col-xs-3">
                                                     <div class="form-group">
                                                         <label for="">Land Area (Hectares)</label>
@@ -95,6 +100,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <div class="row">
                                                 <div class="col-xs-4">
                                                     <label for=''>Loan Amount</label><br>
@@ -105,25 +111,71 @@
                                                         <input id="loanAmount" type='text' name="loan" class="form-control numberOnly">
                                                     </div>
                                                 </div>
-
                                                 <div class="col-xs-4">
                                                     <div class="form-group">
                                                         <label for="">Reason for Loan</label>
-                                                        <input type="text" class="form-control" name="reason" />
+                                                        <select name="reason" id="" class="form-control select2">
+                                                            <%for(LoanReason lr : loanReasons){%>
+                                                            <option value="<%out.print(lr.getLoanReason());%>"><%out.print(lr.getLoanReasonDesc());%></option>
+                                                            <%}%>
+                                                        </select>
                                                     </div>
-                                                </div>       
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <div class="form-group">
+                                                        <label for="">Other Reason</label>
+                                                        <input type="text" class="form-control" name="otherReason" value="N/A">
+                                                    </div>
+                                                </div>    
                                             </div>
+
                                             <div class="row">
                                                 <div class="col-xs-12">
                                                     <label for=''>Remarks</label>
-                                                    <textarea class="form-control" name="remarks" rows="2" placeholder="Remarks"></textarea>
+                                                    <textarea class="form-control" name="remarks" rows="1" placeholder="Remarks"></textarea>
                                                 </div>
-
                                             </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <table class="modTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Address</th>
+                                                                <th>Crops</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <%for(ARB arb : arbo.getArbList()){%>
+                                                            <tr>
+                                                                <td><%=arb.getFullName()%></td>
+                                                                <td><%=arb.getFullAddress()%></td>
+                                                                <td><%=arb.printAllCrops()%></td>
+                                                                <td><input type="checkbox" name="recipients" required></td>
+                                                            </tr>
+                                                            <%}%>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Address</th>
+                                                                <th>Crops</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                         <div class="box-footer">
                                             <input type="hidden" name="arboID" value="<%out.print(arboID);%>">
+                                            <%if(request.getAttribute("newAccessing") != null){%>
+                                            <input type="hidden" name="newAccessing" value="1">
+                                            <%}%>
                                             <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i> Submit</button>
                                         </div>
 
@@ -151,7 +203,7 @@
 
         <%@include file="jspf/footer.jspf" %>
 
-        
+
 
     </body>
 </html>

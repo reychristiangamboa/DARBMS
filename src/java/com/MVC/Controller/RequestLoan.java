@@ -27,37 +27,44 @@ public class RequestLoan extends BaseServlet {
         HttpSession session = request.getSession();
         APCPRequestDAO requestDAO = new APCPRequestDAO();
         APCPRequest apcpRequest = new APCPRequest();
-        
+
         String[] vals = request.getParameter("loan").split(",");
         StringBuilder sb = new StringBuilder();
-        for(String val : vals){
+        for (String val : vals) {
             sb.append(val);
         }
-        
+
         String finLoan = sb.toString();
-        System.out.println(request.getParameter("loan"));
-        System.out.println(finLoan);
 
         apcpRequest.setArboID(Integer.parseInt(request.getParameter("arboID")));
         apcpRequest.setHectares(Double.parseDouble(request.getParameter("land")));
         apcpRequest.setLoanAmount(Double.parseDouble(finLoan));
-        
+
         apcpRequest.setLoanReason(Integer.parseInt(request.getParameter("reason")));
         apcpRequest.setOtherLoanReason(request.getParameter("otherReason"));
         apcpRequest.setApcpType(Integer.parseInt(request.getParameter("apcpType")));
-        
-        apcpRequest.setRemarks(request.getParameter("remarks"));
-        apcpRequest.setRequestStatus(1);
 
-        if (requestDAO.requestAPCP(apcpRequest, (Integer)session.getAttribute("userID"))) {
-            request.setAttribute("arboID", apcpRequest.getArboID());
-            request.setAttribute("success", "APCP requested!");
-            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
+        apcpRequest.setRemarks(request.getParameter("remarks"));
+
+        if (request.getParameter("newAccessing") != null) {
+            apcpRequest.setRequestStatus(6); // NEW ACCESSING
+            request.setAttribute("success", "APCP access requested!");
+            request.setAttribute("errMessage", "Error in requesting access to APCP. Try again.");
         } else {
-            request.setAttribute("arboID", apcpRequest.getArboID());
+            apcpRequest.setRequestStatus(1); // REQUESTED
+            request.setAttribute("success", "APCP requested!");
             request.setAttribute("errMessage", "Error in requesting APCP. Try again.");
-            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         }
+        
+        String[] recipients = request.getParameterValues("recipients");
+
+        int requestID = requestDAO.requestAPCP(apcpRequest, (Integer)session.getAttribute("userID"));
+        
+        for(String id : recipients){
+            requestDAO.addAPCPRecipient(requestID, Integer.parseInt(id));
+        }
+        
+        request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
 
     }
 

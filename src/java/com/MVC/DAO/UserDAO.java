@@ -72,7 +72,7 @@ public class UserDAO {
         try {
             con.setAutoCommit(false);
             String query = "SELECT * FROM users WHERE `email` = ? AND `password` = sha2(?,224)";
-            PreparedStatement pstmt = con.prepareCall(query);
+            PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setString(1, u.getEmail());
             pstmt.setString(2, u.getPassword());
             ResultSet result = pstmt.executeQuery();

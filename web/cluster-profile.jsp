@@ -73,7 +73,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        Project Site
+                        <i class="fa fa-group"></i> Cluster Profile
                     </h1>
                 </section>
                 <section class="content">

@@ -98,8 +98,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong>APCP</strong> 
-                        <small>Region I</small>
+                        <strong><i class="fa fa-file-text-o"></i> Capacity Development Plans</strong> 
                     </h1>
 
 
@@ -212,7 +211,7 @@
                         <div class="col-lg-3 col-xs-6" >
                             <!-- small box -->
                             <a href="#" name="btn1">
-                                <div class="small-box bg-yellow">
+                                <div class="small-box bg-warning">
                                     <div class="inner">
                                         <h3><%=pendingPlans.size()%></h3>
 
@@ -228,7 +227,7 @@
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn2">
-                                <div class="small-box bg-aqua">
+                                <div class="small-box bg-green-gradient">
                                     <div class="inner">
                                         <h3><%=approvedPlans.size()%></h3>
 
@@ -262,7 +261,7 @@
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn4">
-                                <div class="small-box bg-green">
+                                <div class="small-box bg-green-active">
                                     <div class="inner">
                                         <h3><%=implementedPlans.size()%></h3>
 
@@ -282,9 +281,9 @@
                     <!--PENDING-->
                     <div class="row" id="1" style="display:none;">
                         <div class="col-xs-12" >
-                            <div class="box">
+                            <div class="box bg-warning">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Pending CAPDEV Proposals</strong></h3>
+                                    <h3 class="box-title"><strong>Pending</strong></h3>
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                     </div>                         
@@ -316,7 +315,7 @@
                                                     <%}%>
                                                 <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
-                                                <td><%out.print(p.getPlanStatusDesc());%></td>
+                                                <td><span class="label label-warning"><%out.print(p.getPlanStatusDesc());%></span></td>
                                             </tr>
                                             <%}%>
 
@@ -344,9 +343,9 @@
                     <!--                    APPROVED-->
                     <div class="row" id="2" style="display:none;">
                         <div class="col-xs-12">
-                            <div class="box">
+                            <div class="box bg-green-gradient">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Approved CAPDEV Proposals</strong></h3>
+                                    <h3 class="box-title"><strong>Approved</strong></h3>
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                     </div>                         
@@ -378,7 +377,7 @@
                                                     <%}%>
                                                 <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
-                                                <td><%out.print(p.getPlanStatusDesc());%></td>
+                                                <td><span class="label label-success"><%out.print(p.getPlanStatusDesc());%></span></td>
                                             </tr>
                                             <%}%>
 
@@ -406,9 +405,9 @@
                     <!--                                            DISAPPROVED-->
                     <div class="row" id="3" style="display:none;">
                         <div class="col-xs-12">
-                            <div class="box">
+                            <div class="box bg-red">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Disapproved CAPDEV Proposals</strong></h3>
+                                    <h3 class="box-title"><strong>Disapproved</strong></h3>
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                     </div>                         
@@ -438,7 +437,7 @@
                                                 <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
-                                                <td><%out.print(p.getPlanStatusDesc());%></td>
+                                                <td><span class="label label-danger"><%out.print(p.getPlanStatusDesc());%></span></td>
                                             </tr>
                                             <%
                                                }
@@ -465,9 +464,9 @@
                     <!--IMPLEMENTED-->
                     <div class="row" id="4" style="display:none;">
                         <div class="col-xs-12" >
-                            <div class="box">
+                            <div class="box bg-green-active">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Implemented CAPDEV Proposals</strong></h3>
+                                    <h3 class="box-title"><strong>Implemented</strong></h3>
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                     </div>                         
@@ -495,7 +494,7 @@
                                                 <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
                                                 <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
-                                                <td><%out.print(p.getPlanStatusDesc());%></td>
+                                                <td><span class="label label-success"><%out.print(p.getPlanStatusDesc());%></span></td>
                                             </tr>
                                             <%}%>
 

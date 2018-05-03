@@ -47,8 +47,7 @@
                 <section class="content-header">
 
                     <h1>
-                        <strong>APCP</strong> 
-                        <small>Region I</small>
+                        <i class="fa fa-money"></i> Monitor Disbursements
                     </h1>
                     <ol class="breadcrumb">
                         <li><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><i class="fa fa-caret-left"></i> Go Back</a></li>

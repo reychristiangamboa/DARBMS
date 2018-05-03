@@ -27,8 +27,6 @@ public class ViewARBO extends BaseServlet {
         ARBO arbo = new ARBO();
         arbo = arboDAO.getARBOByID(id);
         
-        System.out.println(arbo.getArboName());
-        
         request.setAttribute("arbo", arbo);
         request.getRequestDispatcher("arbo-profile.jsp").forward(request, response);
         

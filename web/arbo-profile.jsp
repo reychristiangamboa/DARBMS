@@ -77,9 +77,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>
-                        ARBO Profile
-                    </h1>
+                    <h1><i class="fa fa-group"></i> Agrarian Reform Beneficiary Organization Profile</h1>
                 </section>
 
                 <!-- Main content -->
