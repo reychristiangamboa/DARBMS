@@ -1059,7 +1059,7 @@
                                     <div clas="row">
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-info">
+                                            <div class="small-box" style="background: #006A9B">
                                                 <div class="inner">
                                                     <h3><%out.print(requestedRequests.size());%></h3>
 
@@ -1073,7 +1073,7 @@
                                         </div>
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-primary">
+                                            <div class="small-box" style="background: #007DA3">
                                                 <div class="inner">
                                                     <h3><%out.print(clearedRequests.size());%></h3>
 
@@ -1087,7 +1087,7 @@
                                         </div>
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-navy">
+                                            <div class="small-box" style="background: #0091A4">
                                                 <div class="inner">
                                                     <h3><%out.print(endorsedRequests.size());%></h3>
 
@@ -1104,7 +1104,7 @@
                                     <div clas="row">
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green-gradient">
+                                            <div class="small-box" style="background: #00A39F">
                                                 <div class="inner">
                                                     <h3><%out.print(approvedRequests.size());%></h3>
 
@@ -1118,7 +1118,7 @@
                                         </div>
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green">
+                                            <div class="small-box" style="background: #00B595">
                                                 <div class="inner">
                                                     <h3><%out.print(forReleaseRequests.size());%></h3>
 
@@ -1132,7 +1132,7 @@
                                         </div>
                                         <div class="col-lg-4 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green-active">
+                                            <div class="small-box" style="background: #2AC587">
                                                 <div class="inner">
                                                     <h3><%out.print(releasedRequests.size());%></h3>
 
@@ -1225,7 +1225,7 @@
 
                                         <div class="col-lg-3 col-xs-6" >
                                             <!-- small box -->
-                                            <div class="small-box bg-info">
+                                            <div class="small-box bg-purple-active">
                                                 <div class="inner">
                                                     <h3><%out.print(requestedRequests.size());%></h3>
 
@@ -1240,7 +1240,7 @@
 
                                         <div class="col-lg-3 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-warning">
+                                            <div class="small-box bg-yellow">
                                                 <div class="inner">
                                                     <h3><%out.print(pendingPlans.size());%></h3>
 
@@ -1254,7 +1254,7 @@
                                         </div>
                                         <div class="col-lg-3 col-xs-6">
                                             <!-- small box -->
-                                            <div class="small-box bg-green-gradient">
+                                            <div class="small-box bg-aqua">
                                                 <div class="inner">
                                                     <h3><%out.print(approvedPlans.size());%></h3>
 
