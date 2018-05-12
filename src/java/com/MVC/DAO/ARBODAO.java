@@ -26,6 +26,7 @@ public class ARBODAO {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ARBO arbo = new ARBO();
+        APCPRequestDAO rDAO = new APCPRequestDAO();
         try {
             String query = "SELECT * FROM arbos a "
                     + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
@@ -52,6 +53,7 @@ public class ARBODAO {
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
                 arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
+                arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
             } else {
                 return null;
             }
@@ -109,6 +111,7 @@ public class ARBODAO {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<ARBO> arboList = new ArrayList();
+        APCPRequestDAO rDAO = new APCPRequestDAO();
         try {
             String query = "SELECT * FROM arbos a "
                     + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
@@ -134,6 +137,7 @@ public class ARBODAO {
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
                 arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
+                arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
                 arboList.add(arbo);
             }
             rs.close();
@@ -154,6 +158,7 @@ public class ARBODAO {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<ARBO> arboList = new ArrayList();
+        APCPRequestDAO rDAO = new APCPRequestDAO();
         try {
             String query = "SELECT * FROM arbos a "
                     + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
@@ -181,6 +186,7 @@ public class ARBODAO {
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
                 arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
+                arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
                 arboList.add(arbo);
             }
             rs.close();
@@ -201,6 +207,7 @@ public class ARBODAO {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<ARBO> arboList = new ArrayList();
+        APCPRequestDAO rDAO = new APCPRequestDAO();
         try {
             String query = "SELECT * FROM arbos a "
                     + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
@@ -228,6 +235,7 @@ public class ARBODAO {
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
                 arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
+                arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
                 arboList.add(arbo);
             }
             rs.close();
@@ -295,6 +303,7 @@ public class ARBODAO {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<ARBO> arboList = new ArrayList();
+        APCPRequestDAO rDAO = new APCPRequestDAO();
         try {
             String query = "SELECT * FROM arbos a "
                     + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
@@ -322,6 +331,7 @@ public class ARBODAO {
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
                 arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
+                arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
                 arboList.add(arbo);
             }
             rs.close();
@@ -342,6 +352,7 @@ public class ARBODAO {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<ARBO> arboList = new ArrayList();
+        APCPRequestDAO rDAO = new APCPRequestDAO();
         try {
             String query = "SELECT * FROM arbos a "
                     + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
@@ -369,6 +380,7 @@ public class ARBODAO {
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
                 arbo.setAPCPQualified(rs.getInt("APCPQualified"));
                 arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
+                arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
                 arboList.add(arbo);
             }
             rs.close();

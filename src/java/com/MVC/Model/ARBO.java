@@ -27,6 +27,7 @@ public class ARBO {
     private String provOfficeCodeDesc;
     private int APCPQualified;
     private ArrayList<ARB> arbList = new ArrayList();
+    private ArrayList<APCPRequest> requestList = new ArrayList();
 
     public int getArboID() {
         return arboID;
@@ -143,6 +144,15 @@ public class ARBO {
     public void setArbList(ArrayList<ARB> arbList) {
         this.arbList = arbList;
     }
+
+    public ArrayList<APCPRequest> getRequestList() {
+        return requestList;
+    }
+
+    public void setRequestList(ArrayList<APCPRequest> requestList) {
+        this.requestList = requestList;
+    }
+    
     
     
     

@@ -90,7 +90,7 @@
                                         <div class="tab-content">
                                             <div class="active tab-pane" id="gender">
 
-                                                <form id="drillDownGenderForm">
+                                                <%--<form id="drillDownGenderForm">
                                                     <div class="row">
                                                         <div class="col-xs-12">
                                                             <input type="radio" id="drillDownGender" name="filterBy" value="All" checked onclick="document.getElementById('regions').disabled = true;document.getElementById('provinces').disabled = true;">
@@ -129,7 +129,7 @@
                                                             <button type="submit" onclick="form.action = 'DashboardFilterGender'" class="btn btn-success"><i class="fa fa-filter margin-r-5"></i> Filter</button>
                                                         </div>
                                                     </div>
-                                                </form>
+                                                </form>--%>
                                                 <div class="row">
                                                     <div class="col-xs-3"></div>
                                                     <div class="col-xs-6">

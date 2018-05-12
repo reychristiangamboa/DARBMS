@@ -17,9 +17,12 @@ import be.ceau.chart.dataset.LineDataset;
 import be.ceau.chart.dataset.PieDataset;
 import be.ceau.chart.options.BarOptions;
 import be.ceau.chart.options.Title;
+import be.ceau.chart.options.scales.BarScale;
+import be.ceau.chart.options.scales.*;
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.DAO.ARBDAO;
 import com.MVC.DAO.ARBODAO;
+import com.MVC.DAO.AddressDAO;
 import com.MVC.DAO.CAPDEVDAO;
 import java.util.ArrayList;
 import com.MVC.DAO.CropDAO;
@@ -30,6 +33,7 @@ import java.util.Calendar;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -65,21 +69,20 @@ public class Chart {
         }
         dataset.setBorderWidth(2);
 
-        BarDataset dataset2 = new BarDataset();
-        dataset2.setLabel("CHOCOLATE");
-        for (int i = 0; i < doubleFigures2.size(); i++) {
-            dataset2.addData(doubleFigures2.get(i));
-            dataset2.addBackgroundColor(Color.CHOCOLATE);
-        }
-        dataset2.setBorderWidth(2);
-
+//        BarDataset dataset2 = new BarDataset();
+//        dataset2.setLabel("CHOCOLATE");
+//        for (int i = 0; i < doubleFigures2.size(); i++) {
+//            dataset2.addData(doubleFigures2.get(i));
+//            dataset2.addBackgroundColor(Color.CHOCOLATE);
+//        }
+//        dataset2.setBorderWidth(2);
         BarData data = new BarData();
         for (int j = 0; j < stringLabels.size(); j++) {
             data.addLabel(stringLabels.get(j));
         }
 
         data.addDataset(dataset);
-        data.addDataset(dataset2);
+//        data.addDataset(dataset2);
 
         return new BarChart(data).toJson();
     }
@@ -215,7 +218,7 @@ public class Chart {
 
             sqlDate = java.sql.Date.valueOf(nextYear + "-02-28");
             dates.add(sqlDate);
-            
+
             sqlDate = java.sql.Date.valueOf(nextYear + "-03-31");
             dates.add(sqlDate);
 
@@ -765,9 +768,775 @@ public class Chart {
 
         return new BarChart(data).toJson();
     }
-    
-    public String getBarChartGender(ArrayList<ARB> arbList) {
-        
+
+    public String getBarChartAgeCount(ArrayList<ARB> arbList) {
+
+        ArrayList<String> labels = new ArrayList();
+        labels.add("18-24");
+        labels.add("25-34");
+        labels.add("35-44");
+        labels.add("45-54");
+        labels.add("55-64");
+        labels.add("> 65");
+
+        BarData data = new BarData();
+        BarDataset dataset = new BarDataset();
+        ArrayList<Integer> values = new ArrayList();
+        for (int i = 0; i < labels.size(); i++) {
+            int total = 0;
+            for (ARB arb : arbList) {
+                if (i == 0 && (arb.getAge() >= 18 && arb.getAge() <= 24)) {
+                    total++;
+                } else if (i == 1 && (arb.getAge() >= 25 && arb.getAge() <= 34)) {
+                    total++;
+                } else if (i == 2 && (arb.getAge() >= 35 && arb.getAge() <= 44)) {
+                    total++;
+                } else if (i == 3 && (arb.getAge() >= 45 && arb.getAge() <= 54)) {
+                    total++;
+                } else if (i == 4 && (arb.getAge() >= 55 && arb.getAge() <= 64)) {
+                    total++;
+                } else if (i == 5 && arb.getAge() >= 65) {
+                    total++;
+                }
+            }
+            values.add(total);
+            data.addLabel(labels.get(i));
+        }
+
+        for (int value : values) {
+            dataset.addData(value);
+            dataset.addBackgroundColor(Color.DARK_OLIVE_GREEN);
+        }
+
+        dataset.setLabel("Age");
+        dataset.setBorderWidth(2);
+        data.addDataset(dataset);
+
+        return new BarChart(data).toJson();
+
     }
 
+    public String getStackedBarChartAPCPRequests(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+
+        ArrayList<String> labels = new ArrayList();
+        boolean b = true;
+
+        if (regionList.isEmpty()) {
+            labels.add("REGION I (ILOCOS REGION)");
+            labels.add("REGION II (CAGAYAN VALLEY)");
+            labels.add("REGION III (CENTRAL LUZON)");
+            labels.add("REGION IV-A (CALABARZON)");
+            labels.add("REGION IV-B (MIMAROPA)");
+            labels.add("REGION V (BICOL REGION)");
+            labels.add("REGION VI (WESTERN VISAYAS)");
+            labels.add("REGION VII (CENTRAL VISAYAS)");
+            labels.add("REGION VIII (EASTERN VISAYAS)");
+            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+            labels.add("REGION X (NORTHERN MINDANAO)");
+            labels.add("REGION XI (DAVAO REGION)");
+            labels.add("REGION XII (SOCCSKSARGEN)");
+            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+            labels.add("REGION XIII (Caraga)");
+            System.out.println("REGION EMPTY!");
+        } else if (provList.isEmpty()) {
+            for (Region r : regionList) {
+                labels.add(r.getRegDesc());
+            }
+            System.out.println("PROV EMPTY!");
+        } else {
+            for (Province p : provList) {
+                labels.add(p.getProvDesc());
+            }
+            b = false;
+            System.out.println("");
+        }
+
+        BarData data = new BarData();
+
+        BarDataset requested = new BarDataset();
+        ArrayList<Integer> requestedValues = new ArrayList();
+        BarDataset cleared = new BarDataset();
+        ArrayList<Integer> clearedValues = new ArrayList();
+        BarDataset endorsed = new BarDataset();
+        ArrayList<Integer> endorsedValues = new ArrayList();
+        BarDataset approved = new BarDataset();
+        ArrayList<Integer> approvedValues = new ArrayList();
+        BarDataset forRelease = new BarDataset();
+        ArrayList<Integer> forReleaseValues = new ArrayList();
+        BarDataset released = new BarDataset();
+        ArrayList<Integer> releasedValues = new ArrayList();
+        BarOptions options = new BarOptions();
+
+        BarScale scales = new BarScale();
+        XAxis x = new XAxis();
+        YAxis y = new YAxis();
+        x.setStacked(Boolean.TRUE);
+        y.setStacked(Boolean.TRUE);
+        scales.addxAxes(x);
+        scales.addyAxes(y);
+        options.setScales(scales);
+
+        for (int i = 0; i < labels.size(); i++) { // REGIONS/PROVINCES
+
+            int requestedCount = 0;
+            int clearedCount = 0;
+            int endorsedCount = 0;
+            int approvedCount = 0;
+            int forReleaseCount = 0;
+            int releasedCount = 0;
+
+            for (ARBO arbo : arboList) {
+                if (b) { // REGIONAL
+                    if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                        for (APCPRequest r : arbo.getRequestList()) {
+                            if (r.getRequestStatus() == 1) { // requested
+                                requestedCount++;
+                            } else if (r.getRequestStatus() == 2) { // cleared
+                                clearedCount++;
+                            } else if (r.getRequestStatus() == 3) { // endorsed
+                                endorsedCount++;
+                            } else if (r.getRequestStatus() == 4) { // approved
+                                approvedCount++;
+                            } else if (r.getRequestStatus() == 5) { // release
+                                releasedCount++;
+                            } else if (r.getRequestStatus() == 6) { // forRelease
+                                forReleaseCount++;
+                            }
+                        }
+                    }
+                } else { // PROVINCIAL OFFICE
+                    if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                        for (APCPRequest r : arbo.getRequestList()) {
+                            if (r.getRequestStatus() == 1) { // requested
+                                requestedCount++;
+                            } else if (r.getRequestStatus() == 2) { // cleared
+                                clearedCount++;
+                            } else if (r.getRequestStatus() == 3) { // endorsed
+                                endorsedCount++;
+                            } else if (r.getRequestStatus() == 4) { // approved
+                                approvedCount++;
+                            } else if (r.getRequestStatus() == 5) { // release
+                                releasedCount++;
+                            } else if (r.getRequestStatus() == 6) { // forRelease
+                                forReleaseCount++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            requestedValues.add(requestedCount);
+            clearedValues.add(clearedCount);
+            endorsedValues.add(endorsedCount);
+            approvedValues.add(approvedCount);
+            forReleaseValues.add(forReleaseCount);
+            releasedValues.add(releasedCount);
+
+            data.addLabel(labels.get(i));
+
+        }
+
+        for (int value : requestedValues) {
+            requested.addData(value);
+            requested.addBackgroundColor(Color.random());
+            requested.setLabel("REQUESTED");
+        }
+
+        for (int value : clearedValues) {
+            cleared.addData(value);
+            cleared.addBackgroundColor(Color.random());
+            cleared.setLabel("CLEARED");
+        }
+
+        for (int value : endorsedValues) {
+            endorsed.addData(value);
+            endorsed.addBackgroundColor(Color.random());
+            endorsed.setLabel("ENDORSED");
+        }
+
+        for (int value : approvedValues) {
+            approved.addData(value);
+            approved.addBackgroundColor(Color.random());
+            approved.setLabel("APPROVED");
+        }
+
+        for (int value : forReleaseValues) {
+            forRelease.addData(value);
+            forRelease.addBackgroundColor(Color.random());
+            forRelease.setLabel("FOR RELEASE");
+        }
+
+        for (int value : releasedValues) {
+            released.addData(value);
+            released.addBackgroundColor(Color.random());
+            released.setLabel("RELEASED");
+        }
+
+        data.addDataset(requested);
+        data.addDataset(cleared);
+        data.addDataset(endorsed);
+        data.addDataset(approved);
+        data.addDataset(forRelease);
+        data.addDataset(released);
+
+        return new BarChart(data, options).setHorizontal().toJson();
+
+    }
+
+    public String getStackedBarChartApprovalRate(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+
+        ArrayList<String> labels = new ArrayList();
+        boolean b = true;
+
+        if (regionList.isEmpty()) {
+            labels.add("REGION I (ILOCOS REGION)");
+            labels.add("REGION II (CAGAYAN VALLEY)");
+            labels.add("REGION III (CENTRAL LUZON)");
+            labels.add("REGION IV-A (CALABARZON)");
+            labels.add("REGION IV-B (MIMAROPA)");
+            labels.add("REGION V (BICOL REGION)");
+            labels.add("REGION VI (WESTERN VISAYAS)");
+            labels.add("REGION VII (CENTRAL VISAYAS)");
+            labels.add("REGION VIII (EASTERN VISAYAS)");
+            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+            labels.add("REGION X (NORTHERN MINDANAO)");
+            labels.add("REGION XI (DAVAO REGION)");
+            labels.add("REGION XII (SOCCSKSARGEN)");
+            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+            labels.add("REGION XIII (Caraga)");
+            System.out.println("REGION EMPTY!");
+        } else if (provList.isEmpty()) {
+            for (Region r : regionList) {
+                labels.add(r.getRegDesc());
+            }
+            System.out.println("PROV EMPTY!");
+        } else {
+            for (Province p : provList) {
+                labels.add(p.getProvDesc());
+            }
+            b = false;
+            System.out.println("");
+        }
+
+        BarData data = new BarData();
+
+        BarDataset requested = new BarDataset();
+        ArrayList<Integer> requestedValues = new ArrayList();
+        BarDataset cleared = new BarDataset();
+        ArrayList<Integer> clearedValues = new ArrayList();
+        BarDataset endorsed = new BarDataset();
+        ArrayList<Integer> endorsedValues = new ArrayList();
+        BarDataset approved = new BarDataset();
+        ArrayList<Integer> approvedValues = new ArrayList();
+        BarDataset forRelease = new BarDataset();
+        ArrayList<Integer> forReleaseValues = new ArrayList();
+
+        BarOptions options = new BarOptions();
+        BarScale scales = new BarScale();
+        XAxis x = new XAxis();
+        YAxis y = new YAxis();
+        x.setStacked(Boolean.TRUE);
+        y.setStacked(Boolean.TRUE);
+        scales.addxAxes(x);
+        scales.addyAxes(y);
+        options.setScales(scales);
+
+        Calendar current = Calendar.getInstance();
+
+        for (int i = 0; i < labels.size(); i++) { // REGIONS/PROVINCES
+
+            int requestedCount = 0;
+            int clearedCount = 0;
+            int endorsedCount = 0;
+            int approvedCount = 0;
+            int forReleaseCount = 0;
+
+            int requestedDays = 0;
+            int clearedDays = 0;
+            int endorsedDays = 0;
+            int approvedDays = 0;
+            int forReleaseDays = 0;
+
+            for (ARBO arbo : arboList) {
+
+                if (b) { // REGIONAL
+                    if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                        for (APCPRequest r : arbo.getRequestList()) {
+                            Calendar startDate = Calendar.getInstance();
+                            Calendar endDate = Calendar.getInstance();
+
+                            if (r.getDateRequested() != null && r.getDateCleared() != null) {
+                                requestedCount++;
+                                startDate.setTime(r.getDateRequested());
+                                endDate.setTime(r.getDateCleared());
+                                requestedDays += (int) daysBetween(startDate, endDate);
+                            } else if (r.getDateRequested() != null && r.getDateCleared() == null) {
+                                requestedCount++;
+                                startDate.setTime(r.getDateRequested());
+                                requestedDays += (int) daysBetween(startDate, current);
+                            }
+
+                            if (r.getDateCleared() != null && r.getDateEndorsed() != null) {
+                                clearedCount++;
+                                startDate.setTime(r.getDateCleared());
+                                clearedDays += (int) daysBetween(startDate, current);
+                            } else if (r.getDateCleared() != null && r.getDateEndorsed() == null) {
+                                clearedCount++;
+                                startDate.setTime(r.getDateCleared());
+                                clearedDays += (int) daysBetween(startDate, current);
+                            }
+
+                            if (r.getDateEndorsed() != null && r.getDateApproved() != null) {
+                                endorsedCount++;
+                                startDate.setTime(r.getDateEndorsed());
+                                endorsedDays += (int) daysBetween(startDate, current);
+                            } else if (r.getDateEndorsed() != null && r.getDateApproved() == null) {
+                                endorsedCount++;
+                                startDate.setTime(r.getDateEndorsed());
+                                endorsedDays += (int) daysBetween(startDate, current);
+                            }
+
+                            if (r.getDateApproved() != null && r.getDateFirstReleasedPerRequest() != null) {
+                                approvedCount++;
+                                startDate.setTime(r.getDateApproved());
+                                approvedDays += (int) daysBetween(startDate, current);
+                            } else if (r.getDateApproved() != null && r.getDateFirstReleasedPerRequest() == null) {
+                                approvedCount++;
+                                startDate.setTime(r.getDateApproved());
+                                approvedDays += (int) daysBetween(startDate, current);
+                            }
+                        }
+                    }
+                } else { // PROVINCIAL OFFICE
+                    if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                        for (APCPRequest r : arbo.getRequestList()) {
+                            Calendar startDate = Calendar.getInstance();
+                            Calendar endDate = Calendar.getInstance();
+
+                            if (r.getDateRequested() != null && r.getDateCleared() != null) {
+                                requestedCount++;
+                                startDate.setTime(r.getDateRequested());
+                                endDate.setTime(r.getDateCleared());
+                                requestedDays += (int) daysBetween(startDate, endDate);
+                            } else if (r.getDateRequested() != null && r.getDateCleared() == null) {
+                                requestedCount++;
+                                startDate.setTime(r.getDateRequested());
+                                requestedDays += (int) daysBetween(startDate, current);
+                            }
+
+                            if (r.getDateCleared() != null && r.getDateEndorsed() != null) {
+                                clearedCount++;
+                                startDate.setTime(r.getDateCleared());
+                                clearedDays += (int) daysBetween(startDate, current);
+                            } else if (r.getDateCleared() != null && r.getDateEndorsed() == null) {
+                                clearedCount++;
+                                startDate.setTime(r.getDateCleared());
+                                clearedDays += (int) daysBetween(startDate, current);
+                            }
+
+                            if (r.getDateEndorsed() != null && r.getDateApproved() != null) {
+                                endorsedCount++;
+                                startDate.setTime(r.getDateEndorsed());
+                                endorsedDays += (int) daysBetween(startDate, current);
+                            } else if (r.getDateEndorsed() != null && r.getDateApproved() == null) {
+                                endorsedCount++;
+                                startDate.setTime(r.getDateEndorsed());
+                                endorsedDays += (int) daysBetween(startDate, current);
+                            }
+
+                            if (r.getDateApproved() != null && r.getDateFirstReleasedPerRequest() != null) {
+                                approvedCount++;
+                                startDate.setTime(r.getDateApproved());
+                                approvedDays += (int) daysBetween(startDate, current);
+                            } else if (r.getDateApproved() != null && r.getDateFirstReleasedPerRequest() == null) {
+                                approvedCount++;
+                                startDate.setTime(r.getDateApproved());
+                                approvedDays += (int) daysBetween(startDate, current);
+                            }
+                        }
+                    }
+                }
+            }
+
+            requestedValues.add(requestedDays / requestedCount);
+            clearedValues.add(clearedDays / clearedCount);
+            endorsedValues.add(endorsedDays / endorsedCount);
+            approvedValues.add(approvedDays / approvedCount);
+
+            data.addLabel(labels.get(i));
+
+        }
+
+        for (int value : requestedValues) {
+            requested.addData(value);
+            requested.addBackgroundColor(Color.random());
+            requested.setLabel("REQUESTED");
+        }
+
+        for (int value : clearedValues) {
+            cleared.addData(value);
+            cleared.addBackgroundColor(Color.random());
+            cleared.setLabel("CLEARED");
+        }
+
+        for (int value : endorsedValues) {
+            endorsed.addData(value);
+            endorsed.addBackgroundColor(Color.random());
+            endorsed.setLabel("ENDORSED");
+        }
+
+        for (int value : approvedValues) {
+            approved.addData(value);
+            approved.addBackgroundColor(Color.random());
+            approved.setLabel("APPROVED");
+        }
+
+        for (int value : forReleaseValues) {
+            forRelease.addData(value);
+            forRelease.addBackgroundColor(Color.random());
+            forRelease.setLabel("RELEASED");
+        }
+
+        data.addDataset(requested);
+        data.addDataset(cleared);
+        data.addDataset(endorsed);
+        data.addDataset(approved);
+//        data.addDataset(forRelease);
+
+        return new BarChart(data, options).setHorizontal().toJson();
+
+    }
+
+    public String getBarChartLoanType(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+
+        ArrayList<String> labels = new ArrayList();
+        boolean b = true;
+
+        if (regionList.isEmpty()) {
+            labels.add("REGION I (ILOCOS REGION)");
+            labels.add("REGION II (CAGAYAN VALLEY)");
+            labels.add("REGION III (CENTRAL LUZON)");
+            labels.add("REGION IV-A (CALABARZON)");
+            labels.add("REGION IV-B (MIMAROPA)");
+            labels.add("REGION V (BICOL REGION)");
+            labels.add("REGION VI (WESTERN VISAYAS)");
+            labels.add("REGION VII (CENTRAL VISAYAS)");
+            labels.add("REGION VIII (EASTERN VISAYAS)");
+            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+            labels.add("REGION X (NORTHERN MINDANAO)");
+            labels.add("REGION XI (DAVAO REGION)");
+            labels.add("REGION XII (SOCCSKSARGEN)");
+            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+            labels.add("REGION XIII (Caraga)");
+            System.out.println("REGION EMPTY!");
+        } else if (provList.isEmpty()) {
+            for (Region r : regionList) {
+                labels.add(r.getRegDesc());
+            }
+            System.out.println("PROV EMPTY!");
+        } else {
+            for (Province p : provList) {
+                labels.add(p.getProvDesc());
+            }
+            b = false;
+            System.out.println("");
+        }
+
+        BarData data = new BarData();
+
+        BarDataset cropProd = new BarDataset();
+        BarDataset live = new BarDataset();
+        ArrayList<Integer> cropProdValues = new ArrayList();
+        ArrayList<Integer> liveValues = new ArrayList();
+
+        for (int i = 0; i < labels.size(); i++) {
+            int total = 0;
+            int total1 = 0;
+            for (ARBO arbo : arboList) {
+                for (APCPRequest r : arbo.getRequestList()) {
+                    if (r.getApcpType() == 1) {
+                        total++;
+                    } else {
+                        total1++;
+                    }
+                }
+            }
+            cropProdValues.add(total);
+            liveValues.add(total1);
+            data.addLabel(labels.get(i));
+        }
+
+        for (int value : cropProdValues) {
+            cropProd.addData(value);
+            cropProd.addBackgroundColor(Color.DARK_OLIVE_GREEN);
+            cropProd.setLabel("CROP PRODUCTION");
+        }
+
+        for (int value : liveValues) {
+            live.addData(value);
+            live.addBackgroundColor(Color.RED);
+            live.setLabel("LIVELIHOOD");
+        }
+
+        data.addDataset(cropProd);
+        data.addDataset(live);
+
+        return new BarChart(data).setHorizontal().toJson();
+
+    }
+
+    public String getStackedBarChartLoanReason(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+
+        ArrayList<String> labels = new ArrayList();
+        boolean b = true;
+
+        if (regionList.isEmpty()) {
+            labels.add("REGION I (ILOCOS REGION)");
+            labels.add("REGION II (CAGAYAN VALLEY)");
+            labels.add("REGION III (CENTRAL LUZON)");
+            labels.add("REGION IV-A (CALABARZON)");
+            labels.add("REGION IV-B (MIMAROPA)");
+            labels.add("REGION V (BICOL REGION)");
+            labels.add("REGION VI (WESTERN VISAYAS)");
+            labels.add("REGION VII (CENTRAL VISAYAS)");
+            labels.add("REGION VIII (EASTERN VISAYAS)");
+            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+            labels.add("REGION X (NORTHERN MINDANAO)");
+            labels.add("REGION XI (DAVAO REGION)");
+            labels.add("REGION XII (SOCCSKSARGEN)");
+            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+            labels.add("REGION XIII (Caraga)");
+            System.out.println("REGION EMPTY!");
+        } else if (provList.isEmpty()) {
+            for (Region r : regionList) {
+                labels.add(r.getRegDesc());
+            }
+            System.out.println("PROV EMPTY!");
+        } else {
+            for (Province p : provList) {
+                labels.add(p.getProvDesc());
+            }
+            b = false;
+            System.out.println("");
+        }
+
+        BarData data = new BarData();
+
+        BarDataset NeedCapital = new BarDataset();
+        ArrayList<Integer> needCapitalValues = new ArrayList();
+        BarDataset HogFattening = new BarDataset();
+        ArrayList<Integer> hogFatteningValues = new ArrayList();
+        BarDataset RiceProduction = new BarDataset();
+        ArrayList<Integer> riceProductionValues = new ArrayList();
+        BarDataset CornProduction = new BarDataset();
+        ArrayList<Integer> cornProductionValues = new ArrayList();
+
+        BarOptions options = new BarOptions();
+        BarScale scales = new BarScale();
+        XAxis x = new XAxis();
+        YAxis y = new YAxis();
+        x.setStacked(Boolean.TRUE);
+        y.setStacked(Boolean.TRUE);
+        scales.addxAxes(x);
+        scales.addyAxes(y);
+        options.setScales(scales);
+
+        for (int i = 0; i < labels.size(); i++) { // REGIONS/PROVINCES
+
+            int one = 0;
+            int two = 0;
+            int three = 0;
+            int four = 0;
+
+            for (ARBO arbo : arboList) {
+                if (b) { // REGIONAL
+                    if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                        for (APCPRequest r : arbo.getRequestList()) {
+                            if (r.getLoanReason() == 1) { // requested
+                                one++;
+                            } else if (r.getRequestStatus() == 2) { // cleared
+                                two++;
+                            } else if (r.getRequestStatus() == 3) { // endorsed
+                                three++;
+                            } else if (r.getRequestStatus() == 4) { // approved
+                                four++;
+                            }
+                        }
+                    }
+                } else { // PROVINCIAL OFFICE
+                    if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                        for (APCPRequest r : arbo.getRequestList()) {
+                            if (r.getLoanReason() == 1) { // requested
+                                one++;
+                            } else if (r.getRequestStatus() == 2) { // cleared
+                                two++;
+                            } else if (r.getRequestStatus() == 3) { // endorsed
+                                three++;
+                            } else if (r.getRequestStatus() == 4) { // approved
+                                four++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            needCapitalValues.add(one);
+            hogFatteningValues.add(two);
+            riceProductionValues.add(three);
+            cornProductionValues.add(four);
+
+            data.addLabel(labels.get(i));
+
+        }
+
+        for (int value : needCapitalValues) {
+            NeedCapital.addData(value);
+            NeedCapital.addBackgroundColor(Color.random());
+            NeedCapital.setLabel("NEED CAPITAL");
+        }
+
+        for (int value : hogFatteningValues) {
+            HogFattening.addData(value);
+            HogFattening.addBackgroundColor(Color.random());
+            HogFattening.setLabel("HOG FATTENING");
+        }
+
+        for (int value : riceProductionValues) {
+            RiceProduction.addData(value);
+            RiceProduction.addBackgroundColor(Color.random());
+            RiceProduction.setLabel("RICE PRODUCTION");
+        }
+
+        for (int value : cornProductionValues) {
+            CornProduction.addData(value);
+            CornProduction.addBackgroundColor(Color.random());
+            CornProduction.setLabel("CORN PRODUCTION");
+        }
+
+        data.addDataset(NeedCapital);
+        data.addDataset(HogFattening);
+        data.addDataset(RiceProduction);
+        data.addDataset(CornProduction);
+
+        return new BarChart(data, options).setHorizontal().toJson();
+
+    }
+
+    public String getBarChartAPCPAmounts(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+
+        ArrayList<String> labels = new ArrayList();
+        boolean b = true;
+
+        if (regionList.isEmpty()) {
+            labels.add("REGION I (ILOCOS REGION)");
+            labels.add("REGION II (CAGAYAN VALLEY)");
+            labels.add("REGION III (CENTRAL LUZON)");
+            labels.add("REGION IV-A (CALABARZON)");
+            labels.add("REGION IV-B (MIMAROPA)");
+            labels.add("REGION V (BICOL REGION)");
+            labels.add("REGION VI (WESTERN VISAYAS)");
+            labels.add("REGION VII (CENTRAL VISAYAS)");
+            labels.add("REGION VIII (EASTERN VISAYAS)");
+            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+            labels.add("REGION X (NORTHERN MINDANAO)");
+            labels.add("REGION XI (DAVAO REGION)");
+            labels.add("REGION XII (SOCCSKSARGEN)");
+            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+            labels.add("REGION XIII (Caraga)");
+            System.out.println("REGION EMPTY!");
+        } else if (provList.isEmpty()) {
+            for (Region r : regionList) {
+                labels.add(r.getRegDesc());
+            }
+
+        } else {
+            for (Province p : provList) {
+                labels.add(p.getProvDesc());
+            }
+            b = false;
+        }
+
+        BarData data = new BarData();
+
+        BarDataset one = new BarDataset();
+        BarDataset two = new BarDataset();
+        BarDataset three = new BarDataset();
+        BarDataset four = new BarDataset();
+        ArrayList<Integer> aa = new ArrayList();
+        ArrayList<Integer> bb = new ArrayList();
+        ArrayList<Integer> cc = new ArrayList();
+        ArrayList<Integer> dd = new ArrayList();
+
+        APCPRequestDAO dao = new APCPRequestDAO();
+        
+        Calendar current = Calendar.getInstance();
+        int year = current.get(Calendar.YEAR);
+
+        for (int i = 0; i < labels.size(); i++) {
+            int a1 = 0;
+            int a2 = 0;
+            int a3 = 0;
+            int a4 = 0;
+            for (ARBO arbo : arboList) {
+                if (b) { // REGIONAL
+                    if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                        a1 += dao.getTotalPastDueAmount(arbo.getRequestList());
+                        a2 += dao.getYearlySumOfReleasesByRequestId(arbo.getRequestList(), year);
+                        a3 += dao.getSumOfAccumulatedReleasesByRequestId(arbo.getRequestList());
+                        a4 += dao.getTotalApprovedAmount(arbo.getRequestList());
+                    }
+                } else { // PROVINCIAL OFFICE
+                    if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                        a1 += dao.getTotalPastDueAmount(arbo.getRequestList());
+                        a2 += dao.getYearlySumOfReleasesByRequestId(arbo.getRequestList(), year);
+                        a3 += dao.getSumOfAccumulatedReleasesByRequestId(arbo.getRequestList());
+                        a4 += dao.getTotalApprovedAmount(arbo.getRequestList());
+                    }
+                }
+            }
+            aa.add(a1);
+            bb.add(a2);
+            cc.add(a3);
+            dd.add(a4);
+        }
+
+        for (int value : aa) {
+            one.addData(value);
+            one.addBackgroundColor(Color.random());
+            one.setLabel("TOTAL PAST DUE AMOUNT");
+        }
+
+        for (int value : bb) {
+            two.addData(value);
+            two.addBackgroundColor(Color.random());
+            two.setLabel("YEARLY RELEASES");
+        }
+        
+        for (int value : cc) {
+            three.addData(value);
+            three.addBackgroundColor(Color.random());
+            three.setLabel("ACCUMULATED RELEASES");
+        }
+        
+        for (int value : dd) {
+            four.addData(value);
+            four.addBackgroundColor(Color.random());
+            four.setLabel("APPROVED AMOUNT");
+        }
+
+        data.addDataset(one);
+        data.addDataset(two);
+        data.addDataset(three);
+        data.addDataset(four);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public static long daysBetween(Calendar startDate, Calendar endDate) {
+        long end = endDate.getTimeInMillis();
+        long start = startDate.getTimeInMillis();
+
+        return TimeUnit.MILLISECONDS.toDays(Math.abs(end - start));
+    }
 }

@@ -29,21 +29,21 @@ public class RegionalProvincesFilterRefresh extends BaseServlet {
         ArrayList<Province> provinces = new ArrayList();
 
         try (PrintWriter out = response.getWriter()) {
-            
-            String[] valajax = request.getParameterValues("valajax");
-            for (String val : valajax) {
-                regionIDs.add(Integer.parseInt(val));
-            }
-            
-            provinces = addressDAO.getAllProvOfficesMultipleReg(regionIDs);
-            
-            for (int j = 0; j < provinces.size(); j++) {
-                response.getWriter().write("<option value='" + provinces.get(j).getProvCode()+ "'>" + provinces.get(j).getProvDesc()+ "</option>");
+
+            if (request.getParameterValues("valajax") != null) {
+                String[] valajax = request.getParameterValues("valajax");
+                for (String val : valajax) {
+                    regionIDs.add(Integer.parseInt(val));
+                }
+
+                provinces = addressDAO.getAllProvOfficesMultipleReg(regionIDs);
+
+                for (int j = 0; j < provinces.size(); j++) {
+                    response.getWriter().write("<option value='" + provinces.get(j).getProvCode() + "'>" + provinces.get(j).getProvDesc() + "</option>");
+                }
             }
 
         }
     }
-
-    
 
 }

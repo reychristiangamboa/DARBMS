@@ -90,78 +90,30 @@ public class ARBDAO {
     }
 
     public ArrayList<ARB> getAllARBsARBO(int arboID) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        ArrayList<ARB> arbList = new ArrayList();
-        try {
-            String query = "SELECT * FROM `dar-bms`.arbs a "
-                    + "JOIN `dar-bms`.ref_educationLevel e ON a.educationLevel=e.educationLevel "
-                    + "JOIN `dar-bms`.ref_arbStatus s ON a.arbStatus=s.arbStatus "
-                    + "JOIN `dar-bms`.refbrgy b ON a.brgyCode=b.brgyCode "
-                    + "JOIN `dar-bms`.refcitymun c ON a.cityMunCode=c.citymunCode "
-                    + "JOIN `dar-bms`.refprovince p ON a.provCode=p.provCode "
-                    + "JOIN `dar-bms`.refregion r ON a.regCode=r.regCode "
-                    + "WHERE `arboID`=?";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, arboID);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                ARB arb = new ARB();
-                arb.setArbID(rs.getInt("arbID"));
-                arb.setArboID(rs.getInt("arboID"));
-                arb.setFirstName(rs.getString("firstName"));
-                arb.setMiddleName(rs.getString("middleName"));
-                arb.setLastName(rs.getString("lastName"));
-                arb.setTIN(rs.getInt("TIN"));
-                arb.setBirthday(rs.getDate("birthday"));
-                arb.setMemberSince(rs.getDate("memberSince"));
-                arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
-                arb.setBrgyCode(rs.getInt("brgyCode"));
-                arb.setBrgyDesc(rs.getString("brgyDesc"));
-                arb.setCityMunCode(rs.getInt("cityMunCode"));
-                arb.setCityMunDesc(rs.getString("citymunDesc"));
-                arb.setProvCode(rs.getInt("provCode"));
-                arb.setProvDesc(rs.getString("provDesc"));
-                arb.setRegCode(rs.getInt("regCode"));
-                arb.setRegDesc(rs.getString("regDesc"));
-                arb.setGender(rs.getString("gender"));
-                arb.setEducationLevel(rs.getInt("educationLevel"));
-                arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
-                arb.setLandArea(rs.getDouble("landArea"));
-                arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
-                arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
-                arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
-                arb.setArbStatus(rs.getInt("arbStatus"));
-                arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
-                arb.setClusterID(rs.getInt("clusterID"));
-                arbList.add(arb);
+        ArrayList<ARB> allARBs = getAllARBs();
+        ArrayList<ARB> list = new ArrayList();
+
+        for (ARB arb : allARBs) {
+            if (arb.getArboID() == arboID) {
+                list.add(arb);
             }
-            pstmt.close();
-            rs.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return arbList;
+
+        return list;
     }
 
     public ArrayList<ARB> getAllARBsOfARBOs(ArrayList<ARBO> arboList) {
         ArrayList<ARB> allARBs = getAllARBs();
         ArrayList<ARB> list = new ArrayList();
-        
-        for(ARB arb : allARBs){
-            for(ARBO arbo : arboList){
-                if(arb.getArboID() == arbo.getArboID()){
+
+        for (ARB arb : allARBs) {
+            for (ARBO arbo : arboList) {
+                if (arb.getArboID() == arbo.getArboID()) {
                     list.add(arb);
                 }
             }
         }
-        
+
         return list;
     }
 
@@ -225,6 +177,43 @@ public class ARBDAO {
             Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return arbList;
+    }
+
+    public ArrayList<ARB> getAllRegionalARBs(int regCode) {
+        
+        ARBODAO arboDAO = new ARBODAO();
+        //ArrayList<ARB> allARBs = getAllARBs();
+        ArrayList<ARB> list = new ArrayList();
+        ArrayList<ARBO> arbos = arboDAO.getAllARBOs();
+        
+        for(ARBO arbo : arbos){ // runs through all ARBO
+            if(arbo.getArboRegion() == regCode){ // if ARBO is part of that region
+                ArrayList<ARB> arbList = getAllARBsARBO(arbo.getArboID()); // get all ARB
+                for(ARB arb : arbList){
+                    list.add(arb);
+                }
+            }
+        }
+
+        return list;
+    }
+
+    public ArrayList<ARB> getAllProvincialARBs(int provOfficeCode) {
+        ARBODAO arboDAO = new ARBODAO();
+        //ArrayList<ARB> allARBs = getAllARBs();
+        ArrayList<ARB> list = new ArrayList();
+        ArrayList<ARBO> arbos = arboDAO.getAllARBOs();
+        
+        for(ARBO arbo : arbos){ // runs through all ARBO
+            if(arbo.getProvOfficeCode() == provOfficeCode){ // if ARBO is part of that provOffice
+                ArrayList<ARB> arbList = getAllARBsARBO(arbo.getArboID()); // get all ARB
+                for(ARB arb : arbList){
+                    list.add(arb);
+                }
+            }
+        }
+
+        return list;
     }
 
     public ArrayList<Crop> getAllARBCurrentCrops(int arbID) {

@@ -32,7 +32,7 @@
 
     ArrayList<ARBO> arboListRegion = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
 
-    ArrayList<ARB> arbListRegion = arbDAO.getAllARBsOfARBOs(arboListRegion);
+    ArrayList<ARB> arbListRegion = arbDAO.getAllRegionalARBs((Integer) session.getAttribute("regOfficeCode"));
 
     ArrayList<Province> perProvinceList = addressDAO.getAllProvOfficesRegion((Integer) session.getAttribute("regOfficeCode"));
 

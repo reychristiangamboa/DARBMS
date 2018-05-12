@@ -380,6 +380,14 @@
         <servlet-name>DashboardFilterGender</servlet-name>
         <servlet-class>com.MVC.Controller.DashboardFilterGender</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FilterARBDashboard</servlet-name>
+        <servlet-class>com.MVC.Controller.FilterARBDashboard</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FilterAPCPDashboard</servlet-name>
+        <servlet-class>com.MVC.Controller.FilterAPCPDashboard</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -759,6 +767,14 @@
     <servlet-mapping>
         <servlet-name>DashboardFilterGender</servlet-name>
         <url-pattern>/DashboardFilterGender</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterARBDashboard</servlet-name>
+        <url-pattern>/FilterARBDashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterAPCPDashboard</servlet-name>
+        <url-pattern>/FilterAPCPDashboard</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

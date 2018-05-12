@@ -7,6 +7,7 @@ package com.MVC.Model;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  *
@@ -335,14 +336,27 @@ public class ARB {
         this.repayments = repayments;
     }
     
+    public int getAge(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(this.birthday);
+        
+        
+        Calendar current = Calendar.getInstance();
+        Long l = System.currentTimeMillis();
+        Date d = new Date(l);
+        current.setTime(d);
+        
+        int age = current.get(Calendar.YEAR) - cal.get(Calendar.YEAR);
+        return age;
+    }
     
-
     @Override
     public String toString() {
         return this.firstName + " "
                 + this.middleName + " "
                 + this.lastName + " "
                 + this.gender + " "
+                + this.birthday.getTime() + " "
                 + this.arbUnitNumStreet + " "
                 + this.brgyCode + " "
                 + this.cityMunCode + " "

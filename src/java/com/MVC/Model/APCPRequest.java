@@ -423,6 +423,13 @@ public class APCPRequest {
         }
         return null;
     }
+    
+    public Date getDateFirstReleasedPerRequest() {
+        if (!releases.isEmpty()) {
+            return releases.get(0).getReleaseDate();
+        }
+        return null;
+    }
 
     public void setDateLastRelease(Date dateLastRelease) {
         this.dateLastRelease = dateLastRelease;
