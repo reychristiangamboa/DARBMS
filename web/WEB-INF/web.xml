@@ -388,6 +388,10 @@
         <servlet-name>FilterAPCPDashboard</servlet-name>
         <servlet-class>com.MVC.Controller.FilterAPCPDashboard</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RequestConduit</servlet-name>
+        <servlet-class>com.MVC.Controller.RequestConduit</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -775,6 +779,10 @@
     <servlet-mapping>
         <servlet-name>FilterAPCPDashboard</servlet-name>
         <url-pattern>/FilterAPCPDashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RequestConduit</servlet-name>
+        <url-pattern>/RequestConduit</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

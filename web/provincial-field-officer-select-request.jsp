@@ -143,17 +143,6 @@
                         </div>
                         <!-- /.col -->
                     </div>
-
-                    <!--PENDING-->
-
-
-                    <!--                    APPROVED-->
-
-
-                    <!--                                            DISAPPROVED-->
-
-
-                    <!-- /.row -->
                 </section>
                 <!-- /.content -->
 

@@ -61,7 +61,7 @@ public class Login extends BaseServlet {
                     lDAO.addLog(l);
 
                     if (u.getUserType() == 1) {   //  ADMINISTRATOR
-                        request.getRequestDispatcher("admin-system-logs.jsp").forward(request, response);
+                        request.getRequestDispatcher("/Admin/admin-system-logs.jsp").forward(request, response);
                     } else if (u.getUserType() == 2) {   //  POINT PERSON
                         request.getRequestDispatcher("point-person-view-capdev-plans.jsp").forward(request, response);
                     } else if (u.getUserType() == 3) {   //  PROVINCIAL FIELD OFFICER

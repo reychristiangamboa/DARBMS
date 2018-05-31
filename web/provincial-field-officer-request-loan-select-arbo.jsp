@@ -37,34 +37,37 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Qualified Agrarian Reform Beneficiary Organizations (ARBO)</h3>
+                                    <h3 class="box-title">Qualified Agrarian Reform Beneficiary Organizations (ARBO) Conduits</h3>
                                 </div>
                                 <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table id="example3" class="table table-bordered table-striped">
-                                        <thead>
+                                <div class="box-body">
+                                        <p><i>Note: If ARBO name is not in the list, ARBO must registered as a qualified conduit first - <a href="">Click here</a></i></p>
 
-                                            <tr>
-                                                <th>ARBO Name</th>
-                                                <th>Address</th>
-                                                <th>No. of Members</th>
-                                            </tr>
-                                        </thead>
+                                        <table id="example3" class="table table-bordered table-striped">
+                                            <thead>
 
-                                        <tbody>
-                                            <%for (ARBO arbo : arboListProvince) {%>
-                                            <%if (arbo.getAPCPQualified() == 1) {%>
-                                            <tr>
-                                                <td><a href="SelectARBORequest?id=<%out.print(arbo.getArboID());%>"> <%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(arbo.getFullAddress());%></td>
-                                                <td><%out.print(arboDAO.getARBCount(arbo.getArboID()));%></td>
-                                            </tr>
+                                                <tr>
+                                                    <th>ARBO Name</th>
+                                                    <th>Address</th>
+                                                    <th>No. of Members</th>
+                                                </tr>
+                                            </thead>
 
-                                            <%}%>
-                                            <%}%>
-                                        </tbody>
+                                            <tbody>
+                                                <%for (ARBO arbo : arboListProvince) {%>
+                                                <%if (arbo.getAPCPQualified() == 1) {%>
+                                                <tr>
+                                                    <td><a href="SelectARBORequest?id=<%out.print(arbo.getArboID());%>"> <%out.print(arbo.getArboName());%></a></td>
+                                                    <td><%out.print(arbo.getFullAddress());%></td>
+                                                    <td><%out.print(arbo.getArbList().size());%></td>
+                                                </tr>
 
-                                    </table>
+                                                <%}%>
+                                                <%}%>
+                                            </tbody>
+
+                                        </table>
+                                    
                                 </div>
                                 <!-- /.box-body -->
                             </div>
@@ -73,44 +76,6 @@
                         <!-- /.col -->
                     </div>
                     <!-- /.row -->
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Agrarian Reform Beneficiary Organizations (ARBO)</h3>                       
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table id="example1" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>ARBO Name</th>
-                                                <th>Address</th>
-                                                <th>No. of Members</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            <%for (ARBO arbo : arboListProvince) {%>
-                                            <%if (arbo.getAPCPQualified() == 0) {%>
-                                            <tr>
-                                                <td><a href="SelectARBORequest?id=<%out.print(arbo.getArboID());%>"> <%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(arbo.getFullAddress());%></td>
-                                                <td><%out.print(arboDAO.getARBCount(arbo.getArboID()));%></td>
-                                            </tr>
-
-                                            <%}%>
-                                            <%}%>
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
                 </section>
                 <!-- /.content -->
 

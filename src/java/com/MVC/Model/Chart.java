@@ -1468,7 +1468,7 @@ public class Chart {
         ArrayList<Integer> dd = new ArrayList();
 
         APCPRequestDAO dao = new APCPRequestDAO();
-        
+
         Calendar current = Calendar.getInstance();
         int year = current.get(Calendar.YEAR);
 
@@ -1511,13 +1511,13 @@ public class Chart {
             two.addBackgroundColor(Color.random());
             two.setLabel("YEARLY RELEASES");
         }
-        
+
         for (int value : cc) {
             three.addData(value);
             three.addBackgroundColor(Color.random());
             three.setLabel("ACCUMULATED RELEASES");
         }
-        
+
         for (int value : dd) {
             four.addData(value);
             four.addBackgroundColor(Color.random());
@@ -1530,6 +1530,145 @@ public class Chart {
         data.addDataset(four);
 
         return new BarChart(data).toJson();
+
+    }
+
+    public String getStackedBarChartCAPDEVPlans(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+
+        ArrayList<String> labels = new ArrayList();
+        boolean b = true;
+
+        if (regionList.isEmpty()) {
+            labels.add("REGION I (ILOCOS REGION)");
+            labels.add("REGION II (CAGAYAN VALLEY)");
+            labels.add("REGION III (CENTRAL LUZON)");
+            labels.add("REGION IV-A (CALABARZON)");
+            labels.add("REGION IV-B (MIMAROPA)");
+            labels.add("REGION V (BICOL REGION)");
+            labels.add("REGION VI (WESTERN VISAYAS)");
+            labels.add("REGION VII (CENTRAL VISAYAS)");
+            labels.add("REGION VIII (EASTERN VISAYAS)");
+            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+            labels.add("REGION X (NORTHERN MINDANAO)");
+            labels.add("REGION XI (DAVAO REGION)");
+            labels.add("REGION XII (SOCCSKSARGEN)");
+            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+            labels.add("REGION XIII (Caraga)");
+        } else if (provList.isEmpty()) {
+            for (Region r : regionList) {
+                labels.add(r.getRegDesc());
+            }
+        } else {
+            for (Province p : provList) {
+                labels.add(p.getProvDesc());
+            }
+            b = false;
+        }
+
+        BarData data = new BarData();
+
+        BarDataset pending = new BarDataset();
+        ArrayList<Integer> pendingValues = new ArrayList();
+        BarDataset approved = new BarDataset();
+        ArrayList<Integer> approvedValues = new ArrayList();
+        BarDataset assigned = new BarDataset();
+        ArrayList<Integer> assignedValues = new ArrayList();
+        BarDataset implemented = new BarDataset();
+        ArrayList<Integer> implementedValues = new ArrayList();
+        
+        BarOptions options = new BarOptions();
+
+        BarScale scales = new BarScale();
+        XAxis x = new XAxis();
+        YAxis y = new YAxis();
+        x.setStacked(Boolean.TRUE);
+        y.setStacked(Boolean.TRUE);
+        scales.addxAxes(x);
+        scales.addyAxes(y);
+        options.setScales(scales);
+
+        for (int i = 0; i < labels.size(); i++) { // REGIONS/PROVINCES
+
+            int pendingCount = 0;
+            int approvedCount = 0;
+            int assignedCount = 0;
+            int implementedCount = 0;
+
+            for (ARBO arbo : arboList) {
+                if (b) { // REGIONAL
+                    if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                        for (APCPRequest r : arbo.getRequestList()) {
+                            for (CAPDEVPlan c : r.getPlans()) {
+                                if (c.getPlanStatus() == 1) { // pending
+                                    pendingCount++;
+                                } else if (c.getPlanStatus() == 2) { // approved
+                                    approvedCount++;
+                                } else if (c.getPlanStatus() == 4) { // assigned
+                                    assignedCount++;
+                                } else if (c.getPlanStatus() == 5) { // implemented
+                                    implementedCount++;
+                                }
+                            }
+                        }
+                    }
+                } else { // PROVINCIAL OFFICE
+                    if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                        for (APCPRequest r : arbo.getRequestList()) {
+                            for (CAPDEVPlan c : r.getPlans()) {
+                                if (c.getPlanStatus() == 1) { // pending
+                                    pendingCount++;
+                                } else if (c.getPlanStatus() == 2) { // approved
+                                    approvedCount++;
+                                } else if (c.getPlanStatus() == 4) { // assigned
+                                    assignedCount++;
+                                } else if (c.getPlanStatus() == 5) { // implemented
+                                    implementedCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            pendingValues.add(pendingCount);
+            approvedValues.add(approvedCount);
+            assignedValues.add(assignedCount);
+            implementedValues.add(implementedCount);
+
+            data.addLabel(labels.get(i));
+
+        }
+
+        for (int value : pendingValues) {
+            pending.addData(value);
+            pending.addBackgroundColor(Color.random());
+            pending.setLabel("PENDING");
+        }
+
+        for (int value : approvedValues) {
+            approved.addData(value);
+            approved.addBackgroundColor(Color.random());
+            approved.setLabel("APPROVED");
+        }
+
+        for (int value : assignedValues) {
+            assigned.addData(value);
+            assigned.addBackgroundColor(Color.random());
+            assigned.setLabel("ASSIGNED");
+        }
+
+        for (int value : implementedValues) {
+            implemented.addData(value);
+            implemented.addBackgroundColor(Color.random());
+            implemented.setLabel("IMPLEMENTED");
+        }
+
+        data.addDataset(pending);
+        data.addDataset(approved);
+        data.addDataset(assigned);
+        data.addDataset(implemented);
+
+        return new BarChart(data, options).setHorizontal().toJson();
 
     }
 

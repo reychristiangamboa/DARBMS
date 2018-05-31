@@ -22,6 +22,7 @@ public class CAPDEVActivity {
     private String activityCategoryDesc;
     private String technicalAssistant;
     private Date activityDate;
+    private Date implementedDate;
     private String observations;
     private String recommendation;
     private String activityName;
@@ -135,6 +136,14 @@ public class CAPDEVActivity {
         this.activityDate = activityDate;
     }
 
+    public Date getImplementedDate() {
+        return implementedDate;
+    }
+
+    public void setImplementedDate(Date implementedDate) {
+        this.implementedDate = implementedDate;
+    }
+    
     public String getObservations() {
         return observations;
     }

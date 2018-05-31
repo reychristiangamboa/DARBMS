@@ -22,6 +22,7 @@ public class APCPRequest {
     private int loanReason;
     private String loanReasonDesc;
     private String otherLoanReason;
+    private int loanTermDuration;
     private double loanAmount;
     private double hectares;
     private Date dateRequested;
@@ -35,16 +36,17 @@ public class APCPRequest {
     private String remarks;
     private int requestStatus;
     private String requestStatusDesc;
-    private int isNewAccessingRequest;
-    private Date farmPlanDate;
-    private Date businessPlanDate;
-    private Date bankRequirementsDate;
     private int loanTrackingNo;
+    private int isNewAccessingRequest;
+    private int cropProdID;
+    private Date dateCompleted;
+    private ArrayList<APCPDocument> apcpDocument = new ArrayList();
     private ArrayList<PastDueAccount> pastDueAccounts = new ArrayList();
     private ArrayList<PastDueAccount> unsettledPastDueAccounts = new ArrayList();
     private ArrayList<APCPRelease> releases = new ArrayList();
     private ArrayList<Repayment> repayments = new ArrayList();
     private ArrayList<ARB> recipients = new ArrayList();
+    private ArrayList<CAPDEVPlan> plans = new ArrayList();
 
     private double totalReleasedAmount;
     private double yearlyReleasedAmount;
@@ -53,6 +55,33 @@ public class APCPRequest {
     private ArrayList<PastDueAccount> pastDueReasons = new ArrayList();
     private Date dateLastRelease;
 
+    public Date getDateCompleted() {
+        return dateCompleted;
+    }
+
+    public void setDateCompleted(Date dateCompleted) {
+        this.dateCompleted = dateCompleted;
+    }
+
+    public int getCropProdID() {
+        return cropProdID;
+    }
+
+    public void setCropProdID(int cropProdID) {
+        this.cropProdID = cropProdID;
+    }
+
+    public ArrayList<APCPDocument> getApcpDocument() {
+        return apcpDocument;
+    }
+
+    public void setApcpDocument(ArrayList<APCPDocument> apcpDocument) {
+        this.apcpDocument = apcpDocument;
+    }
+
+    
+    
+    
     public int getRequestID() {
         return requestID;
     }
@@ -109,6 +138,15 @@ public class APCPRequest {
     public void setOtherLoanReason(String loanReason) {
         this.otherLoanReason = loanReason;
     }
+
+    public int getLoanTermDuration() {
+        return loanTermDuration;
+    }
+
+    public void setLoanTermDuration(int loanTermDuration) {
+        this.loanTermDuration = loanTermDuration;
+    }
+    
 
     public double getLoanAmount() {
         return loanAmount;
@@ -222,30 +260,6 @@ public class APCPRequest {
         this.approvedBy = approvedBy;
     }
 
-    public Date getFarmPlanDate() {
-        return farmPlanDate;
-    }
-
-    public void setFarmPlanDate(Date farmPlanDate) {
-        this.farmPlanDate = farmPlanDate;
-    }
-
-    public Date getBusinessPlanDate() {
-        return businessPlanDate;
-    }
-
-    public void setBusinessPlanDate(Date businessPlanDate) {
-        this.businessPlanDate = businessPlanDate;
-    }
-
-    public Date getBankRequirementsDate() {
-        return bankRequirementsDate;
-    }
-
-    public void setBankRequirementsDate(Date bankRequirementsDate) {
-        this.bankRequirementsDate = bankRequirementsDate;
-    }
-
     public int getLoanTrackingNo() {
         return loanTrackingNo;
     }
@@ -277,7 +291,14 @@ public class APCPRequest {
     public void setRecipients(ArrayList<ARB> recipients) {
         this.recipients = recipients;
     }
-    
+
+    public ArrayList<CAPDEVPlan> getPlans() {
+        return plans;
+    }
+
+    public void setPlans(ArrayList<CAPDEVPlan> plans) {
+        this.plans = plans;
+    }
     
     public double getTotalPDAAmountPerRequest() {
         double val = 0;

@@ -31,7 +31,7 @@ public class SelectARBORequest extends BaseServlet {
         request.setAttribute("arboID", id);
 
         if (arbo.getAPCPQualified() == 0) {
-//            request.getRequestDispatcher("provincial-field-officer-request-loan-new-applicant.jsp").forward(request, response);
+            request.getRequestDispatcher("provincial-field-officer-request-apcp-access.jsp").forward(request, response);
             request.setAttribute("newAccessing", true);
         }
         request.getRequestDispatcher("provincial-field-officer-request-loan.jsp").forward(request, response);

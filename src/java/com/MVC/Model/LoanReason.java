@@ -13,6 +13,8 @@ public class LoanReason {
     
     private int loanReason;
     private String loanReasonDesc;
+    private LoanTerm loanTerm;
+    private int apcpType;
 
     public int getLoanReason() {
         return loanReason;
@@ -29,5 +31,22 @@ public class LoanReason {
     public void setLoanReasonDesc(String loanReasonDesc) {
         this.loanReasonDesc = loanReasonDesc;
     }
+
+    public LoanTerm getLoanTerm() {
+        return loanTerm;
+    }
+
+    public void setLoanTerm(LoanTerm loanTerm) {
+        this.loanTerm = loanTerm;
+    }
+
+    public int getApcpType() {
+        return apcpType;
+    }
+
+    public void setApcpType(int apcpType) {
+        this.apcpType = apcpType;
+    }
+    
     
 }

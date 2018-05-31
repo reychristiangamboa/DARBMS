@@ -8,12 +8,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="jspf/header.jspf" %>
+        <%@include file="/jspf/header.jspf" %>
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
-            <%@include file="jspf/admin-navbar.jspf"%>
-            <%@include file="jspf/admin-sidebar.jspf"%>
+            <%@include file="/jspf/admin-navbar.jspf"%>
+            <%@include file="/jspf/admin-sidebar.jspf"%>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
@@ -78,7 +78,7 @@
         </div>
 
 
-        <%@include file="jspf/footer.jspf" %>
+        <%@include file="/jspf/footer.jspf" %>
 
     </body>
 </html>

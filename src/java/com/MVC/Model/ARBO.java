@@ -5,6 +5,7 @@
  */
 package com.MVC.Model;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -17,6 +18,8 @@ public class ARBO {
     private String arboName;
     private int arboType;
     private String arboTypeDesc;
+    private int arboStatus;
+    private String arboStatusDesc;
     private int arboCityMun;
     private String arboCityMunDesc;
     private int arboProvince;
@@ -26,6 +29,7 @@ public class ARBO {
     private int provOfficeCode;
     private String provOfficeCodeDesc;
     private int APCPQualified;
+    private Date dateOperational;
     private ArrayList<ARB> arbList = new ArrayList();
     private ArrayList<APCPRequest> requestList = new ArrayList();
 
@@ -137,6 +141,30 @@ public class ARBO {
         this.arboTypeDesc = arboTypeDesc;
     }
 
+    public int getArboStatus() {
+        return arboStatus;
+    }
+
+    public void setArboStatus(int arboStatus) {
+        this.arboStatus = arboStatus;
+    }
+
+    public String getArboStatusDesc() {
+        return arboStatusDesc;
+    }
+
+    public void setArboStatusDesc(String arboStatusDesc) {
+        this.arboStatusDesc = arboStatusDesc;
+    }
+    
+    public Date getDateOperational() {
+        return dateOperational;
+    }
+
+    public void setDateOperational(Date dateOperational) {
+        this.dateOperational = dateOperational;
+    }
+    
     public ArrayList<ARB> getArbList() {
         return arbList;
     }

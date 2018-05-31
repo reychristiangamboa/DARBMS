@@ -17,7 +17,7 @@ public class ARB {
 
     private int arbID;
     private int arboID;
-    private int arboRepresentative;
+    private int isCOMAT;
     private int TIN;
     private Date birthday;
     private String firstName;
@@ -68,12 +68,12 @@ public class ARB {
         this.arboID = arboID;
     }
 
-    public int getArboRepresentative() {
-        return arboRepresentative;
+    public int getIsCOMAT() {
+        return isCOMAT;
     }
 
-    public void setArboRepresentative(int arboRepresentative) {
-        this.arboRepresentative = arboRepresentative;
+    public void setIsCOMAT(int isCOMAT) {
+        this.isCOMAT = isCOMAT;
     }
 
     public int getTIN() {

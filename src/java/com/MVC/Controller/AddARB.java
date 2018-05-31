@@ -43,9 +43,6 @@ public class AddARB extends BaseServlet {
             ARBODAO arboDAO = new ARBODAO();
 
             ARB arb = new ARB();
-
-            
-
             ARBO arbo = new ARBO();
             if (request.getParameter("arboID") != null) {
                 int arboID = Integer.parseInt(request.getParameter("arboID"));
@@ -57,7 +54,7 @@ public class AddARB extends BaseServlet {
                 arb.setArboID(arbo.getArboID());
             }
             
-            String id = String.valueOf(arbo.getArboID());
+            /*String id = String.valueOf(arbo.getArboID());
             int size = arbo.getArbList().size();
             int counter = size + 1;
 
@@ -69,9 +66,9 @@ public class AddARB extends BaseServlet {
                 id += counter;
             }
 
-            int finalID = Integer.parseInt(id);
+            int finalID = Integer.parseInt(id);*/
 
-            arb.setArbID(finalID);
+            arb.setArbID(Integer.parseInt(request.getParameter("arbID")));
 
             if (request.getParameter("arboRep").equals("Yes")) {
                 arb.setArboRepresentative(1);

@@ -439,7 +439,7 @@ public class CAPDEVDAO {
 
         return planList;
     }
-
+    
     public ArrayList<CAPDEVPlan> getAllRegionalCAPDEVPlanByStatus(int status, int regCode) {
 
         ArrayList<CAPDEVPlan> planList = new ArrayList();
@@ -553,6 +553,20 @@ public class CAPDEVDAO {
                 Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
             Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return planList;
+    }
+    
+    public ArrayList<CAPDEVPlan> getAllCAPDEVPlanByRequest(int requestID) {
+
+        ArrayList<CAPDEVPlan> allCAPDEVPlans = getAllCAPDEVPlan();
+        ArrayList<CAPDEVPlan> planList = new ArrayList();
+        
+        for (CAPDEVPlan c : allCAPDEVPlans) {
+            if(c.getRequestID() == requestID){
+                planList.add(c);
+            }
         }
 
         return planList;

@@ -31,7 +31,7 @@ public class AddARBO extends BaseServlet {
             ARBODAO arboDAO = new ARBODAO();
             ARBO arbo = new ARBO();
 
-            String id = String.valueOf(Integer.parseInt(request.getParameter("arboProvince")));
+            /*String id = String.valueOf(Integer.parseInt(request.getParameter("arboProvince")));
             int size = arboDAO.getAllARBOsByProvince(Integer.parseInt(request.getParameter("arboProvince"))).size();
             int counter = size + 1;
 
@@ -43,9 +43,9 @@ public class AddARBO extends BaseServlet {
                 id += counter;
             }
 
-            int finalID = Integer.parseInt(id);
+            int finalID = Integer.parseInt(id);*/
 
-            arbo.setArboID(finalID);
+            arbo.setArboID(Integer.parseInt(request.getParameter("arboID")));
             arbo.setArboName(request.getParameter("arboName"));
             arbo.setArboType(Integer.parseInt(request.getParameter("arboType")));
             arbo.setArboCityMun(Integer.parseInt(request.getParameter("arboCityMun")));

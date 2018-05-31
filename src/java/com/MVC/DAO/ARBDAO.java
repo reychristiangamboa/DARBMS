@@ -341,12 +341,12 @@ public class ARBDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`arbs` (`arboID`, `arboRepresentative`, `firstName`, `middleName`, "
+            String query = "INSERT INTO `dar-bms`.`arbs` (`arboID`, `isCOMAT`, `firstName`, `middleName`, "
                     + "`lastName`, `memberSince`,`arbUnitNumStreet`,`brgyCode`,`cityMunCode`,`provCode`,`regCode`, "
                     + "`gender`, `educationLevel`, `landArea`,`TIN`,`arbID`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
             pstmt = con.prepareStatement(query);
             pstmt.setInt(1, arb.getArboID());
-            pstmt.setInt(2, arb.getArboRepresentative());
+            pstmt.setInt(2, arb.getIsCOMAT());
             pstmt.setString(3, arb.getFirstName());
             pstmt.setString(4, arb.getMiddleName());
             pstmt.setString(5, arb.getLastName());

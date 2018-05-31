@@ -47,7 +47,7 @@ public class RequestLoan extends BaseServlet {
         apcpRequest.setRemarks(request.getParameter("remarks"));
 
         if (request.getParameter("newAccessing") != null) {
-            apcpRequest.setRequestStatus(6); // NEW ACCESSING
+            apcpRequest.setRequestStatus(1); // NEW ACCESSING
             request.setAttribute("success", "APCP access requested!");
             request.setAttribute("errMessage", "Error in requesting access to APCP. Try again.");
         } else {
