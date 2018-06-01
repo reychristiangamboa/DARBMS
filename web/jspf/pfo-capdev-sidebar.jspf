@@ -1,0 +1,152 @@
+<%@page import="java.util.ArrayList;"%>
+<%@page import="com.MVC.Model.*;"%>
+<%@page import="com.MVC.Model.Region;"%>
+<%@page import="com.MVC.Model.Province;"%>
+<%@page import="com.MVC.Model.CityMun;"%>
+<%@page import="com.MVC.Model.User;"%>
+<%@page import="com.MVC.Model.ARBO;"%>
+<%@page import="com.MVC.Model.ARB;"%>
+<%@page import="com.MVC.Model.Crop;"%>
+<%@page import="com.MVC.Model.Evaluation;"%>
+<%@page import="com.MVC.Model.APCPRequest;"%>
+<%@page import="com.MVC.Model.APCPRelease;"%>
+<%@page import="com.MVC.Model.CAPDEVPlan;"%>
+<%@page import="com.MVC.Model.CAPDEVActivity;"%>
+<%@page import="com.MVC.Model.PastDueAccount;"%>
+<%@page import="com.MVC.Model.EducationLevel;"%>
+<%@page import="com.MVC.Model.RelationshipType;"%>
+<%@page import="com.MVC.DAO.AddressDAO;"%>
+<%@page import="com.MVC.DAO.ARBODAO;"%>
+<%@page import="com.MVC.DAO.ARBDAO;"%>
+<%@page import="com.MVC.DAO.CropDAO;"%>
+<%@page import="com.MVC.DAO.APCPRequestDAO;"%>
+<%@page import="com.MVC.DAO.CAPDEVDAO;"%>
+<%@page import="com.MVC.DAO.UserDAO;"%>
+
+
+<%
+    CropDAO cropDAO = new CropDAO();
+                AddressDAO addressDAO = new AddressDAO();
+                ARBODAO arboDAO = new ARBODAO();
+                ARBDAO arbDAO = new ARBDAO();
+                APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+                CAPDEVDAO capdevDAO = new CAPDEVDAO();
+                UserDAO uDAO = new UserDAO();
+                APCPRelease apcpRelease = new APCPRelease();
+
+                ArrayList<EducationLevel> educationLevel = arbDAO.getAllEducationLevel();
+                System.out.print("Educ"+educationLevel.size());
+                ArrayList<RelationshipType> relationshipType = arbDAO.getAllRelationshipType();
+                System.out.print(relationshipType.size());
+                
+
+                ArrayList<Crop> allCrops = cropDAO.getAllCrops();
+                System.out.print(allCrops.size());
+                ArrayList<Region> regionList = addressDAO.getAllRegions();
+                System.out.print(regionList.size());
+                ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
+                System.out.print("ARBOProv"+arboListProvince.size());
+                ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
+                System.out.print(nonQualifiedARBOs.size());
+                ArrayList<ARBO> qualifiedARBOs = arboDAO.getAllQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
+                System.out.print(qualifiedARBOs.size());
+
+                ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
+                ArrayList<CityMun> cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
+
+                ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(arbListProvince);
+                ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListProvince);
+
+                ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer) session.getAttribute("provOfficeCode"));
+                
+                ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7, (Integer) session.getAttribute("provOfficeCode"));
+
+                ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(provincialRequests);
+
+                ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
+                ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
+
+                ArrayList<CAPDEVPlan> allPlans = capdevDAO.getAllProvincialCAPDEVPlan((Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
+
+                ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.getAttribute("provOfficeCode"));
+    
+%>
+
+
+
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+                <p><%out.print((String) session.getAttribute("fullName"));%></p>
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+        </div>
+        <!-- search form -->
+        <form action="#" method="get" class="sidebar-form">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <span class="input-group-btn">
+                    <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </form>
+        <!-- /.search form -->
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu" data-widget="tree">
+            <li class="header">MAIN NAVIGATION</li>
+            <li>
+                <a href="provincial-field-officer-home.jsp">
+                    <i class="fa fa-dashboard"></i> <span> Dashboard</span>
+                </a>
+            </li>
+            <!--<li class="treeview">
+                <a href="#">
+                    <i class="fa fa-users"></i> <span>ARBOs</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="provincial-field-officer-arbo-list.jsp"><i class="fa fa-dot-circle-o"></i> View All</a></li>
+                    <li><a href="provincial-field-officer-add-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Create ARBO</a></li>
+                </ul>
+            </li>-->
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-industry"></i> <span>CAPDEV</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="view-capdev-status.jsp"><i class="fa fa-dot-circle-o"></i> View CAPDEV Status</a></li>
+                    <li><a href="provincial-field-officer-select-request.jsp"><i class="fa fa-dot-circle-o"></i> Create CAPDEV Proposal</a></li>
+
+                </ul>
+            </li>
+            <li>
+                <a href="edit-profile.jsp">
+                    <i class="fa fa-edit"></i> <span> Edit Profile</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

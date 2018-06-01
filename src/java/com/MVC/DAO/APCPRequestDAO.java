@@ -580,7 +580,7 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
+
     public boolean approveDocument(int document) {
         boolean success = false;
         PreparedStatement p = null;
@@ -592,7 +592,6 @@ public class APCPRequestDAO {
             String query = "UPDATE apcp_documents d SET isApproved=1 WHERE d.document = ?";
             p = con.prepareStatement(query);
             p.setInt(1, document);
-            
 
             p.executeUpdate();
             success = true;
@@ -609,7 +608,7 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
+
     public boolean updateRequestStatus(int requestID, int statusID) {
         boolean success = false;
         PreparedStatement p = null;
@@ -1385,14 +1384,14 @@ public class APCPRequestDAO {
         }
         return dList;
     }
-    
+
     public ArrayList<APCPDocument> getAllAPCPDocuments() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<APCPDocument> dList = new ArrayList();
         try {
             String query = "SELECT * FROM ref_document d "
-            + "JOIN ref_documentType t ON d.documentType=t.documentType";
+                    + "JOIN ref_documentType t ON d.documentType=t.documentType";
             PreparedStatement pstmt = con.prepareStatement(query);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -1417,7 +1416,7 @@ public class APCPRequestDAO {
         }
         return dList;
     }
-    
+
     public ArrayList<APCPDocument> getAllAPCPDocumentsByRequest(int requestID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -1455,12 +1454,12 @@ public class APCPRequestDAO {
         }
         return dList;
     }
-    
+
     public APCPDocument getAPCPDocumentByDocumentID(int documentID) {
         ArrayList<APCPDocument> allDocuments = getAllAPCPDocuments();
         APCPDocument doc2 = new APCPDocument();
-        for(APCPDocument doc : allDocuments){
-            if(doc.getDocument() == documentID){
+        for (APCPDocument doc : allDocuments) {
+            if (doc.getDocument() == documentID) {
                 doc2 = doc;
             }
         }
@@ -1487,7 +1486,7 @@ public class APCPRequestDAO {
         ARBODAO dao = new ARBODAO();
         for (APCPRequest r : apcpRequestList) {
             ARBO arbo = dao.getARBOByID(r.getArboID());
-            if (arbo.getArboRegion()== regionID) {
+            if (arbo.getArboRegion() == regionID) {
                 list.add(r);
             }
         }
@@ -1819,7 +1818,7 @@ public class APCPRequestDAO {
         return success;
     }
 
-    public ArrayList<LoanReason> getAllLoanReasons() {
+    public ArrayList<LoanReason> getAllLoanReasons() { // includes Others
 
         ArrayList<LoanReason> list = new ArrayList();
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -1828,7 +1827,7 @@ public class APCPRequestDAO {
         try {
             con.setAutoCommit(false);
             String query = "SELECT * FROM `dar-bms`.ref_loanReason r "
-                    + "JOIN ref_loanTerms t ON r.loanTerm=t.loanTerm";
+                    + "LEFT JOIN ref_loanTerms t ON r.loanTerm=t.loanTerm";
             PreparedStatement p = con.prepareStatement(query);
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
@@ -1837,7 +1836,7 @@ public class APCPRequestDAO {
                 r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
                 r.setLoanTerm(getLoanTerm(rs.getInt("loanTerm")));
                 r.setApcpType(rs.getInt("apcpType"));
-                
+
                 list.add(r);
             }
             rs.close();
@@ -1855,8 +1854,23 @@ public class APCPRequestDAO {
         }
         return list;
     }
-    
-    public LoanTerm getLoanTerm(int loanTerm){
+
+    public ArrayList<LoanReason> getAllLoanReasonsByAPCPType(int type) {
+
+        ArrayList<LoanReason> allLoanReasons = getAllLoanReasons();
+        ArrayList<LoanReason> filtered = new ArrayList();
+
+        for (LoanReason r : allLoanReasons) {
+            if (r.getApcpType() == type || r.getApcpType() == 0) { // IF equals to type and encountered 'Others'
+                System.out.println(r.getLoanReasonDesc());
+                filtered.add(r);
+            }
+        }
+
+        return filtered;
+    }
+
+    public LoanTerm getLoanTerm(int loanTerm) {
         LoanTerm t = new LoanTerm();
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();

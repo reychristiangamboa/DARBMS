@@ -39,7 +39,9 @@
                 int arboID = (Integer) request.getAttribute("arboID");
                 ARBO arbo = arboDAO.getARBOByID(arboID);
                 ArrayList<APCPDocument> refDocuments = apcpRequestDAO.getAllAPCPDocuments();
-                ArrayList<LoanReason> refLoanReasons = apcpRequestDAO.getAllLoanReasons();
+                ArrayList<LoanReason> refLoanReasons = apcpRequestDAO.getAllLoanReasonsByAPCPType(1); // Since new requesting, only Crop Production Loan Reasons
+                
+                
             %>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -127,7 +129,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <button id="btnAddConduitDocu" class="btn btn-primary center-block">Add Document</button>    
+                                    <button id="btnAddConduitDocu" type="button" class="btnAddConduitDocu btn btn-primary center-block">Add Document</button>    
                                 </div>
 
                                 <br>
@@ -136,12 +138,13 @@
                                 <div class="row">
                                     <div class="col-xs-2"></div>
                                     <div class="col-xs-8">
-                                        <table id="example1" class="table table-bordered table-striped" >
-                                            <tbody>
+                                        <table id="conduitTable" class="table table-bordered table-striped" >
+                                            <tbody id="conduitWrapper">
                                                 <%for(APCPDocument d : refDocuments){%>
                                                 <%if(d.getIsRequired() == 1 && d.getDocumentType() == 1){ // REQUIRED and CONDUIT%>
                                                 <tr>
                                             <input type="hidden" name="documentID" value="<%out.print(d.getDocument());%>">
+                                            <input type="hidden" name="documentName" value="N/A">
                                             <td style="border: transparent;"><h5> &#9632; &nbsp; <%out.print(d.getDocumentDesc());%>:</h5></td>
                                             <td style="border: transparent;">
                                                 <div class="input-group date">
@@ -151,24 +154,39 @@
                                                     <input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker">
                                                 </div> 
                                             </td>
+                                            <td style="border: transparent">
+                                                &nbsp;
+                                            </td>
                                             </tr>
                                             <%}%>
                                             <%}%>
 
-                                            <!--                                                <tr>
-                                                                                                <td  style="border: transparent;"><h5> &#9632; &nbsp; Management Team Document:</h5></td>
-                                                                                                <td  style="border: transparent;">
-                                                                                                    <div class="input-group date">
-                                                                                                        <div class="input-group-addon">
-                                                                                                            <i class="fa fa-calendar"></i>
-                                                                                                        </div>
-                                                                                                        <input type="date" class="form-control pull-right" id="datepicker">
-                                                                                                    </div> 
-                                                                                                </td>
-                                                                                                <td style="border: transparent;">
-                                                                                                    <button type="button" id="red" class="btn btn-danger color green"><i class="fa fa-close"></i></button>
-                                                                                                </td>
-                                                                                            </tr>-->
+
+                                            <%--<tr>
+                                                <td  style="border: transparent;">
+                                                    <div class="form-group">
+                                                        <select name="documentID" id="" class="form-control select2">
+                                                            <%for(APCPDocument document : refDocuments){%>
+                                                            <%if(document.getIsRequired() == 0 && document.getDocumentType() == 1){%> 
+                                                            <option value="<%out.print(document.getDocument());%>"><%out.print(document.getDocumentDesc());%></option>
+                                                            <%}%>
+                                                            <%}%>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td  style="border: transparent;">
+                                                    <div class="input-group date">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker">
+                                                    </div> 
+                                                </td>
+                                                <td style="border: transparent;">
+                                                    <button type="button" class="delete-row-conduit btn btn-danger"><i class="fa fa-close"></i></button>
+                                                </td>
+                                            </tr>--%>
+
 
                                             </tbody>
                                         </table>
@@ -182,10 +200,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>APCP Type</label>
-                                            <select class="form-control select2" name="apcpType" id="apcpType" style="width: 100%;">
-                                                <option value="1">Crop Production</option>
-                                                <option value="2">Livelihood Program</option>
-                                            </select>
+                                            <input type="text" value="Crop Production" class="form-control" disabled />
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -202,7 +217,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>Other Reason</label>
-                                            <input type="text" id="otherReason" name="otherReason" class="form-control">
+                                            <input type="text" id="otherReason" name="otherReason" class="form-control" disabled>
                                         </div>
                                     </div>
 
@@ -263,7 +278,7 @@
                                             </tfoot>
                                         </table>
                                         <div class="form-group pull-right">
-                                            <input type="file" name="arbListExcel" id="exampleInputFile">
+                                            <input type="file" name="arbListExcel">
                                             <p class="help-block">Upload Recipient List</p>
                                         </div>
                                     </div>
@@ -272,19 +287,35 @@
                                     <h5 class="box-title"><strong>Supporting Documents</strong></h5>
                                 </div>
                                 <div class="row">
-                                    <button id="btnAddConduitDocu" class="btn btn-primary center-block">Add Document</button>    
+                                    <center>
+                                        <!--                                    <div class="btn-group">
+                                                                                <button id="btnAddSupportingDocu" type="button" class="btn btn-primary center-block">Add Document</button>    
+                                                                                <button id="btnAddOthers" type="button" class="btn btn-primary center-block">Other/s</button>
+                                                                            </div>-->
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Add Document <span class="caret"></span></button>
+                                            <ul id="optional-list" class="dropdown-menu" role="menu">
+                                                <%for(APCPDocument document : refDocuments){%>
+                                                <%if(document.getIsRequired() == 0 && document.getDocumentType() == 2){ // OPTIONAL and APCP%>
+                                                <li><a class="optional-document" data-documentID="<%out.print(document.getDocument());%>" data-documentDesc="<%out.print(document.getDocumentDesc());%>"><%out.print(document.getDocumentDesc());%></a></li>
+                                                    <%}%>
+                                                    <%}%>
+                                            </ul>
+                                        </div>
+                                    </center>
                                 </div>
 
                                 <br>
                                 <div class="row">
                                     <div class="col-xs-2"></div>
                                     <div class="col-xs-8">
-                                        <table id="example1" class="table table-bordered table-striped" >
-                                            <tbody>
+                                        <table id="supportingTable" class="table table-bordered table-striped" >
+                                            <tbody id="supportingWrapper">
                                                 <%for(APCPDocument d : refDocuments){%>
                                                 <%if(d.getIsRequired() == 1 && d.getDocumentType() == 2){ // REQUIRED and APCP%>
                                                 <tr>
                                             <input type="hidden" name="documentID" value="<%out.print(d.getDocument());%>">
+                                            <input type="hidden" name="documentName" value="N/A">
                                             <td style="border: transparent;"><h5> &#9632; &nbsp; <%out.print(d.getDocumentDesc());%>:</h5></td>
                                             <td style="border: transparent;">
                                                 <div class="input-group date">
@@ -294,24 +325,37 @@
                                                     <input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker">
                                                 </div> 
                                             </td>
+                                            <td style="border: transparent">
+                                                &nbsp;
+                                            </td>
                                             </tr>
                                             <%}%>
                                             <%}%>
 
-                                            <!--                                                <tr>
-                                                                                                <td  style="border: transparent;"><h5> &#9632; &nbsp; Management Team Document:</h5></td>
-                                                                                                <td  style="border: transparent;">
-                                                                                                    <div class="input-group date">
-                                                                                                        <div class="input-group-addon">
-                                                                                                            <i class="fa fa-calendar"></i>
-                                                                                                        </div>
-                                                                                                        <input type="date" class="form-control pull-right" id="datepicker">
-                                                                                                    </div> 
-                                                                                                </td>
-                                                                                                <td style="border: transparent;">
-                                                                                                    <button type="button" id="red" class="btn btn-danger color green"><i class="fa fa-close"></i></button>
-                                                                                                </td>
-                                                                                            </tr>-->
+                                            <%--
+                                            <tr>
+                                                <td style="border: transparent;">
+                                                    <select name="documentID" class="form-control">
+                                                        <%for(APCPDocument document : refDocuments){%>
+                                                            <%if(document.getDocumentType() == 2 && document.getIsRequired() == 0){%>
+                                                                <option value="<%out.print(document.getDocument());%>"><%out.print(document.getDocumentDesc());%></option>
+                                                            <%}%>
+                                                        <%}%>
+                                                    </select>
+                                                </td>
+                                                <td  style="border: transparent;">
+                                                    <div class="input-group date">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="date" class="form-control pull-right" id="datepicker">
+                                                    </div> 
+                                                </td>
+                                                <td style="border: transparent;">
+                                                    <button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button>
+                                                </td>
+                                            </tr>
+                                            --%>
 
                                             </tbody>
                                         </table>
@@ -323,7 +367,7 @@
                                     <div class="col-xs-12">
                                         <div class="form-group">
                                             <label for="">Remarks</label>
-                                            <textarea name="remarks" cols="30" rows="10" class="form-control"></textarea>
+                                            <textarea name="remarks" cols="20" rows="8" class="form-control"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -369,82 +413,168 @@
         </div>
         <!-- ./wrapper -->
 
+        <%@include file="jspf/footer.jspf"%>  
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#loanReason').on('change', function () { // 
+                    if (this.value > 0) { // If 'Others' is selected
+                        $('#otherReason').prop('disabled', true);
+                    } else {
+                        $('#otherReason').prop('disabled', false);
+                    }
+                });
 
-        <script>
-            
-            $(function () {
-                $('#validator').change(function () {
-                    $('.color').hide();
-                    $('#' + $(this).val()).show();
+
+            <%
+                    int optionalConduitCount = 0;
+                    int optionalSupportingCount = 0;
+                    for(APCPDocument document : refDocuments){
+                        if(document.getIsRequired() == 0 && document.getDocumentType() == 1){ // gets count of OPTIONAL & CONDUIT documents
+                            optionalConduitCount++;
+                        }else if(document.getIsRequired() == 0 && document.getDocumentType() == 2 && document.getDocument() != 12){ // gets count of OPTIONAL & SUPPORTING documents
+                            optionalSupportingCount++;
+                        }
+                    }
+            %>
+                //----- CONDUIT -----
+                var max_fields = <%out.print(optionalConduitCount);%>; //maximum input boxes allowed
+                var conduitWrapper = $('#conduitWrapper'); //Fields wrapper
+                var btnAddConduitDocu = $('#btnAddConduitDocu'); //Add CONDUIT button
+                var conduitDocuMarkup = '<tr><input type="hidden" name="documentName" value="N/A"><td  style="border: transparent;"><div class="form-group"><select name="documentID" id="" class="form-control select2"><%for(APCPDocument document : refDocuments){%><%if(document.getIsRequired() == 0 && document.getDocumentType() == 1){%> <option value="<%out.print(document.getDocument());%>"><%out.print(document.getDocumentDesc());%></option><%}%><%}%></select></div></td><td  style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-conduit btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
+                var x = 0; //initlal text box count
+
+                $(btnAddConduitDocu).click(function (e) { //on add input button click
+                    e.preventDefault();
+                    if (x < max_fields) { //max input box allowed
+                        x++; //text box increment
+                        $(conduitWrapper).append(conduitDocuMarkup);
+                        $('.select2').select2();
+                    }
+                });
+
+                $('#conduitTable').on("click", ".delete-row-conduit", function (event) {
+                    $(this).closest("tr").remove();
+                    x--;
+                });
+
+                //----- SUPPORTING -----
+                var max_fields = <%out.print(optionalSupportingCount);%>; //maximum input boxes allowed
+                var supportingWrapper = $('#supportingWrapper'); //Fields wrapper
+                var btnAddSupportingDocu = $('#btnAddSupportingDocu'); //Add Supporting button
+                var btnAddOthers = $('#btnAddOthers');
+                var supportingDocuMarkup = '<tr><input type="hidden" name="documentName" value="N/A"><td  style="border: transparent;"><div class="form-group"><select name="documentID" id="" class="form-control select2"><%for(APCPDocument document : refDocuments){%><%if(document.getIsRequired() == 0 && document.getDocumentType() == 2 && document.getDocument() != 0){%> <option value="<%out.print(document.getDocument());%>"><%out.print(document.getDocumentDesc());%></option><%}%><%}%></select></div></td><td  style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
+                var othersMarkup = '<tr><input type="hidden" name="documentDesc" value="N/A"><input type="hidden" name="documentID" value="12"><td style="border: transparent;"><div class="form-group"><input type="text" name="documentName" class="form-control" /></div></td><td style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
+                var y = 0; //initlal text box count
+
+                $(btnAddSupportingDocu).click(function (e) { //on add input button click
+                    e.preventDefault();
+
+                    if (y < max_fields) { //max input box allowed
+                        y++; //text box increment
+                        $(supportingWrapper).append(supportingDocuMarkup);
+                        $('.select2').select2();
+                    }
+                });
+
+                $(btnAddOthers).click(function (e) { //on add input button click
+                    e.preventDefault();
+                    $(supportingWrapper).append(othersMarkup);
+                    $('.select2').select2();
+                });
+
+                $('#supportingTable').on("click", ".delete-row-supporting", function (event) {
+                    $(this).closest("tr").remove();
+                    y--;
+                });
+
+                $('#optional-list').on("click", ".optional-document", function (e) {
+                    e.preventDefault();
+                    var documentID = parseInt($(this).attr('data-documentID'));
+                    var documentDesc = $(this).attr('data-documentDesc');
+
+                    var markup = "";
+                    if (documentID === 12) { // OTHERS
+                        markup = '<tr><input type="hidden" name="documentDesc" value="N/A"><input type="hidden" name="documentID" value="' + documentID + '"><td style="border: transparent;"><div class="form-group"><input type="text" name="documentName" class="form-control" /></div></td><td style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
+                    } else {
+                        markup = '<tr><input type="hidden" name="documentName" value="N/A"><input type="hidden" name="documentID" value="' + documentID + '"><td style="border: transparent;"><h5> &#9632; &nbsp; ' + documentDesc + ':</h5></td><td style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
+                    }
+                    $(supportingWrapper).append(markup);
+
                 });
             });
-            $(function () {
-                //Initialize Select2 Elements
-                $('.select2').select2()
-                
-                //Datemask dd/mm/yyyy
-                $('#datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'})
-                //Datemask2 mm/dd/yyyy
-                $('#datemask2').inputmask('mm/dd/yyyy', {'placeholder': 'mm/dd/yyyy'})
-                //Money Euro
-                $('[data-mask]').inputmask()
-                
-                //Date range picker
-                $('#reservation').daterangepicker()
-                //Date range picker with time picker
-                $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'})
-                //Date range as a button
-                $('#daterange-btn').daterangepicker(
-                        {
-                            ranges: {
-                                'Today': [moment(), moment()],
-                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                            },
-                            startDate: moment().subtract(29, 'days'),
-                            endDate: moment()
-                        },
-                        function (start, end) {
-                            $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-                        }
-                )
-                
-                //Date picker
-                $('#datepicker').datepicker({
-                    autoclose: true
-                })
-                
-                //iCheck for checkbox and radio inputs
-                $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-                    checkboxClass: 'icheckbox_minimal-blue',
-                    radioClass: 'iradio_minimal-blue'
-                })
-                //Red color scheme for iCheck
-                $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-                    checkboxClass: 'icheckbox_minimal-red',
-                    radioClass: 'iradio_minimal-red'
-                })
-                //Flat red color scheme for iCheck
-                $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-                    checkboxClass: 'icheckbox_flat-green',
-                    radioClass: 'iradio_flat-green'
-                })
-                
-                //Colorpicker
-                $('.my-colorpicker1').colorpicker()
-                //color picker with addon
-                $('.my-colorpicker2').colorpicker()
-                
-                //Timepicker
-                $('.timepicker').timepicker({
-                    showInputs: false
-                })
-            })
+//            $(function () {
+//                $('#validator').change(function () {
+//                    $('.color').hide();
+//                    $('#' + $(this).val()).show();
+//                });
+//            });
+//            $(function () {
+//                //Initialize Select2 Elements
+//                $('.select2').select2()
+//
+//                //Datemask dd/mm/yyyy
+//                $('#datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'})
+//                //Datemask2 mm/dd/yyyy
+//                $('#datemask2').inputmask('mm/dd/yyyy', {'placeholder': 'mm/dd/yyyy'})
+//                //Money Euro
+//                $('[data-mask]').inputmask()
+//
+//                //Date range picker
+//                $('#reservation').daterangepicker()
+//                //Date range picker with time picker
+//                $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'})
+//                //Date range as a button
+//                $('#daterange-btn').daterangepicker(
+//                        {
+//                            ranges: {
+//                                'Today': [moment(), moment()],
+//                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+//                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+//                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+//                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+//                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+//                            },
+//                            startDate: moment().subtract(29, 'days'),
+//                            endDate: moment()
+//                        },
+//                        function (start, end) {
+//                            $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+//                        }
+//                )
+//
+//                //Date picker
+//                $('#datepicker').datepicker({
+//                    autoclose: true
+//                })
+//
+//                //iCheck for checkbox and radio inputs
+//                $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+//                    checkboxClass: 'icheckbox_minimal-blue',
+//                    radioClass: 'iradio_minimal-blue'
+//                })
+//                //Red color scheme for iCheck
+//                $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+//                    checkboxClass: 'icheckbox_minimal-red',
+//                    radioClass: 'iradio_minimal-red'
+//                })
+//                //Flat red color scheme for iCheck
+//                $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+//                    checkboxClass: 'icheckbox_flat-green',
+//                    radioClass: 'iradio_flat-green'
+//                })
+//
+//                //Colorpicker
+//                $('.my-colorpicker1').colorpicker()
+//                //color picker with addon
+//                $('.my-colorpicker2').colorpicker()
+//
+//                //Timepicker
+//                $('.timepicker').timepicker({
+//                    showInputs: false
+//                })
+//            })
         </script>
-        <%@include file="jspf/footer.jspf"%>
+
     </body>
 
 

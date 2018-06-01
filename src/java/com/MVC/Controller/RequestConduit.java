@@ -35,7 +35,7 @@ public class RequestConduit extends BaseServlet {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         r.setArboID(Integer.parseInt(request.getParameter("arboID")));
-        r.setApcpType(Integer.parseInt(request.getParameter("apcpType")));
+        r.setApcpType(1); // since New Accessing, automatically set to Crop Production
         r.setLoanReason(Integer.parseInt(request.getParameter("loanReason")));
         r.setOtherLoanReason(request.getParameter("otherReason"));
         r.setLoanAmount(Double.parseDouble(request.getParameter("loanAmount")));
@@ -45,9 +45,9 @@ public class RequestConduit extends BaseServlet {
         int requestID = dao.requestAPCP(r, (Integer) session.getAttribute("userID"));
 
         String[] documentIDsStr = request.getParameterValues("documentID"); // document referenceID
-        System.out.println(documentIDsStr.length);
         String[] dateSubmittedStr = request.getParameterValues("dateSubmitted");
         String[] documentNameStr = request.getParameterValues("documentName");
+        System.out.println(documentIDsStr.length + " " + dateSubmittedStr.length + " " + documentNameStr.length);
         String[] arbIDsStr = request.getParameterValues("arbID");
         //ArrayList<APCPDocument> documentList = new ArrayList();
 
@@ -59,7 +59,7 @@ public class RequestConduit extends BaseServlet {
         }
 
         for (int i = 0; i < documentIDsStr.length; i++) {
-            System.out.println("DOCUMENT: "+documentIDsStr[i]);
+            System.out.println("DOCUMENT: " + documentIDsStr[i]);
             APCPDocument doc = new APCPDocument();
             doc.setDocument(Integer.parseInt(documentIDsStr[i])); // set documentID
 
@@ -79,18 +79,22 @@ public class RequestConduit extends BaseServlet {
                 doc.setDocumentName(documentNameStr[i]); // set documentName 
             }
 
-            if(dao.sendDocument(doc, requestID)){
-                System.out.println("LOL");
+            if (dao.sendDocument(doc, requestID)) {
+                System.out.println("Document added!");
+            }
+        }
+
+        System.out.println(request.getParameter("arbListExcel"));
+
+        for (String arbID : arbIDsStr) {
+            System.out.println(arbID);
+            if (dao.addAPCPRecipient(requestID, Integer.parseInt(arbID))) {
+                System.out.println("Recipient added!");
             }
         }
         
-        if(request.getParameter("arbListExcel") != null){ // EXCEL UPLOADED
-            // EXCEL
-        }else{ // NOTHING WAS UPLOADED
-            for(String arbID : arbIDsStr){
-                dao.addAPCPRecipient(requestID, Integer.parseInt(arbID));
-            }
-        }
+        request.setAttribute("success", "CONDUIT requested!");
+        request.getRequestDispatcher("LOL").forward(request,response);
 
     }
 

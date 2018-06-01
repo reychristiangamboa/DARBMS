@@ -33,8 +33,9 @@ public class SelectARBORequest extends BaseServlet {
         if (arbo.getAPCPQualified() == 0) {
             request.getRequestDispatcher("provincial-field-officer-request-apcp-access.jsp").forward(request, response);
             request.setAttribute("newAccessing", true);
+        } else {
+            request.getRequestDispatcher("provincial-field-officer-request-loan.jsp").forward(request, response);
         }
-        request.getRequestDispatcher("provincial-field-officer-request-loan.jsp").forward(request, response);
 
     }
 
