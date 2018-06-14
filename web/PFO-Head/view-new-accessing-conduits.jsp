@@ -1,6 +1,6 @@
 <%-- 
-    Document   : field-officer-arbo-list
-    Created on : Jan 29, 2018, 4:08:13 PM
+    Document   : provincial-field-officer-view-apcp-conduits
+    Created on : May 25, 2018, 8:57:51 PM
     Author     : Rey Christian
 --%>
 
@@ -8,29 +8,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="jspf/header.jspf"%>
-        <style>
-            .example-modal .modal {
-                position: relative;
-                top: auto;
-                bottom: auto;
-                right: auto;
-                left: auto;
-                display: block;
-                z-index: 1;
-            }
-
-            .example-modal .modal {
-                background: transparent !important;
-            }
-        </style>
+        <%@include file="/jspf/header.jspf"%>
     </head>
 
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
 
-            <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/central-sidebar.jspf" %>
+            <%@include file="/jspf/field-officer-navbar.jspf" %>
+            <%@include file="/jspf/central-sidebar.jspf" %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -39,7 +24,7 @@
                     <h1>
                         <i class="fa fa-plus"></i> New Accessing ARBOs
                     </h1>
-            </section>
+                </section>
 
                 <!-- Main content -->
                 <section class="content">
@@ -94,8 +79,6 @@
                                             </tr>
 
                                             <%}%>
-
-
                                         </tbody>
 
                                     </table>
@@ -114,6 +97,6 @@
             </div>
             <!-- /.content-wrapper -->
         </div>
-        <%@include file="jspf/footer.jspf" %>
+        <%@include file="/jspf/footer.jspf" %>
     </body>
 </html>

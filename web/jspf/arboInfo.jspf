@@ -183,7 +183,7 @@
                 <div class="col-xs-4">
                     <label for="space">No. of Members</label>
                     <div class="input-group">
-                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(arboDAO2.getARBCount(a2.getArboID()));%>" disabled>
+                        <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(a2.getArbList().size());%>" disabled>
                         <span class="input-group-btn">
                             <button class="btn btn-link" data-toggle="modal" data-target="#arbs"><i class="fa fa-users"></i> View Members</button>
                         </span>

@@ -31,12 +31,12 @@ public class DisapproveNewAccessing extends BaseServlet {
 
         APCPRequest r = rDAO.getRequestByID(requestID);
 
-        if (aDAO.updateARBOStatus(r.getArboID(), 0) && rDAO.updateRequestStatus(requestID, 7)) {
+        if (aDAO.updateARBOStatus(r.getArboID()) && rDAO.updateRequestStatus(requestID, 9)) {
             request.setAttribute("errMessage", "Access to APCP disapproved!");
-            request.getRequestDispatcher("central-view-new-requesting-arbo.jsp").forward(request, response);
+            request.getRequestDispatcher("/PFO-Head/view-new-accessing-conduits.jsp").forward(request, response);
         } else {
             request.setAttribute("errMessage", "Error in disapproving access to APCP.");
-            request.getRequestDispatcher("central-view-new-requesting-arbo.jsp").forward(request, response);
+            request.getRequestDispatcher("/PFO-Head/view-new-accessing-conduits.jsp").forward(request, response);
         }
 
     }

@@ -10,15 +10,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="jspf/header.jspf"%>
+        <%@include file="/jspf/header.jspf"%>
 
     </head>
 
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
 
-            <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/provincial-field-officer-sidebar.jspf" %>
+            <%@include file="/jspf/field-officer-navbar.jspf" %>
+            <%@include file="/jspf/pfo-apcp-sidebar.jspf" %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -55,7 +55,7 @@
 
                                             <tbody>
                                                 <%for (ARBO arbo : arboListProvince) {%>
-                                                <%if (arbo.getAPCPQualified() == 1) {%>
+                                                <%if (arbo.getQualifiedSince() != null) {%>
                                                 <tr>
                                                     <td><a href="SelectARBORequest?id=<%out.print(arbo.getArboID());%>"> <%out.print(arbo.getArboName());%></a></td>
                                                     <td><%out.print(arbo.getFullAddress());%></td>
@@ -83,6 +83,6 @@
             <!-- /.content-wrapper -->
 
         </div>
-        <%@include file="jspf/footer.jspf" %>
+        <%@include file="/jspf/footer.jspf" %>
     </body>
 </html>

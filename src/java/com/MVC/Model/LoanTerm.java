@@ -10,12 +10,13 @@ package com.MVC.Model;
  * @author Rey Christian
  */
 public class LoanTerm {
-    
     private int loanTerm;
     private String loanTermDesc;
     private double arboInterestRate;
     private double arbInterestRate;
     private double pastDueInterestRate;
+    private int minDuration;
+    private int maxDuration;
 
     public int getLoanTerm() {
         return loanTerm;
@@ -55,6 +56,22 @@ public class LoanTerm {
 
     public void setPastDueInterestRate(double pastDueInterestRate) {
         this.pastDueInterestRate = pastDueInterestRate;
+    }
+
+    public int getMinDuration() {
+        return minDuration;
+    }
+
+    public void setMinDuration(int minDuration) {
+        this.minDuration = minDuration;
+    }
+
+    public int getMaxDuration() {
+        return maxDuration;
+    }
+
+    public void setMaxDuration(int maxDuration) {
+        this.maxDuration = maxDuration;
     }
     
     

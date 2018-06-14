@@ -69,14 +69,13 @@ public class Login extends BaseServlet {
                     } else if (u.getUserType() == 4) {   //  REGIONAL FIELD OFFICER
                         request.getRequestDispatcher("regional-field-officer-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 5) {   //  CENTRAL OFFICER
-                        request.getRequestDispatcher("central-home.jsp").forward(request, response);
-                    } else {    //  DEACTIVATED ACCOUNTS
-                        request.getRequestDispatcher("account-deactivated.jsp").forward(request, response);
+                        request.getRequestDispatcher("/CO/central-home.jsp").forward(request, response);
+                    } else if (u.getUserType() == 6) {   //  PFO-APCP
+                        request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
                     }
 
-                } else {    //  LOGIN FAIL
-                    request.setAttribute("error", "Invalid username or password. Try again.");
-                    request.getRequestDispatcher("index.jsp").forward(request, response);
+                } else {    //  DEACTIVATED ACCOUNTS
+                    request.getRequestDispatcher("account-deactivated.jsp").forward(request, response);
                 }
             } else {    //  NO USER EXISTS
                 request.setAttribute("error", "Invalid username or password. Try again.");

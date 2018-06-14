@@ -53,27 +53,13 @@ public class AddARB extends BaseServlet {
                 arboDAO.addARBO(arbo);
                 arb.setArboID(arbo.getArboID());
             }
-            
-            /*String id = String.valueOf(arbo.getArboID());
-            int size = arbo.getArbList().size();
-            int counter = size + 1;
-
-            if (size <= 9) {
-                id += "00" + counter;
-            } else if (size >= 10) {
-                id += "0" + counter;
-            } else if (size >= 100) {
-                id += counter;
-            }
-
-            int finalID = Integer.parseInt(id);*/
 
             arb.setArbID(Integer.parseInt(request.getParameter("arbID")));
 
             if (request.getParameter("arboRep").equals("Yes")) {
-                arb.setArboRepresentative(1);
+                arb.setIsCOMAT(1);
             } else if (request.getParameter("arboRep").equals("No")) {
-                arb.setArboRepresentative(0);
+                arb.setIsCOMAT(0);
             }
 
             arb.setFirstName(request.getParameter("firstName"));
@@ -104,7 +90,7 @@ public class AddARB extends BaseServlet {
             if (arbDAO.checkIfARBExists(arb)) {
                 request.setAttribute("errMessage", "ARB already exists. Try again.");
                 request.setAttribute("arbo", arbo);
-                request.getRequestDispatcher("provincial-field-officer-add-arb.jsp").forward(request, response);
+                request.getRequestDispatcher("/PFO-Head/provincial-field-officer-add-arb.jsp").forward(request, response);
             } else {
                 
                 arbDAO.addARB(arb);
@@ -181,16 +167,16 @@ public class AddARB extends BaseServlet {
                     if (arbDAO.addDependents(arb.getArbID(), dependentList)) {
                         request.setAttribute("success", "ARB added!");
                         request.setAttribute("arbo", arbo);
-                        request.getRequestDispatcher("provincial-field-officer-add-arb.jsp").forward(request, response);
+                        request.getRequestDispatcher("/PFO-Head/provincial-field-officer-add-arb.jsp").forward(request, response);
                     } else {
                         request.setAttribute("errMessage", "Error in adding ARB. Try again.");
                         request.setAttribute("arbo", arbo);
-                        request.getRequestDispatcher("provincial-field-officer-add-arb.jsp").forward(request, response);
+                        request.getRequestDispatcher("/PFO-Head/provincial-field-officer-add-arb.jsp").forward(request, response);
                     }
                 } else {
                     request.setAttribute("errMessage", "Error in adding ARB. Try again.");
                     request.setAttribute("arbo", arbo);
-                    request.getRequestDispatcher("provincial-field-officer-add-arb.jsp").forward(request, response);
+                    request.getRequestDispatcher("/PFO-Head/provincial-field-officer-add-arb.jsp").forward(request, response);
                 }
             }
 

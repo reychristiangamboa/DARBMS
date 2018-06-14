@@ -19,9 +19,7 @@ public class APCPRequest {
     private int arboID;
     private int apcpType;
     private String apcpTypeDesc;
-    private int loanReason;
-    private String loanReasonDesc;
-    private String otherLoanReason;
+    private LoanReason loanReason;
     private int loanTermDuration;
     private double loanAmount;
     private double hectares;
@@ -79,9 +77,6 @@ public class APCPRequest {
         this.apcpDocument = apcpDocument;
     }
 
-    
-    
-    
     public int getRequestID() {
         return requestID;
     }
@@ -115,28 +110,12 @@ public class APCPRequest {
         this.apcpTypeDesc = apcpTypeDesc;
     }
 
-    public int getLoanReason() {
+    public LoanReason getLoanReason() {
         return loanReason;
     }
 
-    public void setLoanReason(int loanReason) {
+    public void setLoanReason(LoanReason loanReason) {
         this.loanReason = loanReason;
-    }
-
-    public String getLoanReasonDesc() {
-        return loanReasonDesc;
-    }
-
-    public void setLoanReasonDesc(String loanReasonDesc) {
-        this.loanReasonDesc = loanReasonDesc;
-    }
-    
-    public String getOtherLoanReason() {
-        return otherLoanReason;
-    }
-
-    public void setOtherLoanReason(String loanReason) {
-        this.otherLoanReason = loanReason;
     }
 
     public int getLoanTermDuration() {

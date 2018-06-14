@@ -88,6 +88,14 @@
                     disapprovedPlans = capdevDAO.getAllCAPDEVPlanByStatus(3);
                     implementedPlans = capdevDAO.getAllCAPDEVPlanByStatus(5);
                 }
+                
+                if(request.getAttribute("requested") != null){
+                    requestedRequests = (ArrayList)request.getAttribute("requested");
+                    pendingPlans = (ArrayList)request.getAttribute("pending");
+                    approvedPlans = (ArrayList)request.getAttribute("approved");
+                    implementedPlans = (ArrayList)request.getAttribute("implemented");
+                    disapprovedPlans = (ArrayList)request.getAttribute("disapproved");
+                }
    
     
 

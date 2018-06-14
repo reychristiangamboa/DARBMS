@@ -6,15 +6,6 @@
 package com.MVC.DAO;
 
 import com.MVC.Database.DBConnectionFactory;
-import com.MVC.Model.APCPRelease;
-import com.MVC.Model.APCPRequest;
-import com.MVC.Model.ARB;
-import com.MVC.Model.ARBO;
-import com.MVC.Model.CAPDEVActivity;
-import com.MVC.Model.Disbursement;
-import com.MVC.Model.LoanReason;
-import com.MVC.Model.PastDueAccount;
-import com.MVC.Model.Repayment;
 import com.MVC.Model.*;
 import java.sql.Connection;
 import java.sql.Date;
@@ -31,6 +22,130 @@ import java.util.logging.Logger;
  */
 public class APCPRequestDAO {
 
+    public ArrayList<APCPRequest> getAllRequests() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<APCPRequest> apcpRequest = new ArrayList();
+        try {
+            String query = "SELECT * FROM apcp_requests r "
+                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN ref_apcpType t ON r.apcpType=t.apcpType "
+                    + "JOIN arbos a ON r.arboID=a.arboID";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                APCPRequest r = new APCPRequest();
+                r.setRequestID(rs.getInt("requestID"));
+                r.setArboID(rs.getInt("arboID"));
+                r.setDateApproved(rs.getDate("dateApproved"));
+                r.setApprovedBy(rs.getInt("approvedBy"));
+                r.setDateCleared(rs.getDate("dateCleared"));
+                r.setClearedBy(rs.getInt("clearedBy"));
+                r.setDateEndorsed(rs.getDate("dateEndorsed"));
+                r.setEndorsedBy(rs.getInt("endorsedBy"));
+                r.setDateRequested(rs.getDate("dateRequested"));
+                r.setRequestedTo(rs.getInt("requestedTo"));
+                r.setHectares(rs.getDouble("hectares"));
+                r.setLoanAmount(rs.getDouble("loanAmount"));
+                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
+                r.setApcpType(rs.getInt("apcpType"));
+                r.setApcpTypeDesc(rs.getString("apcpTypeDesc"));
+                r.setLoanReason(getAPCPLoanReasonByRequest(rs.getInt("requestID")));
+                r.setLoanTermDuration(rs.getInt("loanTermDuration"));
+                r.setRemarks(rs.getString("remarks"));
+                r.setRequestStatus(rs.getInt("requestStatus"));
+                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
+                r.setIsNewAccessingRequest(rs.getInt("isNewAccessingRequest"));
+                r.setCropProdID(rs.getInt("cropProdID"));
+                r.setDateCompleted(rs.getDate("dateCompleted"));
+                r.setApcpDocument(getAllAPCPDocumentsByRequest(rs.getInt("requestID")));
+                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
+                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
+                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
+                apcpRequest.add(r);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return apcpRequest;
+    }
+    
+    public ArrayList<APCPRequest> getAllCropProdByRequest(int arboID) {
+        ArrayList<APCPRequest> all = getAllRequests();
+        ArrayList<APCPRequest> filtered = new ArrayList();
+        
+        for(APCPRequest r : all){
+            if(r.getArboID() == arboID && r.getApcpType() == 1){ // is REQUEST of ARBO and its TYPE is CROP PROD
+                filtered.add(r);
+            }
+        }
+        
+        return filtered;
+    }
+
+    public APCPRequest getRequestByID(int requestID) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        APCPRequest r = new APCPRequest();
+        try {
+            String query = "SELECT * FROM apcp_requests r "
+                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
+                    + "JOIN ref_apcpType t ON r.apcpType=t.apcpType "
+                    + "JOIN arbos a ON r.arboID=a.arboID "
+                    + "WHERE r.requestID = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, requestID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                r.setRequestID(rs.getInt("requestID"));
+                r.setArboID(rs.getInt("arboID"));
+                r.setDateApproved(rs.getDate("dateApproved"));
+                r.setApprovedBy(rs.getInt("approvedBy"));
+                r.setDateCleared(rs.getDate("dateCleared"));
+                r.setClearedBy(rs.getInt("clearedBy"));
+                r.setDateEndorsed(rs.getDate("dateEndorsed"));
+                r.setEndorsedBy(rs.getInt("endorsedBy"));
+                r.setDateRequested(rs.getDate("dateRequested"));
+                r.setRequestedTo(rs.getInt("requestedTo"));
+                r.setHectares(rs.getDouble("hectares"));
+                r.setLoanAmount(rs.getDouble("loanAmount"));
+                r.setApcpType(rs.getInt("apcpType"));
+                r.setApcpTypeDesc(rs.getString("apcpTypeDesc"));
+                r.setLoanReason(getAPCPLoanReasonByRequest(rs.getInt("requestID")));
+                r.setLoanTermDuration(rs.getInt("loanTermDuration"));
+                r.setRemarks(rs.getString("remarks"));
+                r.setApcpDocument(getAllAPCPDocumentsByRequest(rs.getInt("requestID")));
+                r.setRequestStatus(rs.getInt("requestStatus"));
+                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
+                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
+                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
+                r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
+                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
+                r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
+                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return r;
+    }
+
     public int requestAPCP(APCPRequest r, int userID) {
 
         PreparedStatement p = null;
@@ -39,23 +154,24 @@ public class APCPRequestDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`apcp_requests` (`arboID`, `loanReason`, `loanAmount`, "
-                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`,`requestStatus`,`apcpType`,`otherLoanReason`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?);";
+            String query = "INSERT INTO `dar-bms`.`apcp_requests` (`arboID`, `loanAmount`, "
+                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`,`requestStatus`,`apcpType`,`cropProd`) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
             p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setInt(1, r.getArboID());
-            p.setInt(2, r.getLoanReason());
-            p.setDouble(3, r.getLoanAmount());
-            p.setDouble(4, r.getHectares());
-            p.setString(5, r.getRemarks());
+            p.setDouble(2, r.getLoanAmount());
+            p.setDouble(3, r.getHectares());
+            p.setString(4, r.getRemarks());
 
             Long l = System.currentTimeMillis();
             Date d = new Date(l);
 
-            p.setDate(6, d);
-            p.setInt(7, userID);
-            p.setInt(8, r.getRequestStatus());
-            p.setInt(9, r.getApcpType());
-            p.setString(10, r.getOtherLoanReason());
+            p.setDate(5, d);
+            p.setInt(6, userID);
+            p.setInt(7, r.getRequestStatus());
+            p.setInt(8, r.getApcpType());
+            p.setInt(9, r.getCropProdID());
+            
 
             p.executeUpdate();
 
@@ -82,34 +198,6 @@ public class APCPRequestDAO {
             Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
-    }
-
-    public boolean addAPCPRecipient(int requestID, int arbID) {
-        boolean success = false;
-        PreparedStatement p = null;
-        Connection con = null;
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        con = myFactory.getConnection();
-        try {
-            con.setAutoCommit(false);
-            String query = "INSERT INTO apcp_recipients(arbID, requestID) VALUES (?,?)";
-            p = con.prepareStatement(query);
-            p.setInt(1, arbID);
-            p.setInt(2, requestID);
-            p.executeUpdate();
-            p.close();
-            con.commit();
-            con.close();
-            success = true;
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return success;
     }
 
     public boolean clearRequest(int requestID, int userID) {
@@ -217,109 +305,31 @@ public class APCPRequestDAO {
         return success;
     }
 
-    public APCPRequest getRequestByID(int requestID) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        APCPRequest r = new APCPRequest();
-        try {
-            String query = "SELECT * FROM apcp_requests r "
-                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                    + "JOIN ref_loanReason l ON r.loanReason=l.loanReason "
-                    + "JOIN ref_loanTerms lt ON l.loanTerm=lt.loanTerm "
-                    + "JOIN ref_apcpType t ON r.apcpType=t.apcpType "
-                    + "JOIN arbos a ON r.arboID=a.arboID "
-                    + "WHERE r.requestID = ?";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, requestID);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                r.setRequestID(rs.getInt("requestID"));
-                r.setArboID(rs.getInt("arboID"));
-                r.setDateApproved(rs.getDate("dateApproved"));
-                r.setApprovedBy(rs.getInt("approvedBy"));
-                r.setDateCleared(rs.getDate("dateCleared"));
-                r.setClearedBy(rs.getInt("clearedBy"));
-                r.setDateEndorsed(rs.getDate("dateEndorsed"));
-                r.setEndorsedBy(rs.getInt("endorsedBy"));
-                r.setDateRequested(rs.getDate("dateRequested"));
-                r.setRequestedTo(rs.getInt("requestedTo"));
-                r.setHectares(rs.getDouble("hectares"));
-                r.setLoanAmount(rs.getDouble("loanAmount"));
-                r.setApcpType(rs.getInt("apcpType"));
-                r.setApcpTypeDesc(rs.getString("apcpTypeDesc"));
-                r.setLoanReason(rs.getInt("loanReason"));
-                r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
-                r.setOtherLoanReason(rs.getString("otherLoanReason"));
-                r.setLoanTermDuration(rs.getInt("loanTermDuration"));
-                r.setRemarks(rs.getString("remarks"));
-                r.setApcpDocument(getAllAPCPDocumentsByRequest(rs.getInt("requestID")));
-                r.setRequestStatus(rs.getInt("requestStatus"));
-                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
-                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
-                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
-                r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
-                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
+    public ArrayList<APCPRequest> getAllRequestsByStatus(int statusID) {
+        ArrayList<APCPRequest> all = getAllRequests();
+        ArrayList<APCPRequest> filtered = new ArrayList();
+
+        for (APCPRequest r : all) {
+            if (r.getRequestStatus() == statusID) {
+                filtered.add(r);
             }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return r;
+
+        return filtered;
     }
 
-    public ArrayList<APCPRequest> getAllRequestsByStatus(int statusID) {
+    public ArrayList<APCPRequest> getAllAPCPTypes() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<APCPRequest> apcpRequest = new ArrayList();
         try {
-            String query = "SELECT * FROM apcp_requests r "
-                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                    + "JOIN ref_loanReason l ON r.loanReason=l.loanReason "
-                    + "JOIN ref_apcpType t ON r.apcpType=t.apcpType "
-                    + "JOIN arbos a ON r.arboID=a.arboID "
-                    + "WHERE r.requestStatus = ?";
+            String query = "SELECT * FROM ref_apcpType";
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, statusID);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 APCPRequest r = new APCPRequest();
-                r.setRequestID(rs.getInt("requestID"));
-                r.setArboID(rs.getInt("arboID"));
-                r.setDateApproved(rs.getDate("dateApproved"));
-                r.setApprovedBy(rs.getInt("approvedBy"));
-                r.setDateCleared(rs.getDate("dateCleared"));
-                r.setClearedBy(rs.getInt("clearedBy"));
-                r.setDateEndorsed(rs.getDate("dateEndorsed"));
-                r.setEndorsedBy(rs.getInt("endorsedBy"));
-                r.setDateRequested(rs.getDate("dateRequested"));
-                r.setRequestedTo(rs.getInt("requestedTo"));
-                r.setHectares(rs.getDouble("hectares"));
-                r.setLoanAmount(rs.getDouble("loanAmount"));
-                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
                 r.setApcpType(rs.getInt("apcpType"));
                 r.setApcpTypeDesc(rs.getString("apcpTypeDesc"));
-                r.setLoanReason(rs.getInt("loanReason"));
-                r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
-                r.setOtherLoanReason(rs.getString("otherLoanReason"));
-                r.setRemarks(rs.getString("remarks"));
-                r.setRequestStatus(rs.getInt("requestStatus"));
-                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
-                r.setIsNewAccessingRequest(rs.getInt("isNewAccessingRequest"));
-                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setApcpDocument(getAllAPCPDocumentsByRequest(rs.getInt("requestID")));
-                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
-                r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
-                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
                 apcpRequest.add(r);
             }
             rs.close();
@@ -337,124 +347,31 @@ public class APCPRequestDAO {
     }
 
     public ArrayList<APCPRequest> getAllARBORequestsByStatus(int statusID, int arboID) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        ArrayList<APCPRequest> apcpRequest = new ArrayList();
-        try {
-            String query = "SELECT * FROM apcp_requests r "
-                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                    + "JOIN ref_loanReason l ON r.loanReason=l.loanReason "
-                    + "JOIN ref_apcpType t ON r.apcpType=t.apcpType "
-                    + "JOIN arbos a ON r.arboID=a.arboID "
-                    + "WHERE r.requestStatus = ? AND r.arboID = ?";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, statusID);
-            pstmt.setInt(2, arboID);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                APCPRequest r = new APCPRequest();
-                r.setRequestID(rs.getInt("requestID"));
-                r.setArboID(rs.getInt("arboID"));
-                r.setDateApproved(rs.getDate("dateApproved"));
-                r.setApprovedBy(rs.getInt("approvedBy"));
-                r.setDateCleared(rs.getDate("dateCleared"));
-                r.setClearedBy(rs.getInt("clearedBy"));
-                r.setDateEndorsed(rs.getDate("dateEndorsed"));
-                r.setEndorsedBy(rs.getInt("endorsedBy"));
-                r.setDateRequested(rs.getDate("dateRequested"));
-                r.setRequestedTo(rs.getInt("requestedTo"));
-                r.setHectares(rs.getDouble("hectares"));
-                r.setLoanAmount(rs.getDouble("loanAmount"));
-                r.setApcpType(rs.getInt("apcpType"));
-                r.setApcpTypeDesc(rs.getString("apcpTypeDesc"));
-                r.setLoanReason(rs.getInt("loanReason"));
-                r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
-                r.setOtherLoanReason(rs.getString("otherLoanReason"));
-                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
-                r.setRemarks(rs.getString("remarks"));
-                r.setRequestStatus(rs.getInt("requestStatus"));
-                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
-                r.setIsNewAccessingRequest(rs.getInt("isNewAccessingRequest"));
-                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
-                r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
-                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
-                apcpRequest.add(r);
+        ArrayList<APCPRequest> all = getAllRequests();
+        ArrayList<APCPRequest> filtered = new ArrayList();
+        
+        for(APCPRequest r : all){
+            if(r.getRequestStatus() == statusID && r.getArboID() == arboID){
+                filtered.add(r);
             }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return apcpRequest;
+        
+        return filtered;
     }
 
     public ArrayList<APCPRequest> getAllProvincialRequestsByStatus(int statusID, int provinceID) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        ArrayList<APCPRequest> apcpRequest = new ArrayList();
-        try {
-            String query = "SELECT * FROM apcp_requests r "
-                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                    + "JOIN ref_loanReason l ON r.loanReason=l.loanReason "
-                    + "JOIN ref_apcpType t ON r.apcpType=t.apcpType "
-                    + "JOIN arbos a ON r.arboID=a.arboID "
-                    + "WHERE r.requestStatus = ? AND a.provOfficeCode = ?";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, statusID);
-            pstmt.setInt(2, provinceID);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                APCPRequest r = new APCPRequest();
-                r.setRequestID(rs.getInt("requestID"));
-                r.setArboID(rs.getInt("arboID"));
-                r.setDateApproved(rs.getDate("dateApproved"));
-                r.setApprovedBy(rs.getInt("approvedBy"));
-                r.setDateCleared(rs.getDate("dateCleared"));
-                r.setClearedBy(rs.getInt("clearedBy"));
-                r.setDateEndorsed(rs.getDate("dateEndorsed"));
-                r.setEndorsedBy(rs.getInt("endorsedBy"));
-                r.setDateRequested(rs.getDate("dateRequested"));
-                r.setRequestedTo(rs.getInt("requestedTo"));
-                r.setHectares(rs.getDouble("hectares"));
-                r.setLoanAmount(rs.getDouble("loanAmount"));
-                r.setApcpType(rs.getInt("apcpType"));
-                r.setApcpTypeDesc(rs.getString("apcpTypeDesc"));
-                r.setLoanReason(rs.getInt("loanReason"));
-                r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
-                r.setOtherLoanReason(rs.getString("otherLoanReason"));
-                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
-                r.setRemarks(rs.getString("remarks"));
-                r.setRequestStatus(rs.getInt("requestStatus"));
-                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
-                r.setIsNewAccessingRequest(rs.getInt("isNewAccessingRequest"));
-                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setApcpDocument(getAllAPCPDocumentsByRequest(rs.getInt("requestID")));
-                r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
-                r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
-                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
-                apcpRequest.add(r);
+        ARBODAO dao = new ARBODAO();
+        ArrayList<APCPRequest> all = new ArrayList();
+        ArrayList<APCPRequest> filtered = new ArrayList();
+        
+        for(APCPRequest r : all){
+            ARBO a = dao.getARBOByID(r.getArboID());
+            if(r.getRequestID() == statusID && a.getProvOfficeCode() == provinceID){
+                filtered.add(r);
             }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return apcpRequest;
+        
+        return filtered;
     }
 
     public ArrayList<APCPRequest> getAllProvincialRequestsByStatus(int statusID, ArrayList<Integer> provinceIDs) {
@@ -473,65 +390,18 @@ public class APCPRequestDAO {
     }
 
     public ArrayList<APCPRequest> getAllRegionalRequestsByStatus(int statusID, int regionID) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        ArrayList<APCPRequest> apcpRequest = new ArrayList();
-        try {
-            String query = "SELECT * FROM apcp_requests r "
-                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                    + "JOIN ref_loanReason l ON r.loanReason=l.loanReason "
-                    + "JOIN ref_apcpType t ON r.apcpType=t.apcpType "
-                    + "JOIN arbos a ON r.arboID=a.arboID "
-                    + "JOIN ref_provoffice p ON a.provOfficeCode=p.provOfficeCode "
-                    + "WHERE r.requestStatus = ? AND p.regCode=?";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, statusID);
-            pstmt.setInt(2, regionID);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                APCPRequest r = new APCPRequest();
-                r.setRequestID(rs.getInt("requestID"));
-                r.setArboID(rs.getInt("arboID"));
-                r.setDateApproved(rs.getDate("dateApproved"));
-                r.setApprovedBy(rs.getInt("approvedBy"));
-                r.setDateCleared(rs.getDate("dateCleared"));
-                r.setClearedBy(rs.getInt("clearedBy"));
-                r.setDateEndorsed(rs.getDate("dateEndorsed"));
-                r.setEndorsedBy(rs.getInt("endorsedBy"));
-                r.setDateRequested(rs.getDate("dateRequested"));
-                r.setRequestedTo(rs.getInt("requestedTo"));
-                r.setHectares(rs.getDouble("hectares"));
-                r.setLoanAmount(rs.getDouble("loanAmount"));
-                r.setApcpType(rs.getInt("apcpType"));
-                r.setApcpTypeDesc(rs.getString("apcpTypeDesc"));
-                r.setLoanReason(rs.getInt("loanReason"));
-                r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
-                r.setOtherLoanReason(rs.getString("otherLoanReason"));
-                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
-                r.setRemarks(rs.getString("remarks"));
-                r.setRequestStatus(rs.getInt("requestStatus"));
-                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
-                r.setIsNewAccessingRequest(rs.getInt("isNewAccessingRequest"));
-                r.setApcpDocument(getAllAPCPDocumentsByRequest(rs.getInt("requestID")));
-                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
-                r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
-                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
-                apcpRequest.add(r);
+        ARBODAO dao = new ARBODAO();
+        ArrayList<APCPRequest> all = new ArrayList();
+        ArrayList<APCPRequest> filtered = new ArrayList();
+        
+        for(APCPRequest r : all){
+            ARBO a = dao.getARBOByID(r.getArboID());
+            if(r.getRequestID() == statusID && a.getArboRegion()== regionID){
+                filtered.add(r);
             }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return apcpRequest;
+        
+        return filtered;
     }
 
     public ArrayList<APCPRequest> getAllRegionalRequestsByStatus(int statusID, ArrayList<Integer> regionIDs) {
@@ -549,6 +419,66 @@ public class APCPRequestDAO {
         return list;
     }
 
+    public boolean addAPCPRecipient(int requestID, int arbID) {
+        boolean success = false;
+        PreparedStatement p = null;
+        Connection con = null;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        con = myFactory.getConnection();
+        try {
+            con.setAutoCommit(false);
+            String query = "INSERT INTO apcp_recipients(arbID, requestID) VALUES (?,?)";
+            p = con.prepareStatement(query);
+            p.setInt(1, arbID);
+            p.setInt(2, requestID);
+            p.executeUpdate();
+            p.close();
+            con.commit();
+            con.close();
+            success = true;
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
+    }
+    
+    public void setAPCPLoanReason(int requestID, int loanReason, int loanTerm, String otherReason) {
+        
+        PreparedStatement p = null;
+        Connection con = null;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        con = myFactory.getConnection();
+        try {
+            con.setAutoCommit(false);
+            String query = "INSERT INTO apcp_loanReason (requestID,loanReason,loanTerm,otherReason) "
+                    + "VALUES (?,?,?,?)";
+            p = con.prepareStatement(query);
+            p.setInt(1, requestID);
+            p.setInt(2, loanReason);
+            p.setInt(3, loanTerm);
+            p.setString(4, otherReason);
+
+            p.executeUpdate();
+            
+            p.close();
+            con.commit();
+            con.close();
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
     public boolean sendDocument(APCPDocument doc, int requestID) {
         boolean success = false;
         PreparedStatement p = null;
@@ -557,13 +487,14 @@ public class APCPRequestDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO apcp_documents (requestID,document,documentName,dateSubmitted) "
-                    + "VALUES (?,?,?,?)";
+            String query = "INSERT INTO apcp_documents (requestID,document,documentName,dateSubmitted,isApproved) "
+                    + "VALUES (?,?,?,?,?)";
             p = con.prepareStatement(query);
             p.setInt(1, requestID);
             p.setInt(2, doc.getDocument());
             p.setString(3, doc.getDocumentName());
             p.setDate(4, doc.getDateSubmitted());
+            p.setBoolean(5, doc.isIsApproved());
 
             p.executeUpdate();
             success = true;
@@ -1415,7 +1346,7 @@ public class APCPRequestDAO {
             Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return dList;
-    }
+    } // REFERENCE
 
     public ArrayList<APCPDocument> getAllAPCPDocumentsByRequest(int requestID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -1466,7 +1397,163 @@ public class APCPRequestDAO {
         return doc2;
     }
 
-    // FOR REPORTS
+    public ArrayList<LoanReason> getAllLoanReasons() { // includes Others; REFERENCE
+
+        ArrayList<LoanReason> list = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM `dar-bms`.ref_loanReason r "
+                    + "LEFT JOIN `dar-bms`.ref_apcpType a ON r.apcpType=a.apcpType "
+                    + "WHERE r.apcpType=? OR r.apcpType IS NULL";
+            PreparedStatement p = con.prepareStatement(query);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                LoanReason r = new LoanReason();
+                r.setLoanReason(rs.getInt("loanReason"));
+                r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
+                list.add(r);
+            }
+            rs.close();
+            p.close();
+            con.commit();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    } // REFERENCE
+    
+    public ArrayList<LoanReason> getAllLoanReasonsByAPCPType(int apcpType) { // includes Others; REFERENCE
+
+        ArrayList<LoanReason> list = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM `dar-bms`.ref_loanReason r "
+                    + "LEFT JOIN `dar-bms`.ref_apcpType a ON r.apcpType=a.apcpType "
+                    + "WHERE r.apcpType=? OR r.apcpType IS NULL";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, apcpType);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                LoanReason r = new LoanReason();
+                r.setLoanReason(rs.getInt("loanReason"));
+                r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
+                list.add(r);
+            }
+            rs.close();
+            p.close();
+            con.commit();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    } // REFERENCE
+
+    public ArrayList<LoanTerm> getAllLoanTerms() {
+        ArrayList<LoanTerm> all = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM `dar-bms`.ref_loanTerms t";
+            PreparedStatement p = con.prepareStatement(query);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                LoanTerm t = new LoanTerm();
+                t.setLoanTerm(rs.getInt("loanTerm"));
+                t.setLoanTermDesc(rs.getString("loanTermDesc"));
+                t.setArboInterestRate(rs.getDouble("arboInterestRate"));
+                t.setArbInterestRate(rs.getDouble("arbInterestRate"));
+                t.setPastDueInterestRate(rs.getDouble("pastDueInterestRate"));
+                t.setMinDuration(rs.getInt("minDuration"));
+                t.setMaxDuration(rs.getInt("maxDuration"));
+                all.add(t);
+            }
+            rs.close();
+            p.close();
+            con.commit();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return all;
+    } // REFERENCE
+    
+    public LoanReason getAPCPLoanReasonByRequest(int requestID) {
+
+        LoanReason r = new LoanReason();
+        LoanTerm t = new LoanTerm();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM apcp_loanReason r "
+                    + "JOIN ref_loanReason lr ON r.loanReason=lr.loanReason "
+                    + "JOIN ref_loanTerms lt ON r.loanTerm=lt.loanTerm "
+                    + "WHERE r.requestID=?";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, requestID);
+            ResultSet rs = p.executeQuery();
+            if (rs.next()) {
+                t.setLoanTerm(rs.getInt("loanTerm"));
+                t.setLoanTermDesc(rs.getString("loanTermDesc"));
+                t.setArboInterestRate(rs.getDouble("arboInterestRate"));
+                t.setArbInterestRate(rs.getDouble("arbInterestRate"));
+                t.setPastDueInterestRate(rs.getDouble("pastDueInterestRate"));
+                t.setMinDuration(rs.getInt("minDuration"));
+                t.setMaxDuration(rs.getInt("maxDuration"));
+                
+                r.setLoanTerm(t);
+                r.setLoanReason(rs.getInt("loanReason"));
+                r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
+                r.setOtherReason(rs.getString("otherReason"));
+                r.setLoanTermID(rs.getInt("loanTerm"));
+            }
+            rs.close();
+            p.close();
+            con.commit();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return r;
+    }
+    
+    
+// FOR REPORTS
     public ArrayList<APCPRequest> getAllProvincialRequests(int provinceID) {
         ArrayList<APCPRequest> apcpRequestList = getAllRequests();
         ArrayList<APCPRequest> list = new ArrayList();
@@ -1494,121 +1581,16 @@ public class APCPRequestDAO {
     }
 
     public ArrayList<APCPRequest> getAllARBORequests(int arboID) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        CAPDEVDAO dao = new CAPDEVDAO();
-        ArrayList<APCPRequest> apcpRequest = new ArrayList();
-        try {
-            String query = "SELECT * FROM apcp_requests r "
-                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                    + "JOIN ref_loanReason l ON r.loanReason=l.loanReason "
-                    + "JOIN ref_apcpType t ON r.apcpType=t.apcpType "
-                    + "JOIN arbos a ON r.arboID=a.arboID "
-                    + "WHERE a.arboID = ?";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, arboID);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                APCPRequest r = new APCPRequest();
-                r.setRequestID(rs.getInt("requestID"));
-                r.setArboID(rs.getInt("arboID"));
-                r.setDateApproved(rs.getDate("dateApproved"));
-                r.setApprovedBy(rs.getInt("approvedBy"));
-                r.setDateCleared(rs.getDate("dateCleared"));
-                r.setClearedBy(rs.getInt("clearedBy"));
-                r.setDateEndorsed(rs.getDate("dateEndorsed"));
-                r.setEndorsedBy(rs.getInt("endorsedBy"));
-                r.setDateRequested(rs.getDate("dateRequested"));
-                r.setRequestedTo(rs.getInt("requestedTo"));
-                r.setHectares(rs.getDouble("hectares"));
-                r.setLoanAmount(rs.getDouble("loanAmount"));
-                r.setApcpType(rs.getInt("apcpType"));
-                r.setApcpTypeDesc(rs.getString("apcpTypeDesc"));
-                r.setLoanReason(rs.getInt("loanReason"));
-                r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
-                r.setOtherLoanReason(rs.getString("otherLoanReason"));
-                r.setRemarks(rs.getString("remarks"));
-                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
-                r.setRequestStatus(rs.getInt("requestStatus"));
-                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
-                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
-                r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
-                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
-                r.setPlans(dao.getAllCAPDEVPlanByRequest(rs.getInt("requestID")));
-                apcpRequest.add(r);
+        ArrayList<APCPRequest> all = getAllRequests();
+        ArrayList<APCPRequest> filtered = new ArrayList();
+        
+        for(APCPRequest r : all){
+            if(r.getArboID() == arboID){
+                filtered.add(r);
             }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return apcpRequest;
-    }
-
-    public ArrayList<APCPRequest> getAllRequests() {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        ArrayList<APCPRequest> apcpRequest = new ArrayList();
-        try {
-            String query = "SELECT * FROM apcp_requests r "
-                    + "JOIN ref_requestStatus s ON r.requestStatus=s.requestStatus "
-                    + "JOIN ref_loanReason l ON r.loanReason=l.loanReason "
-                    + "JOIN ref_apcpType t ON r.apcpType=t.apcpType "
-                    + "JOIN arbos a ON r.arboID=a.arboID";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                APCPRequest r = new APCPRequest();
-                r.setRequestID(rs.getInt("requestID"));
-                r.setArboID(rs.getInt("arboID"));
-                r.setDateApproved(rs.getDate("dateApproved"));
-                r.setApprovedBy(rs.getInt("approvedBy"));
-                r.setDateCleared(rs.getDate("dateCleared"));
-                r.setClearedBy(rs.getInt("clearedBy"));
-                r.setDateEndorsed(rs.getDate("dateEndorsed"));
-                r.setEndorsedBy(rs.getInt("endorsedBy"));
-                r.setDateRequested(rs.getDate("dateRequested"));
-                r.setRequestedTo(rs.getInt("requestedTo"));
-                r.setHectares(rs.getDouble("hectares"));
-                r.setLoanAmount(rs.getDouble("loanAmount"));
-                r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
-                r.setApcpType(rs.getInt("apcpType"));
-                r.setApcpTypeDesc(rs.getString("apcpTypeDesc"));
-                r.setLoanReason(rs.getInt("loanReason"));
-                r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
-                r.setOtherLoanReason(rs.getString("otherLoanReason"));
-                r.setLoanTermDuration(rs.getInt("loanTermDuration"));
-                r.setRemarks(rs.getString("remarks"));
-                r.setRequestStatus(rs.getInt("requestStatus"));
-                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
-                r.setIsNewAccessingRequest(rs.getInt("isNewAccessingRequest"));
-                r.setCropProdID(rs.getInt("cropProdID"));
-                r.setDateCompleted(rs.getDate("dateCompleted"));
-                r.setApcpDocument(getAllAPCPDocumentsByRequest(rs.getInt("requestID")));
-                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
-                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
-                apcpRequest.add(r);
-            }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return apcpRequest;
+        
+        return filtered;
     }
 
     public double getSumOfReleasesByRequestId(int requestID) {
@@ -1816,92 +1798,6 @@ public class APCPRequestDAO {
             Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return success;
-    }
-
-    public ArrayList<LoanReason> getAllLoanReasons() { // includes Others
-
-        ArrayList<LoanReason> list = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "SELECT * FROM `dar-bms`.ref_loanReason r "
-                    + "LEFT JOIN ref_loanTerms t ON r.loanTerm=t.loanTerm";
-            PreparedStatement p = con.prepareStatement(query);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                LoanReason r = new LoanReason();
-                r.setLoanReason(rs.getInt("loanReason"));
-                r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
-                r.setLoanTerm(getLoanTerm(rs.getInt("loanTerm")));
-                r.setApcpType(rs.getInt("apcpType"));
-
-                list.add(r);
-            }
-            rs.close();
-            p.close();
-            con.commit();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
-    }
-
-    public ArrayList<LoanReason> getAllLoanReasonsByAPCPType(int type) {
-
-        ArrayList<LoanReason> allLoanReasons = getAllLoanReasons();
-        ArrayList<LoanReason> filtered = new ArrayList();
-
-        for (LoanReason r : allLoanReasons) {
-            if (r.getApcpType() == type || r.getApcpType() == 0) { // IF equals to type and encountered 'Others'
-                System.out.println(r.getLoanReasonDesc());
-                filtered.add(r);
-            }
-        }
-
-        return filtered;
-    }
-
-    public LoanTerm getLoanTerm(int loanTerm) {
-        LoanTerm t = new LoanTerm();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "SELECT * FROM `dar-bms`.ref_loanTerms t WHERE t.loanTerm=?";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, loanTerm);
-            ResultSet rs = p.executeQuery();
-            if (rs.next()) {
-                t.setLoanTerm(rs.getInt("loanTerm"));
-                t.setLoanTermDesc(rs.getString("loanTermDesc"));
-                t.setArboInterestRate(rs.getDouble("arboInterestRate"));
-                t.setArbInterestRate(rs.getDouble("arbInterestRate"));
-                t.setPastDueInterestRate(rs.getDouble("pastDueInterestRate"));
-            }
-            rs.close();
-            p.close();
-            con.commit();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return t;
     }
 
 }

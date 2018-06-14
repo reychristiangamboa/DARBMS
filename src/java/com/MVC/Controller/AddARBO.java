@@ -31,20 +31,6 @@ public class AddARBO extends BaseServlet {
             ARBODAO arboDAO = new ARBODAO();
             ARBO arbo = new ARBO();
 
-            /*String id = String.valueOf(Integer.parseInt(request.getParameter("arboProvince")));
-            int size = arboDAO.getAllARBOsByProvince(Integer.parseInt(request.getParameter("arboProvince"))).size();
-            int counter = size + 1;
-
-            if (size <= 9) {
-                id += "00" + counter;
-            } else if (size >= 10) {
-                id += "0" + counter;
-            } else if (size >= 100) {
-                id += counter;
-            }
-
-            int finalID = Integer.parseInt(id);*/
-
             arbo.setArboID(Integer.parseInt(request.getParameter("arboID")));
             arbo.setArboName(request.getParameter("arboName"));
             arbo.setArboType(Integer.parseInt(request.getParameter("arboType")));
@@ -52,7 +38,7 @@ public class AddARBO extends BaseServlet {
             arbo.setArboProvince(Integer.parseInt(request.getParameter("arboProvince")));
             arbo.setArboRegion(Integer.parseInt(request.getParameter("arboRegion")));
             arbo.setProvOfficeCode((Integer) session.getAttribute("provOfficeCode"));
-
+            
             session.setAttribute("arbo", arbo);
             request.getRequestDispatcher("provincial-field-officer-add-arb.jsp").forward(request, response);
 

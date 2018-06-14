@@ -72,7 +72,7 @@ public class FilterLoanRequests extends BaseServlet {
             request.setAttribute("approved", approvedRequests);
             request.setAttribute("released", releasedRequests);
             request.setAttribute("forRelease", forReleaseRequests);
-            request.getRequestDispatcher("view-filtered-apcp-status.jsp").forward(request, response);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         }
 
     }

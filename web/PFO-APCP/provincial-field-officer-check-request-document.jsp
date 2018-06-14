@@ -8,23 +8,25 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="jspf/header.jspf"%>
+        <%@include file="/jspf/header.jspf"%>
 
     </head>
 
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
 
-            <%@include file="jspf/field-officer-navbar.jspf"%>
+            <%@include file="/jspf/field-officer-navbar.jspf"%>
             <%int userType = (Integer) session.getAttribute("userType");%>
             <%if (userType == 3) {  %>
-            <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
+            <%@include file="/jspf/provincial-field-officer-sidebar.jspf"%>
             <%} else if (userType == 4) {%>
-            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
+            <%@include file="/jspf/regional-field-officer-sidebar.jspf"%>
             <%} else if (userType == 5) {%>
-            <%@include file="jspf/central-sidebar.jspf"%>
+            <%@include file="/jspf/central-sidebar.jspf"%>
             <%} else if (userType == 2) {%>
-            <%@include file="jspf/point-person-sidebar.jspf"%>
+            <%@include file="/jspf/point-person-sidebar.jspf"%>
+            <%} else if (userType == 6) {%>
+            <%@include file="/jspf/pfo-apcp-sidebar.jspf"%>
             <%}%>
             <%
                 ARBODAO arboDAO = new ARBODAO();
@@ -82,7 +84,7 @@
                                             <li><a href="#info" data-toggle="tab">ARBO Profile</a></li>
                                             <li><a href="#history" data-toggle="tab">CAPDEV History</a></li>
                                         </ul>
-                                        <%@include file="jspf/arboInfo.jspf"%>
+                                        <%@include file="/jspf/arboInfo.jspf"%>
 
                                     </div>
                                     <hr>        
@@ -183,7 +185,7 @@
 
                                     </div>
                                     <div class="box-footer">
-                                        <%if (userType == 3) {  %>
+                                        <%if (userType == 6) {  %>
                                         <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
                                         <%if(r.getFarmPlanDate() != null && r.getBusinessPlanDate() != null && r.getBankRequirementsDate() != null){%>
                                         <button type="submit" onclick="form.action = 'ClearAPCPRequest'" name="manual" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
@@ -201,7 +203,7 @@
             </div>
             <!-- /.content-wrapper -->
         </div>
-        <%@include file="jspf/footer.jspf" %>
+        <%@include file="/jspf/footer.jspf" %>
 
         <script>
             var ctx = $('#barCanvas').get(0).getContext('2d');

@@ -33,63 +33,25 @@
             <%@include file="jspf/field-officer-navbar.jspf" %>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
 
+            <%
+                if(request.getAttribute("requested") != null){
+                    requestedRequests = (ArrayList)request.getAttribute("requested");    
+                }
+            %>
+
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong><i class="fa fa-file-o"></i> Select Request</strong> 
+                        <strong><i class="fa fa-file-o"></i> Select Request (Create CAPDEV Proposal)</strong> 
                         <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
-                    
-
                 </section>
 
                 <!-- Main content -->
                 <section class="content">
-
-
-
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <div class="box">
-                                <div class="box-header"><h3 class="box-title">Filter</h3></div>
-                                <form method="post" role="form">
-                                    <div class="box-body">
-                                        <div class="row">
-                                            <div class="col-xs-2">
-                                                <div class="form-group">
-                                                    <label for="actName">Select All</label>
-                                                    <input type="checkbox" id="filterBy" name="selectAll" value="Yes">
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-4">
-                                                <div class="form-group">
-                                                    <label for="actName">Cities / Municipalities</label>
-                                                    <select name="cities[]" id="cities" class="form-control select2" multiple="multiple">
-                                                        <%for(CityMun city : cityMunList){%>
-                                                        <option value="<%=city.getCityMunCode()%>"><%out.print(city.getCityMunDesc());%></option>
-                                                        <%}%>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-                                    <div class="box-footer">
-                                        <button type="submit" onclick="form.action = 'FilterCAPDEVRequestsCCP'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i>Filter</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
                     <!--REQUESTED-->
                     <div class="row" id="1">
                         <div class="col-xs-12" >
@@ -152,7 +114,7 @@
         </div>
         <%@include file="jspf/footer.jspf" %>
         <script>
-            $(document).ready(function(){
+            $(document).ready(function () {
                 var update_pizza = function () {
                     if ($("#filterBy").is(":checked")) {
 

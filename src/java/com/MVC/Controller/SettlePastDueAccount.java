@@ -41,7 +41,7 @@ public class SettlePastDueAccount extends BaseServlet {
             java.util.Date parsedDateSettled = sdf.parse(request.getParameter("dateSettled"));
             dateSettled = new java.sql.Date(parsedDateSettled.getTime());
         } catch (ParseException ex) {
-            Logger.getLogger(SendBankRequirements.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SettlePastDueAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         pda.setPastDueAccountID(Integer.parseInt(request.getParameter("pastDueID")));

@@ -10,15 +10,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="jspf/header.jspf"%>
+        <%@include file="/jspf/header.jspf"%>
 
     </head>
 
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
 
-            <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/provincial-field-officer-sidebar.jspf" %>
+            <%@include file="/jspf/field-officer-navbar.jspf" %>
+            <%@include file="/jspf/provincial-field-officer-sidebar.jspf" %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -33,6 +33,18 @@
 
                 <!-- Main content -->
                 <section class="content">
+                    
+                    <%if(request.getAttribute("success") != null){%>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
+                    </div>
+                    <%}else if(request.getAttribute("errMessage") != null){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                    </div>
+                    <%}%>
                     
                     <!-- /.row -->
                     <div class="row">
@@ -54,13 +66,16 @@
 
                                         <tbody>
                                             <%for (ARBO arbo : arboListProvince) {%>
-                                            <%if (arbo.getAPCPQualified() == 0) {%>
+                                            
+                                            <%if (arbo.getQualifiedSince() == null) {%>
+                                            
                                             <tr>
                                                 <td><a href="SelectARBORequest?id=<%out.print(arbo.getArboID());%>"> <%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(arbo.getFullAddress());%></td>
                                                 <td><%out.print(arbo.getArbList().size());%></td>
                                             </tr>
-
+                                            <%}else{%>
+                                            <%System.out.println(arbo.getQualifiedSince().getTime());%>
                                             <%}%>
                                             <%}%>
                                         </tbody>
@@ -80,6 +95,6 @@
             <!-- /.content-wrapper -->
 
         </div>
-        <%@include file="jspf/footer.jspf" %>
+        <%@include file="/jspf/footer.jspf" %>
     </body>
 </html>

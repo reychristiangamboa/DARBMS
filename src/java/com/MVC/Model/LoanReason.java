@@ -10,11 +10,20 @@ package com.MVC.Model;
  * @author Rey Christian
  */
 public class LoanReason {
-    
+    private int requestID;
     private int loanReason;
     private String loanReasonDesc;
+    private String otherReason;
+    private int loanTermID;
     private LoanTerm loanTerm;
-    private int apcpType;
+
+    public int getRequestID() {
+        return requestID;
+    }
+
+    public void setRequestID(int requestID) {
+        this.requestID = requestID;
+    }
 
     public int getLoanReason() {
         return loanReason;
@@ -32,20 +41,28 @@ public class LoanReason {
         this.loanReasonDesc = loanReasonDesc;
     }
 
+    public String getOtherReason() {
+        return otherReason;
+    }
+
+    public void setOtherReason(String otherReason) {
+        this.otherReason = otherReason;
+    }
+
+    public int getLoanTermID() {
+        return loanTermID;
+    }
+
+    public void setLoanTermID(int loanTermID) {
+        this.loanTermID = loanTermID;
+    }
+
     public LoanTerm getLoanTerm() {
         return loanTerm;
     }
 
     public void setLoanTerm(LoanTerm loanTerm) {
         this.loanTerm = loanTerm;
-    }
-
-    public int getApcpType() {
-        return apcpType;
-    }
-
-    public void setApcpType(int apcpType) {
-        this.apcpType = apcpType;
     }
     
     

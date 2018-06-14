@@ -22,7 +22,7 @@ public class CheckRequirements extends BaseServlet {
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int requestID = Integer.parseInt(request.getParameter("id"));
         request.setAttribute("requestID", requestID);
-        request.getRequestDispatcher("provincial-field-officer-check-request-document.jsp").forward(request, response);
+        request.getRequestDispatcher("/PFO-APCP/provincial-field-officer-check-request-document.jsp").forward(request, response);
     }
 
    

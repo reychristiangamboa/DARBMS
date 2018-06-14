@@ -31,12 +31,12 @@ public class ApproveNewAccessing extends BaseServlet {
 
         APCPRequest r = rDAO.getRequestByID(requestID);
 
-        if (aDAO.updateARBOStatus(r.getArboID(), 1) && rDAO.updateRequestStatus(requestID, 1)) {
+        if (aDAO.updateARBOStatus(r.getArboID()) && rDAO.updateRequestStatus(requestID, 1)) {
             request.setAttribute("success", "Access to APCP approved!");
-            request.getRequestDispatcher("central-view-new-requesting-arbo.jsp").forward(request, response);
+            request.getRequestDispatcher("/PFO-Head/view-new-accessing-conduits.jsp").forward(request, response);
         } else {
             request.setAttribute("errMessage", "Error in approving access to APCP.");
-            request.getRequestDispatcher("central-view-new-requesting-arbo.jsp").forward(request, response);
+            request.getRequestDispatcher("/PFO-Head/view-new-accessing-conduits.jsp").forward(request, response);
         }
 
     }

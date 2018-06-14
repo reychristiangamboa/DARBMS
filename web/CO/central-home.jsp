@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="jspf/header.jspf"%>
+        <%@include file="/jspf/header.jspf"%>
         <style>
             .rate{
                 color:black;
@@ -45,8 +45,8 @@
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
 
-            <%@include file="jspf/field-officer-navbar.jspf"%>
-            <%@include file="jspf/central-sidebar.jspf"%>
+            <%@include file="/jspf/field-officer-navbar.jspf"%>
+            <%@include file="/jspf/central-sidebar.jspf"%>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -1339,7 +1339,7 @@
         </div>
         <!-- /.content-wrapper -->
         <!-- ./wrapper -->
-        <%@include file="jspf/footer.jspf" %>
+        <%@include file="/jspf/footer.jspf" %>
         <script type="text/javascript">
 
             function chg2() {

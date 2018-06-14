@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="jspf/header.jspf"%>
+        <%@include file="/jspf/header.jspf"%>
         <style>
             .example-modal .modal {
                 position: relative;
@@ -30,15 +30,17 @@
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
             <%int userType = (Integer) session.getAttribute("userType");%>
-            <%@include file="jspf/field-officer-navbar.jspf" %>
+            <%@include file="/jspf/field-officer-navbar.jspf" %>
             <%if (userType == 3) {  %>
-            <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
+            <%@include file="/jspf/provincial-field-officer-sidebar.jspf"%>
             <%} else if (userType == 4) {%>
-            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
+            <%@include file="/jspf/regional-field-officer-sidebar.jspf"%>
             <%} else if (userType == 5) {%>
-            <%@include file="jspf/central-sidebar.jspf"%>
+            <%@include file="/jspf/central-sidebar.jspf"%>
             <%} else if (userType == 2) {%>
-            <%@include file="jspf/point-person-sidebar.jspf"%>
+            <%@include file="/jspf/point-person-sidebar.jspf"%>
+            <%} else if (userType == 6) {%>
+            <%@include file="/jspf/pfo-apcp-sidebar.jspf"%>
             <%}%>
 
             <%
@@ -63,7 +65,7 @@
                 ArrayList<APCPRequest> releasedRequests = new ArrayList();
                 ArrayList<APCPRequest> forReleaseRequests = new ArrayList();
     
-                if(userType == 3 || userType == 2){
+                if(userType == 3 || userType == 2 || userType == 6){
                     ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
                     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
                     cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
@@ -90,9 +92,19 @@
                     clearedRequests = apcpRequestDAO.getAllRequestsByStatus(2);
                     requestedRequests = apcpRequestDAO.getAllRequestsByStatus(1);
                 }
-   
-    
-
+                
+                if(request.getAttribute("requested") != null){
+                    requestedRequests = (ArrayList)request.getAttribute("requested");
+                    clearedRequests = (ArrayList)request.getAttribute("cleared");
+                    endorsedRequests = (ArrayList)request.getAttribute("endorsed");
+                    approvedRequests = (ArrayList)request.getAttribute("approved");
+                    releasedRequests = (ArrayList)request.getAttribute("released");
+                    forReleaseRequests = (ArrayList)request.getAttribute("forRelease");
+                }
+                
+                Long l = System.currentTimeMillis();
+                Date d = new Date(l);
+            
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -340,7 +352,11 @@
                                             %>
                                             <tr>
                                                 <td><a href="CheckRequirements?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                <td><%out.print(r.getLoanReason.getLoanReasonDesc() + ": " + r.getLoanReason.getOtherReason());%></td>
+                                                <%}else{%> <!--LOAN REASON-->
+                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
+                                                <%}%>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateRequested());%></td>
@@ -390,12 +406,16 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <%if (userType==3){%>
+                                                <%if (userType==6){%>
                                                 <td><a data-toggle="modal" data-target="#cleared-modal<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}else if (userType == 4 || userType == 5 || userType == 2){%>
+                                                    <%}else if (userType == 4 || userType == 5 || userType == 2 || userType == 3){%>
                                                 <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
-                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                <td><%out.print(r.getLoanReason.getLoanReasonDesc() + ": " + r.getLoanReason.getOtherReason());%></td>
+                                                <%}else{%> <!--LOAN REASON-->
+                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
+                                                <%}%>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateCleared());%></td>
@@ -428,11 +448,9 @@
                                                             <button type="submit" name="manual" onclick="form.action = 'EndorseAPCPRequest'" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i> Submit</button>
                                                         </div>
                                                     </form>
-
+                                                            
                                                 </div>
-                                                <!--                                            /.modal-content -->
                                             </div>
-                                            <!--                                        /.modal-dialog -->
                                         </div>
 
                                         <%}%>
@@ -446,7 +464,7 @@
                         </div>
                         <!-- /.col -->
                     </div>
-                                        
+
                     <div class="row" id="3" style="display:none;">
                         <!--ENDORSED-->
                         <div class="col-xs-12">
@@ -479,12 +497,16 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <%if(userType==3){%>
+                                                <%if(userType==6){%>
                                                 <td><a data-toggle="modal" data-target="#endorsed-modal<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}if (userType == 4 || userType == 5 || userType == 2){%>
+                                                    <%}if (userType == 4 || userType == 5 || userType == 2 || userType == 3){%>
                                                 <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
-                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                <td><%out.print(r.getLoanReason.getLoanReasonDesc() + ": " + r.getLoanReason.getOtherReason());%></td>
+                                                <%}else{%> <!--LOAN REASON-->
+                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
+                                                <%}%>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateEndorsed());%></td>
@@ -508,7 +530,7 @@
                                                                         <label for="">Approval Date</label>
                                                                         <div class="input-group date">
                                                                             <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                                                                            <input type="date" class="form-control" name="approveDate" />        
+                                                                            <input type="date" value="<%out.print(d.getTime());%>" class="form-control" name="approveDate" />        
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -521,9 +543,7 @@
                                                     </form>
 
                                                 </div>
-                                                <!--                                            /.modal-content -->
                                             </div>
-                                            <!--                                        /.modal-dialog -->
                                         </div>
                                         <%}%>
 
@@ -538,7 +558,7 @@
                         </div>
                         <!-- /.col -->
                     </div>
-                                        
+
                     <div class="row" id="4" style="display:none;">
                         <!--APPROVED-->
                         <div class="col-xs-12">
@@ -571,12 +591,16 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <%if(userType==3){%>
+                                                <%if(userType==6){%>
                                                 <td><a href="SchedulePreRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}else if (userType == 4 || userType == 2 || userType == 5){%>
+                                                    <%}else if (userType == 4 || userType == 2 || userType == 5 || userType == 3){%>
                                                 <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
-                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                <td><%out.print(r.getLoanReason.getLoanReasonDesc() + ": " + r.getLoanReason.getOtherReason());%></td>
+                                                <%}else{%> <!--LOAN REASON-->
+                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
+                                                <%}%>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateApproved());%></td>
@@ -628,12 +652,16 @@
                                             %>
 
                                             <tr>
-                                                <%if (userType == 4 || userType == 3 || userType == 5){%>
+                                                <%if (userType == 4 || userType == 3 || userType == 5  || userType == 6){%>
                                                 <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}else if(userType == 2){%>
                                                 <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
-                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                <td><%out.print(r.getLoanReason.getLoanReasonDesc() + ": " + r.getLoanReason.getOtherReason());%></td>
+                                                <%}else{%> <!--LOAN REASON-->
+                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
+                                                <%}%>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateApproved());%></td>
@@ -684,8 +712,16 @@
                                             %>
 
                                             <tr>
+                                                <%if (userType == 4 || userType == 3 || userType == 5  || userType == 6){%>
+                                                <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else if(userType == 2){%>
                                                 <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(r.getLoanReason());%></td>
+                                                    <%}%>
+                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                <td><%out.print(r.getLoanReason.getLoanReasonDesc() + ": " + r.getLoanReason.getOtherReason());%></td>
+                                                <%}else{%> <!--LOAN REASON-->
+                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
+                                                <%}%>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getReleases().get(r.getReleases().size()-1).getReleaseDate());%></td>
@@ -712,7 +748,7 @@
             <!-- /.content-wrapper -->
 
         </div>
-        <%@include file="jspf/footer.jspf" %>
+        <%@include file="/jspf/footer.jspf" %>
         <script>
 
             function chg2() {

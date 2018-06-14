@@ -36,13 +36,15 @@ public class RequestConduit extends BaseServlet {
 
         r.setArboID(Integer.parseInt(request.getParameter("arboID")));
         r.setApcpType(1); // since New Accessing, automatically set to Crop Production
-        r.setLoanReason(Integer.parseInt(request.getParameter("loanReason")));
-        r.setOtherLoanReason(request.getParameter("otherReason"));
         r.setLoanAmount(Double.parseDouble(request.getParameter("loanAmount")));
         r.setHectares(Double.parseDouble(request.getParameter("landArea")));
         r.setRemarks(request.getParameter("remarks"));
 
+        // RETURNS newly added REQUEST ID
         int requestID = dao.requestAPCP(r, (Integer) session.getAttribute("userID"));
+        
+        // INSERTS into apcp_loanReason table
+        dao.setAPCPLoanReason(requestID, Integer.parseInt(request.getParameter("loanReason")), Integer.parseInt(request.getParameter("loanTerm")), request.getParameter("otherReason"));
 
         String[] documentIDsStr = request.getParameterValues("documentID"); // document referenceID
         String[] dateSubmittedStr = request.getParameterValues("dateSubmitted");
@@ -52,11 +54,16 @@ public class RequestConduit extends BaseServlet {
         //ArrayList<APCPDocument> documentList = new ArrayList();
 
         r.setRequestStatus(0); // FOR CONDUIT APPROVAL
-        for (String str : dateSubmittedStr) {
-            if (str.isEmpty()) {
+        for (int a = 0; a < dateSubmittedStr.length; a++) {
+            
+            System.out.println(dateSubmittedStr[a]);
+            if (dateSubmittedStr[a] == null) {
+                System.out.println(dateSubmittedStr[a]);
                 r.setRequestStatus(8); // INCOMPLETE
             }
         }
+        
+        
 
         for (int i = 0; i < documentIDsStr.length; i++) {
             System.out.println("DOCUMENT: " + documentIDsStr[i]);
@@ -66,10 +73,13 @@ public class RequestConduit extends BaseServlet {
             java.sql.Date dateSubmitted = null;
 
             try {
-                if (!dateSubmittedStr[i].isEmpty()) {
+                if (!dateSubmittedStr[i].isEmpty()) { // dateSubmitted has value
                     java.util.Date parsedDateSubmitted = sdf.parse(dateSubmittedStr[i]);
                     dateSubmitted = new java.sql.Date(parsedDateSubmitted.getTime());
                     doc.setDateSubmitted(dateSubmitted); // set dateSubmitted
+                    doc.setIsApproved(true);
+                }else{  // dateSubmitted is null
+                    doc.setIsApproved(false);
                 }
             } catch (ParseException ex) {
                 Logger.getLogger(RequestConduit.class.getName()).log(Level.SEVERE, null, ex);
@@ -94,7 +104,7 @@ public class RequestConduit extends BaseServlet {
         }
         
         request.setAttribute("success", "CONDUIT requested!");
-        request.getRequestDispatcher("LOL").forward(request,response);
+        request.getRequestDispatcher("/PFO-APCP/provincial-field-officer-request-access-select-arbo").forward(request,response);
 
     }
 

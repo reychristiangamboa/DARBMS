@@ -22,7 +22,7 @@ public class ViewNewAccessingARBO extends BaseServlet {
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         request.setAttribute("requestID", id);
-        request.getRequestDispatcher("central-view-arbo-profile.jsp").forward(request, response);
+        request.getRequestDispatcher("/PFO-Head/view-new-accessing-arbo.jsp").forward(request, response);
     }
 
     

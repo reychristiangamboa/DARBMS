@@ -35,22 +35,12 @@
                 APCPRelease apcpRelease = new APCPRelease();
 
                 ArrayList<EducationLevel> educationLevel = arbDAO.getAllEducationLevel();
-                System.out.print("Educ"+educationLevel.size());
                 ArrayList<RelationshipType> relationshipType = arbDAO.getAllRelationshipType();
-                System.out.print(relationshipType.size());
-                
-
                 ArrayList<Crop> allCrops = cropDAO.getAllCrops();
-                System.out.print(allCrops.size());
                 ArrayList<Region> regionList = addressDAO.getAllRegions();
-                System.out.print(regionList.size());
                 ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
-                System.out.print("ARBOProv"+arboListProvince.size());
                 ArrayList<ARBO> nonQualifiedARBOs = arboDAO.getAllNonQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
-                System.out.print(nonQualifiedARBOs.size());
                 ArrayList<ARBO> qualifiedARBOs = arboDAO.getAllQualifiedARBOs((Integer) session.getAttribute("provOfficeCode"));
-                System.out.print(qualifiedARBOs.size());
-
                 ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
                 ArrayList<CityMun> cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
 

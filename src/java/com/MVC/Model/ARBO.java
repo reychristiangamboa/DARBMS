@@ -7,13 +7,15 @@ package com.MVC.Model;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  *
  * @author Rey Christian
  */
 public class ARBO {
-    
+
     private int arboID;
     private String arboName;
     private int arboType;
@@ -28,7 +30,7 @@ public class ARBO {
     private String arboRegionDesc;
     private int provOfficeCode;
     private String provOfficeCodeDesc;
-    private int APCPQualified;
+    private Date qualifiedSince;
     private Date dateOperational;
     private ArrayList<ARB> arbList = new ArrayList();
     private ArrayList<APCPRequest> requestList = new ArrayList();
@@ -113,16 +115,16 @@ public class ARBO {
         this.provOfficeCodeDesc = provOfficeCodeDesc;
     }
 
-    public String getFullAddress(){
+    public String getFullAddress() {
         return this.arboCityMunDesc + ", " + this.arboProvinceDesc + "," + this.arboRegionDesc;
     }
 
-    public int getAPCPQualified() {
-        return APCPQualified;
+    public Date getQualifiedSince() {
+        return qualifiedSince;
     }
 
-    public void setAPCPQualified(int APCPQualified) {
-        this.APCPQualified = APCPQualified;
+    public void setQualifiedSince(Date qualifiedSince) {
+        this.qualifiedSince = qualifiedSince;
     }
 
     public int getArboType() {
@@ -156,7 +158,7 @@ public class ARBO {
     public void setArboStatusDesc(String arboStatusDesc) {
         this.arboStatusDesc = arboStatusDesc;
     }
-    
+
     public Date getDateOperational() {
         return dateOperational;
     }
@@ -164,7 +166,7 @@ public class ARBO {
     public void setDateOperational(Date dateOperational) {
         this.dateOperational = dateOperational;
     }
-    
+
     public ArrayList<ARB> getArbList() {
         return arbList;
     }
@@ -180,10 +182,20 @@ public class ARBO {
     public void setRequestList(ArrayList<APCPRequest> requestList) {
         this.requestList = requestList;
     }
-    
-    
-    
-    
-    
-    
+
+    public boolean isSixMonthsOperational() {
+        Calendar startCalendar = new GregorianCalendar();
+        startCalendar.setTime(this.dateOperational);
+        Calendar endCalendar = new GregorianCalendar();
+        
+        int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
+        int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+        
+        if(diffMonth >= 6){
+            return true;
+        }
+        
+        return false;
+    }
+
 }

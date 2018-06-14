@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="jspf/header.jspf"%>
+        <%@include file="/jspf/header.jspf"%>
 
         <style>
             .example-modal .modal {
@@ -33,15 +33,14 @@
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
 
-            <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/provincial-field-officer-sidebar.jspf" %>
+            <%@include file="/jspf/field-officer-navbar.jspf" %>
+            <%@include file="/jspf/pfo-apcp-sidebar.jspf" %>
             <%
                 int arboID = (Integer) request.getAttribute("arboID");
                 ARBO arbo = arboDAO.getARBOByID(arboID);
                 ArrayList<APCPDocument> refDocuments = apcpRequestDAO.getAllAPCPDocuments();
                 ArrayList<LoanReason> refLoanReasons = apcpRequestDAO.getAllLoanReasonsByAPCPType(1); // Since new requesting, only Crop Production Loan Reasons
-                
-                
+                ArrayList<LoanTerm> refLoanTerms = apcpRequestDAO.getAllLoanTerms();
             %>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -56,6 +55,13 @@
 
                 <!-- Main content -->
                 <section class="content">
+                    
+                    <%if(request.getAttribute("errMessage") != null){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                    </div>
+                    <%}%>
 
                     <div class="box box-default">
                         <div class="box-header with-border">
@@ -160,34 +166,6 @@
                                             </tr>
                                             <%}%>
                                             <%}%>
-
-
-                                            <%--<tr>
-                                                <td  style="border: transparent;">
-                                                    <div class="form-group">
-                                                        <select name="documentID" id="" class="form-control select2">
-                                                            <%for(APCPDocument document : refDocuments){%>
-                                                            <%if(document.getIsRequired() == 0 && document.getDocumentType() == 1){%> 
-                                                            <option value="<%out.print(document.getDocument());%>"><%out.print(document.getDocumentDesc());%></option>
-                                                            <%}%>
-                                                            <%}%>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                                <td  style="border: transparent;">
-                                                    <div class="input-group date">
-                                                        <div class="input-group-addon">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </div>
-                                                        <input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker">
-                                                    </div> 
-                                                </td>
-                                                <td style="border: transparent;">
-                                                    <button type="button" class="delete-row-conduit btn btn-danger"><i class="fa fa-close"></i></button>
-                                                </td>
-                                            </tr>--%>
-
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -203,28 +181,7 @@
                                             <input type="text" value="Crop Production" class="form-control" disabled />
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Loan Reason</label>
-                                            <select class="form-control select2" name="loanReason" id="loanReason" style="width: 100%;">
-                                                <%for(LoanReason r : refLoanReasons){%>
-                                                <option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option>
-                                                <%}%>
-                                            </select>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Other Reason</label>
-                                            <input type="text" id="otherReason" name="otherReason" class="form-control" disabled>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-1">
-                                    </div>
                                     <div class="col-md-4">
                                         <!-- /.form-group -->
                                         <div class="form-group">
@@ -232,8 +189,6 @@
                                             <input type="number" step=".01" class="form-control" name="landArea" id="Area" required>
                                         </div>
                                         <!-- /.form-group -->
-                                    </div>
-                                    <div class="col-md-2">
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
@@ -246,7 +201,53 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-1">
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-1"></div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Loan Reason</label>
+                                            <select class="form-control select2" name="loanReason" id="loanReason" style="width: 100%;">
+                                                <%for(LoanReason r : refLoanReasons){%>
+                                                <option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option>
+                                                <%}%>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-2"></div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Other Reason</label>
+                                            <input type="text" id="otherReason" name="otherReason" class="form-control" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-1"></div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <label for="">Loan Term</label>
+                                            <select name="loanTerm" class="form-control" id="loanTerm">
+                                                <%for(LoanTerm t : refLoanTerms){%>
+                                                <option value="<%out.print(t.getLoanTerm());%>"><%out.print(t.getLoanTermDesc());%></option>
+                                                <%}%>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <label for="">Minimum Duration (Months)</label>
+                                            <input id="minDuration" type="number" class="form-control" value="12" name="minDuration" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <div class="form-group">
+                                            <label for="">Maximum Duration (Months)</label>
+                                            <input id="maxDuration" type="number" class="form-control" min="13" max="36" name="maxDuration" />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -258,6 +259,7 @@
                                                     <th>Action</th>
                                                     <th>Full Name</th> 
                                                     <th>Membership Date</th> 
+                                                    <th>COMAT</th> 
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -266,6 +268,11 @@
                                                     <td><input type="checkbox" name="arbID" value="<%out.print(arb.getArbID());%>"></td>
                                                     <td><%out.print(arb.getFLName());%></td>
                                                     <td><%out.print(f.format(arb.getMemberSince()));%></td>
+                                                    <%if(arb.getIsCOMAT() > 0){%>
+                                                    <td>&checkmark;</td>
+                                                    <%}else{%>
+                                                    <td>&nbsp;</td>
+                                                    <%}%>
                                                 </tr>
                                                 <%}%>
                                             </tbody>
@@ -273,7 +280,7 @@
                                                 <tr>
                                                     <th>Action</th>
                                                     <th>Full Name</th> 
-                                                    <th>Membership Date</th> 
+                                                    <th>COMAT</th> 
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -286,12 +293,9 @@
                                 <div class="box-header with-border">
                                     <h5 class="box-title"><strong>Supporting Documents</strong></h5>
                                 </div>
+                                <br>
                                 <div class="row">
                                     <center>
-                                        <!--                                    <div class="btn-group">
-                                                                                <button id="btnAddSupportingDocu" type="button" class="btn btn-primary center-block">Add Document</button>    
-                                                                                <button id="btnAddOthers" type="button" class="btn btn-primary center-block">Other/s</button>
-                                                                            </div>-->
                                         <div class="btn-group">
                                             <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Add Document <span class="caret"></span></button>
                                             <ul id="optional-list" class="dropdown-menu" role="menu">
@@ -331,31 +335,6 @@
                                             </tr>
                                             <%}%>
                                             <%}%>
-
-                                            <%--
-                                            <tr>
-                                                <td style="border: transparent;">
-                                                    <select name="documentID" class="form-control">
-                                                        <%for(APCPDocument document : refDocuments){%>
-                                                            <%if(document.getDocumentType() == 2 && document.getIsRequired() == 0){%>
-                                                                <option value="<%out.print(document.getDocument());%>"><%out.print(document.getDocumentDesc());%></option>
-                                                            <%}%>
-                                                        <%}%>
-                                                    </select>
-                                                </td>
-                                                <td  style="border: transparent;">
-                                                    <div class="input-group date">
-                                                        <div class="input-group-addon">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </div>
-                                                        <input type="date" class="form-control pull-right" id="datepicker">
-                                                    </div> 
-                                                </td>
-                                                <td style="border: transparent;">
-                                                    <button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button>
-                                                </td>
-                                            </tr>
-                                            --%>
 
                                             </tbody>
                                         </table>
@@ -413,18 +392,52 @@
         </div>
         <!-- ./wrapper -->
 
-        <%@include file="jspf/footer.jspf"%>  
+        <%@include file="/jspf/footer.jspf"%>  
         <script type="text/javascript">
             $(document).ready(function () {
                 $('#loanReason').on('change', function () { // 
-                    if (this.value > 0) { // If 'Others' is selected
+                    if (this.value > 0) {
                         $('#otherReason').prop('disabled', true);
-                    } else {
+                        $('#otherReason').prop('required', false);
+                    } else { // If 'Others' is selected
                         $('#otherReason').prop('disabled', false);
+                        $('#otherReason').prop('required', true);
                     }
                 });
 
+                var max = $('#maxDuration').attr('min');
+                $('#maxDuration').val(max);
 
+                $('#loanTerm').on('change', function () {
+                    if (this.value == 1) {
+                        $('#minDuration').val('12');
+                        $('#maxDuration').attr({
+                            "min": 13,
+                            "max": 36
+                        });
+                    } else if (this.value == 2) {
+                        $('#minDuration').val('36');
+                        $('#maxDuration').attr({
+                            "min": 37,
+                            "max": 84
+                        });
+                    } else if (this.value == 3) {
+                        $('#minDuration').val('12');
+                        $('#maxDuration').attr({
+                            "min": 13,
+                            "max": 36
+                        });
+                    } else if (this.value == 4) {
+                        $('#minDuration').val('12');
+                        $('#maxDuration').attr({
+                            "min": 13,
+                            "max": 60
+                        });
+                    }
+
+                    var max = $('#maxDuration').attr('min');
+                    $('#maxDuration').val(max);
+                });
             <%
                     int optionalConduitCount = 0;
                     int optionalSupportingCount = 0;
@@ -502,77 +515,7 @@
 
                 });
             });
-//            $(function () {
-//                $('#validator').change(function () {
-//                    $('.color').hide();
-//                    $('#' + $(this).val()).show();
-//                });
-//            });
-//            $(function () {
-//                //Initialize Select2 Elements
-//                $('.select2').select2()
-//
-//                //Datemask dd/mm/yyyy
-//                $('#datemask').inputmask('dd/mm/yyyy', {'placeholder': 'dd/mm/yyyy'})
-//                //Datemask2 mm/dd/yyyy
-//                $('#datemask2').inputmask('mm/dd/yyyy', {'placeholder': 'mm/dd/yyyy'})
-//                //Money Euro
-//                $('[data-mask]').inputmask()
-//
-//                //Date range picker
-//                $('#reservation').daterangepicker()
-//                //Date range picker with time picker
-//                $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'})
-//                //Date range as a button
-//                $('#daterange-btn').daterangepicker(
-//                        {
-//                            ranges: {
-//                                'Today': [moment(), moment()],
-//                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-//                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-//                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-//                                'This Month': [moment().startOf('month'), moment().endOf('month')],
-//                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-//                            },
-//                            startDate: moment().subtract(29, 'days'),
-//                            endDate: moment()
-//                        },
-//                        function (start, end) {
-//                            $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-//                        }
-//                )
-//
-//                //Date picker
-//                $('#datepicker').datepicker({
-//                    autoclose: true
-//                })
-//
-//                //iCheck for checkbox and radio inputs
-//                $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-//                    checkboxClass: 'icheckbox_minimal-blue',
-//                    radioClass: 'iradio_minimal-blue'
-//                })
-//                //Red color scheme for iCheck
-//                $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-//                    checkboxClass: 'icheckbox_minimal-red',
-//                    radioClass: 'iradio_minimal-red'
-//                })
-//                //Flat red color scheme for iCheck
-//                $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-//                    checkboxClass: 'icheckbox_flat-green',
-//                    radioClass: 'iradio_flat-green'
-//                })
-//
-//                //Colorpicker
-//                $('.my-colorpicker1').colorpicker()
-//                //color picker with addon
-//                $('.my-colorpicker2').colorpicker()
-//
-//                //Timepicker
-//                $('.timepicker').timepicker({
-//                    showInputs: false
-//                })
-//            })
+
         </script>
 
     </body>

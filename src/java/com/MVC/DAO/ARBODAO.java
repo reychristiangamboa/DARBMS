@@ -9,6 +9,7 @@ import com.MVC.Database.DBConnectionFactory;
 import com.MVC.Model.ARB;
 import com.MVC.Model.*;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,7 +55,7 @@ public class ARBODAO {
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
-                arbo.setAPCPQualified(rs.getInt("APCPQualified"));
+                arbo.setQualifiedSince(rs.getDate("qualifiedSince"));
                 arbo.setDateOperational(rs.getDate("dateOperational"));
                 arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
                 arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
@@ -84,7 +85,7 @@ public class ARBODAO {
         try {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`arbos` (`arboName`, `arboCityMun`, `arboProvince`, "
-                    + "`arboRegion`,`provOfficeCode`, `arboType`, `APCPQualified`, `arboID`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+                    + "`arboRegion`,`provOfficeCode`, `arboType`, `qualifiedSince`, `arboID`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
             p = con.prepareStatement(query);
             p.setString(1, arbo.getArboName());
             p.setInt(2, arbo.getArboCityMun());
@@ -92,7 +93,7 @@ public class ARBODAO {
             p.setInt(4, arbo.getArboRegion());
             p.setInt(5, arbo.getProvOfficeCode());
             p.setInt(6, arbo.getArboType());
-            p.setInt(7, arbo.getAPCPQualified());
+            p.setDate(7, arbo.getQualifiedSince());
             p.setInt(8, arbo.getArboID());
 
             p.executeUpdate();
@@ -142,7 +143,7 @@ public class ARBODAO {
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
-                arbo.setAPCPQualified(rs.getInt("APCPQualified"));
+                arbo.setQualifiedSince(rs.getDate("qualifiedSince"));
                 arbo.setDateOperational(rs.getDate("dateOperational"));
                 arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
                 arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
@@ -217,7 +218,7 @@ public class ARBODAO {
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
-                arbo.setAPCPQualified(rs.getInt("APCPQualified"));
+                arbo.setQualifiedSince(rs.getDate("qualifiedSince"));
                 arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
                 arboList.add(arbo);
             }
@@ -247,7 +248,7 @@ public class ARBODAO {
                     + "JOIN refregion r ON c.regCode=r.regCode "
                     + "JOIN ref_provoffice po ON a.provOfficeCode=po.provOfficeCode "
                     + "JOIN ref_arboType at ON a.arboType=at.arboType "
-                    + "WHERE a.provOfficeCode=? AND APCPQualified = 0";
+                    + "WHERE a.provOfficeCode=? AND qualifiedSince = 0";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, provinceID);
             ResultSet rs = pstmt.executeQuery();
@@ -265,7 +266,7 @@ public class ARBODAO {
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
-                arbo.setAPCPQualified(rs.getInt("APCPQualified"));
+                arbo.setQualifiedSince(rs.getDate("qualifiedSince"));
                 arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
                 arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
                 arboList.add(arbo);
@@ -296,7 +297,7 @@ public class ARBODAO {
                     + "JOIN refregion r ON c.regCode=r.regCode "
                     + "JOIN ref_provoffice po ON a.provOfficeCode=po.provOfficeCode "
                     + "JOIN ref_arboType at ON a.arboType=at.arboType "
-                    + "WHERE a.provOfficeCode=? AND APCPQualified = 1";
+                    + "WHERE a.provOfficeCode=? AND qualifiedSince IS NOT NULL";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, provinceID);
             ResultSet rs = pstmt.executeQuery();
@@ -314,7 +315,7 @@ public class ARBODAO {
                 arbo.setArboRegionDesc(rs.getString("regDesc"));
                 arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
-                arbo.setAPCPQualified(rs.getInt("APCPQualified"));
+                arbo.setQualifiedSince(rs.getDate("qualifiedSince"));
                 arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
                 arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
                 arboList.add(arbo);
@@ -333,7 +334,7 @@ public class ARBODAO {
         return arboList;
     }
 
-    public boolean updateARBOStatus(int arboID, int status) {
+    public boolean updateARBOStatus(int arboID) {
         boolean success = false;
         PreparedStatement p = null;
         Connection con = null;
@@ -341,9 +342,12 @@ public class ARBODAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE arbos SET `APCPQualified`=? WHERE `arboID`=?";
+            String query = "UPDATE arbos SET `qualifiedSince`=? WHERE `arboID`=?";
             p = con.prepareStatement(query);
-            p.setInt(1, status);
+            Long l = System.currentTimeMillis();
+            Date d = new Date(l);
+            
+            p.setDate(1, d);
             p.setInt(2, arboID);
 
             p.executeUpdate();

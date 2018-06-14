@@ -1352,7 +1352,7 @@ public class Chart {
                 if (b) { // REGIONAL
                     if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
                         for (APCPRequest r : arbo.getRequestList()) {
-                            if (r.getLoanReason() == 1) { // requested
+                            if (r.getLoanReason().getLoanReason() == 1) { // requested
                                 one++;
                             } else if (r.getRequestStatus() == 2) { // cleared
                                 two++;
@@ -1366,7 +1366,7 @@ public class Chart {
                 } else { // PROVINCIAL OFFICE
                     if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
                         for (APCPRequest r : arbo.getRequestList()) {
-                            if (r.getLoanReason() == 1) { // requested
+                            if (r.getLoanReason().getLoanReason() == 1) { // requested
                                 one++;
                             } else if (r.getRequestStatus() == 2) { // cleared
                                 two++;
