@@ -72,6 +72,8 @@ public class Login extends BaseServlet {
                         request.getRequestDispatcher("CO-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 6) {   //  PFO-APCP
                         request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
+                    } else if (u.getUserType() == 7) {   //  PFO-CAPDEV
+                        request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
                     }
 
                 } else {    //  DEACTIVATED ACCOUNTS

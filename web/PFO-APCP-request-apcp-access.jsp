@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="/jspf/header.jspf"%>
+        <%@include file="jspf/header.jspf"%>
 
         <style>
             .example-modal .modal {
@@ -33,8 +33,8 @@
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
 
-            <%@include file="/jspf/field-officer-navbar.jspf" %>
-            <%@include file="/jspf/pfo-apcp-sidebar.jspf" %>
+            <%@include file="jspf/field-officer-navbar.jspf" %>
+            <%@include file="jspf/pfo-apcp-sidebar.jspf" %>
             <%
                 int arboID = (Integer) request.getAttribute("arboID");
                 ARBO arbo = arboDAO.getARBOByID(arboID);
@@ -55,7 +55,7 @@
 
                 <!-- Main content -->
                 <section class="content">
-                    
+
                     <%if(request.getAttribute("errMessage") != null){%>
                     <div class="alert alert-danger alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -72,7 +72,7 @@
                             </div>
                         </div>
                         <!-- /.box-header -->
-                        <form method="post">
+                        <form method="post" id="requestConduitForm">
                             <div class="box-body">
                                 <div class="row">
                                     <div class="col-md-4">
@@ -151,7 +151,7 @@
                                                 <tr>
                                             <input type="hidden" name="documentID" value="<%out.print(d.getDocument());%>">
                                             <input type="hidden" name="documentName" value="N/A">
-                                            <td style="border: transparent;"><h5> &#9632; &nbsp; <%out.print(d.getDocumentDesc());%>:</h5></td>
+                                            <td style="border: transparent;"><h5 class="documentLabel"> &#9632; &nbsp; <%out.print(d.getDocumentDesc());%>:</h5></td>
                                             <td style="border: transparent;">
                                                 <div class="input-group date">
                                                     <div class="input-group-addon">
@@ -197,37 +197,17 @@
                                                 <div class="input-group-addon">
                                                     <i>&#8369;</i>
                                                 </div>
-                                                <input id="loanAmount" type='number' name="loanAmount" class="form-control numberOnly" required>
+                                                <input id="loanAmount" name="loanAmount" class="form-control numberOnly" required>
                                             </div>
                                         </div>
                                     </div>
 
 
                                 </div>
-                                <div class="row">
-                                    <div class="col-xs-1"></div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Loan Reason</label>
-                                            <select class="form-control select2" name="loanReason" id="loanReason" style="width: 100%;">
-                                                <%for(LoanReason r : refLoanReasons){%>
-                                                <option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option>
-                                                <%}%>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-2"></div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Other Reason</label>
-                                            <input type="text" id="otherReason" name="otherReason" class="form-control" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-1"></div>
-                                </div>
+                              
 
                                 <div class="row">
-                                    <div class="col-xs-4">
+                                    <div class="col-xs-3">
                                         <div class="form-group">
                                             <label for="">Loan Term</label>
                                             <select name="loanTerm" class="form-control" id="loanTerm">
@@ -237,16 +217,26 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-xs-4">
+                                    <div class="col-xs-3">
                                         <div class="form-group">
-                                            <label for="">Minimum Duration (Months)</label>
-                                            <input id="minDuration" type="number" class="form-control" value="12" name="minDuration" disabled />
+                                            <label for="">Loan Duration (Months)</label>
+                                            <input id="minDuration" type="number" class="form-control" value="12" max="36" name="loanTermDuration" />
                                         </div>
                                     </div>
-                                    <div class="col-xs-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="">Maximum Duration (Months)</label>
-                                            <input id="maxDuration" type="number" class="form-control" min="13" max="36" name="maxDuration" />
+                                            <label>Loan Reason</label>
+                                            <select class="form-control select2" name="loanReason" id="loanReason" style="width: 100%;">
+                                                <%for(LoanReason r : refLoanReasons){%>
+                                                <option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option>
+                                                <%}%>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Other Reason</label>
+                                            <input type="text" id="otherReason" name="otherReason" class="form-control" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -320,7 +310,7 @@
                                                 <tr>
                                             <input type="hidden" name="documentID" value="<%out.print(d.getDocument());%>">
                                             <input type="hidden" name="documentName" value="N/A">
-                                            <td style="border: transparent;"><h5> &#9632; &nbsp; <%out.print(d.getDocumentDesc());%>:</h5></td>
+                                            <td style="border: transparent;"><h5 class="documentLabel"> &#9632; &nbsp; <%out.print(d.getDocumentDesc());%>:</h5></td>
                                             <td style="border: transparent;">
                                                 <div class="input-group date">
                                                     <div class="input-group-addon">
@@ -354,10 +344,10 @@
                             </div>
                             <!-- /.box-body -->
                             <div class="box-footer">
-                                <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#confirm">Submit</button>
+                                <button type="button" id="submitBtn" class="btn btn-success pull-right" data-toggle="modal" data-target="#confirm">Submit</button>
                             </div>
                             <div class="modal fade" id="confirm">
-                                <div class="modal-dialog modal-sm">
+                                <div class="modal-dialog modal-md">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -365,6 +355,11 @@
                                             <h4 class="modal-title">Confirm Submission</h4>
                                         </div>
                                         <div class="modal-body" id="modalBody">
+                                            <div class="row">
+                                                <div class="col-xs-12" id="nullDocuments">
+
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 <div class="col-xs-12">
                                                     <h5>Do you wish to proceed?</h5>
@@ -392,9 +387,34 @@
         </div>
         <!-- ./wrapper -->
 
-        <%@include file="/jspf/footer.jspf"%>  
+        <%@include file="jspf/footer.jspf"%>  
         <script type="text/javascript">
             $(document).ready(function () {
+
+//                var docuArray = [];
+//                var conduitDocumentsDate = $('#conduitTable').children('input[type=date]');
+//                var supportingDocumentsDate = $('#supportingTable').children('input[type=date]');
+//
+//                var nullDocuments = $('#nullDocuments'); // modal content
+//                $('#submitBtn').on('click', function () {
+//                    
+//                    conduitDocumentsDate.each(function () { // docuArray accumulates labels of null date values
+//                        if (this.value == null) {
+//                            docuArray.push($(this).closest('h5 .documentLabel').val());
+//                        }
+//                    });
+//
+//                    alert(docuArray[0].value);
+//
+//                    supportingDocumentsDate.each(function () { // docuArray accumulates labels of null date values
+//                        if (this.value == null) {
+//                            docuArray.push($(this).closest('h5 .documentLabel').val());
+//                        }
+//                    });
+//
+//                    nullDocuments.html("<p class='text text-info'>The following documents don't have date submitted values: " + docuArray. + ".");
+//                });
+
                 $('#loanReason').on('change', function () { // 
                     if (this.value > 0) {
                         $('#otherReason').prop('disabled', true);
@@ -411,26 +431,26 @@
                 $('#loanTerm').on('change', function () {
                     if (this.value == 1) {
                         $('#minDuration').val('12');
-                        $('#maxDuration').attr({
-                            "min": 13,
+                        $('#minDuration').attr({
+                            "min": 12,
                             "max": 36
                         });
                     } else if (this.value == 2) {
                         $('#minDuration').val('36');
-                        $('#maxDuration').attr({
-                            "min": 37,
+                        $('#minDuration').attr({
+                            "min": 36,
                             "max": 84
                         });
                     } else if (this.value == 3) {
                         $('#minDuration').val('12');
-                        $('#maxDuration').attr({
-                            "min": 13,
+                        $('#minDuration').attr({
+                            "min": 12,
                             "max": 36
                         });
                     } else if (this.value == 4) {
                         $('#minDuration').val('12');
-                        $('#maxDuration').attr({
-                            "min": 13,
+                        $('#minDuration').attr({
+                            "min": 12,
                             "max": 60
                         });
                     }

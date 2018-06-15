@@ -24,56 +24,15 @@ import java.util.logging.Logger;
 public class ARBODAO {
 
     public ARBO getARBOByID(int id) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        ARBO arbo = new ARBO();
-        APCPRequestDAO rDAO = new APCPRequestDAO();
-        try {
-            String query = "SELECT * FROM arbos a "
-                    + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
-                    + "JOIN refprovince p ON c.provCode=p.provCode "
-                    + "JOIN refregion r ON c.regCode=r.regCode "
-                    + "JOIN ref_provoffice po ON a.provOfficeCode=po.provOfficeCode "
-                    + "JOIN ref_arboType at ON a.arboType=at.arboType "
-                    + "JOIN ref_arboStatus ast ON a.arboStatus=ast.arboStatus "
-                    + "WHERE a.arboID=?";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                arbo.setArboID(rs.getInt("arboID"));
-                arbo.setArboName(rs.getString("arboName"));
-                arbo.setArboType(rs.getInt("arboType"));
-                arbo.setArboTypeDesc(rs.getString("arboTypeDesc"));
-                arbo.setArboStatus(rs.getInt("arboStatus"));
-                arbo.setArboStatusDesc(rs.getString("arboStatusDesc"));
-                arbo.setArboCityMun(rs.getInt("arboCityMun"));
-                arbo.setArboCityMunDesc(rs.getString("cityMunDesc"));
-                arbo.setArboProvince(rs.getInt("arboProvince"));
-                arbo.setArboProvinceDesc(rs.getString("provDesc"));
-                arbo.setArboRegion(rs.getInt("arboRegion"));
-                arbo.setArboRegionDesc(rs.getString("regDesc"));
-                arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
-                arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
-                arbo.setQualifiedSince(rs.getDate("qualifiedSince"));
-                arbo.setDateOperational(rs.getDate("dateOperational"));
-                arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
-                arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
-            } else {
-                return null;
+        ArrayList<ARBO> allARBOs = getAllARBOs();
+        ArrayList<ARBO> arboList = new ArrayList();
+        
+        for(ARBO arbo : allARBOs){
+            if(arbo.getArboID()== id){
+                return arbo;
             }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return arbo;
+        return null;
     }
 
     public boolean addARBO(ARBO arbo) {
@@ -117,6 +76,7 @@ public class ARBODAO {
         Connection con = myFactory.getConnection();
         ArrayList<ARBO> arboList = new ArrayList();
         APCPRequestDAO rDAO = new APCPRequestDAO();
+        ARBDAO aDAO = new ARBDAO();
         try {
             String query = "SELECT * FROM arbos a "
                     + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
@@ -145,7 +105,7 @@ public class ARBODAO {
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
                 arbo.setQualifiedSince(rs.getDate("qualifiedSince"));
                 arbo.setDateOperational(rs.getDate("dateOperational"));
-                arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
+                arbo.setArbList(aDAO.getAllARBsARBO(rs.getInt("arboID")));
                 arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
                 arboList.add(arbo);
             }
@@ -190,147 +150,41 @@ public class ARBODAO {
     }
 
     public ArrayList<ARBO> getAllARBOsByCityMun(int cityMun) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
+        ArrayList<ARBO> allARBOs = getAllARBOs();
         ArrayList<ARBO> arboList = new ArrayList();
-        try {
-            String query = "SELECT * FROM arbos a "
-                    + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
-                    + "JOIN refprovince p ON c.provCode=p.provCode "
-                    + "JOIN refregion r ON c.regCode=r.regCode "
-                    + "JOIN ref_provoffice po ON a.provOfficeCode=po.provOfficeCode "
-                    + "JOIN ref_arboType at ON a.arboType=at.arboType "
-                    + "WHERE a.arboCityMun=?";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, cityMun);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                ARBO arbo = new ARBO();
-                arbo.setArboID(rs.getInt("arboID"));
-                arbo.setArboName(rs.getString("arboName"));
-                arbo.setArboType(rs.getInt("arboType"));
-                arbo.setArboTypeDesc(rs.getString("arboTypeDesc"));
-                arbo.setArboCityMun(rs.getInt("arboCityMun"));
-                arbo.setArboCityMunDesc(rs.getString("cityMunDesc"));
-                arbo.setArboProvince(rs.getInt("arboProvince"));
-                arbo.setArboProvinceDesc(rs.getString("provDesc"));
-                arbo.setArboRegion(rs.getInt("arboRegion"));
-                arbo.setArboRegionDesc(rs.getString("regDesc"));
-                arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
-                arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
-                arbo.setQualifiedSince(rs.getDate("qualifiedSince"));
-                arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
+        
+        for(ARBO arbo : allARBOs){
+            if(arbo.getArboCityMun()== cityMun){
                 arboList.add(arbo);
             }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return arboList;
     }
 
     public ArrayList<ARBO> getAllNonQualifiedARBOs(int provinceID) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
+        ArrayList<ARBO> allARBOs = getAllARBOs();
         ArrayList<ARBO> arboList = new ArrayList();
-        APCPRequestDAO rDAO = new APCPRequestDAO();
-        try {
-            String query = "SELECT * FROM arbos a "
-                    + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
-                    + "JOIN refprovince p ON c.provCode=p.provCode "
-                    + "JOIN refregion r ON c.regCode=r.regCode "
-                    + "JOIN ref_provoffice po ON a.provOfficeCode=po.provOfficeCode "
-                    + "JOIN ref_arboType at ON a.arboType=at.arboType "
-                    + "WHERE a.provOfficeCode=? AND qualifiedSince = 0";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, provinceID);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                ARBO arbo = new ARBO();
-                arbo.setArboID(rs.getInt("arboID"));
-                arbo.setArboName(rs.getString("arboName"));
-                arbo.setArboType(rs.getInt("arboType"));
-                arbo.setArboTypeDesc(rs.getString("arboTypeDesc"));
-                arbo.setArboCityMun(rs.getInt("arboCityMun"));
-                arbo.setArboCityMunDesc(rs.getString("cityMunDesc"));
-                arbo.setArboProvince(rs.getInt("arboProvince"));
-                arbo.setArboProvinceDesc(rs.getString("provDesc"));
-                arbo.setArboRegion(rs.getInt("arboRegion"));
-                arbo.setArboRegionDesc(rs.getString("regDesc"));
-                arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
-                arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
-                arbo.setQualifiedSince(rs.getDate("qualifiedSince"));
-                arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
-                arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
+        
+        for(ARBO arbo : allARBOs){
+            if(arbo.getProvOfficeCode()== provinceID && arbo.getQualifiedSince() == null){
                 arboList.add(arbo);
             }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return arboList;
     }
 
     public ArrayList<ARBO> getAllQualifiedARBOs(int provinceID) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
+        ArrayList<ARBO> allARBOs = getAllARBOs();
         ArrayList<ARBO> arboList = new ArrayList();
-        APCPRequestDAO rDAO = new APCPRequestDAO();
-        try {
-            String query = "SELECT * FROM arbos a "
-                    + "JOIN refcitymun c ON a.arboCityMun=c.citymunCode "
-                    + "JOIN refprovince p ON c.provCode=p.provCode "
-                    + "JOIN refregion r ON c.regCode=r.regCode "
-                    + "JOIN ref_provoffice po ON a.provOfficeCode=po.provOfficeCode "
-                    + "JOIN ref_arboType at ON a.arboType=at.arboType "
-                    + "WHERE a.provOfficeCode=? AND qualifiedSince IS NOT NULL";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, provinceID);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                ARBO arbo = new ARBO();
-                arbo.setArboID(rs.getInt("arboID"));
-                arbo.setArboName(rs.getString("arboName"));
-                arbo.setArboType(rs.getInt("arboType"));
-                arbo.setArboTypeDesc(rs.getString("arboTypeDesc"));
-                arbo.setArboCityMun(rs.getInt("arboCityMun"));
-                arbo.setArboCityMunDesc(rs.getString("cityMunDesc"));
-                arbo.setArboProvince(rs.getInt("arboProvince"));
-                arbo.setArboProvinceDesc(rs.getString("provDesc"));
-                arbo.setArboRegion(rs.getInt("arboRegion"));
-                arbo.setArboRegionDesc(rs.getString("regDesc"));
-                arbo.setProvOfficeCode(rs.getInt("provOfficeCode"));
-                arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
-                arbo.setQualifiedSince(rs.getDate("qualifiedSince"));
-                arbo.setArbList(getAllARBsARBO(rs.getInt("arboID")));
-                arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
+        
+        for(ARBO arbo : allARBOs){
+            if(arbo.getProvOfficeCode()== provinceID && arbo.getQualifiedSince() != null){
                 arboList.add(arbo);
             }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return arboList;
     }
 
@@ -401,65 +255,7 @@ public class ARBODAO {
         return success;
     }
 
-    public ArrayList<ARB> getAllARBsARBO(int arboID) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-        ARBDAO dao = new ARBDAO();
-        ArrayList<ARB> arbList = new ArrayList();
-        try {
-            String query = "SELECT * FROM `dar-bms`.arbs a "
-                    + "JOIN `dar-bms`.ref_educationLevel e ON a.educationLevel=e.educationLevel "
-                    + "JOIN `dar-bms`.ref_arbStatus s ON a.arbStatus=s.arbStatus "
-                    + "JOIN `dar-bms`.refbrgy b ON a.brgyCode=b.brgyCode "
-                    + "JOIN `dar-bms`.refcitymun c ON a.cityMunCode=c.citymunCode "
-                    + "JOIN `dar-bms`.refprovince p ON a.provCode=p.provCode "
-                    + "JOIN `dar-bms`.refregion r ON a.regCode=r.regCode "
-                    + "WHERE `arboID`=?";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, arboID);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                ARB arb = new ARB();
-                arb.setArbID(rs.getInt("arbID"));
-                arb.setArboID(rs.getInt("arboID"));
-                arb.setFirstName(rs.getString("firstName"));
-                arb.setMiddleName(rs.getString("middleName"));
-                arb.setLastName(rs.getString("lastName"));
-                arb.setMemberSince(rs.getDate("memberSince"));
-                arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
-                arb.setBrgyCode(rs.getInt("brgyCode"));
-                arb.setBrgyDesc(rs.getString("brgyDesc"));
-                arb.setCityMunCode(rs.getInt("cityMunCode"));
-                arb.setCityMunDesc(rs.getString("citymunDesc"));
-                arb.setProvCode(rs.getInt("provCode"));
-                arb.setProvDesc(rs.getString("provDesc"));
-                arb.setRegCode(rs.getInt("regCode"));
-                arb.setRegDesc(rs.getString("regDesc"));
-                arb.setGender(rs.getString("gender"));
-                arb.setEducationLevel(rs.getInt("educationLevel"));
-                arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
-                arb.setLandArea(rs.getDouble("landArea"));
-                arb.setCurrentCrops(dao.getAllARBCurrentCrops(rs.getInt("arbID")));
-                arb.setCrops(dao.getAllARBCrops(rs.getInt("arbID")));
-                arb.setDependents(dao.getAllARBDependents(rs.getInt("arbID")));
-                arb.setArbStatus(rs.getInt("arbStatus"));
-                arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
-                arb.setClusterID(rs.getInt("clusterID"));
-                arbList.add(arb);
-            }
-            pstmt.close();
-            rs.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return arbList;
-    }
+    
 
     public int getARBOType(String arboTypeDesc) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();

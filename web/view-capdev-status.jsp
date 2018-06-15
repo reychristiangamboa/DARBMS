@@ -37,6 +37,8 @@
             <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
             <%} else if (userType == 5) {%>
             <%@include file="jspf/central-sidebar.jspf"%>
+            <%} else if (userType == 7) {%>
+            <%@include file="jspf/pfo-capdev-sidebar.jspf"%>
             <%}%>
 
             <%
@@ -60,7 +62,7 @@
                 ArrayList<CAPDEVPlan> implementedPlans = new ArrayList();
                 ArrayList<APCPRequest> requestedRequests = new ArrayList();
     
-                if(userType == 3){
+                if(userType == 3 || userType == 7){
                     ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
                     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
                     cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());

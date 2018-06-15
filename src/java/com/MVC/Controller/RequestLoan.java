@@ -34,7 +34,7 @@ public class RequestLoan extends BaseServlet {
         APCPRequest r = new APCPRequest();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        String[] vals = request.getParameter("loan").split(",");
+        String[] vals = request.getParameter("loanAmount").split(",");
         StringBuilder sb = new StringBuilder();
         for (String val : vals) {
             sb.append(val);
@@ -44,13 +44,24 @@ public class RequestLoan extends BaseServlet {
         double loanAmount = Double.parseDouble(finLoan);
         double maxAmount = 0;
 
-        
+        String[] documentIDsStr = request.getParameterValues("documentID"); // document referenceID
+        String[] dateSubmittedStr = request.getParameterValues("dateSubmitted");
+        String[] documentNameStr = request.getParameterValues("documentName");
+        String[] arbIDsStr = request.getParameterValues("arbID");
+        //ArrayList<APCPDocument> documentList = new ArrayList();
+
+        r.setRequestStatus(0); // FOR CONDUIT APPROVAL
+        for (String str : dateSubmittedStr) {
+            if (str.isEmpty()) {
+                r.setRequestStatus(8); // INCOMPLETE
+            }
+        }
+
         if (request.getParameter("cropProd") != null) {
             APCPRequest cropProdRequest = dao.getRequestByID(Integer.parseInt("cropProd"));
             maxAmount = cropProdRequest.getLoanAmount() * .10;
 
             //<editor-fold desc="IF-ELSE loanAmount is less than maxAmount">
-        
             if (loanAmount < maxAmount) { // loanAmount doesn't exceed maxAmount (10% of crop prod amount)
                 r.setArboID(Integer.parseInt(request.getParameter("arboID")));
                 r.setApcpType(Integer.parseInt(request.getParameter("apcpType")));
@@ -58,25 +69,12 @@ public class RequestLoan extends BaseServlet {
                 r.setLoanAmount(Double.parseDouble(finLoan));
                 r.setHectares(Double.parseDouble(request.getParameter("landArea")));
                 r.setRemarks(request.getParameter("remarks"));
+                r.setLoanTermDuration(Integer.parseInt(request.getParameter("loanTermDuration")));
 
                 int requestID = dao.requestAPCP(r, (Integer) session.getAttribute("userID"));
 
                 // INSERTS into apcp_loanReason table
                 dao.setAPCPLoanReason(requestID, Integer.parseInt(request.getParameter("loanReason")), Integer.parseInt(request.getParameter("loanTerm")), request.getParameter("otherReason"));
-
-                String[] documentIDsStr = request.getParameterValues("documentID"); // document referenceID
-                String[] dateSubmittedStr = request.getParameterValues("dateSubmitted");
-                String[] documentNameStr = request.getParameterValues("documentName");
-                String[] arbIDsStr = request.getParameterValues("arbID");
-                //ArrayList<APCPDocument> documentList = new ArrayList();
-
-                r.setRequestStatus(0); // FOR CONDUIT APPROVAL
-                for (String str : dateSubmittedStr) {
-
-                    if (str == null) {
-                        r.setRequestStatus(8); // INCOMPLETE
-                    }
-                }
 
                 for (int i = 0; i < documentIDsStr.length; i++) {
                     System.out.println("DOCUMENT: " + documentIDsStr[i]);
@@ -130,25 +128,12 @@ public class RequestLoan extends BaseServlet {
             r.setLoanAmount(Double.parseDouble(finLoan));
             r.setHectares(Double.parseDouble(request.getParameter("landArea")));
             r.setRemarks(request.getParameter("remarks"));
+            r.setLoanTermDuration(Integer.parseInt(request.getParameter("loanTermDuration")));
 
-            int requestID = dao.requestAPCP(r, (Integer) session.getAttribute("userID"));
+            int requestID = dao.requestAPCPNewAccess(r, (Integer) session.getAttribute("userID"));
 
             // INSERTS into apcp_loanReason table
             dao.setAPCPLoanReason(requestID, Integer.parseInt(request.getParameter("loanReason")), Integer.parseInt(request.getParameter("loanTerm")), request.getParameter("otherReason"));
-
-            String[] documentIDsStr = request.getParameterValues("documentID"); // document referenceID
-            String[] dateSubmittedStr = request.getParameterValues("dateSubmitted");
-            String[] documentNameStr = request.getParameterValues("documentName");
-            String[] arbIDsStr = request.getParameterValues("arbID");
-            //ArrayList<APCPDocument> documentList = new ArrayList();
-
-            r.setRequestStatus(0); // FOR CONDUIT APPROVAL
-            for (String str : dateSubmittedStr) {
-                System.out.println(str);
-                if (str == null) {
-                    r.setRequestStatus(8); // INCOMPLETE
-                }
-            }
 
             for (int i = 0; i < documentIDsStr.length; i++) {
                 System.out.println("DOCUMENT: " + documentIDsStr[i]);
@@ -162,9 +147,7 @@ public class RequestLoan extends BaseServlet {
                         java.util.Date parsedDateSubmitted = sdf.parse(dateSubmittedStr[i]);
                         dateSubmitted = new java.sql.Date(parsedDateSubmitted.getTime());
                         doc.setDateSubmitted(dateSubmitted); // set dateSubmitted
-                        doc.setIsApproved(true);
-                    } else {  // dateSubmitted is null
-                        doc.setIsApproved(false);
+                        
                     }
                 } catch (ParseException ex) {
                     Logger.getLogger(RequestConduit.class.getName()).log(Level.SEVERE, null, ex);

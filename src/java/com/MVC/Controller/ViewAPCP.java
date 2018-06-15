@@ -16,15 +16,18 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author ijJPN
  */
-public class ViewNewAccessingARBO extends BaseServlet {
+public class ViewAPCP extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
         int id = Integer.parseInt(request.getParameter("id"));
+        
         request.setAttribute("requestID", id);
-        request.getRequestDispatcher("PFO-HEAD-view-new-accessing-arbo.jsp").forward(request, response);
+        request.getRequestDispatcher("view-apcp-application.jsp").forward(request, response);
     }
-
+    
+    
     
 
 }

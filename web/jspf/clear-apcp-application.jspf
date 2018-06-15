@@ -1,0 +1,124 @@
+
+<div class="box-header with-border text-center">
+    <h5 class="box-title"><strong>Supporting Documents</strong></h5>
+</div>
+<br />
+
+<div class="row">
+
+    <div class="col-xs-2"></div>
+    <div class="col-xs-8">
+
+        <form method="post">
+            <table id="supportingTable" class="table table-bordered table-striped" >
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>Document</th>
+                        <th>Date Submitted</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="supportingWrapper">
+                    <%for(APCPDocument d : req.getApcpDocument()){%>
+                    <%if(d.getDocumentType() == 2){ // APCP%>
+                    <tr>
+
+                        <td>
+                            <input type="checkbox" name="documentID" value="<%out.print(d.getId());%>">
+                        </td>
+
+                        <%if(d.getDocument() != 12){ // APCP%>
+                        <td style="border: transparent;"><h5><%out.print(d.getDocumentDesc());%></h5></td>
+                                <%} else if(d.getDocument() == 12){ // OTHERS%>
+                        <td style="border: transparent;"><h5><%out.print(d.getDocumentDesc() + " (" + d.getDocumentName() + ")");%></h5></td>
+                                <%}%>
+                        <td style="border: transparent;">
+                            <div class="input-group date">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="date" value="<%=d.getDateSubmitted()%>" class="form-control" disabled>
+                            </div> 
+                        </td>
+
+                        <td>
+                            <%
+                            if(d.isIsApproved()){
+                                out.print("VERIFIED");
+                            }else{
+                                out.print("NOT VERIFIED");
+                            }
+                            %>
+                        </td>
+
+                    </tr>
+
+                    <%}%>
+                    <%}%>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+
+                        <td><button class="btn btn-primary" onclick="form.action = 'VerifyDocuments?requestID=<%out.print(reqID);%>'">VERIFY</button></td>
+                    </tr>
+
+
+
+                </tbody>
+            </table>
+        </form>
+        <table id="apcpOrientation" class="table table-bordered table-striped">
+            <thead>
+                <%if(req.checkARBOHadAPCPOrientation()){%>
+                <%for(CAPDEVPlan plan : req.getPlans()){%>
+                <%for(CAPDEVActivity act : plan.getActivities()){%>
+                <%if(act.getActivityType() == 12){%>
+                <tr>
+                    <td><input type="checkbox"checked disabled/></td>
+                    <td><h5><%out.print(act.getActivityName());%></h5></td>
+                    <td>
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="date" value="<%=act.getActivityDate()%>" class="form-control" disabled>
+                        </div> 
+                    </td>
+                </tr>
+                <%}%>
+                <%}%>
+                <%}%>
+                <%}else{%>
+
+                <tr>
+                    <td><input type="checkbox" disabled/></td>
+                    <td><h5>APCP Orientation</h5></td>
+                    <td>
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="text" value="APCP Orientation not yet undertaken." class="form-control" disabled>
+                        </div> 
+                    </td>
+                </tr>
+                <%}%>
+            </thead>
+        </table>                    
+    </div>
+    <div class="col-xs-2"></div>
+
+</div>
+
+<div class="box-footer">
+    <%if(req.checkARBOHadAPCPOrientation()){%>
+    <button type="submit" class="btn btn-success pull-right" disabled>Clear Request</button>
+    <%}else{%>
+    <button type="submit" class="btn btn-success pull-right">Clear Request</button>
+    <%}%>
+</div>
+
+
+

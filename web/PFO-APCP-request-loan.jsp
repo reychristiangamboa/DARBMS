@@ -204,30 +204,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-xs-1"></div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Loan Reason</label>
-                                            <select class="form-control select2" name="loanReason" id="loanReason" style="width: 100%;">
-                                                <%for(LoanReason r : refLoanReasonsCropProduction){%>
-                                                <option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option>
-                                                <%}%>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-2"></div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Other Reason</label>
-                                            <input type="text" id="otherReason" name="otherReason" class="form-control" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-1"></div>
-                                </div>
 
                                 <div class="row">
-                                    <div class="col-xs-4">
+                                    <div class="col-xs-3">
                                         <div class="form-group">
                                             <label for="">Loan Term</label>
                                             <select name="loanTerm" class="form-control" id="loanTerm">
@@ -237,19 +216,31 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-xs-4">
+                                    <div class="col-xs-3">
                                         <div class="form-group">
-                                            <label for="">Minimum Duration (Months)</label>
-                                            <input id="minDuration" type="number" class="form-control" value="12" name="minDuration" disabled />
+                                            <label for="">Loan Duration (Months)</label>
+                                            <input id="minDuration" type="number" class="form-control" value="12" max="36" name="loanTermDuration" />
                                         </div>
                                     </div>
-                                    <div class="col-xs-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
-                                            <label for="">Maximum Duration (Months)</label>
-                                            <input id="maxDuration" type="number" class="form-control" min="13" max="36" name="maxDuration" />
+                                            <label>Loan Reason</label>
+                                            <select class="form-control select2" name="loanReason" id="loanReason" style="width: 100%;">
+                                                <%for(LoanReason r : refLoanReasons){%>
+                                                <option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option>
+                                                <%}%>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Other Reason</label>
+                                            <input type="text" id="otherReason" name="otherReason" class="form-control" disabled>
                                         </div>
                                     </div>
                                 </div>
+
+
 
 
                                 <div class="row">
@@ -399,61 +390,54 @@
         <script type="text/javascript">
             $(document).ready(function () {
 
-                var cropProdMarkup = '<div class="col-md-3 id="cropProduction"><div class="form-group"><label>Crop Production Request</label><select name="cropProd" class="form-control"><%for(APCPRequest cropProd : cropProds){%><option value="<%out.print(cropProd.getRequestID());%>"><%out.print(cropProd.getRequestID());%></option><%}%></select></div></div>'
-                $('#apcpType').on('change', function () {
-                    if ($('#apcpType').val() == 1) {
-                        $('#apcpTypeWrapper').remove('#cropProduction');
-                        $('#loanReason').html('<%for(LoanReason r : refLoanReasonsCropProduction){%><option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option><%}%>');
-                    } else {
+            var cropProdMarkup = '<div class="col-md-3 id="cropProduction"><div class="form-group"><label>Crop Production Request</label><select name="cropProd" class="form-control"><%for(APCPRequest cropProd : cropProds){%><option value="<%out.print(cropProd.getRequestID());%>"><%out.print(cropProd.getRequestID());%></option><%}%></select></div></div>'
+                    $('#apcpType').on('change', function () {
+            if ($('#apcpType').val() == 1) {
+            $('#apcpTypeWrapper').remove('#cropProduction');
+                    $('#loanReason').html('<%for(LoanReason r : refLoanReasonsCropProduction){%><option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option><%}%>');
+                        } else {
                         $('#apcpTypeWrapper').append(cropProdMarkup);
-                        $('#loanReason').html('<%for(LoanReason r : refLoanReasonsLivelihoodProgram){%><option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option><%}%>');
-                    }
+                                $('#loanReason').html('<%for(LoanReason r : refLoanReasonsLivelihoodProgram){%><option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option><%}%>');
+                                    }
 
-                });
-
-                $('#loanReason').on('change', function () { // 
-                    if (this.value > 0) {
-                        $('#otherReason').prop('disabled', true);
-                        $('#otherReason').prop('required', false);
-                    } else { // If 'Others' is selected
-                        $('#otherReason').prop('disabled', false);
-                        $('#otherReason').prop('required', true);
-                    }
-                });
-
-                var max = $('#maxDuration').attr('min');
-                $('#maxDuration').val(max);
-
-                $('#loanTerm').on('change', function () {
-                    if (this.value == 1) {
-                        $('#minDuration').val('12');
-                        $('#maxDuration').attr({
-                            "min": 13,
-                            "max": 36
-                        });
-                    } else if (this.value == 2) {
-                        $('#minDuration').val('36');
-                        $('#maxDuration').attr({
-                            "min": 37,
-                            "max": 84
-                        });
-                    } else if (this.value == 3) {
-                        $('#minDuration').val('12');
-                        $('#maxDuration').attr({
-                            "min": 13,
-                            "max": 36
-                        });
-                    } else if (this.value == 4) {
-                        $('#minDuration').val('12');
-                        $('#maxDuration').attr({
-                            "min": 13,
-                            "max": 60
-                        });
-                    }
-
-                    var max = $('#maxDuration').attr('min');
-                    $('#maxDuration').val(max);
-                });
+                                    });
+                                            $('#loanReason').on('change', function () { // 
+                                    if (this.value > 0) {
+                                    $('#otherReason').prop('disabled', true);
+                                            $('#otherReason').prop('required', false);
+                                    } else { // If 'Others' is selected
+                                    $('#otherReason').prop('disabled', false);
+                                            $('#otherReason').prop('required', true);
+                                    }
+                                    });
+                                            var max = $('#maxDuration').attr('min');
+                                            $('#maxDuration').val(max);
+                                            $('#loanTerm').on('change', function () {
+                                    if (this.value == 1) {
+                                    $('#minDuration').val('12');
+                                            $('#minDuration').attr({
+                                    "min": 12,
+                                            "max": 36
+                                    });
+                                    } else if (this.value == 2) {
+                                    $('#minDuration').val('36');
+                                            $('#minDuration').attr({
+                                    "min": 36,
+                                            "max": 84
+                                    });
+                                    } else if (this.value == 3) {
+                                    $('#minDuration').val('12');
+                                            $('#minDuration').attr({
+                                    "min": 12,
+                                            "max": 36
+                                    });
+                                    } else if (this.value == 4) {
+                                    $('#minDuration').val('12');
+                                            $('#minDuration').attr({
+                                    "min": 12,
+                                            "max": 60
+                                    });
+                                    }
             <%
                     int optionalConduitCount = 0;
                     int optionalSupportingCount = 0;
@@ -465,72 +449,65 @@
                         }
                     }
             %>
-                //----- CONDUIT -----
-                var max_fields = <%out.print(optionalConduitCount);%>; //maximum input boxes allowed
-                var conduitWrapper = $('#conduitWrapper'); //Fields wrapper
-                var btnAddConduitDocu = $('#btnAddConduitDocu'); //Add CONDUIT button
-                var conduitDocuMarkup = '<tr><input type="hidden" name="documentName" value="N/A"><td  style="border: transparent;"><div class="form-group"><select name="documentID" id="" class="form-control select2"><%for(APCPDocument document : refDocuments){%><%if(document.getIsRequired() == 0 && document.getDocumentType() == 1){%> <option value="<%out.print(document.getDocument());%>"><%out.print(document.getDocumentDesc());%></option><%}%><%}%></select></div></td><td  style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-conduit btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
-                var x = 0; //initlal text box count
+                                    //----- CONDUIT -----
+                                    var max_fields = <%out.print(optionalConduitCount);%>; //maximum input boxes allowed
+                                            var conduitWrapper = $('#conduitWrapper'); //Fields wrapper
+                                            var btnAddConduitDocu = $('#btnAddConduitDocu'); //Add CONDUIT button
+                                            var conduitDocuMarkup = '<tr><input type="hidden" name="documentName" value="N/A"><td  style="border: transparent;"><div class="form-group"><select name="documentID" id="" class="form-control select2"><%for(APCPDocument document : refDocuments){%><%if(document.getIsRequired() == 0 && document.getDocumentType() == 1){%> <option value="<%out.print(document.getDocument());%>"><%out.print(document.getDocumentDesc());%></option><%}%><%}%></select></div></td><td  style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-conduit btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
+                                            var x = 0; //initlal text box count
 
-                $(btnAddConduitDocu).click(function (e) { //on add input button click
-                    e.preventDefault();
-                    if (x < max_fields) { //max input box allowed
-                        x++; //text box increment
-                        $(conduitWrapper).append(conduitDocuMarkup);
-                        $('.select2').select2();
-                    }
-                });
+                                            $(btnAddConduitDocu).click(function (e) { //on add input button click
+                                    e.preventDefault();
+                                            if (x < max_fields) { //max input box allowed
+                                    x++; //text box increment
+                                            $(conduitWrapper).append(conduitDocuMarkup);
+                                            $('.select2').select2();
+                                    }
+                                    });
+                                            $('#conduitTable').on("click", ".delete-row-conduit", function (event) {
+                                    $(this).closest("tr").remove();
+                                            x--;
+                                    });
+                                            //----- SUPPORTING -----
+                                            var max_fields = <%out.print(optionalSupportingCount);%>; //maximum input boxes allowed
+                                            var supportingWrapper = $('#supportingWrapper'); //Fields wrapper
+                                            var btnAddSupportingDocu = $('#btnAddSupportingDocu'); //Add Supporting button
+                                            var btnAddOthers = $('#btnAddOthers');
+                                            var supportingDocuMarkup = '<tr><input type="hidden" name="documentName" value="N/A"><td  style="border: transparent;"><div class="form-group"><select name="documentID" id="" class="form-control select2"><%for(APCPDocument document : refDocuments){%><%if(document.getIsRequired() == 0 && document.getDocumentType() == 2 && document.getDocument() != 0){%> <option value="<%out.print(document.getDocument());%>"><%out.print(document.getDocumentDesc());%></option><%}%><%}%></select></div></td><td  style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
+                                            var othersMarkup = '<tr><input type="hidden" name="documentDesc" value="N/A"><input type="hidden" name="documentID" value="12"><td style="border: transparent;"><div class="form-group"><input type="text" name="documentName" class="form-control" /></div></td><td style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
+                                            var y = 0; //initlal text box count
 
-                $('#conduitTable').on("click", ".delete-row-conduit", function (event) {
-                    $(this).closest("tr").remove();
-                    x--;
-                });
-
-                //----- SUPPORTING -----
-                var max_fields = <%out.print(optionalSupportingCount);%>; //maximum input boxes allowed
-                var supportingWrapper = $('#supportingWrapper'); //Fields wrapper
-                var btnAddSupportingDocu = $('#btnAddSupportingDocu'); //Add Supporting button
-                var btnAddOthers = $('#btnAddOthers');
-                var supportingDocuMarkup = '<tr><input type="hidden" name="documentName" value="N/A"><td  style="border: transparent;"><div class="form-group"><select name="documentID" id="" class="form-control select2"><%for(APCPDocument document : refDocuments){%><%if(document.getIsRequired() == 0 && document.getDocumentType() == 2 && document.getDocument() != 0){%> <option value="<%out.print(document.getDocument());%>"><%out.print(document.getDocumentDesc());%></option><%}%><%}%></select></div></td><td  style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
-                var othersMarkup = '<tr><input type="hidden" name="documentDesc" value="N/A"><input type="hidden" name="documentID" value="12"><td style="border: transparent;"><div class="form-group"><input type="text" name="documentName" class="form-control" /></div></td><td style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
-                var y = 0; //initlal text box count
-
-                $(btnAddSupportingDocu).click(function (e) { //on add input button click
-                    e.preventDefault();
-
-                    if (y < max_fields) { //max input box allowed
-                        y++; //text box increment
-                        $(supportingWrapper).append(supportingDocuMarkup);
-                        $('.select2').select2();
-                    }
-                });
-
-                $(btnAddOthers).click(function (e) { //on add input button click
-                    e.preventDefault();
-                    $(supportingWrapper).append(othersMarkup);
-                    $('.select2').select2();
-                });
-
-                $('#supportingTable').on("click", ".delete-row-supporting", function (event) {
-                    $(this).closest("tr").remove();
-                    y--;
-                });
-
-                $('#optional-list').on("click", ".optional-document", function (e) {
-                    e.preventDefault();
-                    var documentID = parseInt($(this).attr('data-documentID'));
-                    var documentDesc = $(this).attr('data-documentDesc');
-
-                    var markup = "";
-                    if (documentID === 12) { // OTHERS
-                        markup = '<tr><input type="hidden" name="documentDesc" value="N/A"><input type="hidden" name="documentID" value="' + documentID + '"><td style="border: transparent;"><div class="form-group"><input type="text" name="documentName" class="form-control" /></div></td><td style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
-                    } else {
-                        markup = '<tr><input type="hidden" name="documentName" value="N/A"><input type="hidden" name="documentID" value="' + documentID + '"><td style="border: transparent;"><h5> &#9632; &nbsp; ' + documentDesc + ':</h5></td><td style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
-                    }
-                    $(supportingWrapper).append(markup);
-
-                });
-            });
+                                            $(btnAddSupportingDocu).click(function (e) { //on add input button click
+                                    e.preventDefault();
+                                            if (y < max_fields) { //max input box allowed
+                                    y++; //text box increment
+                                            $(supportingWrapper).append(supportingDocuMarkup);
+                                            $('.select2').select2();
+                                    }
+                                    });
+                                            $(btnAddOthers).click(function (e) { //on add input button click
+                                    e.preventDefault();
+                                            $(supportingWrapper).append(othersMarkup);
+                                            $('.select2').select2();
+                                    });
+                                            $('#supportingTable').on("click", ".delete-row-supporting", function (event) {
+                                    $(this).closest("tr").remove();
+                                            y--;
+                                    });
+                                            $('#optional-list').on("click", ".optional-document", function (e) {
+                                    e.preventDefault();
+                                            var documentID = parseInt($(this).attr('data-documentID'));
+                                            var documentDesc = $(this).attr('data-documentDesc');
+                                            var markup = "";
+                                            if (documentID === 12) { // OTHERS
+                                    markup = '<tr><input type="hidden" name="documentDesc" value="N/A"><input type="hidden" name="documentID" value="' + documentID + '"><td style="border: transparent;"><div class="form-group"><input type="text" name="documentName" class="form-control" /></div></td><td style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
+                                    } else {
+                                    markup = '<tr><input type="hidden" name="documentName" value="N/A"><input type="hidden" name="documentID" value="' + documentID + '"><td style="border: transparent;"><h5> &#9632; &nbsp; ' + documentDesc + ':</h5></td><td style="border: transparent;"><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="dateSubmitted" class="form-control pull-right" id="datepicker"></div> </td><td style="border: transparent;"><button type="button" class="delete-row-supporting btn btn-danger"><i class="fa fa-close"></i></button></td></tr>';
+                                    }
+                                    $(supportingWrapper).append(markup);
+                                    });
+                                    })
+                                    ;
 
         </script>
 

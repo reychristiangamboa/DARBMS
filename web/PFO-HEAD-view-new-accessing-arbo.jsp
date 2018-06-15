@@ -154,36 +154,17 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>APCP Type</label>
-                                            <input type="text" value="Crop Production" class="form-control" disabled />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Loan Reason</label>
-                                            <input type="text" class="form-control" value="<%out.print(r.getLoanReason().getLoanReasonDesc());%>">
+                                            <input type="text" value="<%=r.getApcpTypeDesc()%>" class="form-control" disabled />
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Other Reason</label>
-                                            <input type="text" id="otherReason" name="otherReason" class="form-control" disabled>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-1">
-                                    </div>
                                     <div class="col-md-4">
                                         <!-- /.form-group -->
                                         <div class="form-group">
                                             <label for="Area">Land Area</label>
-                                            <input type="number" value="<%out.print(r.getHectares());%>" class="form-control" name="landArea" id="Area" required>
+                                            <input type="number" step=".01" value="<%=r.getHectares()%>" class="form-control" name="landArea" id="Area" disabled>
                                         </div>
                                         <!-- /.form-group -->
-                                    </div>
-                                    <div class="col-md-2">
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
@@ -192,11 +173,39 @@
                                                 <div class="input-group-addon">
                                                     <i>&#8369;</i>
                                                 </div>
-                                                <input id="loanAmount" value="<%out.print(currency.format(r.getLoanAmount()));%>" name="loanAmount" class="form-control numberOnly" required>
+                                                <input id="loanAmount" value="<%=r.getLoanAmount()%>" name="loanAmount" class="form-control numberOnly" disabled>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-1">
+
+
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <div class="form-group">
+                                            <label for="">Loan Term</label>
+                                            <input type="text" class="form-control" value="<%=r.getLoanReason().getLoanTerm().getLoanTermDesc()%>" disabled/>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class="form-group">
+                                            <label for="">Loan Duration (Months)</label>
+                                            <input id="minDuration" value="<%=r.getLoanTermDuration()%>" class="form-control" value="12" max="36" name="loanTermDuration" disabled/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Loan Reason</label>
+                                            <input type="text" class="form-control" value="<%=r.getLoanReason().getLoanReasonDesc()%>" disabled/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Other Reason</label>
+                                            <input type="text" id="otherReason" name="otherReason" class="form-control" value="<%=r.getLoanReason().getOtherReason()%>" disabled />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -207,6 +216,7 @@
                                                 <tr>
                                                     <th>Full Name</th> 
                                                     <th>Membership Date</th> 
+                                                    <th>COMAT</th> 
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -214,6 +224,11 @@
                                                 <tr>
                                                     <td><%out.print(arb.getFLName());%></td>
                                                     <td><%out.print(f.format(arb.getMemberSince()));%></td>
+                                                    <%if(arb.getIsCOMAT() > 0){%>
+                                                    <td>&checkmark;</td>
+                                                    <%}else{%>
+                                                    <td>&nbsp;</td>
+                                                    <%}%>
                                                 </tr>
                                                 <%}%>
                                             </tbody>
@@ -221,6 +236,7 @@
                                                 <tr>
                                                     <th>Full Name</th> 
                                                     <th>Membership Date</th> 
+                                                    <th>COMAT</th> 
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -262,7 +278,7 @@
                                     <div class="col-xs-12">
                                         <div class="form-group">
                                             <label for="">Remarks</label>
-                                            <textarea name="remarks" cols="10" rows="8" class="form-control"><%out.print(r.getRemarks());%></textarea>
+                                            <textarea name="remarks" cols="10" rows="8" class="form-control" disabled><%out.print(r.getRemarks());%></textarea>
                                         </div>
                                     </div>
                                 </div>

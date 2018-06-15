@@ -392,6 +392,14 @@
         <servlet-name>RequestConduit</servlet-name>
         <servlet-class>com.MVC.Controller.RequestConduit</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewAPCP</servlet-name>
+        <servlet-class>com.MVC.Controller.ViewAPCP</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VerifyDocuments</servlet-name>
+        <servlet-class>com.MVC.Controller.VerifyDocuments</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -783,6 +791,14 @@
     <servlet-mapping>
         <servlet-name>RequestConduit</servlet-name>
         <url-pattern>/RequestConduit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewAPCP</servlet-name>
+        <url-pattern>/ViewAPCP</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VerifyDocuments</servlet-name>
+        <url-pattern>/VerifyDocuments</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

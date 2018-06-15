@@ -126,7 +126,6 @@ public class APCPRequest {
         this.loanTermDuration = loanTermDuration;
     }
     
-
     public double getLoanAmount() {
         return loanAmount;
     }
@@ -448,6 +447,17 @@ public class APCPRequest {
         }
 
         return sb.toString();
+    }
+    
+    public boolean checkARBOHadAPCPOrientation() {
+        for (CAPDEVPlan plan : this.plans) {
+            for (CAPDEVActivity act : plan.getActivities()) {
+                if (plan.getPlanStatus() == 5 && act.getActivityType() == 2) { // IMPLEMENTED and APCP ORIENTATION
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
     

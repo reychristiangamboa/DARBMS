@@ -13,6 +13,7 @@ import java.sql.Date;
  */
 public class APCPDocument {
     
+    private int id;
     private int document;
     private String documentDesc;
     private String documentName;
@@ -22,6 +23,14 @@ public class APCPDocument {
     private boolean isApproved;
     private int isRequired;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public int getDocument() {
         return document;
     }

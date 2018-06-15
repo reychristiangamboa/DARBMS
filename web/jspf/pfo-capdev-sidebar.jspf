@@ -116,18 +116,6 @@
                     <i class="fa fa-dashboard"></i> <span> Dashboard</span>
                 </a>
             </li>
-            <!--<li class="treeview">
-                <a href="#">
-                    <i class="fa fa-users"></i> <span>ARBOs</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="provincial-field-officer-arbo-list.jsp"><i class="fa fa-dot-circle-o"></i> View All</a></li>
-                    <li><a href="provincial-field-officer-add-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Create ARBO</a></li>
-                </ul>
-            </li>-->
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-industry"></i> <span>CAPDEV</span>

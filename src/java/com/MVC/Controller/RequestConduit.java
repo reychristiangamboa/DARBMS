@@ -34,36 +34,41 @@ public class RequestConduit extends BaseServlet {
         APCPRequest r = new APCPRequest();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        r.setArboID(Integer.parseInt(request.getParameter("arboID")));
-        r.setApcpType(1); // since New Accessing, automatically set to Crop Production
-        r.setLoanAmount(Double.parseDouble(request.getParameter("loanAmount")));
-        r.setHectares(Double.parseDouble(request.getParameter("landArea")));
-        r.setRemarks(request.getParameter("remarks"));
+        String[] vals = request.getParameter("loanAmount").split(",");
+        StringBuilder sb = new StringBuilder();
+        for (String val : vals) {
+            sb.append(val);
+        }
 
-        // RETURNS newly added REQUEST ID
-        int requestID = dao.requestAPCP(r, (Integer) session.getAttribute("userID"));
-        
-        // INSERTS into apcp_loanReason table
-        dao.setAPCPLoanReason(requestID, Integer.parseInt(request.getParameter("loanReason")), Integer.parseInt(request.getParameter("loanTerm")), request.getParameter("otherReason"));
+        String finLoan = sb.toString();
+        double loanAmount = Double.parseDouble(finLoan);
 
         String[] documentIDsStr = request.getParameterValues("documentID"); // document referenceID
         String[] dateSubmittedStr = request.getParameterValues("dateSubmitted");
         String[] documentNameStr = request.getParameterValues("documentName");
-        System.out.println(documentIDsStr.length + " " + dateSubmittedStr.length + " " + documentNameStr.length);
         String[] arbIDsStr = request.getParameterValues("arbID");
         //ArrayList<APCPDocument> documentList = new ArrayList();
 
+        r.setArboID(Integer.parseInt(request.getParameter("arboID")));
+        r.setApcpType(1); // since New Accessing, automatically set to Crop Production
+        r.setLoanAmount(loanAmount);
+        r.setHectares(Double.parseDouble(request.getParameter("landArea")));
+        r.setRemarks(request.getParameter("remarks"));
+        r.setLoanTermDuration(Integer.parseInt(request.getParameter("loanTermDuration")));
+
         r.setRequestStatus(0); // FOR CONDUIT APPROVAL
         for (int a = 0; a < dateSubmittedStr.length; a++) {
-            
-            System.out.println(dateSubmittedStr[a]);
-            if (dateSubmittedStr[a] == null) {
-                System.out.println(dateSubmittedStr[a]);
+
+            if (dateSubmittedStr[a].isEmpty()) {
                 r.setRequestStatus(8); // INCOMPLETE
             }
         }
-        
-        
+
+        // RETURNS newly added REQUEST ID
+        int requestID = dao.requestAPCPNewAccess(r, (Integer) session.getAttribute("userID"));
+
+        // INSERTS into apcp_loanReason table
+        dao.setAPCPLoanReason(requestID, Integer.parseInt(request.getParameter("loanReason")), Integer.parseInt(request.getParameter("loanTerm")), request.getParameter("otherReason"));
 
         for (int i = 0; i < documentIDsStr.length; i++) {
             System.out.println("DOCUMENT: " + documentIDsStr[i]);
@@ -78,7 +83,7 @@ public class RequestConduit extends BaseServlet {
                     dateSubmitted = new java.sql.Date(parsedDateSubmitted.getTime());
                     doc.setDateSubmitted(dateSubmitted); // set dateSubmitted
                     doc.setIsApproved(true);
-                }else{  // dateSubmitted is null
+                } else {  // dateSubmitted is null
                     doc.setIsApproved(false);
                 }
             } catch (ParseException ex) {
@@ -102,9 +107,9 @@ public class RequestConduit extends BaseServlet {
                 System.out.println("Recipient added!");
             }
         }
-        
-        request.setAttribute("success", "CONDUIT requested!");
-        request.getRequestDispatcher("/PFO-APCP/provincial-field-officer-request-access-select-arbo").forward(request,response);
+
+        request.setAttribute("success", "CONDUIT access requested!");
+        request.getRequestDispatcher("PFO-APCP-request-access-select-arbo.jsp").forward(request, response);
 
     }
 

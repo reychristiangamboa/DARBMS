@@ -47,6 +47,7 @@ public class ARBDAO {
             if (rs.next()) {
                 arb.setArbID(rs.getInt("arbID"));
                 arb.setArboID(rs.getInt("arboID"));
+                arb.setIsCOMAT(rs.getInt("isCOMAT"));
                 arb.setFirstName(rs.getString("firstName"));
                 arb.setMiddleName(rs.getString("middleName"));
                 arb.setLastName(rs.getString("lastName"));
@@ -137,6 +138,7 @@ public class ARBDAO {
                 ARB arb = new ARB();
                 arb.setArbID(rs.getInt("arbID"));
                 arb.setArboID(rs.getInt("arboID"));
+                arb.setIsCOMAT(rs.getInt("isCOMAT"));
                 arb.setFirstName(rs.getString("firstName"));
                 arb.setMiddleName(rs.getString("middleName"));
                 arb.setLastName(rs.getString("lastName"));

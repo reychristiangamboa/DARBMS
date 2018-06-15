@@ -15,7 +15,7 @@
         <div class="wrapper">
 
             <%@include file="/jspf/field-officer-navbar.jspf" %>
-            <%@include file="/jspf/central-sidebar.jspf" %>
+            <%@include file="/jspf/provincial-field-officer-sidebar.jspf" %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">

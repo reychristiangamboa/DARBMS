@@ -1,0 +1,206 @@
+
+
+<div class="row" style="margin-top: 10px">
+    <div class="col-xs-4">
+        <div class="form-group">
+            <label for="status">Status</label>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="status" id="status" value="<%=req.getRequestStatusDesc()%>" disabled>
+        </div>
+    </div>
+    <div class="col-xs-4"></div>
+    <div class="col-xs-4">
+        <div class="form-group">
+            <label for="ltn">Land Bank Reference No.</label>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" value="<%if(req.getLoanTrackingNo() > 0){
+                        out.print(req.getLoanTrackingNo());
+                   } else {
+                        out.print("N/A");
+                   }
+                   %>" disabled>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Loan Reason</label>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%if (req.getLoanReason().getLoanReasonDesc().equals("Others")){
+                   out.print(req.getLoanReason().getLoanReasonDesc() + " (" + req.getLoanReason().getOtherReason() + ")");
+                   } else {
+                        out.print(req.getLoanReason().getLoanReasonDesc());
+                   }
+                   %>" disabled>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>APCP Type</label>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getApcpTypeDesc()%>" disabled></div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Loan Term</label>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getLoanTermDuration()%> Months" disabled></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Loan Area</label>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getHectares()%>" disabled>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Loan Amount</label>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <i>&#8369;</i>
+                </div>
+                <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getLoanAmount()%>" disabled></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Loan Duration</label>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getLoanTermDuration()%>" disabled></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <label>Loan Recipients</label>
+        <table id="example3" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Full Name</th> 
+                    <th>Membership Date</th> 
+                    <th>COMAT</th> 
+                </tr>
+            </thead>
+            <tbody>
+                <%for(ARB arb : arbo.getArbList()){%>
+                <tr>
+                    <td><input type="checkbox" name="arbID" value="<%out.print(arb.getArbID());%>"></td>
+                    <td><%out.print(arb.getFLName());%></td>
+                    <td><%out.print(f.format(arb.getMemberSince()));%></td>
+                    <%if(arb.getIsCOMAT() > 0){%>
+                    <td>&checkmark;</td>
+                    <%}else{%>
+                    <td>&nbsp;</td>
+                    <%}%>
+                </tr>
+                <%}%>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Action</th>
+                    <th>Full Name</th> 
+                    <th>COMAT</th> 
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Date Requested (Date Completed)</label>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" value="<% if (req.getDateRequested() != null && req.getDateCompleted() != null) {
+                                out.print(f.format(req.getDateRequested()) + " (" + f.format(req.getDateCompleted()) + ")");
+                            } else {
+                                out.print(f.format(req.getDateRequested()) + " (Incomplete)");
+                            }
+            %>" disabled/>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Requested To</label>
+            <% u1 = userDAO.searchUser(req.getRequestedTo());%>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" value="<%=u1.getFullName()%>" disabled>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Date Cleared</label>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" value="<% if (req.getDateCleared() != null) {
+                                out.print(f.format(req.getDateCleared()));
+                            } else {
+                                out.print("N/A");
+                            }%>" disabled/>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Cleared By</label>
+            <% if (req.getClearedBy() > 0) {
+                                u2 = userDAO.searchUser(req.getClearedBy()
+                                );
+                            } %>
+            <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%if (req.getClearedBy() > 0) {
+                    out.print(u2.getFullName());
+                } else {
+                    out.print("N/A");
+                }%>" disabled/>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Date Endorsed</label>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" value="<% if (req.getDateEndorsed() != null) {
+                                out.print(f.format(req.getDateEndorsed()));
+                            } else {
+                            out.print("N/A");
+                        }%>" disabled/>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Endorsed By</label>
+            <% if (req.getEndorsedBy() > 0) {
+                                u2 = userDAO.searchUser(req.getEndorsedBy()
+                                );
+                            } %>
+            <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%if (req.getEndorsedBy() > 0) {
+                    out.print(u2.getFullName());
+                } else {
+                    out.print("N/A");
+                }%>" disabled/>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Date Approved</label>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<% if (req.getDateApproved() != null) {
+                                out.print(f.format(req.getDateApproved()));
+                            } else {
+                            out.print("N/A");
+                        }%>" disabled/>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Approved By</label>
+            <% if (req.getApprovedBy() > 0) {
+                                u2 = userDAO.searchUser(req.getApprovedBy()
+                                );
+                            } %>
+            <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%if (req.getApprovedBy() > 0) {
+                    out.print(u2.getFullName());
+                } else {
+                    out.print("N/A");
+                }%>" disabled/>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-group">
+            <label for="">Remarks</label>
+            <textarea name="remarks" cols="20" rows="8" class="form-control" value="<%=req.getRemarks()%>" disabled></textarea>
+        </div>
+    </div>
+</div>

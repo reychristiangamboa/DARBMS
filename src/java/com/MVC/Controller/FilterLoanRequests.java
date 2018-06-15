@@ -41,6 +41,8 @@ public class FilterLoanRequests extends BaseServlet {
             ArrayList<APCPRequest> approvedRequests = dao.getAllProvincialRequestsByStatus(4, provinceIDs);
             ArrayList<APCPRequest> releasedRequests = dao.getAllProvincialRequestsByStatus(5, provinceIDs);
             ArrayList<APCPRequest> forReleaseRequests = dao.getAllProvincialRequestsByStatus(7, provinceIDs);
+            ArrayList<APCPRequest> incompleteRequests = dao.getAllProvincialRequestsByStatus(8, provinceIDs);
+            ArrayList<APCPRequest> forConduitApprovalRequests = dao.getAllProvincialRequestsByStatus(0, provinceIDs);
 
             request.setAttribute("requested", requestedRequests);
             request.setAttribute("cleared", clearedRequests);
@@ -48,7 +50,9 @@ public class FilterLoanRequests extends BaseServlet {
             request.setAttribute("approved", approvedRequests);
             request.setAttribute("released", releasedRequests);
             request.setAttribute("forRelease", forReleaseRequests);
-            request.getRequestDispatcher("view-filtered-apcp-status.jsp").forward(request, response);
+            request.setAttribute("incomplete", incompleteRequests);
+            request.setAttribute("forConduitApproval", forConduitApprovalRequests);
+            request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         
         }  else if(request.getParameter("filterBy").equals("regions")){
             ArrayList<Integer> regionIDs = new ArrayList();
@@ -65,6 +69,9 @@ public class FilterLoanRequests extends BaseServlet {
             ArrayList<APCPRequest> approvedRequests = dao.getAllRegionalRequestsByStatus(4, regionIDs);
             ArrayList<APCPRequest> releasedRequests = dao.getAllRegionalRequestsByStatus(5, regionIDs);
             ArrayList<APCPRequest> forReleaseRequests = dao.getAllRegionalRequestsByStatus(7, regionIDs);
+            ArrayList<APCPRequest> incompleteRequests = dao.getAllRegionalRequestsByStatus(8, regionIDs);
+            ArrayList<APCPRequest> forConduitApprovalRequests = dao.getAllRegionalRequestsByStatus(0, regionIDs);
+            
 
             request.setAttribute("requested", requestedRequests);
             request.setAttribute("cleared", clearedRequests);
@@ -72,6 +79,8 @@ public class FilterLoanRequests extends BaseServlet {
             request.setAttribute("approved", approvedRequests);
             request.setAttribute("released", releasedRequests);
             request.setAttribute("forRelease", forReleaseRequests);
+            request.setAttribute("incomplete", incompleteRequests);
+            request.setAttribute("forConduitApproval", forConduitApprovalRequests);
             request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         }
 

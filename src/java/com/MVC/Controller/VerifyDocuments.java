@@ -5,6 +5,7 @@
  */
 package com.MVC.Controller;
 
+import com.MVC.DAO.APCPRequestDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -16,15 +17,25 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author ijJPN
  */
-public class ViewNewAccessingARBO extends BaseServlet {
+public class VerifyDocuments extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        request.setAttribute("requestID", id);
-        request.getRequestDispatcher("PFO-HEAD-view-new-accessing-arbo.jsp").forward(request, response);
+        
+        String [] documentIDs = request.getParameterValues("documentID");
+        APCPRequestDAO dao = new APCPRequestDAO();
+        
+        
+        for(String idStr : documentIDs){
+            if(dao.approveDocument(Integer.parseInt(idStr))){
+            }
+        }
+        
+        int requestID = Integer.parseInt(request.getParameter("requestID"));
+        
+        request.setAttribute("requestID", requestID);
+        request.getRequestDispatcher("view-apcp-application.jsp").forward(request, response);
+        
     }
-
-    
 
 }

@@ -25,6 +25,7 @@ public class APCPRequestDAO {
     public ArrayList<APCPRequest> getAllRequests() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
+        CAPDEVDAO dao = new CAPDEVDAO();
         ArrayList<APCPRequest> apcpRequest = new ArrayList();
         try {
             String query = "SELECT * FROM apcp_requests r "
@@ -62,6 +63,7 @@ public class APCPRequestDAO {
                 r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
                 r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
                 r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
+                r.setPlans(dao.getAllCAPDEVPlanByRequest(rs.getInt("requestID")));
                 apcpRequest.add(r);
             }
             rs.close();
@@ -94,6 +96,7 @@ public class APCPRequestDAO {
     public APCPRequest getRequestByID(int requestID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
+        CAPDEVDAO dao = new CAPDEVDAO();
         APCPRequest r = new APCPRequest();
         try {
             String query = "SELECT * FROM apcp_requests r "
@@ -131,6 +134,7 @@ public class APCPRequestDAO {
                 r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
                 r.setRepayments(getAllRepaymentsByRequest(rs.getInt("requestID")));
                 r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
+                r.setPlans(dao.getAllCAPDEVPlanByRequest(rs.getInt("requestID")));
             }
             rs.close();
             pstmt.close();
@@ -155,8 +159,8 @@ public class APCPRequestDAO {
         try {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`apcp_requests` (`arboID`, `loanAmount`, "
-                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`,`requestStatus`,`apcpType`,`cropProd`) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`,`requestStatus`,`apcpType`,`cropProd`,`loanTermDuration`) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
             p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setInt(1, r.getArboID());
             p.setDouble(2, r.getLoanAmount());
@@ -171,6 +175,61 @@ public class APCPRequestDAO {
             p.setInt(7, r.getRequestStatus());
             p.setInt(8, r.getApcpType());
             p.setInt(9, r.getCropProdID());
+            p.setInt(10, r.getLoanTermDuration());
+            
+
+            p.executeUpdate();
+
+            ResultSet rs = p.getGeneratedKeys();
+
+            if (rs.next()) {
+                int n = rs.getInt(1);
+                p.close();
+                con.commit();
+                con.close();
+                return n;
+            }
+
+            p.close();
+            con.commit();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
+    public int requestAPCPNewAccess(APCPRequest r, int userID) {
+
+        PreparedStatement p = null;
+        Connection con = null;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        con = myFactory.getConnection();
+        try {
+            con.setAutoCommit(false);
+            String query = "INSERT INTO `dar-bms`.`apcp_requests` (`arboID`, `loanAmount`, "
+                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`,`requestStatus`,`apcpType`,`loanTermDuration`) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+            p.setInt(1, r.getArboID());
+            p.setDouble(2, r.getLoanAmount());
+            p.setDouble(3, r.getHectares());
+            p.setString(4, r.getRemarks());
+
+            Long l = System.currentTimeMillis();
+            Date d = new Date(l);
+
+            p.setDate(5, d);
+            p.setInt(6, userID);
+            p.setInt(7, r.getRequestStatus());
+            p.setInt(8, r.getApcpType());
+            p.setInt(9, r.getLoanTermDuration());
             
 
             p.executeUpdate();
@@ -361,12 +420,12 @@ public class APCPRequestDAO {
 
     public ArrayList<APCPRequest> getAllProvincialRequestsByStatus(int statusID, int provinceID) {
         ARBODAO dao = new ARBODAO();
-        ArrayList<APCPRequest> all = new ArrayList();
+        ArrayList<APCPRequest> all = getAllRequests();
         ArrayList<APCPRequest> filtered = new ArrayList();
         
         for(APCPRequest r : all){
             ARBO a = dao.getARBOByID(r.getArboID());
-            if(r.getRequestID() == statusID && a.getProvOfficeCode() == provinceID){
+            if(r.getRequestStatus()== statusID && a.getProvOfficeCode() == provinceID){
                 filtered.add(r);
             }
         }
@@ -520,7 +579,7 @@ public class APCPRequestDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE apcp_documents d SET isApproved=1 WHERE d.document = ?";
+            String query = "UPDATE apcp_documents d SET isApproved=1 WHERE d.id = ?";
             p = con.prepareStatement(query);
             p.setInt(1, document);
 
@@ -1362,6 +1421,7 @@ public class APCPRequestDAO {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 APCPDocument d = new APCPDocument();
+                d.setId(rs.getInt("id"));
                 d.setDocument(rs.getInt("document"));
                 d.setDocumentDesc(rs.getString("documentDesc"));
                 d.setDocumentName(rs.getString("documentName"));

@@ -32,14 +32,12 @@ public class SelectARBORequest extends BaseServlet {
 
         if (!arbo.isSixMonthsOperational()) {
             request.setAttribute("errMessage", "ARBO is not 6 months operational. Please choose again.");
-            request.getRequestDispatcher("provincial-field-officer-request-access-select-arbo.jsp").forward(request, response);
+            request.getRequestDispatcher("PFO-APCP-request-access-select-arbo.jsp").forward(request, response);
         } else {
-            if (arbo.getQualifiedSince() == null) {
-                request.setAttribute("newAccessing", true);
-                request.getRequestDispatcher("provincial-field-officer-request-apcp-access.jsp").forward(request, response);
-            } else {
-                request.getRequestDispatcher("provincial-field-officer-request-loan.jsp").forward(request, response);
-            }
+
+            request.setAttribute("newAccessing", true);
+            request.getRequestDispatcher("PFO-APCP-request-apcp-access.jsp").forward(request, response);
+
         }
 
     }
