@@ -124,8 +124,8 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="/PFO-APCP/provincial-field-officer-request-loan-select-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Request APCP</a></li>
-                    <li><a href="/PFO-APCP/provincial-field-officer-request-access-select-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Request Conduit Access</a></li>
+                    <li><a href="PFO-APCP-request-loan-select-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Request APCP</a></li>
+                    <li><a href="PFO-APCP-request-access-select-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Request Conduit Access</a></li>
                     <li><a href="view-apcp-status.jsp"><i class="fa fa-dot-circle-o"></i> View APCP Status</a></li>
                 </ul>
             </li>

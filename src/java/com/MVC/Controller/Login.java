@@ -61,15 +61,15 @@ public class Login extends BaseServlet {
                     lDAO.addLog(l);
 
                     if (u.getUserType() == 1) {   //  ADMINISTRATOR
-                        request.getRequestDispatcher("/Admin/admin-system-logs.jsp").forward(request, response);
+                        request.getRequestDispatcher("admin-system-logs.jsp").forward(request, response);
                     } else if (u.getUserType() == 2) {   //  POINT PERSON
                         request.getRequestDispatcher("point-person-view-capdev-plans.jsp").forward(request, response);
                     } else if (u.getUserType() == 3) {   //  PROVINCIAL FIELD OFFICER
-                        request.getRequestDispatcher("provincial-field-officer-home.jsp").forward(request, response);
+                        request.getRequestDispatcher("PFO-HEAD-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 4) {   //  REGIONAL FIELD OFFICER
-                        request.getRequestDispatcher("regional-field-officer-home.jsp").forward(request, response);
+                        request.getRequestDispatcher("RFO-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 5) {   //  CENTRAL OFFICER
-                        request.getRequestDispatcher("/CO/central-home.jsp").forward(request, response);
+                        request.getRequestDispatcher("CO-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 6) {   //  PFO-APCP
                         request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
                     }

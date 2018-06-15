@@ -102,7 +102,7 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
             <li>
-                <a href="provincial-field-officer-home.jsp">
+                <a href="PFO-HEAD-home.jsp">
                     <i class="fa fa-dashboard"></i> <span> Dashboard</span>
                 </a>
             </li>
@@ -115,7 +115,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="provincial-field-officer-arbo-list.jsp"><i class="fa fa-dot-circle-o"></i> View All</a></li>
-                    <li><a href="provincial-field-officer-add-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Create ARBO</a></li>
+                    <li><a href="PFO-HEAD-add-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Create ARBO</a></li>
                 </ul>
             </li>
             <li class="treeview">
@@ -126,10 +126,8 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="provincial-field-officer-request-loan-select-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Request APCP</a></li>
-                    <li><a href="provincial-field-officer-request-access-select-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Request Conduit Access</a></li>
                     <li><a href="view-apcp-status.jsp"><i class="fa fa-dot-circle-o"></i> View APCP Status</a></li>
-                    <li><a href=""><i class="fa fa-dot-circle-o"></i> View Conduit Requests</a></li>
+                    <li><a href="view-new-accessing-conduits.jsp"><i class="fa fa-dot-circle-o"></i> View Conduit Requests</a></li>
                 </ul>
             </li>
             <li class="treeview">
@@ -141,7 +139,6 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="view-capdev-status.jsp"><i class="fa fa-dot-circle-o"></i> View CAPDEV Status</a></li>
-                    <li><a href="provincial-field-officer-select-request.jsp"><i class="fa fa-dot-circle-o"></i> Create CAPDEV Proposal</a></li>
 
                 </ul>
             </li>
@@ -160,7 +157,7 @@
                 </ul>
             </li>
             <li>
-                <a href="provincial-field-officer-manage-past-due-reasons.jsp">
+                <a href="PFO-HEAD-manage-past-due-reasons.jsp">
                     <i class="fa fa-hourglass"></i> <span> Manage Past Due Reasons</span>
                 </a>
             </li>

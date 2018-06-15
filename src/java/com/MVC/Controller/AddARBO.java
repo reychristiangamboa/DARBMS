@@ -40,7 +40,7 @@ public class AddARBO extends BaseServlet {
             arbo.setProvOfficeCode((Integer) session.getAttribute("provOfficeCode"));
             
             session.setAttribute("arbo", arbo);
-            request.getRequestDispatcher("provincial-field-officer-add-arb.jsp").forward(request, response);
+            request.getRequestDispatcher("PFO-HEAD-add-arb.jsp").forward(request, response);
 
         }
     }
