@@ -54,7 +54,7 @@
         <div class="form-group">
             <label>Loan Amount</label>
             <div class="input-group">
-                <div class="input-group-addon">
+                <div class="input-group-addon" style="border-top: transparent; border-left: transparent;">
                     <i>&#8369;</i>
                 </div>
                 <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getLoanAmount()%>" disabled></div>

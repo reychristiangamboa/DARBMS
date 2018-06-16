@@ -1,0 +1,54 @@
+<div class="panel box box-success">
+    <div class="box-header with-border">
+        <h4 class="box-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                Create Capacity Development (CAPDEV) Plan
+            </a>
+        </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="box-body">
+            <form role="form" method="post" action="SendCAPDEVProposal">
+                <div class="box-body">
+
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <label>CAPDEV Proposal Document Tracking No.</label>
+                            <input type="text" name="dtn" class="form-control" placeholder="DTN" required/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <center>
+                            <div class="btn-group">
+                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Add Activity <span class="caret"></span></button>
+                                <ul id="optional-list" class="dropdown-menu" role="menu">
+                                    <%for(CAPDEVActivity c : categories){%>
+                                    <%if(req.getIsNewAccessingRequest() > 0 && c.getNewAccessingCategories()){ %>
+                                    <li><a class="optional-document" data-documentID="<%out.print(c.getActivityCategory());%>" data-documentDesc="<%out.print(c.getActivityCategoryDesc());%>"><%out.print(c.getActivityCategoryDesc());%></a></li>
+                                        <%}else if(req.getIsNewAccessingRequest() == 0 && c.getExistingCategories()){%>
+                                    <li><a class="optional-document" data-documentID="<%out.print(c.getActivityCategory());%>" data-documentDesc="<%out.print(c.getActivityCategoryDesc());%>"><%out.print(c.getActivityCategoryDesc());%></a></li>
+                                        <%}%>
+                                        <%}%>
+                                </ul>
+                            </div>
+                        </center>
+                    </div>
+
+                    <div class="input_fields_wrap" id="activityWrapper">
+                        
+
+                    </div>
+
+                </div>
+                <div class="box-footer">
+                    <input type="hidden" name="requestID" value="<%out.print(req.getRequestID());%>">
+                    <%if((Integer)request.getAttribute("pastDueID") != null){%>
+                    <input type="hidden" name="pastDueID" value="<%out.print((Integer)request.getAttribute("pastDueID"));%>">
+                    <%}%>
+                    <button type="submit" name="manual" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i>Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

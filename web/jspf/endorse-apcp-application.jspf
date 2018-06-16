@@ -1,1 +1,37 @@
+<div class="panel box box-success">
+    <div class="box-header with-border">
+        <h4 class="box-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                Endorse APCP Request
+            </a>
+        </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="box-body">
+            <div class="box-header with-border text-center">
+                <h5 class="box-title"><strong>Endorse APCP Request</strong></h5>
+            </div>
 
+            <br />
+
+            <form method="post">
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="">Loan Application Number</label>
+                            <input type="text" name="ltn" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="box-footer">
+                    <input type="hidden" name="requestID" value="<%out.print(req.getRequestID());%>">
+                    <button type="submit" name="manual" onclick="form.action = 'EndorseAPCPRequest'" class="btn btn-primary pull-right"> Endorse</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

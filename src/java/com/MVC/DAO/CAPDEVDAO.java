@@ -707,6 +707,39 @@ public class CAPDEVDAO {
         }
         return 0;
     }
+    
+    public ArrayList<CAPDEVActivity> getCAPDEVCategories() {
+
+        ArrayList<CAPDEVActivity> caList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM `dar-bms`.ref_activitycategory;";
+            PreparedStatement p = con.prepareStatement(query);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                CAPDEVActivity ca = new CAPDEVActivity();
+                ca.setActivityCategory(rs.getInt("activityCategory"));
+                ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
+                caList.add(ca);
+            }
+            con.commit();
+            rs.close();
+            p.close();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return caList;
+    }
 
     public ArrayList<CAPDEVActivity> getCAPDEVPlanActivities(int planID) {
 

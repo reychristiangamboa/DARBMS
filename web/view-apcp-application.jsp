@@ -97,39 +97,27 @@
                                 <div class="panel box box-primary">
                                     <div class="box-header with-border">
                                         <h4 class="box-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                                                ARBO Information
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseOne" class="panel-collapse collapse in">
-                                        <div class="box-body">
-                                            <%@include file="/jspf/arbo-information.jspf" %>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel box box-success">
-                                    <div class="box-header with-border">
-                                        <h4 class="box-title">
                                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-                                                Action Screen
+                                                ARBO Information
                                             </a>
                                         </h4>
                                     </div>
                                     <div id="collapseThree" class="panel-collapse collapse">
                                         <div class="box-body">
-                                            <%
-                                            if (req.getRequestStatus() == 1){%>
-                                            <%@include file="/jspf/clear-apcp-application.jspf" %>
-                                            <%}else if(req.getRequestStatus() == 2){%>
-                                            <%@include file="/jspf/endorse-apcp-application.jspf" %>
-                                            <%}else if(req.getRequestStatus() == 3){%>
-                                            <%@include file="/jspf/approve-apcp-application.jspf" %>
-                                            <%}
-                                            %>
+                                            <%@include file="/jspf/arbo-information.jspf" %>
                                         </div>
                                     </div>
-                                </div>
+                                        </<d></d>iv>
+                                <%
+                                            if (req.getRequestStatus() == 1){%>
+                                <%@include file="/jspf/clear-apcp-application.jspf" %>
+                                <%}else if(req.getRequestStatus() == 2){%>
+                                <%@include file="/jspf/endorse-apcp-application.jspf" %>
+                                <%}else if(req.getRequestStatus() == 3){%>
+                                <%@include file="/jspf/approve-apcp-application.jspf" %>
+                                <%}
+                                %>
+
                                 <!-- /.box-body -->
                             </div>
                             <!-- /.box -->

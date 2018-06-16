@@ -27,7 +27,7 @@ public class CreateCAPDEVProposal extends BaseServlet {
             request.setAttribute("pastDueID", Integer.parseInt(request.getParameter("pastDueID")));
         }
 
-        request.getRequestDispatcher("provincial-field-officer-create-capdev-proposal.jsp").forward(request, response);
+        request.getRequestDispatcher("PFO-CAPDEV-create-capdev-proposal.jsp").forward(request, response);
     }
 
 }

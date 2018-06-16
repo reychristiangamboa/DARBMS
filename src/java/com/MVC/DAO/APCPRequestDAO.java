@@ -129,6 +129,7 @@ public class APCPRequestDAO {
                 r.setRequestStatus(rs.getInt("requestStatus"));
                 r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
                 r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
+                r.setIsNewAccessingRequest(rs.getInt("isNewAccessingRequest"));
                 r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
                 r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
                 r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
@@ -159,8 +160,8 @@ public class APCPRequestDAO {
         try {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`apcp_requests` (`arboID`, `loanAmount`, "
-                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`,`requestStatus`,`apcpType`,`cropProd`,`loanTermDuration`) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`,`requestStatus`,`apcpType`,`cropProd`,`loanTermDuration`,`isNewAccessingRequest`) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);";
             p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setInt(1, r.getArboID());
             p.setDouble(2, r.getLoanAmount());
@@ -176,6 +177,7 @@ public class APCPRequestDAO {
             p.setInt(8, r.getApcpType());
             p.setInt(9, r.getCropProdID());
             p.setInt(10, r.getLoanTermDuration());
+            p.setInt(11, 0);
             
 
             p.executeUpdate();
@@ -214,8 +216,8 @@ public class APCPRequestDAO {
         try {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`apcp_requests` (`arboID`, `loanAmount`, "
-                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`,`requestStatus`,`apcpType`,`loanTermDuration`) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`,`requestStatus`,`apcpType`,`loanTermDuration`,`isNewAccessingRequest`) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
             p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setInt(1, r.getArboID());
             p.setDouble(2, r.getLoanAmount());
@@ -230,6 +232,7 @@ public class APCPRequestDAO {
             p.setInt(7, r.getRequestStatus());
             p.setInt(8, r.getApcpType());
             p.setInt(9, r.getLoanTermDuration());
+            p.setInt(10, 1);
             
 
             p.executeUpdate();

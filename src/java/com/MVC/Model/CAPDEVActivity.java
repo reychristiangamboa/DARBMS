@@ -177,6 +177,7 @@ public class CAPDEVActivity {
         
         return rate;
     }
+    
     public int getAttendance(ArrayList<CAPDEVActivity> activities){
         int present = 0;
         
@@ -187,6 +188,26 @@ public class CAPDEVActivity {
         }
         
         return present;
+    }
+    
+    public boolean getNewAccessingCategories(){
+        
+        if(this.activityCategory == 2 || this.activityCategory == 5 || this.activityCategory == 7 || this.activityCategory == 9 || this.activityCategory == 10){
+            return true;
+        }
+        
+        return false;
+        
+    }
+    
+    public boolean getExistingCategories(){
+        
+        if(this.activityCategory == 3 || this.activityCategory == 6 || this.activityCategory == 8 || this.activityCategory == 9 || this.activityCategory == 10){
+            return true;
+        }
+        
+        return false;
+        
     }
     
 }

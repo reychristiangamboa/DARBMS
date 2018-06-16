@@ -41,6 +41,8 @@
             <%@include file="jspf/point-person-sidebar.jspf"%>
             <%} else if (userType == 6) {%>
             <%@include file="jspf/pfo-apcp-sidebar.jspf"%>
+            <%} else if (userType == 7) {%>
+            <%@include file="jspf/pfo-capdev-sidebar.jspf"%>
             <%}%>
 
             <%
@@ -67,7 +69,7 @@
                 ArrayList<APCPRequest> incompleteRequests = new ArrayList();
                 ArrayList<APCPRequest> forConduitApprovalRequests = new ArrayList();
     
-                if(userType == 3 || userType == 2 || userType == 6){
+                if(userType == 3 || userType == 2 || userType == 6 || userType == 7){
                     ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
                     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
                     cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
@@ -361,8 +363,12 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
+                                                <%if(userType == 7){%>
+                                                <td><a href="CreateCAPDEVProposal?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else{%>
                                                 <td><a href="ViewAPCP?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                    <%}%>
+                                                    <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
                                                 <%}else{%> <!--LOAN REASON-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
@@ -416,13 +422,12 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <%if (userType == 6){%>
-                                                <td><a data-toggle="modal" data-target="#cleared-modal<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}else if (userType == 4 || userType == 5 || userType == 2 || userType == 3){%>
-                                                <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <%if(userType == 7){%>
+                                                <td><a href="CreateCAPDEVProposal?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ViewAPCP?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
-                                                    <%
-                                                if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                    <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
                                                 <%}else{%> <!--LOAN REASON-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
@@ -434,37 +439,7 @@
                                                 <td><span class="label label-primary"><%out.print(r.getRequestStatusDesc());%></span></td>
                                             </tr>
 
-                                        <div class="modal fade" id="cleared-modal<%out.print(r.getRequestID());%>">
-                                            <div class="modal-dialog modal-sm">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span></button>
-                                                        <h4 class="modal-title">Endorse Agrarian Production Credit Program Request</h4>
-                                                    </div>
-
-                                                    <form method="post">
-                                                        <div class="modal-body" id="modalBody">
-                                                            <div class="row">
-                                                                <div class="col-xs-12">
-                                                                    <div class="form-group">
-                                                                        <label for="">Loan Application Number</label>
-                                                                        <input type="text" name="ltn" class="form-control">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
-                                                            <button type="submit" name="manual" onclick="form.action = 'EndorseAPCPRequest'" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i> Submit</button>
-                                                        </div>
-                                                    </form>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <%}%>
+                                            <%}%>
                                         </tbody>
 
                                     </table>
@@ -508,10 +483,10 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <%if(userType==6){%>
-                                                <td><a data-toggle="modal" data-target="#endorsed-modal<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}if (userType == 4 || userType == 5 || userType == 2 || userType == 3){%>
-                                                <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <%if(userType == 7){%>
+                                                <td><a href="CreateCAPDEVProposal?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ViewAPCP?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
                                                     <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
@@ -524,39 +499,8 @@
                                                 <td><%out.print(r.getRemarks());%></td>
                                                 <td><span class="label label-primary" style="background-color: #001F3F"><%out.print(r.getRequestStatusDesc());%></span></td>
                                             </tr>
-                                        <div class="modal fade" id="endorsed-modal<%out.print(r.getRequestID());%>">
-                                            <div class="modal-dialog modal-sm">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span></button>
-                                                        <h4 class="modal-title">Approve APCP Request</h4>
-                                                    </div>
 
-                                                    <form method="post">
-                                                        <div class="modal-body" id="modalBody">
-                                                            <div class="row">
-                                                                <div class="col-xs-12">
-                                                                    <div class="form-group">
-                                                                        <label for="">Approval Date</label>
-                                                                        <div class="input-group date">
-                                                                            <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                                                                            <input type="date" value="<%out.print(da.getTime());%>" class="form-control" name="approveDate" />        
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <input type="hidden" name="requestID" value="<%out.print(r.getRequestID());%>">
-                                                            <button type="submit" name="manual" onclick="form.action = 'ApproveAPCPRequest'" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i> Submit</button>
-                                                        </div>
-                                                    </form>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <%}%>
+                                            <%}%>
 
                                         </tbody>
 
@@ -602,12 +546,14 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <%if(userType==6){%>
+                                                <%if(userType == 6){%>
                                                 <td><a href="SchedulePreRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}else if (userType == 4 || userType == 2 || userType == 5 || userType == 3){%>
                                                 <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else if (userType == 7){%>
+                                                <td><a href="CreateCAPDEVProposal?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
-                                                    <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
                                                 <%}else{%> <!--LOAN REASON-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
@@ -667,6 +613,8 @@
                                                 <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}else if(userType == 2){%>
                                                 <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else if (userType == 7){%>
+                                                <td><a href="CreateCAPDEVProposal?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
                                                     <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
@@ -763,7 +711,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="released" class="table table-bordered table-striped">
+                                    <table id="incomlpete" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -782,10 +730,10 @@
                                             %>
 
                                             <tr>
-                                                <%if (userType == 4 || userType == 3 || userType == 5  || userType == 6){%>
-                                                <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}else if(userType == 2){%>
-                                                <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <%if(userType == 7){%>
+                                                <td><a href="CreateCAPDEVProposal?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ViewAPCP?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
                                                     <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>

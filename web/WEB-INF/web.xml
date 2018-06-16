@@ -321,10 +321,6 @@
         <servlet-class>com.MVC.Controller.EditQuestion</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ViewARBOInfo</servlet-name>
-        <servlet-class>com.MVC.Controller.ViewARBOInfo</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ViewExistingSite</servlet-name>
         <servlet-class>com.MVC.Controller.ViewExistingSite</servlet-class>
     </servlet>
@@ -399,6 +395,10 @@
     <servlet>
         <servlet-name>VerifyDocuments</servlet-name>
         <servlet-class>com.MVC.Controller.VerifyDocuments</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddCAPDEVParticipants</servlet-name>
+        <servlet-class>com.MVC.Controller.AddCAPDEVParticipants</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -721,10 +721,6 @@
         <url-pattern>/EditQuestion</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ViewARBOInfo</servlet-name>
-        <url-pattern>/ViewARBOInfo</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ViewExistingSite</servlet-name>
         <url-pattern>/ViewExistingSite</url-pattern>
     </servlet-mapping>
@@ -799,6 +795,10 @@
     <servlet-mapping>
         <servlet-name>VerifyDocuments</servlet-name>
         <url-pattern>/VerifyDocuments</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCAPDEVParticipants</servlet-name>
+        <url-pattern>/AddCAPDEVParticipants</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -1,3 +1,40 @@
-<%-- any content can be specified here e.g.: --%>
-<%@ page pageEncoding="UTF-8" %>
-<h2>approve apcp application</h2>
+<div class="panel box box-success">
+    <div class="box-header with-border">
+        <h4 class="box-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                Approve APCP Request
+            </a>
+        </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="box-body">
+            <div class="box-header with-border text-center">
+                <h5 class="box-title"><strong>Approve APCP Request</strong></h5>
+            </div>
+
+            <br />
+
+            <form method="post">
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="">Approval Date</label>
+                            <div class="input-group date">
+                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                <input type="date" value="<%out.print(currDate.getTime());%>" class="form-control" name="approveDate" />        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="box-footer">
+                    <input type="hidden" name="requestID" value="<%out.print(req.getRequestID());%>">
+                    <button type="submit" name="manual" onclick="form.action = 'ApproveAPCPRequest'" class="btn btn-primary pull-right"> Approve</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div> 
