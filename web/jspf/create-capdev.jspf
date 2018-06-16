@@ -32,11 +32,12 @@
                                         <%}%>
                                 </ul>
                             </div>
+                            <button type="button" class="btn btn-primary add_field_button">Add</button>
                         </center>
                     </div>
 
                     <div class="input_fields_wrap" id="activityWrapper">
-                        
+
 
                     </div>
 
