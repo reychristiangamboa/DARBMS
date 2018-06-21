@@ -61,6 +61,11 @@
 <script src="bower_components/select2/dist/js/select2.js"></script>
 <script src="bower_components/select2/dist/js/select2.min.js"></script>
 
+<!--CALENDAR-->
+<script src="bower_components/fullcalendar-3.9.0/lib/jquery.min.js"></script>
+<script src="bower_components/fullcalendar-3.9.0/lib/moment.min.js"></script>
+<script src="bower_components/fullcalendar-3.9.0/fullcalendar.js"></script>
+
 <script src="bower_components/inputmask/dist/jquery.inputmask.bundle.js"></script>
 
 <script>

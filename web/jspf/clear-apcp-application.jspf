@@ -35,7 +35,11 @@
                                 <tr>
 
                                     <td>
-                                        <input type="checkbox" name="documentID" value="<%out.print(d.getId());%>">
+                                        <%if(d.isIsApproved()){%>
+                                        <input type="checkbox" disabled checked />
+                                        <%}else{%>
+                                        <input type="checkbox" name="documentID" value="<%out.print(d.getId());%>" />
+                                        <%}%>
                                     </td>
 
                                     <%if(d.getDocument() != 12){ // APCP%>
@@ -125,9 +129,9 @@
             <form method="post">
                 <div class="box-footer">
                     <%if(req.checkARBOHadAPCPOrientation()){%>
-                    <button type="submit" class="btn btn-success pull-right" disabled>Clear Request</button>
+                    <button type="submit" onclick="form.action='ClearAPCPRequest?requestID=' + <%out.print(req.getRequestID());%> + ''" class="btn btn-success pull-right">Clear Request</button>
                     <%}else{%>
-                    <button type="submit" class="btn btn-success pull-right">Clear Request</button>
+                    <button type="submit" class="btn btn-success pull-right" disabled>Clear Request</button>
                     <%}%>
                 </div>
             </form>

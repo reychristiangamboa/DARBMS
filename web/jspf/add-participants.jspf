@@ -1,0 +1,84 @@
+<%
+    ArrayList<CAPDEVActivity> activities = new ArrayList();
+    CAPDEVPlan plan = new CAPDEVPlan();
+
+if(request.getAttribute("planID") != null){
+    planID = (Integer)request.getAttribute("planID");
+}
+    
+    plan = capdevDAO.getCAPDEVPlan(planID);
+    activities = plan.getActivities();
+
+%>
+<div class="panel box box-success">
+    <div class="box-header with-border">
+        <h4 class="box-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                Capacity Development (CAPDEV) Plan <%out.print(plan.getDTN());%>: Add Participants
+            </a>
+        </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-xs-12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Title of Activity</th>
+                                <th>Date of Activity</th>
+                                <th>No. of Participants</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%for(CAPDEVActivity act : activities){%>
+
+                            <tr>
+                                <td><%out.print(act.getActivityName());%></td>
+                                <td><%out.print(f.format(act.getActivityDate()));%></td>
+                                <td><%out.print(act.getArbList().size());%></td>
+                                <td><button class="btn btn-primary" data-toggle="modal" data-target="#participantsModal<%out.print(act.getActivityID());%>">Add</button></td>
+
+                        <div class="modal fade" id="participantsModal<%out.print(act.getActivityID());%>">
+                            <div class="modal-dialog modal-md">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">Add Participants</h4>
+                                    </div>
+                                    <div class="modal-body" id="modalBody">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="hidden" name="planID" value="<%out.print(planID);%>">
+                                        <input type="hidden" name="activityID" value="<%out.print(act.getActivityID());%>">
+                                        <button type="submit" name="manual" onclick="form.action = 'AddActivityParticipants'" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i> Submit</button>
+                                    </div>
+                                </div>
+                                <!--                                            /.modal-content -->
+                            </div>
+                            <!--                                        /.modal-dialog -->
+                        </div>
+                        </tr>
+                        <%}%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            <%if(plan.checkAllActivitiesHaveParticipants()){%>
+            <a href="/SendCAPDEVProposal" class="btn btn-success pull-right"><i class="fa fa-send margin-r-5"></i>Submit</a>
+            <%}else{%>
+            <a href="#" class="btn btn-success pull-right" disabled><i class="fa fa-send margin-r-5"></i>Submit</a>
+            <%}%>
+        </div>
+    </div>
+</div>

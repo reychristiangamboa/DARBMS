@@ -8,7 +8,7 @@
     </div>
     <div id="collapseOne" class="panel-collapse collapse in">
         <div class="box-body">
-            <form role="form" method="post" action="SendCAPDEVProposal">
+            <form role="form" method="post" action="AddCAPDEVPlan">
                 <div class="box-body">
 
                     <div class="row">
@@ -32,12 +32,17 @@
                                         <%}%>
                                 </ul>
                             </div>
-                            <button type="button" class="btn btn-primary add_field_button">Add</button>
                         </center>
                     </div>
 
                     <div class="input_fields_wrap" id="activityWrapper">
-
+                        <%if(req.getRequestStatus() == 1 && req.getIsNewAccessingRequest() > 0){  // REQUESTED and NEW ACCESSING %> 
+                            
+                        <%}else if(req.getRequestStatus() == 1){ // %>
+                            
+                        <%}else if(req.getRequestStatus() == 4){ // APPROVED %>
+                            
+                        <%}%>
 
                     </div>
 

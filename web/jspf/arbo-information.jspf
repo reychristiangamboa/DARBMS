@@ -45,14 +45,14 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Qualified Since</label>
-            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="status" id="status" value="<%=arbo.getQualifiedSince()%>" disabled>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="status" id="status" value="<%out.print(f.format(arbo.getQualifiedSince()));%>" disabled>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
                 <label>Date Operational</label>
-                <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="status" id="status" value<%=arbo.getDateOperational()%> disabled>
+                <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="status" id="status" value<%out.print(f.format(arbo.getDateOperational()));%> disabled>
             </div>
         </div>
     </div>

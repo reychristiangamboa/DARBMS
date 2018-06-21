@@ -82,9 +82,6 @@ public class RequestConduit extends BaseServlet {
                     java.util.Date parsedDateSubmitted = sdf.parse(dateSubmittedStr[i]);
                     dateSubmitted = new java.sql.Date(parsedDateSubmitted.getTime());
                     doc.setDateSubmitted(dateSubmitted); // set dateSubmitted
-                    doc.setIsApproved(true);
-                } else {  // dateSubmitted is null
-                    doc.setIsApproved(false);
                 }
             } catch (ParseException ex) {
                 Logger.getLogger(RequestConduit.class.getName()).log(Level.SEVERE, null, ex);

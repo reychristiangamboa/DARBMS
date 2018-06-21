@@ -53,18 +53,14 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Loan Amount</label>
-            <div class="input-group">
-                <div class="input-group-addon" style="border-top: transparent; border-left: transparent;">
-                    <i>&#8369;</i>
-                </div>
-                <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getLoanAmount()%>" disabled></div>
-        </div>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%out.print(currency.format(req.getLoanAmount()));%>" disabled></div>
     </div>
-    <div class="col-md-4">
-        <div class="form-group">
-            <label>Loan Duration</label>
-            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getLoanTermDuration()%>" disabled></div>
-    </div>
+</div>
+<div class="col-md-4">
+    <div class="form-group">
+        <label>Loan Duration</label>
+        <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getLoanTermDuration()%>" disabled></div>
+</div>
 </div>
 <div class="row">
     <div class="col-xs-12">
@@ -72,7 +68,6 @@
         <table id="example3" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Action</th>
                     <th>Full Name</th> 
                     <th>Membership Date</th> 
                     <th>COMAT</th> 
@@ -81,7 +76,6 @@
             <tbody>
                 <%for(ARB arb : arbo.getArbList()){%>
                 <tr>
-                    <td><input type="checkbox" name="arbID" value="<%out.print(arb.getArbID());%>"></td>
                     <td><%out.print(arb.getFLName());%></td>
                     <td><%out.print(f.format(arb.getMemberSince()));%></td>
                     <%if(arb.getIsCOMAT() > 0){%>
@@ -94,8 +88,8 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th>Action</th>
                     <th>Full Name</th> 
+                    <th>Membership Date</th> 
                     <th>COMAT</th> 
                 </tr>
             </tfoot>
@@ -111,7 +105,7 @@
                             } else {
                                 out.print(f.format(req.getDateRequested()) + " (Incomplete)");
                             }
-            %>" disabled/>
+                   %>" disabled/>
         </div>
     </div>
     <div class="col-md-3">

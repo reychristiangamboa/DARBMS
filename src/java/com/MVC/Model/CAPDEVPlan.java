@@ -117,6 +117,15 @@ public class CAPDEVPlan {
         this.clusterID = clusterID;
     }
     
+    public boolean checkAllActivitiesHaveParticipants(){
+        for(CAPDEVActivity act : this.activities){
+            if(act.getArbList().isEmpty()){
+                return false;
+            }
+        }
+        return true;
+    }
+    
 }
 
 

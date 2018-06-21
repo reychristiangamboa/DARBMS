@@ -400,6 +400,14 @@
         <servlet-name>AddCAPDEVParticipants</servlet-name>
         <servlet-class>com.MVC.Controller.AddCAPDEVParticipants</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddCAPDEVPlan</servlet-name>
+        <servlet-class>com.MVC.Controller.AddCAPDEVPlan</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddActivityParticipants</servlet-name>
+        <servlet-class>com.MVC.Controller.AddActivityParticipants</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -799,6 +807,14 @@
     <servlet-mapping>
         <servlet-name>AddCAPDEVParticipants</servlet-name>
         <url-pattern>/AddCAPDEVParticipants</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCAPDEVPlan</servlet-name>
+        <url-pattern>/AddCAPDEVPlan</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddActivityParticipants</servlet-name>
+        <url-pattern>/AddActivityParticipants</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

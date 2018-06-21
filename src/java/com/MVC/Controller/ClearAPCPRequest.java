@@ -47,7 +47,7 @@ public class ClearAPCPRequest extends BaseServlet {
                 request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
             }
         } else {
-            request.setAttribute("errMessage", "Please make sure documents are verified and APCP Orientation is implemented");
+            request.setAttribute("errMessage", "Please make sure documents are verified and APCP Orientation is implemented.");
             request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         }
 

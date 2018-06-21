@@ -107,7 +107,7 @@
                                             <%@include file="/jspf/arbo-information.jspf" %>
                                         </div>
                                     </div>
-                                        </<d></d>iv>
+                                        
                                 <%
                                             if (req.getRequestStatus() == 1){%>
                                 <%@include file="/jspf/clear-apcp-application.jspf" %>
