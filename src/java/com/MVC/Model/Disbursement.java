@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Disbursement {
 
     private int disbursementID;
-    private int releaseID;
+    private int requestID;
     private int arbID;
     private double disbursedAmount;
     private double OSBalance;
@@ -31,12 +31,12 @@ public class Disbursement {
         this.disbursementID = disbursementID;
     }
 
-    public int getReleaseID() {
-        return releaseID;
+    public int getRequestID() {
+        return requestID;
     }
 
-    public void setReleaseID(int releaseID) {
-        this.releaseID = releaseID;
+    public void setRequestID(int releaseID) {
+        this.requestID = releaseID;
     }
     
     public int getArbID() {

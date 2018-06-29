@@ -16,7 +16,7 @@ public class APCPRelease {
 
     private int releaseID;
     private int requestID;
-    private ArrayList<Disbursement> disbursements = new ArrayList();
+    private double OSBalance;
     private double releaseAmount;
     private Date releaseDate;
     private double currentYearReleaseAmount;
@@ -39,21 +39,15 @@ public class APCPRelease {
         this.requestID = requestID;
     }
 
-    public ArrayList<Disbursement> getDisbursements() {
-        return disbursements;
+    public double getOSBalance() {
+        return OSBalance;
     }
 
-    public void setDisbursements(ArrayList<Disbursement> disbursements) {
-        this.disbursements = disbursements;
+    public void setOSBalance(double OSBalance) {
+        this.OSBalance = OSBalance;
     }
-
-    public double getTotalOSBalance() {
-        double value = 0;
-        for (Disbursement d : this.disbursements) {
-            value += d.getOSBalance();
-        }
-        return value;
-    }
+    
+    
 
     public double getReleaseAmount() {
         return releaseAmount;

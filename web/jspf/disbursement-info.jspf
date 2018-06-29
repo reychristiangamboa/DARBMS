@@ -1,0 +1,58 @@
+<div class="box-body"> 
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <div class="form-group">
+                                <label for="">Release Amount</label>
+                                <input type="text" class="form-control" id="" placeholder="" value="<%=currency.format(release.getReleaseAmount())%>" disabled>
+                            </div>
+                        </div>
+                        <div class="col-xs-3">
+                            <div class="form-group">
+                                <label for="">Release Date</label>
+                                <input type="text" class="form-control" id="" value="<%out.print(f.format(release.getReleaseDate()));%>" disabled >
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-striped modTable">
+                        <thead>
+                            <tr>
+                                <th>Disbursed To</th>
+                                <th>Disbursement Amount</th>
+                                <th>O/S Balance</th>
+                                <th>Disbursement Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <%
+                                for(Disbursement d : release.getDisbursements()){
+                                    ARB arb = arbDAO99.getARBByID(d.getArbID());
+                            %>
+                            <tr>
+
+                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                <td><%out.print(currency.format(d.getDisbursedAmount()));%></td>
+                                <td><%out.print(currency.format(d.getOSBalance()));%></td>
+                                <td><%out.print(f.format(d.getDateDisbursed()));%></td>
+
+                            </tr>
+                            <%}%>
+
+                        </tbody>
+
+                    </table>
+                </div> 
+    
+
+
+    <div class="box-footer">
+        <div class="pull-right">
+            <%if((Integer)session.getAttribute("userType") == 2){%>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-disbursements-modal">Import Disbursements</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-disbursement-modal">Add Disbursement</button>
+            <%}%>
+        </div>
+
+    </div>
+</div>

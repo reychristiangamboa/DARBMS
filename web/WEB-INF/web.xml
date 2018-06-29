@@ -408,6 +408,26 @@
         <servlet-name>AddActivityParticipants</servlet-name>
         <servlet-class>com.MVC.Controller.AddActivityParticipants</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RecordARBORepayment</servlet-name>
+        <servlet-class>com.MVC.Controller.RecordARBORepayment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RecordARBRepayment</servlet-name>
+        <servlet-class>com.MVC.Controller.RecordARBRepayment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RefreshARBRepayment</servlet-name>
+        <servlet-class>com.MVC.Controller.RefreshARBRepayment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReplaceParticipant</servlet-name>
+        <servlet-class>com.MVC.Controller.ReplaceParticipant</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CheckAttendance</servlet-name>
+        <servlet-class>com.MVC.Controller.CheckAttendance</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -815,6 +835,26 @@
     <servlet-mapping>
         <servlet-name>AddActivityParticipants</servlet-name>
         <url-pattern>/AddActivityParticipants</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RecordARBORepayment</servlet-name>
+        <url-pattern>/RecordARBORepayment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RecordARBRepayment</servlet-name>
+        <url-pattern>/RecordARBRepayment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RefreshARBRepayment</servlet-name>
+        <url-pattern>/RefreshARBRepayment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReplaceParticipant</servlet-name>
+        <url-pattern>/ReplaceParticipant</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckAttendance</servlet-name>
+        <url-pattern>/CheckAttendance</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

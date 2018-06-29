@@ -29,7 +29,7 @@ public class MonitorCAPDEVAttendance extends BaseServlet {
         }
         
         request.setAttribute("planID", planID);
-        request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);
+        request.getRequestDispatcher("PP-CAPDEV-review-capdev-attendance.jsp").forward(request, response);
 
     }
 

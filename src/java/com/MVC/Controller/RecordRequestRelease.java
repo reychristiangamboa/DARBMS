@@ -59,6 +59,7 @@ public class RecordRequestRelease extends BaseServlet {
         }
 
         r.setReleaseDate(releaseDate);
+        r.setOSBalance(Double.parseDouble(request.getParameter("releaseOSBalance")));
         r.setReleasedBy((Integer) session.getAttribute("userID"));
 
         if (!dao.requestHasRelease(req)) {

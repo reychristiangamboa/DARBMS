@@ -39,6 +39,18 @@
                 APCPRelease release = apcpRequestDAO99.getAPCPReleaseByID((Integer)request.getAttribute("releaseID"));
                 ARBO a = arboDAO99.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO99.getAllARBsARBO(r.getArboID());
+                
+        int reqID = (Integer) request.getAttribute("requestID");
+        APCPRequest req = apcpRequestDAO99.getRequestByID(reqID);
+        ARBO arbo = arboDAO99.getARBOByID(req.getArboID());
+        UserDAO userDAO = new UserDAO();
+            %>                                        
+            <% User u1 = new User(); %>
+            <% User u2 = new User(); %>
+            <% User u3 = new User(); %>
+            <% User u4 = new User(); %>
+            %>
+
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -71,114 +83,52 @@
                     <%}%>
                     <div class="row">
                         <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">APCP Information</h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
-                                    </div>  
-                                </div>
-                                <!-- /.box-header -->
-
-
-                                <div class="box-body"> 
-
-                                    <div class="nav-tabs-custom">
-                                        <!-- Tabs within a box -->
-                                        <ul class="nav nav-tabs pull-left">
-                                            <li class="active"><a href="#request" data-toggle="tab">Request Information</a></li>
-                                            <li><a href="#info" data-toggle="tab">ARBO Profile</a></li>
-                                            <li><a href="#history" data-toggle="tab">CAPDEV History</a></li>
-                                        </ul>
-                                        <%@include file="jspf/arboInfo.jspf"%>
+                            <div class="box-group" id="accordion">
+                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                <div class="panel box box-info">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+                                                ARBO Information
+                                            </a>
+                                        </h4>
                                     </div>
-                                    <hr>        
+                                    <div id="collapseFour" class="panel-collapse collapse">
+                                        <div class="box-body">
+                                            <%@include file="/jspf/arbo-information.jspf" %>
+                                        </div>
+                                    </div> 
                                 </div>
-                                <!-- /.box-body -->
+                                <div class="panel box box-info">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">
+                                                APCP Request Information
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseFive" class="panel-collapse collapse">
+                                        <div class="box-body">
+                                            <%@include file="/jspf/apcp-request-info.jspf" %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel box box-info">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                                Disbursement Information
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseTwo" class="panel-collapse collapse in">
+                                        <div class="box-body">
+                                            <%@include file="/jspf/disbursement-info.jspf" %>
+                                        </div>
+                                    </div>
+                                </div>
 
                             </div>
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Disbursement Information</h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
-                                    </div>  
-                                </div>
-                                <!-- /.box-header -->
-
-
-                                <div class="box-body"> 
-
-                                    <div class="nav-tabs-custom">
-                                        <!-- Tabs within a box -->
-                                        <ul class="nav nav-tabs pull-left">
-                                            <li class="active"><a href="#request" data-toggle="tab">Disbursement Table</a></li>
-                                        </ul>
-
-                                        <div class="tab-content no-padding">
-                                            <!-- Morris chart - Sales -->
-                                            <div class="chart tab-pane active" id="request" style="position: relative;">
-                                                <div class="box-body">
-                                                    <div class="row">
-                                                        <div class="col-xs-3">
-                                                            <div class="form-group">
-                                                                <label for="">Release Amount</label>
-                                                                <input type="text" class="form-control" id="" placeholder="" value="<%=currency.format(release.getReleaseAmount())%>" disabled>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-3">
-                                                            <div class="form-group">
-                                                                <label for="">Release Date</label>
-                                                                <input type="text" class="form-control" id="" value="<%out.print(f.format(release.getReleaseDate()));%>" disabled >
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <table id="example1" class="table table-bordered table-striped">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Disbursed To</th>
-                                                                <th>Disbursement Amount</th>
-                                                                <th>OS Balance</th>
-                                                                <th>Disbursement Date</th>
-                                                            </tr>
-                                                        </thead>
-
-                                                        <tbody>
-                                                            <%
-                                                                for(Disbursement d : release.getDisbursements()){
-                                                                    ARB arb = arbDAO99.getARBByID(d.getArbID());
-                                                            %>
-                                                            <tr>
-
-                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
-                                                                <td><%out.print(currency.format(d.getDisbursedAmount()));%></td>
-                                                                <td><%out.print(currency.format(d.getOSBalance()));%></td>
-                                                                <td><%out.print(d.getDateDisbursed());%></td>
-
-                                                            </tr>
-                                                            <%}%>
-
-                                                        </tbody>
-
-                                                    </table>
-                                                </div> 
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="box-footer">
-                                        <div class="pull-right">
-                                            <%if((Integer)session.getAttribute("userType") == 2){%>
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-disbursements-modal">Import Disbursements</button>
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-disbursement-modal">Add Disbursement</button>
-                                            <%}%>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <!-- /.box-body -->
-
-                            </div> 
                         </div>
                         <!-- /.col -->
                     </div>
@@ -233,7 +183,7 @@
                                                         <div class="input-group-addon">
                                                             <i>&#8369;</i>
                                                         </div>
-                                                        <input type="text" class="form-control numberOnly" name="disbursementAmount" autocomplete="off" required>
+                                                        <input type="text" id="disbursementAmount" class="form-control numberOnly" name="disbursementAmount" autocomplete="off" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -244,7 +194,7 @@
                                                         <div class="input-group-addon">
                                                             <i>&#8369;</i>
                                                         </div>
-                                                        <input type="text" class="form-control numberOnly" name="OSBalance" autocomplete="off" required>
+                                                        <input type="text" id="disbursementOSBalance" class="form-control numberOnly" name="OSBalance" autocomplete="off" required disabled>
                                                     </div>
                                                 </div>
                                             </div>
@@ -311,25 +261,17 @@
 
             </div>
             <!-- /.content-wrapper -->
-            
+
         </div>
         <%@include file="jspf/footer.jspf" %>
         <script>
             $(document).ready(function () {
-                var max_fields = 9; //maximum input boxes allowed
-                var wrapper = $(".input_fields_wrap"); //Fields wrapper
-                var add_button = $(".add_field_button"); //Add button ID
-                var x = 0; //initlal text box count
-                $(add_button).click(function (e) { //on add input button click
-                    e.preventDefault();
-                    if (x < max_fields) { //max input box allowed
-                        x++; //text box increment
-                        $('#count').val(x);
-                        $(wrapper).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity activity : activities){%><option value="<%out.print(activity.getActivityID());%>"><%out.print(activity.getActivityName());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right" id="datepicker"></div></div></div><div class="col-xs-4"><div class="form-group"><label for="">Participants</label><input type="file" name="file[]" /></div></div></div>');
-                        $('.select2').select2();
-                    }
+                var interestRate = <%out.print(r.getLoanReason().getLoanTerm().getArbInterestRate());%>
+                        
+                $('#disbursementAmount').on('input', function () {
+                    var val = this.value * interestRate;
+                    $('#disbursementOSBalance').val(val);
                 });
-
 
 
             });

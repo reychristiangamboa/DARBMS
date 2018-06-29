@@ -79,7 +79,7 @@ public class RecordDisbursement extends BaseServlet {
                 d.setReleaseID(Integer.parseInt(request.getParameter("releaseID")));
 
                 d.setDisbursedAmount(Double.parseDouble(finAmount));
-                d.setOSBalance(Double.parseDouble(OSBalance));
+                d.setOSBalance(Double.parseDouble(request.getParameter("disbursementOSBalance")));
 
                 java.sql.Date disbursedDate = null;
 

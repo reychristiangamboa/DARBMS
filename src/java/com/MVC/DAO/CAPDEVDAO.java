@@ -34,11 +34,12 @@ public class CAPDEVDAO {
 
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`capdev_plans` (`requestID`,`planDTN`,`createdBy`) VALUES (?,?,?);";
+            String query = "INSERT INTO `dar-bms`.`capdev_plans` (`requestID`,`planDTN`,`createdBy`,`planDate`) VALUES (?,?,?,?);";
             PreparedStatement p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setInt(1, cp.getRequestID());
             p.setString(2, cp.getPlanDTN());
             p.setInt(3, userID);
+            p.setDate(4, cp.getPlanDate());
             p.executeUpdate();
 
             ResultSet rs = p.getGeneratedKeys();
@@ -68,12 +69,13 @@ public class CAPDEVDAO {
 
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`capdev_plans` (`requestID`,`planDTN`,`createdBy`,`pastDueAccountID`) VALUES (?,?,?,?);";
+            String query = "INSERT INTO `dar-bms`.`capdev_plans` (`requestID`,`planDTN`,`createdBy`,`pastDueAccountID`,`planDate`) VALUES (?,?,?,?,?);";
             PreparedStatement p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setInt(1, cp.getRequestID());
             p.setString(2, cp.getPlanDTN());
             p.setInt(3, userID);
             p.setInt(4, cp.getPastDueAccountID());
+            p.setDate(5, cp.getPlanDate());
             p.executeUpdate();
 
             ResultSet rs = p.getGeneratedKeys();
@@ -154,8 +156,12 @@ public class CAPDEVDAO {
                 cp.setAssignedTo(rs.getInt("assignedTo"));
                 cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
                 cp.setPlanDTN(rs.getString("planDTN"));
+                cp.setPlanDate(rs.getDate("planDate"));
+                cp.setImplementedDate(rs.getDate("implementedDate"));
                 cp.setCreatedBy(rs.getInt("createdBy"));
                 cp.setApprovedBy(rs.getInt("approvedBy"));
+                cp.setObservations(rs.getString("observations"));
+                cp.setRecommendation(rs.getString("recommendation"));
                 cp.setClusterID(rs.getInt("clusterID"));
                 cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
             }
@@ -416,10 +422,14 @@ public class CAPDEVDAO {
                 cp.setPlanStatus(rs.getInt("planStatus"));
                 cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
                 cp.setPlanDTN(rs.getString("planDTN"));
+                cp.setPlanDate(rs.getDate("planDate"));
+                cp.setImplementedDate(rs.getDate("implementedDate"));
                 cp.setAssignedTo(rs.getInt("assignedTo"));
                 cp.setCreatedBy(rs.getInt("createdBy"));
                 cp.setApprovedBy(rs.getInt("approvedBy"));
                 cp.setClusterID(rs.getInt("clusterID"));
+                cp.setObservations(rs.getString("observations"));
+                cp.setRecommendation(rs.getString("recommendation"));
                 cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
                 planList.add(cp);
             }
@@ -678,13 +688,12 @@ public class CAPDEVDAO {
         try {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`capdev_activities` "
-                    + "(`activityType`, `planID`, `activityDate`) "
-                    + "VALUES (?,?,?);";
+                    + "(`activityType`, `planID`) "
+                    + "VALUES (?,?);";
 
             PreparedStatement p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setInt(1, activity.getActivityType());
             p.setInt(2, activity.getPlanID());
-            p.setDate(3, activity.getActivityDate());
 
             p.executeUpdate();
 
@@ -762,10 +771,8 @@ public class CAPDEVDAO {
                 ca.setActivityType(rs.getInt("activityType"));
                 ca.setPlanID(rs.getInt("planID"));
                 ca.setActivityName(rs.getString("activityName"));
-                ca.setActivityDate(rs.getDate("activityDate"));
                 ca.setActivityDesc(rs.getString("activityDesc"));
-                ca.setObservations(rs.getString("observations"));
-                ca.setRecommendation(rs.getString("recommendation"));
+                
                 ca.setActivityCategory(rs.getInt("activityCategory"));
                 ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
                 ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
@@ -811,10 +818,7 @@ public class CAPDEVDAO {
                 ca.setActivityType(rs.getInt("activityType"));
                 ca.setPlanID(rs.getInt("planID"));
                 ca.setActivityName(rs.getString("activityName"));
-                ca.setActivityDate(rs.getDate("activityDate"));
                 ca.setActivityDesc(rs.getString("activityDesc"));
-                ca.setObservations(rs.getString("observations"));
-                ca.setRecommendation(rs.getString("recommendation"));
                 ca.setActivityCategory(rs.getInt("activityCategory"));
                 ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
                 ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
@@ -861,10 +865,7 @@ public class CAPDEVDAO {
                 ca.setActivityType(rs.getInt("activityType"));
                 ca.setPlanID(rs.getInt("planID"));
                 ca.setActivityName(rs.getString("activityName"));
-                ca.setActivityDate(rs.getDate("activityDate"));
                 ca.setActivityDesc(rs.getString("activityDesc"));
-                ca.setObservations(rs.getString("observations"));
-                ca.setRecommendation(rs.getString("recommendation"));
                 ca.setActivityCategory(rs.getInt("activityCategory"));
                 ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
                 ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
@@ -910,10 +911,7 @@ public class CAPDEVDAO {
                 ca.setActivityType(rs.getInt("activityType"));
                 ca.setPlanID(rs.getInt("planID"));
                 ca.setActivityName(rs.getString("activityName"));
-                ca.setActivityDate(rs.getDate("activityDate"));
                 ca.setActivityDesc(rs.getString("activityDesc"));
-                ca.setObservations(rs.getString("observations"));
-                ca.setRecommendation(rs.getString("recommendation"));
                 ca.setActivityCategory(rs.getInt("activityCategory"));
                 ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
                 ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
@@ -960,10 +958,7 @@ public class CAPDEVDAO {
                 ca.setActivityType(rs.getInt("activityType"));
                 ca.setPlanID(rs.getInt("planID"));
                 ca.setActivityName(rs.getString("activityName"));
-                ca.setActivityDate(rs.getDate("activityDate"));
                 ca.setActivityDesc(rs.getString("activityDesc"));
-                ca.setObservations(rs.getString("observations"));
-                ca.setRecommendation(rs.getString("recommendation"));
                 ca.setActivityCategory(rs.getInt("activityCategory"));
                 ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
                 ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
@@ -1021,7 +1016,7 @@ public class CAPDEVDAO {
         }
         return success;
     }
-
+    
     public ArrayList<ARB> getCAPDEVPlanActivityParticipants(int activityID) {
 
         ArrayList<ARB> aList = new ArrayList();
@@ -1037,6 +1032,7 @@ public class CAPDEVDAO {
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 ARB arb = dao.getARBByID(rs.getInt("arbID"));
+                arb.setIsPresent(rs.getInt("isPresent"));
                 aList.add(arb);
             }
             con.commit();
@@ -1678,6 +1674,36 @@ public class CAPDEVDAO {
         }
         return success;
     }
+    
+    public boolean updatePlanStatus(int planID, int status, Date implementedDate) {
+        boolean success = false;
+        PreparedStatement p = null;
+        Connection con = null;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        con = myFactory.getConnection();
+        try {
+            con.setAutoCommit(false);
+            String query = "UPDATE capdev_plans SET `planStatus`=?, `implementedDate`=? WHERE `planID`=?";
+            p = con.prepareStatement(query);
+            p.setInt(1, status);
+            p.setDate(2, implementedDate);
+            p.setInt(3, planID);
+
+            p.executeUpdate();
+            p.close();
+            con.commit();
+            con.close();
+            success = true;
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
+    }
 
     public boolean addPastDueReason(String reason) {
         boolean success = false;
@@ -1803,14 +1829,12 @@ public class CAPDEVDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE capdev_activities SET observations=?, recommendation=?, active=?, technicalAssistant=? WHERE activityID=?";
+            String query = "UPDATE capdev_activities SET active=?, technicalAssistant=? WHERE activityID=?";
 
             p = con.prepareStatement(query);
-            p.setString(1, ca.getObservations());
-            p.setString(2, ca.getRecommendation());
-            p.setInt(3, ca.getActive());
-            p.setString(4, ca.getTechnicalAssistant());
-            p.setInt(5, ca.getActivityID());
+            p.setInt(1, ca.getActive());
+            p.setString(2, ca.getTechnicalAssistant());
+            p.setInt(3, ca.getActivityID());
 
             p.executeUpdate();
             p.close();
@@ -1860,16 +1884,63 @@ public class CAPDEVDAO {
         }
         return success;
     }
+    
+    public void replaceAttendees(ArrayList<Integer> attendees, int activityID) {
+        boolean success = false;
+        PreparedStatement p = null;
+        Connection con = null;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        con = myFactory.getConnection();
+        try {
+            con.setAutoCommit(false);
+            String query = "UPDATE capdev_participants SET isPresent=2 WHERE arbID=? AND activityID=?";
 
-    public boolean checkIfAssessmentsComplete(ArrayList<CAPDEVActivity> activities) {
-
-        for (CAPDEVActivity act : activities) {
-            if (act.getActive() == 0) {
-                return false;
+            for (int i : attendees) {
+                p = con.prepareStatement(query);
+                p.setInt(1, i);
+                p.setInt(2, activityID);
+                p.executeUpdate();
+                p.close();
             }
-        }
 
-        return true;
+            con.commit();
+            con.close();
+            
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void assessCAPDEV(String observation, String recommendation) {
+        boolean success = false;
+        PreparedStatement p = null;
+        Connection con = null;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        con = myFactory.getConnection();
+        try {
+            con.setAutoCommit(false);
+            String query = "UPDATE capdev_plans SET `observations`=?, `recommendation`=? WHERE `planID`=?";
+
+            p = con.prepareStatement(query);
+            p.setString(1, observation);
+            p.setString(2, recommendation);
+
+            con.commit();
+            con.close();
+            
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

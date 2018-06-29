@@ -1,0 +1,384 @@
+
+<div class="modal fade" id="add-release-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Record Release</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">Release Amount</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i>&#8369;</i>
+                                    </div>
+                                    <input type="text" id="releaseAmount" class="form-control numberOnly" name="releaseAmount" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">O/S Balance</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i>&#8369;</i>
+                                    </div>
+                                    <input type="text" id="releaseOSBalance" class="form-control numberOnly" name="releaseOSBalance" autocomplete="off" required disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">Release Date</label>
+                                <div class="input-group date">
+                                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                    <input type="date" class="form-control" name="releaseDate" />        
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" onclick="form.action = 'RecordRequestRelease'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
+</div>
+<div class="modal fade" id="import-release-modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Import Releases</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="">Import File</label>
+                                <input type="file" class="form-control" name="file" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" name="manual" onclick="form.action = 'ImportRelease'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
+</div>
+
+<!--ARBO REPAYMENT-->
+<div class="modal fade" id="add-arbo-repayment-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Record Repayment</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">O/S Balance</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i>&#8369;</i>
+                                    </div>
+                                    <input type="text" class="form-control" value="<%=r.getTotalReleaseOSBalance()%>" autocomplete="off" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">Amount</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i>&#8369;</i>
+                                    </div>
+                                    <input type="text" class="form-control numberOnly" name="arboRepaymentAmount" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">Repayment Date</label>
+                                <div class="input-group date">
+                                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                    <input type="date" class="form-control" name="arboRepaymentDate" />        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" name="manual" onclick="form.action = 'RecordARBORepayment'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
+</div>
+<div class="modal fade" id="import-arbo-repayment-modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Import Repayments</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="">Import File</label>
+                                <input type="file" class="form-control" name="file" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" name="manual" onclick="form.action = 'ImportRepayment'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
+</div>
+
+<!--ARB REPAYMENT-->
+<div class="modal fade" id="add-arb-repayment-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Record Repayment</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <center>
+                            <div class="form-group">
+                                <label for=""></label>
+                                <select name="arbID" id='arbRepaymentSelect' class="form-control select2" onchange='chg()'>
+                                    <%for(ARB arb : r.getRecipients()){%>
+                                    <option value="<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></option>
+                                </select>
+                            </div>
+                        </center>
+                    </div>
+
+                    <div class="row" id='arbRepaymentDetails'>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">ARB</label>
+                                <input type="text" class="form-control" name='arbIDRepayment' disabled/>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">O/S Balance</label>
+                                <input type="text" class="form-control" name='arbRepaymentOSBalance' disabled/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="">Amount</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i>&#8369;</i>
+                                    </div>
+                                    <input type="text" class="form-control numberOnly" name="arbRepaymentAmount" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="">Repayment Date</label>
+                                <div class="input-group date">
+                                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                    <input type="date" class="form-control" name="arbRepaymentDate" />        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" name="manual" onclick="form.action = 'RecordARBRepayment'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
+</div>
+<div class="modal fade" id="import-arb-repayment-modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Import Repayments</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="">Import File</label>
+                                <input type="file" class="form-control" name="file" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" name="manual" onclick="form.action = 'ImportRepayment'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="add-pastdue-modal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Record Past Due Account</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="">Amount</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i>&#8369;</i>
+                                    </div>
+                                    <input type="text" class="form-control numberOnly" name="pastDueAmount" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="">Reason for Past Due </label>
+                                <select class="form-control" name="reasonPastDue" id="">
+                                    <%for (PastDueAccount p : reasons) {%>
+                                    <option value="<%=p.getReasonPastDue()%>"><%out.print(p.getReasonPastDueDesc());%></option>
+                                    <%}%>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="">Date Recorded</label>
+                                <input type="date" class="form-control" name="recordedDate" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="">Other Reason</label>
+                                <textarea class="form-control" name="otherReason" id="" cols="10" rows="3">N/A</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" name="manual" onclick="form.action = 'RecordPastDueAccount'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
+</div>
+<div class="modal fade" id="import-pastdue-modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Import Past Due Accounts</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="">Import File</label>
+                                <input type="file" class="form-control" name="file" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" name="manual" onclick="form.action = 'ImportPastDueAccount'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
+</div>

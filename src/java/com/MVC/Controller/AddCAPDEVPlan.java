@@ -40,6 +40,18 @@ public class AddCAPDEVPlan extends BaseServlet {
 
         capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         capdevPlan.setPlanDTN(request.getParameter("dtn"));
+        
+        
+        java.sql.Date planDate = null;
+
+            try {
+                java.util.Date parsedPlanDate = sdf.parse(request.getParameter("planDate"));
+                planDate = new java.sql.Date(parsedPlanDate.getTime());
+            } catch (ParseException ex) {
+                Logger.getLogger(AddARBCrop.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            capdevPlan.setPlanDate(planDate);
 
         int planID = 0;
 
@@ -65,8 +77,7 @@ public class AddCAPDEVPlan extends BaseServlet {
             int activityType = Integer.parseInt(activities[i]);
             activity.setActivityType(activityType);
             activity.setPlanID(planID);
-            activity.setActivityDate(activityDate);
-
+            
             int newlyAddedActivityID = capdevDAO.addCAPDEVPlanActivity(activity);
 
         }

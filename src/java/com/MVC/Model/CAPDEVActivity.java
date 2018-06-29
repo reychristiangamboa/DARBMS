@@ -1,10 +1,12 @@
-    /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package com.MVC.Model;
 
+import com.MVC.DAO.ARBDAO;
+import com.MVC.DAO.ARBODAO;
 import java.sql.Date;
 import java.util.ArrayList;
 import com.MVC.Model.ARB;
@@ -21,10 +23,6 @@ public class CAPDEVActivity {
     private int activityCategory;
     private String activityCategoryDesc;
     private String technicalAssistant;
-    private Date activityDate;
-    private Date implementedDate;
-    private String observations;
-    private String recommendation;
     private String activityName;
     private String activityDesc;
     private String activityReportDTN;
@@ -79,7 +77,7 @@ public class CAPDEVActivity {
     public void setActivityCategoryDesc(String activityCategoryDesc) {
         this.activityCategoryDesc = activityCategoryDesc;
     }
-    
+
     public String getTechnicalAssistant() {
         return technicalAssistant;
     }
@@ -87,7 +85,7 @@ public class CAPDEVActivity {
     public void setTechnicalAssistant(String technicalAssistant) {
         this.technicalAssistant = technicalAssistant;
     }
-    
+
     public String getActivityDesc() {
         return activityDesc;
     }
@@ -111,7 +109,7 @@ public class CAPDEVActivity {
     public void setIsPresent(int isPresent) {
         this.isPresent = isPresent;
     }
-    
+
     public int getPlanID() {
         return planID;
     }
@@ -127,87 +125,73 @@ public class CAPDEVActivity {
     public void setActive(int active) {
         this.active = active;
     }
-    
-    public Date getActivityDate() {
-        return activityDate;
-    }
 
-    public void setActivityDate(Date activityDate) {
-        this.activityDate = activityDate;
-    }
-
-    public Date getImplementedDate() {
-        return implementedDate;
-    }
-
-    public void setImplementedDate(Date implementedDate) {
-        this.implementedDate = implementedDate;
-    }
-    
-    public String getObservations() {
-        return observations;
-    }
-
-    public void setObservations(String observations) {
-        this.observations = observations;
-    }
-
-    public String getRecommendation() {
-        return recommendation;
-    }
-
-    public void setRecommendation(String recommendation) {
-        this.recommendation = recommendation;
-    }
-    
-    public double getAttendanceRate(ArrayList<CAPDEVActivity> activities){
+    public double getAttendanceRate(ArrayList<CAPDEVActivity> activities) {
         double present = 0;
         double absent = 0;
         double rate = 0;
-        
-        for(CAPDEVActivity cAct : activities){
-            if(cAct.getIsPresent() == 0){
+
+        for (CAPDEVActivity cAct : activities) {
+            if (cAct.getIsPresent() == 0) {
                 absent++;
-            } else if(cAct.getIsPresent() == 1){
+            } else if (cAct.getIsPresent() == 1) {
                 present++;
             }
         }
-        
-        rate = (present/activities.size()) * 100;
-        
+
+        rate = (present / activities.size()) * 100;
+
         return rate;
     }
-    
-    public int getAttendance(ArrayList<CAPDEVActivity> activities){
+
+    public int getAttendance(ArrayList<CAPDEVActivity> activities) {
         int present = 0;
-        
-        for(CAPDEVActivity cAct : activities){
-            if(cAct.getIsPresent() == 1){
+
+        for (CAPDEVActivity cAct : activities) {
+            if (cAct.getIsPresent() == 1) {
                 present++;
             }
         }
-        
+
         return present;
     }
-    
-    public boolean getNewAccessingCategories(){
-        
-        if(this.activityCategory == 2 || this.activityCategory == 5 || this.activityCategory == 7 || this.activityCategory == 9 || this.activityCategory == 10){
+
+    public boolean getNewAccessingCategories() {
+
+        if (this.activityCategory == 2 || this.activityCategory == 5 || this.activityCategory == 7 || this.activityCategory == 9 || this.activityCategory == 10) {
             return true;
         }
-        
+
         return false;
-        
+
     }
-    
-    public boolean getExistingCategories(){
-        
-        if(this.activityCategory == 3 || this.activityCategory == 6 || this.activityCategory == 8 || this.activityCategory == 9 || this.activityCategory == 10){
+
+    public boolean getExistingCategories() {
+
+        if (this.activityCategory == 3 || this.activityCategory == 6 || this.activityCategory == 8 || this.activityCategory == 9 || this.activityCategory == 10) {
             return true;
         }
-        
+
         return false;
-        
+
     }
-    
+
+    public ArrayList<ARB> getNonParticipantARBs() { // retrieves ARBs that are not participant/s of activity
+        int arboID = this.arbList.get(0).getArboID(); // assuming every activity has a participant
+        ARBDAO arbDAO = new ARBDAO();
+
+        ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(arboID); // retrieves all ARBs of that ARBO
+        ArrayList<ARB> filtered = new ArrayList();
+
+        for (ARB arb : arbList) {
+            for (ARB participant : this.arbList) {
+                if (arb.getArbID() != participant.getArbID()) { // if this activity doesn't recognize this ARB 
+                    filtered.add(arb);                          // as a participant, ADD to filtered
+                }
+            }
+        }
+
+        return filtered;
+    }
+
 }

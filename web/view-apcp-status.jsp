@@ -38,7 +38,7 @@
             <%} else if (userType == 5) {%>
             <%@include file="jspf/central-sidebar.jspf"%>
             <%} else if (userType == 2) {%>
-            <%@include file="jspf/point-person-sidebar.jspf"%>
+            <%@include file="jspf/pp-apcp-sidebar.jspf"%>
             <%} else if (userType == 6) {%>
             <%@include file="jspf/pfo-apcp-sidebar.jspf"%>
             <%} else if (userType == 7) {%>
@@ -823,7 +823,7 @@
             <!-- /.content-wrapper -->
 
         </div>
-        <%@include file="/jspf/footer.jspf" %>
+        <%@include file="jspf/footer.jspf" %>
         <script>
 
             function chg2() {

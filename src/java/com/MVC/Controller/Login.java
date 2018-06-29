@@ -60,9 +60,9 @@ public class Login extends BaseServlet {
                     l.setActionType(1); //  LOGIN
                     lDAO.addLog(l);
 
-                    if (u.getUserType() == 1) {   //  ADMINISTRATOR
+                    if (u.getUserType() == 1) {   // ADMINISTRATOR
                         request.getRequestDispatcher("admin-system-logs.jsp").forward(request, response);
-                    } else if (u.getUserType() == 2) {   //  POINT PERSON
+                    } else if (u.getUserType() == 2) {   //  POINT PERSON APCP
                         request.getRequestDispatcher("point-person-view-capdev-plans.jsp").forward(request, response);
                     } else if (u.getUserType() == 3) {   //  PROVINCIAL FIELD OFFICER
                         request.getRequestDispatcher("PFO-HEAD-home.jsp").forward(request, response);
@@ -73,6 +73,8 @@ public class Login extends BaseServlet {
                     } else if (u.getUserType() == 6) {   //  PFO-APCP
                         request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
                     } else if (u.getUserType() == 7) {   //  PFO-CAPDEV
+                        request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
+                    } else if (u.getUserType() == 8) {   //  POINT PERSON CAPDEV
                         request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
                     }
 

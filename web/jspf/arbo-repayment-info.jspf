@@ -1,0 +1,45 @@
+<div class="box-body">
+
+    <table id="repaymentTable" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Repayment Amount</th>
+                <th>Repayment Date</th>
+                <th>Recorded By</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <%
+                for (Repayment repayment : r.getRepayments()) {
+                    User u = new User();
+                    u = uDAO99.searchUser(repayment.getRecordedBy());
+                    ARB arb = new ARB();
+                    arb = arbDAO99.getARBByID(repayment.getArbID());
+            %>
+            <tr>
+                <td><%out.print(currency.format(repayment.getAmount()));%></td>
+                <td><%out.print(repayment.getDateRepayment());%></td>
+                <td><%out.print(u.getFullName());%></td>
+            </tr>
+            <%}%>
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <th>Repayment Amount</th>
+                <th>Repayment Date</th>
+                <th>Recorded By</th>
+            </tr>
+        </tfoot>
+
+    </table>
+</div>
+<div class="box-footer">
+    <div class="pull-right">
+        <%if ((Integer) session.getAttribute("userType") == 2) {%>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-arbo-repayment-modal">Import Repayments</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-arbo-repayment-modal">Add Repayment</button>
+        <%}%>
+    </div>
+</div>

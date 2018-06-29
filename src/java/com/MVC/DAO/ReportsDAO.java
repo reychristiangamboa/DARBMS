@@ -53,7 +53,6 @@ public class ReportsDAO {
                     r.setReleaseAmount(rs.getDouble("releaseAmount"));
                     r.setReleaseDate(rs.getDate("releaseDate"));
                     r.setReleasedBy(rs.getInt("releasedBy"));
-                    r.setDisbursements(dao.getAllDisbursementsByRelease(rs.getInt("releaseID")));
                     newRelease.add(r);
                 }
                 rs.close();

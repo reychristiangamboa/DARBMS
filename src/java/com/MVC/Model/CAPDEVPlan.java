@@ -18,11 +18,15 @@ public class CAPDEVPlan {
     private int requestID;
     private int pastDueAccountID;
     private String planDTN;
+    private Date planDate;
+    private Date implementedDate;
     private int createdBy;
     private int assignedTo;
     private int approvedBy;
     private int planStatus;
     private String planStatusDesc;
+    private String observations;
+    private String recommendation;
     private int clusterID;
     
     private ArrayList<CAPDEVActivity> activities = new ArrayList();
@@ -60,6 +64,22 @@ public class CAPDEVPlan {
         this.planDTN = planDTN;
     }
 
+    public Date getPlanDate() {
+        return planDate;
+    }
+
+    public void setPlanDate(Date planDate) {
+        this.planDate = planDate;
+    }
+
+    public Date getImplementedDate() {
+        return implementedDate;
+    }
+
+    public void setImplementedDate(Date implementedDate) {
+        this.implementedDate = implementedDate;
+    }
+    
     public int getCreatedBy() {
         return createdBy;
     }
@@ -92,6 +112,22 @@ public class CAPDEVPlan {
     public void setPlanStatusDesc(String plantStatusDesc) {
         this.planStatusDesc = plantStatusDesc;
     }
+
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
+    }
+
+    public String getRecommendation() {
+        return recommendation;
+    }
+
+    public void setRecommendation(String recommendation) {
+        this.recommendation = recommendation;
+    }
     
     public ArrayList<CAPDEVActivity> getActivities() {
         return activities;
@@ -120,6 +156,15 @@ public class CAPDEVPlan {
     public boolean checkAllActivitiesHaveParticipants(){
         for(CAPDEVActivity act : this.activities){
             if(act.getArbList().isEmpty()){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public boolean assessmentsAreComplete(){
+        for(CAPDEVActivity act : this.activities){
+            if(act.getActive() == 0){ // 1 activity is still left unassessed
                 return false;
             }
         }

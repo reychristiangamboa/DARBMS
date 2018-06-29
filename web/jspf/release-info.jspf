@@ -1,0 +1,41 @@
+<div class="box-body">
+    <center>
+        <%if ((Integer) session.getAttribute("userType") == 2) {%>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-release-modal">Import Releases</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-release-modal">Add Release</button>
+        <%}%>
+    </center>
+    <br />
+    <table id="releaseTable" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Release Amount</th>
+                <th>Release Date</th>
+                <th>Released By</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <%
+                for (APCPRelease release : releaseList) {
+                    User u = new User();
+                    u = uDAO99.searchUser(release.getReleasedBy());
+            %>
+            <tr>
+                <td><a href="MonitorDisbursement?releaseID=<%out.print(release.getReleaseID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(currency.format(release.getReleaseAmount()));%></a></td>
+                <td><%out.print(release.getReleaseDate());%></td>
+                <td><%out.print(u.getFullName());%></td>
+            </tr>
+            <%}%>
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <th>Release Amount</th>
+                <th>Release Date</th>
+                <th>Released By</th>
+            </tr>
+        </tfoot>
+
+    </table>
+</div>

@@ -5,6 +5,7 @@
  */
 package com.MVC.Model;
 
+import com.MVC.DAO.APCPRequestDAO;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,9 +43,11 @@ public class APCPRequest {
     private ArrayList<PastDueAccount> pastDueAccounts = new ArrayList();
     private ArrayList<PastDueAccount> unsettledPastDueAccounts = new ArrayList();
     private ArrayList<APCPRelease> releases = new ArrayList();
-    private ArrayList<Repayment> repayments = new ArrayList();
+    private ArrayList<Repayment> arboRepayments = new ArrayList();
+    private ArrayList<Repayment> arbRepayments = new ArrayList();
     private ArrayList<ARB> recipients = new ArrayList();
     private ArrayList<CAPDEVPlan> plans = new ArrayList();
+    private ArrayList<Disbursement> disbursements = new ArrayList();
 
     private double totalReleasedAmount;
     private double yearlyReleasedAmount;
@@ -53,6 +56,44 @@ public class APCPRequest {
     private ArrayList<PastDueAccount> pastDueReasons = new ArrayList();
     private Date dateLastRelease;
 
+    
+    public ArrayList<Disbursement> getDisbursements() {
+        return disbursements;
+    }
+
+    public void setDisbursements(ArrayList<Disbursement> disbursements) {
+        this.disbursements = disbursements;
+    }
+
+    public double getTotalReleaseOSBalance() {
+        double value = 0;
+        for (APCPRelease r : this.releases) {
+            value += r.getOSBalance();
+        }
+        for(Repayment p : this.arboRepayments){
+            value -= p.getAmount();
+        }
+        return value;
+    }
+    
+    public double getTotalARBOSBalance(int arbID){
+        APCPRequestDAO dao = new APCPRequestDAO();
+        ArrayList<Repayment> arbRepayments = dao.getArbRepaymentsByARB(arbID);
+        ArrayList<Disbursement> arbDisbursements = dao.getAllDisbursementsByARB(arbID);
+        
+        double totDisbursements  = 0;
+        for(Disbursement d : arbDisbursements){
+            totDisbursements += d.getDisbursedAmount();
+        }
+        
+        double totRepayments = 0;
+        for(Repayment r : arbRepayments){
+            totRepayments += r.getAmount();
+        }
+        
+        return totDisbursements - totRepayments;
+    }
+    
     public Date getDateCompleted() {
         return dateCompleted;
     }
@@ -328,33 +369,24 @@ public class APCPRequest {
         this.releases = releases;
     }
 
-    public ArrayList<Repayment> getRepayments() {
-        return repayments;
+    public ArrayList<Repayment> getArboRepayments() {
+        return arboRepayments;
     }
 
-    public void setRepayments(ArrayList<Repayment> repayments) {
-        this.repayments = repayments;
+    public void setArboRepayments(ArrayList<Repayment> repayments) {
+        this.arboRepayments = repayments;
+    }
+    
+    public ArrayList<Repayment> getArbRepayments() {
+        return arbRepayments;
+    }
+
+    public void setArbRepayments(ArrayList<Repayment> repayments) {
+        this.arbRepayments = repayments;
     }
 
     public double getProgressBarWidth(double val1, double val2) {
         return (val1 / val2) * 100;
-    }
-
-    public double getAccumulatedOSBalancePerRequest() {
-        double value = 0;
-        double value2 = 0;
-        double value3 = 0;
-        
-        for (APCPRelease r : this.releases) {
-            value += r.getTotalOSBalance();
-        }
-        for(Repayment rep : this.repayments){
-            value2 += rep.getAmount();
-        }
-        
-        value3 = value - value2;
-        
-        return value;
     }
 
     public boolean sameARBO(int arboID) {

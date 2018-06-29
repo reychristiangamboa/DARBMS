@@ -107,6 +107,7 @@
                                             <%@include file="/jspf/arbo-information.jspf" %>
                                         </div>
                                     </div>
+                                </div>
                                         
                                 <%
                                             if (req.getRequestStatus() == 1){%>
@@ -124,6 +125,7 @@
                         </div>
                         <!-- /.box -->
 
+                    </div>
                     </div>
 
                 </section>

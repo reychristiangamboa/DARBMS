@@ -35,12 +35,25 @@
                 CAPDEVDAO capdevDAO99 = new CAPDEVDAO();
                 UserDAO uDAO99 = new UserDAO();
                 
-                APCPRequest r = apcpRequestDAO99.getRequestByID((Integer) request.getAttribute("requestID"));
+                ArrayList<CAPDEVActivity> activities = capdevDAO99.getCAPDEVActivities();
+                APCPRequest r = apcpRequestDAO99.getRequestByID((Integer)request.getAttribute("requestID"));
+                APCPRelease release = apcpRequestDAO99.getAPCPReleaseByID((Integer)request.getAttribute("releaseID"));
                 ARBO a = arboDAO99.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO99.getAllARBsARBO(r.getArboID());
                 ArrayList<APCPRelease> releaseList = apcpRequestDAO99.getAllAPCPReleasesByRequest((Integer) request.getAttribute("requestID"));
                 ArrayList<PastDueAccount> reasons = capdevDAO99.getAllPastDueReasons();
+                    
+        int reqID = (Integer) request.getAttribute("requestID");
+        APCPRequest req = apcpRequestDAO99.getRequestByID(reqID);
+        ARBO arbo = arboDAO99.getARBOByID(req.getArboID());
+        UserDAO userDAO = new UserDAO();
+            %>                                        
+            <% User u1 = new User(); %>
+            <% User u2 = new User(); %>
+            <% User u3 = new User(); %>
+            <% User u4 = new User(); %>
             %>
+
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -75,613 +88,150 @@
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
                                     </div>  
-                                </div>
-                                <!-- /.box-header -->
-
-
+                                </div>  
                                 <div class="box-body"> 
-
-                                    <div class="nav-tabs-custom">
-                                        <!-- Tabs within a box -->
-                                        <ul class="nav nav-tabs pull-left">
-                                            <li class="active"><a href="#request" data-toggle="tab">Request Information</a></li>
-                                            <li><a href="#info" data-toggle="tab">ARBO Profile</a></li>
-                                            <li><a href="#history" data-toggle="tab">CAPDEV History</a></li>
-                                        </ul>
-                                        <%@include file="jspf/arboInfo.jspf"%>
-                                    </div>
-                                    <hr>        
-                                </div>
-                                <!-- /.box-body -->
-
-                            </div>
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Release Information</h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
-                                    </div>  
-                                </div>
-                                <!-- /.box-header -->
-
-
-                                <div class="box-body"> 
-
-                                    <div class="nav-tabs-custom">
-                                        <!-- Tabs within a box -->
-                                        <ul class="nav nav-tabs pull-left">
-                                            <li class="active"><a href="#release" data-toggle="tab">Release</a></li>
-                                            <li><a href="#repayment" data-toggle="tab">Repayment</a></li>
-                                            <li><a href="#pastdue" data-toggle="tab">Past Due</a></li>
-                                        </ul>
-
-                                        <div class="tab-content no-padding">
-                                            <!-- Morris chart - Sales -->
-                                            <div class="chart tab-pane active" id="release" style="position: relative;">
+                                    <div class="box-group" id="accordion">
+                                        <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                        <div class="panel box box-info">
+                                            <div class="box-header with-border">
+                                                <h4 class="box-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+                                                        ARBO Information
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseFour" class="panel-collapse collapse">
                                                 <div class="box-body">
-
-                                                    <table id="releaseTable" class="table table-bordered table-striped">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Release Amount</th>
-                                                                <th>Release Date</th>
-                                                                <th>Released By</th>
-                                                            </tr>
-                                                        </thead>
-
-                                                        <tbody>
-                                                            <%
-                                                                for (APCPRelease release : releaseList) {
-                                                                    User u = new User();
-                                                                    u = uDAO99.searchUser(release.getReleasedBy());
-                                                            %>
-                                                            <tr>
-                                                                <td><a href="MonitorDisbursement?releaseID=<%out.print(release.getReleaseID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(currency.format(release.getReleaseAmount()));%></a></td>
-                                                                <td><%out.print(release.getReleaseDate());%></td>
-                                                                <td><%out.print(u.getFullName());%></td>
-                                                            </tr>
-                                                            <%}%>
-                                                        </tbody>
-
-                                                        <tfoot>
-                                                        <th>Release Amount</th>
-                                                        <th>Release Date</th>
-                                                        <th>Released By</th>
-                                                        </tfoot>
-
-                                                    </table>
+                                                    <%@include file="/jspf/arbo-information.jspf" %>
                                                 </div>
-                                                <div class="box-footer">
-                                                    <div class="pull-right">
-                                                        <%if ((Integer) session.getAttribute("userType") == 2) {%>
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-release-modal">Import Releases</button>
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-release-modal">Add Release</button>
-                                                        <%}%>
-                                                    </div>
-                                                </div>
+                                            </div> 
+                                        </div>
+                                        <div class="panel box box-info">
+                                            <div class="box-header with-border">
+                                                <h4 class="box-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive">
+                                                        APCP Request Information
+                                                    </a>
+                                                </h4>
                                             </div>
-                                            <div class="chart tab-pane" id="repayment" style="position: relative;">
+                                            <div id="collapseFive" class="panel-collapse collapse">
                                                 <div class="box-body">
-
-                                                    <table id="repaymentTable" class="table table-bordered table-striped">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Repayment Amount</th>
-                                                                <th>Repayment Date</th>
-                                                                <th>Repaid By</th>
-                                                                <th>Recorded By</th>
-                                                            </tr>
-                                                        </thead>
-
-                                                        <tbody>
-                                                            <%
-                                                                for (Repayment repayment : r.getRepayments()) {
-                                                                    User u = new User();
-                                                                    u = uDAO99.searchUser(repayment.getRecordedBy());
-                                                                    ARB arb = new ARB();
-                                                                    arb = arbDAO99.getARBByID(repayment.getArbID());
-                                                            %>
-                                                            <tr>
-                                                                <td><%out.print(currency.format(repayment.getAmount()));%></td>
-                                                                <td><%out.print(repayment.getDateRepayment());%></td>
-                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
-                                                                <td><%out.print(u.getFullName());%></td>
-                                                            </tr>
-                                                            <%}%>
-                                                        </tbody>
-
-                                                        <tfoot>
-                                                            <tr>
-                                                                <th>Repayment Amount</th>
-                                                                <th>Repayment Date</th>
-                                                                <th>Repaid By</th>
-                                                                <th>Recorded By</th>
-                                                            </tr>
-                                                        </tfoot>
-
-                                                    </table>
+                                                    <%@include file="/jspf/apcp-request-info.jspf" %>
                                                 </div>
-                                                <div class="box-footer">
-                                                    <div class="pull-right">
-                                                        <%if ((Integer) session.getAttribute("userType") == 2) {%>
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-repayment-modal">Import Repayments</button>
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-repayment-modal">Add Repayment</button>
-                                                        <%}%>
-                                                    </div>
-                                                </div>
-
                                             </div>
-                                            <div class="chart tab-pane" id="pastdue" style="position: relative;">
+                                        </div>
+                                        <div class="panel box box-info">
+                                            <div class="box-header with-border">
+                                                <h4 class="box-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                                        Release Information
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseTwo" class="panel-collapse collapse in">
                                                 <div class="box-body">
-
-                                                    <table id="pastDueTable" class="table table-bordered table-striped">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Amount</th>
-                                                                <th>Reason Past Due</th>
-                                                                <th>Other Reason</th>
-                                                                <th>Date</th>
-                                                                <th>Recorded By</th>
-                                                                <th>Status</th>
-                                                            </tr>
-                                                        </thead>
-
-                                                        <tbody>
-                                                            <%
-                                                                for (PastDueAccount p : r.getPastDueAccounts()) {
-                                                                    User u = new User();
-                                                                    u = uDAO99.searchUser(p.getRecordedBy());
-                                                            %>
-                                                            <tr>
-                                                                <td><a href="#" data-toggle="modal" data-target="#pastDueModal<%out.print(p.getPastDueAccountID());%>"><%out.print(currency.format(p.getPastDueAmount()));%></a></td>
-                                                                <td><%out.print(p.getReasonPastDueDesc());%></td>
-                                                                <td><%out.print(p.getOtherReason());%></td>
-
-                                                                <%if (p.getDateSettled() != null) {%>
-                                                                <td><%out.print(p.getDateSettled());%></td>
-                                                                <%} else {%>
-                                                                <td><%out.print("N/A");%></td>
-                                                                <%}%>
-
-                                                                <td><%out.print(u.getFullName());%></td>
-                                                                
-                                                                <%if (p.getDateSettled() != null) {%>
-                                                                <td><%out.print("Unsettled");%></td>
-                                                                <%} else {%>
-                                                                <td><%out.print("Settled");%></td>
-                                                                <%}%>
-                                                            </tr>
-
-
-                                                        <div class="modal fade" id="pastDueModal<%out.print(p.getPastDueAccountID());%>">
-                                                            <div class="modal-dialog modal-md">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span></button>
-                                                                        <h4 class="modal-title">Past Due Account Details</h4>
-                                                                    </div>
-
-                                                                    <form method="post">
-                                                                        <div class="modal-body" id="modalBody">
-                                                                            <div class="row">
-                                                                                <div class="col-xs-12">
-                                                                                    <div class="text-center">
-                                                                                        <div class="form-group">
-                                                                                            <input type="radio" id="full" name="paymentMode" value="full" checked onclick="document.getElementById('pdaAmount<%out.print(p.getPastDueAccountID());%>').disabled = true">
-                                                                                            <label for="">Full Settlement</label>
-                                                                                            <input type="radio" id="partial" name="paymentMode" value="partial" onclick="document.getElementById('pdaAmount<%out.print(p.getPastDueAccountID());%>').disabled = false">
-                                                                                            <label for="">Partial Settlement</label>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col-xs-12">
-                                                                                    <div class="col-xs-6">
-                                                                                        <div class="form-group">
-                                                                                            <label for="">Amount</label>
-                                                                                            <input type="text" id="pdaAmount<%out.print(p.getPastDueAccountID());%>" class="form-control numberOnly" name="amount" value="<%=p.getPastDueAmount()%>">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-xs-6">
-                                                                                        <div class="form-group">
-                                                                                            <label for="">Date Settled</label>
-                                                                                            <div class="input-group">
-                                                                                                <input type="date" class="form-control" name="dateSettled" <%if (p.getDateSettled() != null) { %> value="<%out.print(p.getDateSettled());%>"<%}%> required>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="col-xs-12">
-                                                                                    <div class="col-xs-6">
-                                                                                        <div class="form-group">
-                                                                                            <label for="">Reason for Past Due</label>
-                                                                                            <input type="text" class="form-control" value="<%=p.getReasonPastDueDesc()%>" disabled>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-xs-6">
-                                                                                        <label for="">Other Reason for Past Due</label>
-                                                                                        <textarea class="form-control" name="otherReason" id="" cols="10" rows="3" disabled><%out.print(p.getOtherReason());%></textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-
-
-                                                                        <div class="modal-footer">
-
-                                                                            <input type="hidden" name="id" value="<%=r.getRequestID()%>">
-                                                                            <input type="hidden" name="pastDueID" value="<%=p.getPastDueAccountID()%>">
-                                                                            <%if((Integer)session.getAttribute("userType") == 3){%>
-                                                                            <button type="submit" onclick="form.action = 'CreateCAPDEVProposal'" class="btn btn-primary pull-right">Create CAPDEV Proposal</button>
-                                                                            <%}else if((Integer)session.getAttribute("userType") == 2){%>
-                                                                            <button class="btn btn-primary" onclick="form.action = 'SettlePastDueAccount'">Settle</button>
-                                                                            <%}%>
-                                                                        </div>
-
-                                                                    </form>
-                                                                </div>
-                                                                <!--                                            /.modal-content -->
-                                                            </div>
-                                                            <!--                                        /.modal-dialog -->
-                                                        </div>
-
-                                                        <%}%>
-                                                        </tbody>
-
-                                                        <tfoot>
-
-                                                            <tr>
-                                                                <th>Amount</th>
-                                                                <th>Reason Past Due</th>
-                                                                <th>Other Reason</th>
-                                                                <th>Date</th>
-                                                                <th>Recorded By</th>
-                                                                <th>Status</th>
-                                                            </tr>
-
-                                                        </tfoot>
-
-                                                    </table>
+                                                    <%@include file="/jspf/release-info.jspf" %>
                                                 </div>
-                                                <div class="box-footer">
-                                                    <div class="pull-right">
-                                                        <%if ((Integer) session.getAttribute("userType") == 2) {%>
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import-pastdue-modal">Import Past Due Accounts</button>
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-pastdue-modal">Add Past Due Account</button>
-                                                        <%}%>
-                                                    </div>
+                                            </div>
+                                        </div>
+                                        <!--ARBO REPAYMENT-->
+                                        <div class="panel box box-primary">
+                                            <div class="box-header with-border">
+                                                <h4 class="box-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                                        ARBO Repayment Information
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseThree" class="panel-collapse collapse">
+                                                <div class="box-body">
+                                                    <%@include file="/jspf/arbo-repayment-info.jspf" %>
                                                 </div>
-
+                                            </div>
+                                        </div> 
+                                        <!--ARB REPAYMENT-->  
+                                        <div class="panel box box-primary">
+                                            <div class="box-header with-border">
+                                                <h4 class="box-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven">
+                                                        ARB Repayment Information
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseSeven" class="panel-collapse collapse">
+                                                <div class="box-body">
+                                                    <%@include file="/jspf/arb-repayment-info.jspf" %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--DISBURSEMENT REPAYMENT-->
+                                        <div class="panel box box-info">
+                                            <div class="box-header with-border">
+                                                <h4 class="box-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix">
+                                                        Disbursement Information
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseSix" class="panel-collapse collapse in">
+                                                <div class="box-body">
+                                                    <%@include file="/jspf/disbursement-info.jspf" %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--PAST DUE REPAYMENT-->
+                                        <div class="panel box box-primary">
+                                            <div class="box-header with-border">
+                                                <h4 class="box-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                                        Past Due Information
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseOne" class="panel-collapse collapse">
+                                                <div class="box-body">
+                                                    <%@include file="/jspf/pastdue-info.jspf" %>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-
-
                                 </div>
-                                <!-- /.box-body -->
-
-                            </div> 
-                        </div>
-                        <!-- /.col -->
-                    </div>
-
-                    <div class="modal fade" id="add-release-modal">
-                        <div class="modal-dialog modal-md">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Record Release</h4>
-                                </div>
-
-                                <form method="post">
-                                    <div class="modal-body" id="modalBody">
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <label for="">Release Amount</label>
-                                                    <div class="input-group">
-                                                        <div class="input-group-addon">
-                                                            <i>&#8369;</i>
-                                                        </div>
-                                                        <input type="text" class="form-control numberOnly" name="releaseAmount" autocomplete="off" required>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <label for="">Release Date</label>
-                                                    <div class="input-group date">
-                                                        <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                                                        <input type="date" class="form-control" name="releaseDate" />        
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
-                                        <button type="submit" onclick="form.action = 'RecordRequestRelease'" class="btn btn-primary pull-right">Submit</button>
-                                    </div>
-                                </form>
-
                             </div>
-                            <!--                                            /.modal-content -->
+
                         </div>
-                        <!--                                        /.modal-dialog -->
                     </div>
-
-                    <div class="modal fade" id="import-release-modal">
-                        <div class="modal-dialog modal-sm">
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Import Releases</h4>
-                                </div>
-
-                                <form method="post">
-                                    <div class="modal-body" id="modalBody">
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <div class="form-group">
-                                                    <label for="">Import File</label>
-                                                    <input type="file" class="form-control" name="file" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
-                                        <button type="submit" name="manual" onclick="form.action = 'ImportRelease'" class="btn btn-primary pull-right">Submit</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                            <!--                                            /.modal-content -->
-                        </div>
-                        <!--                                        /.modal-dialog -->
-                    </div>
-
-                    <div class="modal fade" id="add-repayment-modal">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Record Repayment</h4>
-                                </div>
-
-                                <form method="post">
-                                    <div class="modal-body" id="modalBody">
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <table id="example1" class="table table-bordered table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ARB Name</th>
-                                                            <th>Address</th>
-                                                            <th>Crops</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
-
-                                                    <tbody>
-                                                        <%for (ARB arb : arbList) {%>
-                                                        <tr>
-                                                            <td><%out.print(arb.getFLName());%></td>
-                                                            <td><%out.print(arb.getFullAddress());%></td>
-                                                            <td><%out.print(arb.printAllCrops());%></td>
-
-                                                            <td>
-                                                                <input type="checkbox" name="arbIDs" value="<%=arb.getArbID()%>"/>
-                                                            </td>
-                                                        </tr>
-                                                        <%}%>
-                                                    </tbody>
-
-                                                </table>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <label for="">Amount</label>
-                                                    <div class="input-group">
-                                                        <div class="input-group-addon">
-                                                            <i>&#8369;</i>
-                                                        </div>
-                                                        <input type="text" class="form-control numberOnly" name="repaymentAmount" autocomplete="off" required>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <label for="">Repayment Date</label>
-                                                    <div class="input-group date">
-                                                        <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                                                        <input type="date" class="form-control" name="repaymentDate" />        
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
-                                        <button type="submit" name="manual" onclick="form.action = 'RecordRepayment'" class="btn btn-primary pull-right">Submit</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                            <!--                                            /.modal-content -->
-                        </div>
-                        <!--                                        /.modal-dialog -->
-                    </div>
-
-                    <div class="modal fade" id="import-repayment-modal">
-                        <div class="modal-dialog modal-sm">
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Import Repayments</h4>
-                                </div>
-
-                                <form method="post">
-                                    <div class="modal-body" id="modalBody">
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <div class="form-group">
-                                                    <label for="">Import File</label>
-                                                    <input type="file" class="form-control" name="file" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
-                                        <button type="submit" name="manual" onclick="form.action = 'ImportRepayment'" class="btn btn-primary pull-right">Submit</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                            <!--                                            /.modal-content -->
-                        </div>
-                        <!--                                        /.modal-dialog -->
-                    </div>
-
-                    <div class="modal fade" id="add-pastdue-modal">
-                        <div class="modal-dialog modal-md">
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Record Past Due Account</h4>
-                                </div>
-
-                                <form method="post">
-                                    <div class="modal-body" id="modalBody">
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <label for="">Amount</label>
-                                                    <div class="input-group">
-                                                        <div class="input-group-addon">
-                                                            <i>&#8369;</i>
-                                                        </div>
-                                                        <input type="text" class="form-control numberOnly" name="pastDueAmount" autocomplete="off" required>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <label for="">Reason for Past Due </label>
-                                                    <select class="form-control" name="reasonPastDue" id="">
-                                                        <%for (PastDueAccount p : reasons) {%>
-                                                        <option value="<%=p.getReasonPastDue()%>"><%out.print(p.getReasonPastDueDesc());%></option>
-                                                        <%}%>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                <div class="form-group">
-                                                    <label for="">Date Recorded</label>
-                                                    <input type="date" class="form-control" name="recordedDate" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <div class="form-group">
-                                                    <label for="">Other Reason</label>
-                                                    <textarea class="form-control" name="otherReason" id="" cols="10" rows="3">N/A</textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
-                                        <button type="submit" name="manual" onclick="form.action = 'RecordPastDueAccount'" class="btn btn-primary pull-right">Submit</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                            <!--                                            /.modal-content -->
-                        </div>
-                        <!--                                        /.modal-dialog -->
-                    </div>
-                    <div class="modal fade" id="import-pastdue-modal">
-                        <div class="modal-dialog modal-sm">
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Import Past Due Accounts</h4>
-                                </div>
-
-                                <form method="post">
-                                    <div class="modal-body" id="modalBody">
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <div class="form-group">
-                                                    <label for="">Import File</label>
-                                                    <input type="file" class="form-control" name="file" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
-                                        <button type="submit" name="manual" onclick="form.action = 'ImportPastDueAccount'" class="btn btn-primary pull-right">Submit</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                            <!--                                            /.modal-content -->
-                        </div>
-                        <!--                                        /.modal-dialog -->
-                    </div>
-
+                    <%@include file="/jspf/modal-info.jspf"%>
                 </section>
-                <!-- /.content -->
-
+                <!-- /.col -->
             </div>
-            <!-- /.content-wrapper -->
+
+            <!-- /.content -->
 
         </div>
-        <%@include file="jspf/footer.jspf" %>
-        <script>
 
+    <%@include file="jspf/footer.jspf" %>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var arboInterestRate = <%out.print(r.getLoanReason().getLoanTerm().getArboInterestRate());%>
+            $('#releaseAmount').on('input', function () {
+                var val = this.value * arboInterestRate;
+                $('#releaseOSBalance').val(val);
+            });
+        });
+        
+        function chg() {
+                var arbID = document.getElementById('arbRepaymentSelect').value;
 
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        document.getElementById('arbRepaymentDetails').innerHTML = xhttp.responseText;
+                    }
+                };
+                xhttp.open("GET", "RefreshARBRepayment?arbID=" + arbID + "&requestID=" + r.getRequestID()), true);
+                xhttp.send();
+            }
+    </script>
 
-            var ctx = $('#barCanvas').get(0).getContext('2d');
-            <%
-                Chart bar = new Chart();
-                String json = bar.getBarChartEducation(arbList);
-            %>
-            new Chart(ctx, <%out.print(json);%>);
-
-            var ctx3 = $('#pieCanvas').get(0).getContext('2d');
-            <%
-                Chart pie = new Chart();
-                String json3 = pie.getPieChartGender(arbList);
-            %>
-            new Chart(ctx3, <%out.print(json3);%>);
-
-        </script>
-
-    </body>
+</body>
 </html>

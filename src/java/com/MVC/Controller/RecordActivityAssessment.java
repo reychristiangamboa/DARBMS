@@ -5,7 +5,6 @@
  */
 package com.MVC.Controller;
 
-import static com.MVC.Controller.SendCAPDEVProposal.readExcelFile;
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.DAO.ARBDAO;
 import com.MVC.DAO.ARBODAO;
@@ -80,7 +79,7 @@ public class RecordActivityAssessment extends BaseServlet {
                 arbIDs.add(arbID);
             }
         }else if(request.getParameter("manual") != null){
-            String[] attendees = request.getParameterValues("attended");
+            String[] attendees = request.getParameterValues("attendee");
             for(String attendee : attendees){
                 arbIDs.add(Integer.parseInt(attendee));
             }
@@ -94,18 +93,16 @@ public class RecordActivityAssessment extends BaseServlet {
             ca.setActivityID(activityID);
             ca.setActive(1);
             ca.setTechnicalAssistant(request.getParameter("TA"));
-            ca.setObservations(request.getParameter("observations"));
-            ca.setRecommendation(request.getParameter("recommendation"));
 
-            if (cDAO.recordAssessment(ca) && cDAO.checkIfPresent(arbIDs, activityID)) {
+            if (cDAO.recordAssessment(ca)) {
                 request.setAttribute("success", "Activity Assessment recorded!");
                 request.setAttribute("planID", planID);
-                request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);
+                request.getRequestDispatcher("PP-CAPDEV-review-capdev-attendance.jsp").forward(request, response);
 
             } else {
                 request.setAttribute("errMessage", "Unable to record Activity Assessment.");
                 request.setAttribute("planID", planID);
-                request.getRequestDispatcher("point-person-review-capdev-attendance.jsp").forward(request, response);
+                request.getRequestDispatcher("PP-CAPDEV-review-capdev-attendance.jsp").forward(request, response);
             }
         }
 

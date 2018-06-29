@@ -149,7 +149,6 @@ public class AddCAPDEVParticipants extends BaseServlet {
                 int activityType = Integer.parseInt(activities[i]);
                 activity.setActivityType(activityType);
                 activity.setPlanID(planID);
-                activity.setActivityDate(activityDate);
 
                 int newlyAddedActivityID = capdevDAO.addCAPDEVPlanActivity(activity);
 

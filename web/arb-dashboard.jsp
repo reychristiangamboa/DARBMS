@@ -50,6 +50,8 @@
             <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
             <% } else if ((Integer) session.getAttribute("userType") == 5) {%>
             <%@include file="jspf/central-sidebar.jspf"%>
+            <% } else if ((Integer) session.getAttribute("userType") == 3) {%>
+            <%@include file="jspf/central-sidebar.jspf"%>
             <%}%>
 
             <%
