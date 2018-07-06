@@ -43,7 +43,7 @@ public class ViewCAPDEVProposal extends BaseServlet {
         } else {
             request.setAttribute("planID", planID);
             request.setAttribute("requestID", req.getRequestID());
-            request.getRequestDispatcher("regional-field-officer-view-capdev-plan.jsp").forward(request, response);
+            request.getRequestDispatcher("PFO-HEAD-view-capdev-plan.jsp").forward(request, response);
         }
 
     }

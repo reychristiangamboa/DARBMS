@@ -546,14 +546,12 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <%if(userType == 6){%>
-                                                <td><a href="SchedulePreRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}else if (userType == 4 || userType == 2 || userType == 5 || userType == 3){%>
-                                                <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}else if (userType == 7){%>
+                                                <%if (userType == 7){%>
                                                 <td><a href="CreateCAPDEVProposal?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
-                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                    <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
                                                 <%}else{%> <!--LOAN REASON-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
@@ -565,7 +563,6 @@
                                                 <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                             </tr>
                                             <%}%>
-
                                         </tbody>
 
                                     </table>

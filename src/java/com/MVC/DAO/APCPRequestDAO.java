@@ -132,6 +132,7 @@ public class APCPRequestDAO {
                 r.setRequestStatus(rs.getInt("requestStatus"));
                 r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
                 r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
+                r.setDateCompleted(rs.getDate("dateCompleted"));
                 r.setIsNewAccessingRequest(rs.getInt("isNewAccessingRequest"));
                 r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
                 r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
@@ -165,8 +166,8 @@ public class APCPRequestDAO {
         try {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`apcp_requests` (`arboID`, `loanAmount`, "
-                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`,`requestStatus`,`apcpType`,`cropProd`,`loanTermDuration`,`isNewAccessingRequest`) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);";
+                    + "`hectares`, `remarks`, `dateRequested`,`requestedTo`,`requestStatus`,`apcpType`,`cropProd`,`loanTermDuration`,`isNewAccessingRequest`, `dateCompleted`) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
             p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setInt(1, r.getArboID());
             p.setDouble(2, r.getLoanAmount());
@@ -183,6 +184,7 @@ public class APCPRequestDAO {
             p.setInt(9, r.getCropProdID());
             p.setInt(10, r.getLoanTermDuration());
             p.setInt(11, 0);
+            p.setDate(12, r.getDateCompleted());
             
 
             p.executeUpdate();
@@ -1537,9 +1539,7 @@ public class APCPRequestDAO {
 
         try {
             con.setAutoCommit(false);
-            String query = "SELECT * FROM `dar-bms`.ref_loanReason r "
-                    + "LEFT JOIN `dar-bms`.ref_apcpType a ON r.apcpType=a.apcpType "
-                    + "WHERE r.apcpType=? OR r.apcpType IS NULL";
+            String query = "SELECT * FROM `dar-bms`.ref_loanReason r";
             PreparedStatement p = con.prepareStatement(query);
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
@@ -1930,6 +1930,32 @@ public class APCPRequestDAO {
             Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return success;
+    }
+    
+    public double getTotalApprovedAmount(){
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        double value = 0;
+
+        try {
+            String query = "select sum(r.loanAmount) from apcp_requests r";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                value = rs.getInt(1);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return value;
     }
 
 }

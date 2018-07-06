@@ -6,7 +6,7 @@
         <%}%>
     </center>
     <br />
-    <table id="releaseTable" class="table table-bordered table-striped">
+    <table id="releaseTable" class="table table-bordered table-striped modTable">
         <thead>
             <tr>
                 <th>Release Amount</th>
@@ -17,12 +17,12 @@
 
         <tbody>
             <%
-                for (APCPRelease release : releaseList) {
+                for (APCPRelease release : r.getReleases()) {
                     User u = new User();
                     u = uDAO99.searchUser(release.getReleasedBy());
             %>
             <tr>
-                <td><a href="MonitorDisbursement?releaseID=<%out.print(release.getReleaseID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(currency.format(release.getReleaseAmount()));%></a></td>
+                <td><a target="_blank" rel="noopener noreferrer" href="MonitorDisbursement?releaseID=<%out.print(release.getReleaseID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(currency.format(release.getReleaseAmount()));%></a></td>
                 <td><%out.print(release.getReleaseDate());%></td>
                 <td><%out.print(u.getFullName());%></td>
             </tr>

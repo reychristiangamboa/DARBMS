@@ -482,46 +482,6 @@ public class Chart {
         return new PieChart(data).toJson();
     }
 
-    public String getPieChartGender(ArrayList<ARB> arbGender) {
-
-        ArrayList<ARB> dataMale = new ArrayList();
-        ArrayList<ARB> dataFemale = new ArrayList();
-
-        for (ARB arb : arbGender) {
-            if (arb.getGender().equalsIgnoreCase("M")) {
-                dataMale.add(arb);
-            } else if (arb.getGender().equalsIgnoreCase("F")) {
-                dataFemale.add(arb);
-            }
-        }
-        ArrayList<Integer> doubleFigures = new ArrayList();
-        doubleFigures.add(dataMale.size());
-        doubleFigures.add(dataFemale.size());
-
-        ArrayList<String> stringLabels = new ArrayList();
-        stringLabels.add("Male");
-        stringLabels.add("Female");
-
-        PieDataset dataset = new PieDataset();
-        dataset.setLabel("DATASET");
-        for (int i = 0; i < doubleFigures.size(); i++) {
-            dataset.addData(doubleFigures.get(i));
-            dataset.addBackgroundColor(Color.BLUE);
-            dataset.addBackgroundColor(Color.DARK_SALMON);
-
-        }
-        dataset.setBorderWidth(2);
-
-        PieData data = new PieData();
-        for (int j = 0; j < stringLabels.size(); j++) {
-            data.addLabel(stringLabels.get(j));
-        }
-
-        data.addDataset(dataset);
-
-        return new PieChart(data).toJson();
-    }
-
     public String getPieChartPastDue(ArrayList<APCPRequest> unsettledProvincialRequests) {
         CAPDEVDAO dao = new CAPDEVDAO();
         APCPRequestDAO dao2 = new APCPRequestDAO();
@@ -769,6 +729,145 @@ public class Chart {
         return new BarChart(data).toJson();
     }
 
+    public static long daysBetween(Calendar startDate, Calendar endDate) {
+        long end = endDate.getTimeInMillis();
+        long start = startDate.getTimeInMillis();
+
+        return TimeUnit.MILLISECONDS.toDays(Math.abs(end - start));
+    }
+
+    // <editor-fold desc="ARB DASHBOARD">
+    // <editor-fold desc="GENDER">
+    public String getPieChartGender(ArrayList<ARB> arbGender) {
+
+        ArrayList<ARB> dataMale = new ArrayList();
+        ArrayList<ARB> dataFemale = new ArrayList();
+
+        for (ARB arb : arbGender) {
+            if (arb.getGender().equalsIgnoreCase("M")) {
+                dataMale.add(arb);
+            } else if (arb.getGender().equalsIgnoreCase("F")) {
+                dataFemale.add(arb);
+            }
+        }
+        ArrayList<Integer> doubleFigures = new ArrayList();
+        doubleFigures.add(dataMale.size());
+        doubleFigures.add(dataFemale.size());
+
+        ArrayList<String> stringLabels = new ArrayList();
+        stringLabels.add("Male");
+        stringLabels.add("Female");
+
+        PieDataset dataset = new PieDataset();
+        dataset.setLabel("DATASET");
+        for (int i = 0; i < doubleFigures.size(); i++) {
+            dataset.addData(doubleFigures.get(i));
+            dataset.addBackgroundColor(Color.BLUE);
+            dataset.addBackgroundColor(Color.DARK_SALMON);
+
+        }
+        dataset.setBorderWidth(2);
+
+        PieData data = new PieData();
+        for (int j = 0; j < stringLabels.size(); j++) {
+            data.addLabel(stringLabels.get(j));
+        }
+
+        data.addDataset(dataset);
+
+        return new PieChart(data).toJson();
+    }
+
+    public String getBarChartRecipientsByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+
+        BarData data = new BarData();
+        BarDataset male = new BarDataset();
+        BarDataset female = new BarDataset();
+        ArrayList<Integer> maleValues = new ArrayList();
+        ArrayList<Integer> femaleValues = new ArrayList();
+
+        for (Region r : regionList) {
+            int maleTotal = 0;
+            int femaleTotal = 0;
+            for (ARB arb : arbList) {
+                if (arb.getRegCode() == r.getRegCode() && arb.getGender().equals("M")) {
+                    maleTotal++;
+                } else if (arb.getRegCode() == r.getRegCode() && arb.getGender().equals("F")) {
+                    femaleTotal++;
+                }
+            }
+            maleValues.add(maleTotal);
+            femaleValues.add(femaleTotal);
+            data.addLabel(r.getRegDesc());
+        }
+
+        for (int maleValue : maleValues) {
+            male.addData(maleValue);
+            male.addBackgroundColor(Color.AQUA);
+        }
+
+        for (int femaleValue : femaleValues) {
+            female.addData(femaleValue);
+            female.addBackgroundColor(Color.PINK);
+        }
+
+        male.setLabel("MALE");
+        female.setLabel("FEMALE");
+
+        data.addDataset(male);
+        data.addDataset(female);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartRecipientsByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+
+        BarData data = new BarData();
+        BarDataset male = new BarDataset();
+        BarDataset female = new BarDataset();
+        ArrayList<Integer> maleValues = new ArrayList();
+        ArrayList<Integer> femaleValues = new ArrayList();
+
+        ARBODAO arboDAO = new ARBODAO();
+
+        for (Province p : provOfficeList) {
+            int maleTotal = 0;
+            int femaleTotal = 0;
+            for (ARB arb : arbList) {
+                if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode() && arb.getGender().equals("M")) {
+                    maleTotal++;
+                } else if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode() && arb.getGender().equals("F")) {
+                    femaleTotal++;
+                }
+            }
+            maleValues.add(maleTotal);
+            femaleValues.add(femaleTotal);
+            data.addLabel(p.getProvDesc());
+        }
+
+        for (int maleValue : maleValues) {
+            male.addData(maleValue);
+            male.addBackgroundColor(Color.AQUA);
+        }
+
+        for (int femaleValue : femaleValues) {
+            female.addData(femaleValue);
+            female.addBackgroundColor(Color.PINK);
+        }
+
+        male.setLabel("MALE");
+        female.setLabel("FEMALE");
+
+        data.addDataset(male);
+        data.addDataset(female);
+
+        return new BarChart(data).toJson();
+
+    }
+    // </editor-fold>
+
+    // <editor-fold desc="AGE">
     public String getBarChartAgeCount(ArrayList<ARB> arbList) {
 
         ArrayList<String> labels = new ArrayList();
@@ -815,7 +914,10 @@ public class Chart {
         return new BarChart(data).toJson();
 
     }
+    // </editor-fold>
+    // </editor-fold>
 
+    // <editor-fold desc="APCP DASHBOARD">
     public String getStackedBarChartAPCPRequests(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
 
         ArrayList<String> labels = new ArrayList();
@@ -852,6 +954,7 @@ public class Chart {
         }
 
         BarData data = new BarData();
+        ArrayList<BarDataset> datasets = new ArrayList();
 
         BarDataset requested = new BarDataset();
         ArrayList<Integer> requestedValues = new ArrayList();
@@ -1022,6 +1125,10 @@ public class Chart {
 
         BarDataset requested = new BarDataset();
         ArrayList<Integer> requestedValues = new ArrayList();
+
+        BarDataset completed = new BarDataset();
+        ArrayList<Integer> completedValues = new ArrayList();
+
         BarDataset cleared = new BarDataset();
         ArrayList<Integer> clearedValues = new ArrayList();
         BarDataset endorsed = new BarDataset();
@@ -1052,6 +1159,7 @@ public class Chart {
             int forReleaseCount = 0;
 
             int requestedDays = 0;
+            int completedDays = 0;
             int clearedDays = 0;
             int endorsedDays = 0;
             int approvedDays = 0;
@@ -1065,15 +1173,25 @@ public class Chart {
                             Calendar startDate = Calendar.getInstance();
                             Calendar endDate = Calendar.getInstance();
 
-                            if (r.getDateRequested() != null && r.getDateCleared() != null) {
+                            if (r.getDateRequested() != null && r.getDateCompleted() != null && r.getDateCleared() != null) {
                                 requestedCount++;
+
                                 startDate.setTime(r.getDateRequested());
-                                endDate.setTime(r.getDateCleared());
+                                endDate.setTime(r.getDateCompleted());
                                 requestedDays += (int) daysBetween(startDate, endDate);
-                            } else if (r.getDateRequested() != null && r.getDateCleared() == null) {
+
+                                startDate.setTime(r.getDateCompleted());
+                                endDate.setTime(r.getDateCleared());
+                                completedDays += (int) daysBetween(startDate, endDate);
+
+                            } else if (r.getDateRequested() != null && r.getDateCompleted() == null) {
                                 requestedCount++;
                                 startDate.setTime(r.getDateRequested());
                                 requestedDays += (int) daysBetween(startDate, current);
+                            } else if (r.getDateCompleted() != null && r.getDateCleared() == null) {
+                                requestedCount++;
+                                startDate.setTime(r.getDateCompleted());
+                                completedDays += (int) daysBetween(startDate, current);
                             }
 
                             if (r.getDateCleared() != null && r.getDateEndorsed() != null) {
@@ -1115,9 +1233,15 @@ public class Chart {
 
                             if (r.getDateRequested() != null && r.getDateCleared() != null) {
                                 requestedCount++;
+
                                 startDate.setTime(r.getDateRequested());
-                                endDate.setTime(r.getDateCleared());
+                                endDate.setTime(r.getDateCompleted());
                                 requestedDays += (int) daysBetween(startDate, endDate);
+
+                                startDate.setTime(r.getDateCompleted());
+                                endDate.setTime(r.getDateCleared());
+                                completedDays += (int) daysBetween(startDate, endDate);
+
                             } else if (r.getDateRequested() != null && r.getDateCleared() == null) {
                                 requestedCount++;
                                 startDate.setTime(r.getDateRequested());
@@ -1157,20 +1281,35 @@ public class Chart {
                     }
                 }
             }
-
-            requestedValues.add(requestedDays / requestedCount);
-            clearedValues.add(clearedDays / clearedCount);
-            endorsedValues.add(endorsedDays / endorsedCount);
-            approvedValues.add(approvedDays / approvedCount);
+            System.out.println(requestedDays);
+            if (requestedCount > 0) {
+                requestedValues.add(requestedDays / requestedCount);
+                completedValues.add(completedDays / requestedCount);
+            }
+            if (clearedCount > 0) {
+                clearedValues.add(clearedDays / clearedCount);
+            }
+            if (endorsedCount > 0) {
+                endorsedValues.add(endorsedDays / endorsedCount);
+            }
+            if (approvedCount > 0) {
+                approvedValues.add(approvedDays / approvedCount);
+            }
 
             data.addLabel(labels.get(i));
 
         }
 
         for (int value : requestedValues) {
+            completed.addData(value);
+            completed.addBackgroundColor(Color.random());
+            completed.setLabel("REQUESTED");
+        }
+
+        for (int value : completedValues) {
             requested.addData(value);
             requested.addBackgroundColor(Color.random());
-            requested.setLabel("REQUESTED");
+            requested.setLabel("COMPLETED");
         }
 
         for (int value : clearedValues) {
@@ -1197,6 +1336,7 @@ public class Chart {
             forRelease.setLabel("RELEASED");
         }
 
+        data.addDataset(completed);
         data.addDataset(requested);
         data.addDataset(cleared);
         data.addDataset(endorsed);
@@ -1253,11 +1393,25 @@ public class Chart {
             int total = 0;
             int total1 = 0;
             for (ARBO arbo : arboList) {
-                for (APCPRequest r : arbo.getRequestList()) {
-                    if (r.getApcpType() == 1) {
-                        total++;
-                    } else {
-                        total1++;
+                if (b) { // REGIONAL
+                    if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                        for (APCPRequest r : arbo.getRequestList()) {
+                            if (r.getApcpType() == 1) { // crop prod
+                                total++;
+                            } else { // livelihood
+                                total1++;
+                            }
+                        }
+                    }
+                } else { // PROVINCIAL OFFICE
+                    if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                        for (APCPRequest r : arbo.getRequestList()) {
+                            if (r.getApcpType() == 1) { // crop prod
+                                total++;
+                            } else { // livelihood
+                                total1++;
+                            }
+                        }
                     }
                 }
             }
@@ -1285,7 +1439,7 @@ public class Chart {
 
     }
 
-    public String getStackedBarChartLoanReason(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+    public String getBarChartLoanTerm(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
 
         ArrayList<String> labels = new ArrayList();
         boolean b = true;
@@ -1322,14 +1476,100 @@ public class Chart {
 
         BarData data = new BarData();
 
-        BarDataset NeedCapital = new BarDataset();
-        ArrayList<Integer> needCapitalValues = new ArrayList();
-        BarDataset HogFattening = new BarDataset();
-        ArrayList<Integer> hogFatteningValues = new ArrayList();
-        BarDataset RiceProduction = new BarDataset();
-        ArrayList<Integer> riceProductionValues = new ArrayList();
-        BarDataset CornProduction = new BarDataset();
-        ArrayList<Integer> cornProductionValues = new ArrayList();
+        BarDataset cropProd = new BarDataset();
+        BarDataset live = new BarDataset();
+        ArrayList<Integer> annualValues = new ArrayList();
+        ArrayList<Integer> plantationValues = new ArrayList();
+        ArrayList<Integer> capitalValues = new ArrayList();
+        ArrayList<Integer> fixedAssetValues = new ArrayList();
+
+        for (int i = 0; i < labels.size(); i++) {
+            int annual = 0;
+            int plantation = 0;
+            int capital = 0;
+            int fixedAsset = 0;
+
+            for (ARBO arbo : arboList) {
+                if (b) { // REGIONAL
+                    if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                        for (APCPRequest r : arbo.getRequestList()) {
+                            if (r.getLoanReason().getLoanReasonDesc() != null) {
+                                if (r.getLoanReason().getLoanTermID() == 1) { // Semi-Annual / Annual
+                                    annual++;
+                                } else if (r.getLoanReason().getLoanTermID() == 2) { // Plantation
+                                    plantation++;
+                                } else if (r.getLoanReason().getLoanTermID() == 3) { // Working Capital
+                                    capital++;
+                                } else if (r.getLoanReason().getLoanTermID() == 4) { // Fixed Asset Acquisition
+                                    fixedAsset++;
+                                }
+                            }
+
+                        }
+                    }
+                } else { // PROVINCIAL OFFICE
+                    if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                        for (APCPRequest r : arbo.getRequestList()) {
+                            if (r.getLoanReason().getLoanReasonDesc() != null) {
+                                if (r.getLoanReason().getLoanTermID() == 1) { // Semi-Annual / Annual
+                                    annual++;
+                                } else if (r.getLoanReason().getLoanTermID() == 2) { // Plantation
+                                    plantation++;
+                                } else if (r.getLoanReason().getLoanTermID() == 3) { // Working Capital
+                                    capital++;
+                                } else if (r.getLoanReason().getLoanTermID() == 4) { // Fixed Asset Acquisition
+                                    fixedAsset++;
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            annualValues.add(annual);
+            plantationValues.add(plantation);
+            capitalValues.add(capital);
+            fixedAssetValues.add(fixedAsset);
+            data.addLabel(labels.get(i));
+        }
+
+        for (int value : annualValues) {
+            cropProd.addData(value);
+            cropProd.addBackgroundColor(Color.DARK_OLIVE_GREEN);
+            cropProd.setLabel("SEMI-ANNUAL/ANNUAL CROPS");
+        }
+
+        for (int value : plantationValues) {
+            live.addData(value);
+            live.addBackgroundColor(Color.RED);
+            live.setLabel("PLANTATION CROPS");
+        }
+
+        for (int value : capitalValues) {
+            cropProd.addData(value);
+            cropProd.addBackgroundColor(Color.DARK_OLIVE_GREEN);
+            cropProd.setLabel("WORKING CAPITAL");
+        }
+
+        for (int value : fixedAssetValues) {
+            live.addData(value);
+            live.addBackgroundColor(Color.RED);
+            live.setLabel("FIXED ASSET ACQUISITION");
+        }
+
+        data.addDataset(cropProd);
+        data.addDataset(live);
+
+        return new BarChart(data).setHorizontal().toJson();
+
+    }
+
+    public String getStackedBarChartLoanReason(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+
+        APCPRequestDAO requestDAO = new APCPRequestDAO();
+        ArrayList<String> labels = new ArrayList();
+        ArrayList<LoanReason> refLoanReasons = requestDAO.getAllLoanReasons();
+        boolean b = true;
 
         BarOptions options = new BarOptions();
         BarScale scales = new BarScale();
@@ -1341,82 +1581,81 @@ public class Chart {
         scales.addyAxes(y);
         options.setScales(scales);
 
-        for (int i = 0; i < labels.size(); i++) { // REGIONS/PROVINCES
+        if (regionList.isEmpty()) {
+            labels.add("REGION I (ILOCOS REGION)");
+            labels.add("REGION II (CAGAYAN VALLEY)");
+            labels.add("REGION III (CENTRAL LUZON)");
+            labels.add("REGION IV-A (CALABARZON)");
+            labels.add("REGION IV-B (MIMAROPA)");
+            labels.add("REGION V (BICOL REGION)");
+            labels.add("REGION VI (WESTERN VISAYAS)");
+            labels.add("REGION VII (CENTRAL VISAYAS)");
+            labels.add("REGION VIII (EASTERN VISAYAS)");
+            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+            labels.add("REGION X (NORTHERN MINDANAO)");
+            labels.add("REGION XI (DAVAO REGION)");
+            labels.add("REGION XII (SOCCSKSARGEN)");
+            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+            labels.add("REGION XIII (Caraga)");
+            System.out.println("REGION EMPTY!");
+        } else if (provList.isEmpty()) {
+            for (Region r : regionList) {
+                labels.add(r.getRegDesc());
+            }
+            System.out.println("PROV EMPTY!");
+        } else {
+            for (Province p : provList) {
+                labels.add(p.getProvDesc());
+            }
+            b = false;
+            System.out.println("");
+        }
 
-            int one = 0;
-            int two = 0;
-            int three = 0;
-            int four = 0;
+        BarData data = new BarData();
 
-            for (ARBO arbo : arboList) {
-                if (b) { // REGIONAL
-                    if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
-                        for (APCPRequest r : arbo.getRequestList()) {
-                            if (r.getLoanReason().getLoanReason() == 1) { // requested
-                                one++;
-                            } else if (r.getRequestStatus() == 2) { // cleared
-                                two++;
-                            } else if (r.getRequestStatus() == 3) { // endorsed
-                                three++;
-                            } else if (r.getRequestStatus() == 4) { // approved
-                                four++;
+        ArrayList<BarDataset> datasets = new ArrayList();
+        for (LoanReason reason : refLoanReasons) {
+            BarDataset dataset = new BarDataset(); // initializes
+            dataset.setLabel(reason.getLoanReasonDesc()); // ONE color
+            dataset.setBackgroundColor(Color.random()); // ONE bar
+            for (String label : labels) { // REGIONS/PROVINCES
+                int count = 0;
+                for (ARBO arbo : arboList) {
+                    if (b) { // REGIONAL
+                        if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                            for (APCPRequest r : arbo.getRequestList()) {
+                                if (r.getLoanReason().getLoanReasonDesc() != null) {
+                                    if (r.getLoanReason().getLoanReasonDesc().equals(reason.getLoanReasonDesc())) {
+                                        count++;
+                                    }
+                                }
+
                             }
                         }
-                    }
-                } else { // PROVINCIAL OFFICE
-                    if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
-                        for (APCPRequest r : arbo.getRequestList()) {
-                            if (r.getLoanReason().getLoanReason() == 1) { // requested
-                                one++;
-                            } else if (r.getRequestStatus() == 2) { // cleared
-                                two++;
-                            } else if (r.getRequestStatus() == 3) { // endorsed
-                                three++;
-                            } else if (r.getRequestStatus() == 4) { // approved
-                                four++;
+                    } else { // PROVINCIAL OFFICE
+                        if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                            for (APCPRequest r : arbo.getRequestList()) {
+                                if (r.getLoanReason().getLoanReasonDesc() != null) {
+                                    if (r.getLoanReason().getLoanReasonDesc().equals(reason.getLoanReasonDesc())) {
+                                        count++;
+                                    }
+                                }
                             }
                         }
                     }
                 }
+                if (count > 0) {
+                    dataset.addData(count);
+                }
+            }
+            if (dataset.getData().size() > 0) {
+                datasets.add(dataset);
             }
 
-            needCapitalValues.add(one);
-            hogFatteningValues.add(two);
-            riceProductionValues.add(three);
-            cornProductionValues.add(four);
-
-            data.addLabel(labels.get(i));
-
         }
 
-        for (int value : needCapitalValues) {
-            NeedCapital.addData(value);
-            NeedCapital.addBackgroundColor(Color.random());
-            NeedCapital.setLabel("NEED CAPITAL");
-        }
-
-        for (int value : hogFatteningValues) {
-            HogFattening.addData(value);
-            HogFattening.addBackgroundColor(Color.random());
-            HogFattening.setLabel("HOG FATTENING");
-        }
-
-        for (int value : riceProductionValues) {
-            RiceProduction.addData(value);
-            RiceProduction.addBackgroundColor(Color.random());
-            RiceProduction.setLabel("RICE PRODUCTION");
-        }
-
-        for (int value : cornProductionValues) {
-            CornProduction.addData(value);
-            CornProduction.addBackgroundColor(Color.random());
-            CornProduction.setLabel("CORN PRODUCTION");
-        }
-
-        data.addDataset(NeedCapital);
-        data.addDataset(HogFattening);
-        data.addDataset(RiceProduction);
-        data.addDataset(CornProduction);
+        data.setLabels(labels);
+        data.setDatasets(datasets);
 
         return new BarChart(data, options).setHorizontal().toJson();
 
@@ -1533,6 +1772,249 @@ public class Chart {
 
     }
 
+    public String getStackedBarChartApprovedAmounts(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+
+        APCPRequestDAO requestDAO = new APCPRequestDAO();
+        AddressDAO addressDAO = new AddressDAO();
+        ArrayList<String> labels = new ArrayList();
+        ArrayList<LoanReason> refLoanReasons = requestDAO.getAllLoanReasons();
+        double totalApprovedAmount = requestDAO.getTotalApprovedAmount();
+        boolean b = true;
+
+        BarOptions options = new BarOptions();
+        BarScale scales = new BarScale();
+        XAxis x = new XAxis();
+        YAxis y = new YAxis();
+        x.setStacked(Boolean.TRUE);
+        y.setStacked(Boolean.TRUE);
+        scales.addxAxes(x);
+        scales.addyAxes(y);
+        options.setScales(scales);
+
+        if (regionList.isEmpty()) { // REGION parameter is empty
+            labels.add("REGION I (ILOCOS REGION)");
+            labels.add("REGION II (CAGAYAN VALLEY)");
+            labels.add("REGION III (CENTRAL LUZON)");
+            labels.add("REGION IV-A (CALABARZON)");
+            labels.add("REGION IV-B (MIMAROPA)");
+            labels.add("REGION V (BICOL REGION)");
+            labels.add("REGION VI (WESTERN VISAYAS)");
+            labels.add("REGION VII (CENTRAL VISAYAS)");
+            labels.add("REGION VIII (EASTERN VISAYAS)");
+            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+            labels.add("REGION X (NORTHERN MINDANAO)");
+            labels.add("REGION XI (DAVAO REGION)");
+            labels.add("REGION XII (SOCCSKSARGEN)");
+            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+            labels.add("REGION XIII (Caraga)");
+        } else if (provList.isEmpty()) { // PROVINCE parameter is empty
+            for (Region r : regionList) {
+                labels.add(r.getRegDesc());
+            }
+            System.out.println("PROV EMPTY!");
+        } else {
+            for (Province p : provList) {
+                labels.add(p.getProvDesc());
+            }
+            b = false;
+            System.out.println("");
+        }
+
+        BarData data = new BarData();
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        for (LoanReason reason : refLoanReasons) {
+            BarDataset dataset = new BarDataset(); // initializes
+            dataset.setLabel(reason.getLoanReasonDesc()); // ONE color
+            dataset.setBackgroundColor(Color.random()); // ONE bar
+            for (String label : labels) { // REGIONS/PROVINCES
+                int count = 0;
+                for (ARBO arbo : arboList) {
+                    if (b) { // REGIONAL
+                        if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                            for (APCPRequest r : arbo.getRequestList()) {
+                                if (r.getLoanReason().getLoanReasonDesc() != null) {
+                                    if (r.getLoanReason().getLoanReasonDesc().equals(reason.getLoanReasonDesc())) {
+                                        count++;
+                                    }
+                                }
+
+                            }
+                        }
+                    } else { // PROVINCIAL OFFICE
+                        if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                            for (APCPRequest r : arbo.getRequestList()) {
+                                if (r.getLoanReason().getLoanReasonDesc() != null) {
+                                    if (r.getLoanReason().getLoanReasonDesc().equals(reason.getLoanReasonDesc())) {
+                                        count++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (count > 0) {
+                    dataset.addData(count);
+                }
+            }
+            if (dataset.getData().size() > 0) {
+                datasets.add(dataset);
+            }
+
+        }
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new BarChart(data, options).setHorizontal().toJson();
+
+    }
+
+    public String getBarChartApprovedAmounts(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+
+        APCPRequestDAO requestDAO = new APCPRequestDAO();
+        AddressDAO aDAO = new AddressDAO();
+        ARBODAO arboDAO = new ARBODAO();
+        Province provOffice = new Province();
+        ArrayList<Province> provOffices = aDAO.getAllProvOffices();
+
+        ArrayList<String> labels = new ArrayList();
+        boolean b = true;
+        double totalApprovedAmount = requestDAO.getTotalApprovedAmount();
+        BarOptions options = new BarOptions();
+        BarScale scales = new BarScale();
+        XAxis x = new XAxis();
+        YAxis y = new YAxis();
+        x.setStacked(Boolean.TRUE);
+        y.setStacked(Boolean.TRUE);
+        scales.addxAxes(x);
+        scales.addyAxes(y);
+        options.setScales(scales);
+
+        if (regionList.isEmpty()) {
+            labels.add("REGION I (ILOCOS REGION)");
+            labels.add("REGION II (CAGAYAN VALLEY)");
+            labels.add("REGION III (CENTRAL LUZON)");
+            labels.add("REGION IV-A (CALABARZON)");
+            labels.add("REGION IV-B (MIMAROPA)");
+            labels.add("REGION V (BICOL REGION)");
+            labels.add("REGION VI (WESTERN VISAYAS)");
+            labels.add("REGION VII (CENTRAL VISAYAS)");
+            labels.add("REGION VIII (EASTERN VISAYAS)");
+            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+            labels.add("REGION X (NORTHERN MINDANAO)");
+            labels.add("REGION XI (DAVAO REGION)");
+            labels.add("REGION XII (SOCCSKSARGEN)");
+            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+            labels.add("REGION XIII (Caraga)");
+            System.out.println("REGION EMPTY!");
+        } else if (provList.isEmpty()) {
+            for (Region r : regionList) {
+                labels.add(r.getRegDesc());
+            }
+            System.out.println("PROV EMPTY!");
+        } else {
+            for (Province p : provList) {
+                labels.add(p.getProvDesc());
+            }
+            b = false;
+            System.out.println("");
+        }
+
+        BarData data = new BarData();
+        BarDataset dataset = new BarDataset(); // initializes
+        ArrayList<BarDataset> datasets = new ArrayList();
+
+        // REGIONAL
+        for (String label : labels) { // REGIONS
+            dataset = new BarDataset(); // initializes
+            if (b) {
+                for (Province p : provOffices) {
+                    if (p.matchProvOfficeByDesc(p, label)) {
+                        dataset.setLabel(p.getProvDesc()); // ONE color
+                        dataset.setBackgroundColor(Color.random()); // ONE bar
+
+                        double provincialApprovedAmount = 0;
+
+                        for (APCPRequest req : requestDAO.getAllProvincialRequests(p.getProvCode())) {
+                            if (req.getRequestStatus() == 4 || req.getRequestStatus() == 5 || req.getRequestStatus() == 6) {
+                                provincialApprovedAmount += req.getLoanAmount();
+                            }
+                        }
+                        dataset.addData(provincialApprovedAmount / totalApprovedAmount);
+                    }
+                }
+            } else { // PROVINCIAL
+//                for (ARBO a : arboDAO.getAllARBOsByProvinceDesc(label)) {
+//                    dataset.setLabel(a.getArboName()); // ONE color
+//                    dataset.setBackgroundColor(Color.random()); // ONE bar
+//
+//                    double arboApprovedAmount = 0;
+//
+//                    for (APCPRequest req : a.getRequestList()) {
+//                        if (req.getRequestStatus() == 4 || req.getRequestStatus() == 5 || req.getRequestStatus() == 6) {
+//                            arboApprovedAmount += req.getLoanAmount();
+//                        }
+//                    }
+//
+//                    dataset.addData(arboApprovedAmount / totalApprovedAmount);
+//
+//                }
+//
+//                datasets.add(dataset);
+
+            }
+
+        }
+
+//        for (String label : labels) { // REGIONS/
+//            for (String label : labels) { // REGIONS/PROVINCES
+//
+//                int count = 0;
+//                for (ARBO arbo : arboList) {
+//                    if (b) { // REGIONAL
+//                        if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+//                            for (APCPRequest r : arbo.getRequestList()) {
+//                                if (r.getLoanReason().getLoanReasonDesc() != null) {
+//                                    System.out.println("R " + r.getLoanReason().getLoanReasonDesc());
+//                                    System.out.println("reason " + reason.getLoanReasonDesc());
+//                                    if (r.getLoanReason().getLoanReasonDesc().equals(reason.getLoanReasonDesc())) {
+//                                        count++;
+//                                    }
+//                                }
+//
+//                            }
+//                        }
+//                    } else { // PROVINCIAL OFFICE
+//                        if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+//                            for (APCPRequest r : arbo.getRequestList()) {
+//                                if (r.getLoanReason().getLoanReasonDesc() != null) {
+//                                    if (r.getLoanReason().getLoanReasonDesc().equals(reason.getLoanReasonDesc())) {
+//                                        count++;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                if (count > 0) {
+//                    dataset.addData(count);
+//                }
+//            }
+//            if (dataset.getData().size() > 0) {
+//                datasets.add(dataset);
+//            }
+//
+//        }
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+        return new BarChart(data, options).setHorizontal().toJson();
+
+    }
+    // </editor-fold>
+
+    //<editor-fold desc="CAPDEV DASHBOARD">
+    // CAPDEV Plan Status
     public String getStackedBarChartCAPDEVPlans(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
 
         ArrayList<String> labels = new ArrayList();
@@ -1575,7 +2057,7 @@ public class Chart {
         ArrayList<Integer> assignedValues = new ArrayList();
         BarDataset implemented = new BarDataset();
         ArrayList<Integer> implementedValues = new ArrayList();
-        
+
         BarOptions options = new BarOptions();
 
         BarScale scales = new BarScale();
@@ -1672,10 +2154,114 @@ public class Chart {
 
     }
 
-    public static long daysBetween(Calendar startDate, Calendar endDate) {
-        long end = endDate.getTimeInMillis();
-        long start = startDate.getTimeInMillis();
+    // Frequency of Activity Types
+    public String getStackedBarChartActivityTypes(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
 
-        return TimeUnit.MILLISECONDS.toDays(Math.abs(end - start));
+        CAPDEVDAO capdevDAO = new CAPDEVDAO();
+        ArrayList<String> labels = new ArrayList();
+        ArrayList<CAPDEVActivity> allActivities = capdevDAO.getCAPDEVActivities();
+
+        boolean b = true;
+
+        BarOptions options = new BarOptions();
+        BarScale scales = new BarScale();
+        XAxis x = new XAxis();
+        YAxis y = new YAxis();
+        x.setStacked(Boolean.TRUE);
+        y.setStacked(Boolean.TRUE);
+        scales.addxAxes(x);
+        scales.addyAxes(y);
+        options.setScales(scales);
+
+        if (regionList.isEmpty()) {
+            labels.add("REGION I (ILOCOS REGION)");
+            labels.add("REGION II (CAGAYAN VALLEY)");
+            labels.add("REGION III (CENTRAL LUZON)");
+            labels.add("REGION IV-A (CALABARZON)");
+            labels.add("REGION IV-B (MIMAROPA)");
+            labels.add("REGION V (BICOL REGION)");
+            labels.add("REGION VI (WESTERN VISAYAS)");
+            labels.add("REGION VII (CENTRAL VISAYAS)");
+            labels.add("REGION VIII (EASTERN VISAYAS)");
+            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+            labels.add("REGION X (NORTHERN MINDANAO)");
+            labels.add("REGION XI (DAVAO REGION)");
+            labels.add("REGION XII (SOCCSKSARGEN)");
+            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+            labels.add("REGION XIII (Caraga)");
+            System.out.println("REGION EMPTY!");
+        } else if (provList.isEmpty()) {
+            for (Region r : regionList) {
+                labels.add(r.getRegDesc());
+            }
+            System.out.println("PROV EMPTY!");
+        } else {
+            for (Province p : provList) {
+                labels.add(p.getProvDesc());
+            }
+            b = false;
+            System.out.println("");
+        }
+
+        BarData data = new BarData();
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        for (CAPDEVActivity activity : allActivities) {
+            BarDataset dataset = new BarDataset(); // initializes
+            dataset.setLabel(activity.getActivityName()); // ONE color
+            dataset.setBackgroundColor(Color.random()); // ONE bar
+            for (String label : labels) { // REGIONS/PROVINCES
+                int count = 0;
+                for (ARBO arbo : arboList) {
+                    if (b) { // REGIONAL
+                        if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                            for (APCPRequest r : arbo.getRequestList()) {
+                                for (CAPDEVPlan p : r.getPlans()) {
+                                    if (p.getPlanStatus() == 5) { // IMPLEMENTED
+                                        for (CAPDEVActivity planActivity : p.getActivities()) {
+                                            if (planActivity.getActivityName() != null) { // NOT NULL/HAS VALUE
+                                                if (planActivity.getActivityName().equals(activity.getActivityName())) { // IF MATCH
+                                                    count++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else { // PROVINCIAL OFFICE
+                        if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                            for (APCPRequest r : arbo.getRequestList()) {
+                                for (CAPDEVPlan p : r.getPlans()) {
+                                    if (p.getPlanStatus() == 5) { // IMPLEMENTED
+                                        for (CAPDEVActivity planActivity : p.getActivities()) {
+                                            if (planActivity.getActivityName() != null) { // NOT NULL/HAS VALUE
+                                                if (planActivity.getActivityName().equals(activity.getActivityName())) { // IF MATCH
+                                                    count++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (count > 0) {
+                    dataset.addData(count);
+                }
+            }
+            if (dataset.getData().size() > 0) {
+                datasets.add(dataset);
+            }
+
+        }
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new BarChart(data, options).setHorizontal().toJson();
+
     }
+    //</editor-fold>
 }

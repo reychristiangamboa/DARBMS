@@ -37,7 +37,7 @@
                 
                 ArrayList<CAPDEVActivity> activities = capdevDAO99.getCAPDEVActivities();
                 APCPRequest r = apcpRequestDAO99.getRequestByID((Integer)request.getAttribute("requestID"));
-                APCPRelease release = apcpRequestDAO99.getAPCPReleaseByID((Integer)request.getAttribute("releaseID"));
+                
                 ARBO a = arboDAO99.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO99.getAllARBsARBO(r.getArboID());
                 ArrayList<APCPRelease> releaseList = apcpRequestDAO99.getAllAPCPReleasesByRequest((Integer) request.getAttribute("requestID"));
@@ -62,8 +62,6 @@
                     <h1>
                         <i class="fa fa-money"></i> Monitor Releases
                     </h1>
-
-
                 </section>
 
 
@@ -102,7 +100,7 @@
                                             </div>
                                             <div id="collapseFour" class="panel-collapse collapse">
                                                 <div class="box-body">
-                                                    <%@include file="/jspf/arbo-information.jspf" %>
+                                                    <%@include file="jspf/arbo-information.jspf" %>
                                                 </div>
                                             </div> 
                                         </div>
@@ -116,10 +114,12 @@
                                             </div>
                                             <div id="collapseFive" class="panel-collapse collapse">
                                                 <div class="box-body">
-                                                    <%@include file="/jspf/apcp-request-info.jspf" %>
+                                                    <%@include file="jspf/apcp-request-info.jspf" %>
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <!--RELEASES-->
                                         <div class="panel box box-info">
                                             <div class="box-header with-border">
                                                 <h4 class="box-title">
@@ -130,10 +130,11 @@
                                             </div>
                                             <div id="collapseTwo" class="panel-collapse collapse in">
                                                 <div class="box-body">
-                                                    <%@include file="/jspf/release-info.jspf" %>
+                                                    <%@include file="jspf/release-info.jspf" %>
                                                 </div>
                                             </div>
                                         </div>
+                                        
                                         <!--ARBO REPAYMENT-->
                                         <div class="panel box box-primary">
                                             <div class="box-header with-border">
@@ -145,10 +146,11 @@
                                             </div>
                                             <div id="collapseThree" class="panel-collapse collapse">
                                                 <div class="box-body">
-                                                    <%@include file="/jspf/arbo-repayment-info.jspf" %>
+                                                    <%@include file="jspf/arbo-repayment-info.jspf" %>
                                                 </div>
                                             </div>
                                         </div> 
+                                        
                                         <!--ARB REPAYMENT-->  
                                         <div class="panel box box-primary">
                                             <div class="box-header with-border">
@@ -160,25 +162,11 @@
                                             </div>
                                             <div id="collapseSeven" class="panel-collapse collapse">
                                                 <div class="box-body">
-                                                    <%@include file="/jspf/arb-repayment-info.jspf" %>
+                                                    <%@include file="jspf/arb-repayment-info.jspf" %>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!--DISBURSEMENT REPAYMENT-->
-                                        <div class="panel box box-info">
-                                            <div class="box-header with-border">
-                                                <h4 class="box-title">
-                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix">
-                                                        Disbursement Information
-                                                    </a>
-                                                </h4>
-                                            </div>
-                                            <div id="collapseSix" class="panel-collapse collapse in">
-                                                <div class="box-body">
-                                                    <%@include file="/jspf/disbursement-info.jspf" %>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                         <!--PAST DUE REPAYMENT-->
                                         <div class="panel box box-primary">
                                             <div class="box-header with-border">
@@ -190,7 +178,7 @@
                                             </div>
                                             <div id="collapseOne" class="panel-collapse collapse">
                                                 <div class="box-body">
-                                                    <%@include file="/jspf/pastdue-info.jspf" %>
+                                                    <%@include file="jspf/pastdue-info.jspf" %>
                                                 </div>
                                             </div>
                                         </div>
@@ -200,7 +188,7 @@
 
                         </div>
                     </div>
-                    <%@include file="/jspf/modal-info.jspf"%>
+                    <%@include file="jspf/modal-info.jspf"%>
                 </section>
                 <!-- /.col -->
             </div>
@@ -209,17 +197,17 @@
 
         </div>
 
-    <%@include file="jspf/footer.jspf" %>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var arboInterestRate = <%out.print(r.getLoanReason().getLoanTerm().getArboInterestRate());%>
-            $('#releaseAmount').on('input', function () {
-                var val = this.value * arboInterestRate;
-                $('#releaseOSBalance').val(val);
+        <%@include file="jspf/footer.jspf" %>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var arboInterestRate = <%out.print(r.getLoanReason().getLoanTerm().getArboInterestRate());%>
+                $('#releaseAmount').on('input', function () {
+                    var val = this.value * arboInterestRate;
+                    $('#releaseOSBalance').val(val);
+                });
             });
-        });
-        
-        function chg() {
+
+            function chg() {
                 var arbID = document.getElementById('arbRepaymentSelect').value;
 
                 var xhttp = new XMLHttpRequest();
@@ -231,7 +219,7 @@
                 xhttp.open("GET", "RefreshARBRepayment?arbID=" + arbID + "&requestID=" + r.getRequestID()), true);
                 xhttp.send();
             }
-    </script>
+        </script>
 
-</body>
+    </body>
 </html>

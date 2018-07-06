@@ -92,8 +92,7 @@ public class RecordActivityAssessment extends BaseServlet {
         } else {
             ca.setActivityID(activityID);
             ca.setActive(1);
-            ca.setTechnicalAssistant(request.getParameter("TA"));
-
+            
             if (cDAO.recordAssessment(ca)) {
                 request.setAttribute("success", "Activity Assessment recorded!");
                 request.setAttribute("planID", planID);

@@ -69,7 +69,7 @@ public class Login extends BaseServlet {
                     } else if (u.getUserType() == 4) {   //  REGIONAL FIELD OFFICER
                         request.getRequestDispatcher("RFO-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 5) {   //  CENTRAL OFFICER
-                        request.getRequestDispatcher("CO-home.jsp").forward(request, response);
+                        request.getRequestDispatcher("apcp-dashboard.jsp").forward(request, response);
                     } else if (u.getUserType() == 6) {   //  PFO-APCP
                         request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
                     } else if (u.getUserType() == 7) {   //  PFO-CAPDEV

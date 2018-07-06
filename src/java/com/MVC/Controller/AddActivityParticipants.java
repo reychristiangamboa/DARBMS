@@ -27,6 +27,7 @@ public class AddActivityParticipants extends BaseServlet {
         CAPDEVDAO dao = new CAPDEVDAO();
         ARBDAO arbDAO = new ARBDAO();
         ArrayList<ARB> arbs = new ArrayList();
+        int requestID = Integer.parseInt(request.getParameter("requestID"));
         int planID = Integer.parseInt(request.getParameter("planID"));
         int activityID = Integer.parseInt(request.getParameter("activityID"));
         
@@ -38,8 +39,8 @@ public class AddActivityParticipants extends BaseServlet {
         
         if(dao.addCAPDEVPlanActivityParticipants(arbs, activityID)){
             request.setAttribute("planID", planID);
-            request.setAttribute("participants", true);
-            request.getRequestDispatcher("PFO-CAPDEV-create-capdev-proposal.jsp").forward(request, response);
+            request.setAttribute("requestID", requestID);
+            request.getRequestDispatcher("PFO-CAPDEV-plan-activity-list.jsp").forward(request, response);
         }
         
         

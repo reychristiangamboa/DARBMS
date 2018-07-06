@@ -30,20 +30,16 @@ public class CheckAttendance extends BaseServlet {
         String[] attendeesStr = request.getParameterValues("attendee");
         ArrayList<Integer> arbIDs = new ArrayList();
 
-        if (attendeesStr.length == 0) {
+        for (String attendeeStr : attendeesStr) {
+            arbIDs.add(Integer.parseInt(attendeeStr));
+        }
+        
+        capdevDAO.setTechnicalAssistant(request.getParameter("TA"), activityID);
+
+        if (capdevDAO.checkIfPresent(arbIDs, activityID)) { // PRESENT
             request.setAttribute("planID", planID);
+            request.setAttribute("success", "Attendees recorded!");
             request.getRequestDispatcher("PP-CAPDEV-review-capdev-attendance.jsp").forward(request, response);
-        } else {
-            for (String attendeeStr : attendeesStr) {
-                arbIDs.add(Integer.parseInt(attendeeStr));
-            }
-
-            if (capdevDAO.checkIfPresent(arbIDs, activityID)) { // PRESENT
-                request.setAttribute("planID", planID);
-                request.setAttribute("success", "Attendees recorded!");
-                request.getRequestDispatcher("PP-CAPDEV-review-capdev-attendance.jsp").forward(request, response);
-            }
-
         }
 
     }

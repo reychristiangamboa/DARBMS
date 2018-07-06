@@ -26,7 +26,6 @@ if(request.getAttribute("planID") != null){
                         <thead>
                             <tr>
                                 <th>Title of Activity</th>
-                                <th>Date of Activity</th>
                                 <th>No. of Participants</th>
                                 <th>Action</th>
                             </tr>
@@ -36,7 +35,6 @@ if(request.getAttribute("planID") != null){
 
                             <tr>
                                 <td><%out.print(act.getActivityName());%></td>
-                                <td><%out.print(f.format(act.getActivityDate()));%></td>
                                 <td><%out.print(act.getArbList().size());%></td>
                                 <td><button class="btn btn-primary" data-toggle="modal" data-target="#participantsModal<%out.print(act.getActivityID());%>">Add</button></td>
 

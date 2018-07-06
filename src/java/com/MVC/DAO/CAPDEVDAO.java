@@ -449,7 +449,7 @@ public class CAPDEVDAO {
 
         return planList;
     }
-    
+
     public ArrayList<CAPDEVPlan> getAllRegionalCAPDEVPlanByStatus(int status, int regCode) {
 
         ArrayList<CAPDEVPlan> planList = new ArrayList();
@@ -510,7 +510,7 @@ public class CAPDEVDAO {
             for (int id : regionIDs) {
                 APCPRequest r = dao.getRequestByID(c.getRequestID());
                 ARBO a = dao2.getARBOByID(r.getArboID());
-                if (a.getArboRegion()== id) {
+                if (a.getArboRegion() == id) {
                     planList.add(c);
                 }
             }
@@ -567,14 +567,14 @@ public class CAPDEVDAO {
 
         return planList;
     }
-    
+
     public ArrayList<CAPDEVPlan> getAllCAPDEVPlanByRequest(int requestID) {
 
         ArrayList<CAPDEVPlan> allCAPDEVPlans = getAllCAPDEVPlan();
         ArrayList<CAPDEVPlan> planList = new ArrayList();
-        
+
         for (CAPDEVPlan c : allCAPDEVPlans) {
-            if(c.getRequestID() == requestID){
+            if (c.getRequestID() == requestID) {
                 planList.add(c);
             }
         }
@@ -716,7 +716,7 @@ public class CAPDEVDAO {
         }
         return 0;
     }
-    
+
     public ArrayList<CAPDEVActivity> getCAPDEVCategories() {
 
         ArrayList<CAPDEVActivity> caList = new ArrayList();
@@ -772,7 +772,7 @@ public class CAPDEVDAO {
                 ca.setPlanID(rs.getInt("planID"));
                 ca.setActivityName(rs.getString("activityName"));
                 ca.setActivityDesc(rs.getString("activityDesc"));
-                
+
                 ca.setActivityCategory(rs.getInt("activityCategory"));
                 ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
                 ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
@@ -1016,7 +1016,7 @@ public class CAPDEVDAO {
         }
         return success;
     }
-    
+
     public ArrayList<ARB> getCAPDEVPlanActivityParticipants(int activityID) {
 
         ArrayList<ARB> aList = new ArrayList();
@@ -1516,8 +1516,7 @@ public class CAPDEVDAO {
             con.setAutoCommit(false);
             String query = "SELECT * FROM `dar-bms`.ref_activity a "
                     + "JOIN `dar-bms`.ref_activityCategory c "
-                    + "ON a.activityCategory=c.activityCategory "
-                    + "WHERE a.activityType != 1";
+                    + "ON a.activityCategory=c.activityCategory ";
             PreparedStatement p = con.prepareStatement(query);
 
             ResultSet rs = p.executeQuery();
@@ -1674,7 +1673,7 @@ public class CAPDEVDAO {
         }
         return success;
     }
-    
+
     public boolean updatePlanStatus(int planID, int status, Date implementedDate) {
         boolean success = false;
         PreparedStatement p = null;
@@ -1829,12 +1828,11 @@ public class CAPDEVDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE capdev_activities SET active=?, technicalAssistant=? WHERE activityID=?";
+            String query = "UPDATE capdev_activities SET active=? WHERE activityID=?";
 
             p = con.prepareStatement(query);
             p.setInt(1, ca.getActive());
-            p.setString(2, ca.getTechnicalAssistant());
-            p.setInt(3, ca.getActivityID());
+            p.setInt(2, ca.getActivityID());
 
             p.executeUpdate();
             p.close();
@@ -1884,7 +1882,7 @@ public class CAPDEVDAO {
         }
         return success;
     }
-    
+
     public void replaceAttendees(ArrayList<Integer> attendees, int activityID) {
         boolean success = false;
         PreparedStatement p = null;
@@ -1905,7 +1903,7 @@ public class CAPDEVDAO {
 
             con.commit();
             con.close();
-            
+
         } catch (Exception ex) {
             try {
                 con.rollback();
@@ -1915,7 +1913,36 @@ public class CAPDEVDAO {
             Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    public void setTechnicalAssistant(String name, int activityID) {
+        boolean success = false;
+        PreparedStatement p = null;
+        Connection con = null;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        con = myFactory.getConnection();
+        try {
+            con.setAutoCommit(false);
+            String query = "UPDATE capdev_activities SET technicalAssistant=? WHERE activityID=?";
+
+            p = con.prepareStatement(query);
+            p.setString(1, name);
+            p.setInt(2, activityID);
+            p.executeUpdate();
+            p.close();
+
+            con.commit();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public void assessCAPDEV(String observation, String recommendation) {
         boolean success = false;
         PreparedStatement p = null;
@@ -1932,7 +1959,7 @@ public class CAPDEVDAO {
 
             con.commit();
             con.close();
-            
+
         } catch (Exception ex) {
             try {
                 con.rollback();

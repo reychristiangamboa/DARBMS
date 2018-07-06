@@ -31,7 +31,7 @@
                             %>
                             <tr>
 
-                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                <td><a target="_blank" re="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
                                 <td><%out.print(currency.format(d.getDisbursedAmount()));%></td>
                                 <td><%out.print(currency.format(d.getOSBalance()));%></td>
                                 <td><%out.print(f.format(d.getDateDisbursed()));%></td>

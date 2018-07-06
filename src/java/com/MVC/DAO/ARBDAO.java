@@ -817,5 +817,66 @@ public class ARBDAO {
         }
         return type;
     }
+    
+    public ArrayList<ARB> getAllAPCPRecipients(){
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<ARB> arbList = new ArrayList();
+        try {
+            String query = "SELECT * FROM `dar-bms`.apcp_recipients rec "
+                    + "JOIN arbs a on rec.arbID = a.arbID "
+                    + "JOIN `dar-bms`.ref_educationLevel e ON a.educationLevel=e.educationLevel "
+                    + "JOIN `dar-bms`.ref_arbStatus s ON a.arbStatus=s.arbStatus "
+                    + "JOIN `dar-bms`.refbrgy b ON a.brgyCode=b.brgyCode "
+                    + "JOIN `dar-bms`.refcitymun c ON a.cityMunCode=c.citymunCode "
+                    + "JOIN `dar-bms`.refprovince p ON a.provCode=p.provCode "
+                    + "JOIN `dar-bms`.refregion r ON a.regCode=r.regCode "
+                    + "JOIN apcp_requests req on rec.requestID = req.requestID "
+                    + "WHERE req.requestStatus = 4 OR req.requestStatus = 5 OR req.requestStatus = 6 "
+                    + "GROUP BY a.arbID";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ARB arb = new ARB();
+                arb.setArbID(rs.getInt("arbID"));
+                arb.setArboID(rs.getInt("arboID"));
+                arb.setFirstName(rs.getString("firstName"));
+                arb.setMiddleName(rs.getString("middleName"));
+                arb.setLastName(rs.getString("lastName"));
+                arb.setMemberSince(rs.getDate("memberSince"));
+                arb.setArbUnitNumStreet(rs.getString("arbUnitNumStreet"));
+                arb.setBrgyCode(rs.getInt("brgyCode"));
+                arb.setBrgyDesc(rs.getString("brgyDesc"));
+                arb.setCityMunCode(rs.getInt("cityMunCode"));
+                arb.setCityMunDesc(rs.getString("citymunDesc"));
+                arb.setProvCode(rs.getInt("provCode"));
+                arb.setProvDesc(rs.getString("provDesc"));
+                arb.setRegCode(rs.getInt("regCode"));
+                arb.setRegDesc(rs.getString("regDesc"));
+                arb.setGender(rs.getString("gender"));
+                arb.setEducationLevel(rs.getInt("educationLevel"));
+                arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
+                arb.setLandArea(rs.getDouble("landArea"));
+                arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
+                arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
+                arb.setArbStatus(rs.getInt("arbStatus"));
+                arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
+                arb.setClusterID(rs.getInt("clusterID"));
+                
+                arbList.add(arb);
+            }
+            pstmt.close();
+            rs.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return arbList;
+    }
 
 }

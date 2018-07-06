@@ -59,7 +59,7 @@
                                 <!-- /.box-header -->
 
 
-                                <div class="box-body"> 
+                                <%--<div class="box-body"> 
 
                                     <div class="nav-tabs-custom">
                                         <!-- Tabs within a box -->
@@ -72,7 +72,7 @@
                                         <%@include file="jspf/arboInfo.jspf"%>
                                     </div>
                                     <hr>        
-                                </div>
+                                </div>--%>
                                 <!-- /.box-body -->
 
                             </div>

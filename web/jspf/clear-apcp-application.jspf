@@ -84,20 +84,20 @@
                         </table>
                     </form>
                     <table id="apcpOrientation" class="table table-bordered table-striped">
-                        <thead>
+                        <tbody>
                             <%if(req.checkARBOHadAPCPOrientation()){%>
                             <%for(CAPDEVPlan plan : req.getPlans()){%>
                             <%for(CAPDEVActivity act : plan.getActivities()){%>
-                            <%if(act.getActivityType() == 12){%>
+                            <%if(act.getActivityType() == 2){ // GETS APCP ORIENTATION %>
                             <tr>
-                                <td><input type="checkbox"checked disabled/></td>
+                                <td><input type="checkbox" checked disabled/></td>
                                 <td><h5><%out.print(act.getActivityName());%></h5></td>
                                 <td>
                                     <div class="input-group date">
                                         <div class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </div>
-                                        <input type="date" value="<%=act.getActivityDate()%>" class="form-control" disabled>
+                                        <input type="date" value="<%=plan.getPlanDate()%>" class="form-control" disabled>
                                     </div> 
                                 </td>
                             </tr>
@@ -119,7 +119,7 @@
                                 </td>
                             </tr>
                             <%}%>
-                        </thead>
+                        </tbody>
                     </table>                    
                 </div>
                 <div class="col-xs-2"></div>
@@ -129,15 +129,12 @@
             <form method="post">
                 <div class="box-footer">
                     <%if(req.checkARBOHadAPCPOrientation()){%>
-                    <button type="submit" onclick="form.action='ClearAPCPRequest?requestID=' + <%out.print(req.getRequestID());%> + ''" class="btn btn-success pull-right">Clear Request</button>
+                    <button type="submit" onclick="form.action = 'ClearAPCPRequest?requestID=<%out.print(req.getRequestID());%>" class="btn btn-success pull-right">Clear Request</button>
                     <%}else{%>
                     <button type="submit" class="btn btn-success pull-right" disabled>Clear Request</button>
                     <%}%>
                 </div>
             </form>
-
-
-
         </div>
     </div>
 </div>

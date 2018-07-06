@@ -77,69 +77,24 @@
 <!-- page script -->
 <script type="text/javascript">
     $(function () {
-
-        $('#attendance1').DataTable();
-        $('#attendance2').DataTable();
-        $('#attendance3').DataTable();
-        $('#attendance4').DataTable();
-        $('#attendance5').DataTable();
-        $('#attendance6').DataTable();
-        $('#attendance7').DataTable();
-        $('#attendance8').DataTable();
-        $('#attendance9').DataTable();
-        $('#attendance10').DataTable();
-
-        $('#arbTable').DataTable();
-
-        $('#requested').DataTable();
-        $('#cleared').DataTable();
-        $('#endorsed').DataTable();
-        $('#approved').DataTable();
-        $('#released').DataTable();
-        $('#forRelease').DataTable();
-
-        $('#releaseTable').DataTable();
-        $('#repaymentTable').DataTable();
-        $('#pastDueTable').DataTable();
-
-
-        $('#apcp1').DataTable();
-        $('#apcp2').DataTable();
-        $('#apcp3').DataTable();
-        $('#capdev1').DataTable();
-        $('#capdev2').DataTable();
-        $('#capdev3').DataTable();
-
-
-        $('.table.table-bordered.table-striped.modTable').DataTable();
+        
+        $('.export').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+        
         $('.modTable').DataTable();
+        
+        $('.table.table-bordered.table-striped.modTable').DataTable();
         $('.table.table-bordered.table-striped.export').DataTable({
             dom: 'Bfrtip',
             buttons: [
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ]
         });
-        $('#example1').DataTable();
-        $('#example8').DataTable();
-        $('#example7').DataTable();
-        $('#example3').DataTable();
-//        $('#example4').DataTable();
-        $('#example5').DataTable();
-        $('#example6').DataTable();
-        $('#example2').DataTable({
-            'paging': true,
-            'lengthChange': false,
-            'searching': false,
-            'ordering': true,
-            'info': true,
-            'autoWidth': false
-        });
-        $('#example4').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ]
-        });
+        
 
         $('.numberOnly').inputmask("numeric", {
             radixPoint: ".",

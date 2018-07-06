@@ -62,6 +62,7 @@
                 AddressDAO addressDAO = new AddressDAO();
                 ArrayList<Region> regionList = addressDAO.getAllRegions();
                 
+                
                 ArrayList<ARB> allArbsList = new ArrayList();
                 if((Integer)session.getAttribute("userType") == 5){
                     allArbsList = arbDAO.getAllARBs();    
@@ -69,8 +70,10 @@
                     allArbsList = arbDAO.getAllRegionalARBs((Integer)session.getAttribute("regOfficeCode"));    
                 }
                 
-                int category = 5;
-                int demographic = 1;
+                int category = 1; // COUNT
+                int demographic = 1; // GENDER
+                ArrayList<Region> regions = new ArrayList();
+                ArrayList<Province> provOffices = new ArrayList();
                 
                 if(request.getAttribute("category") != null){
                     category = (Integer)request.getAttribute("category");
@@ -82,6 +85,16 @@
                 
                 if(request.getAttribute("filtered") != null){
                     allArbsList = (ArrayList<ARB>)request.getAttribute("filtered");
+                }
+                
+
+                if(request.getAttribute("regions") != null){
+                    regions = (ArrayList<Region>)request.getAttribute("regions");
+                }
+                
+
+                if(request.getAttribute("provOffices") != null){
+                    provOffices = (ArrayList<Province>)request.getAttribute("provOffices");
                 }
             %>
 
@@ -134,11 +147,13 @@
                                         <div class="form-group">
                                             <label for="">Category</label>
                                             <select name="category" id="category" class="form-control select2" >
-                                                <option value="1">Credit Rating</option>
-                                                <option value="2">Self Rating</option>
-                                                <option value="3">Crops</option>
-                                                <option value="4">Attendance Rate</option>
-                                                <option value="5">Count</option>
+                                                <option value="1">Count</option>
+                                                <option value="2">Recipients</option>
+                                                <option value="3">Participation Rate</option>
+                                                <option value="4">APCP Mean Ave. Disbursed Amount </option>
+                                                <option value="5">APCP Mean Ave. Past Due Amount</option>
+                                                <option value="5">Settlement Rate</option>
+                                                <option value="5">APCP Type Availment</option>
                                             </select>
                                         </div>
                                     </div>
@@ -218,10 +233,7 @@
                                         <div class="col-xs-3">
                                             <%
                                                 String regionsStr = "";
-                                                ArrayList<Region> regions = new ArrayList();
-                                                if(request.getAttribute("regions") != null){
-                                                    regions = (ArrayList<Region>)request.getAttribute("regions");
-                                                }
+                                                
                                             %>
                                             <%if(regions.isEmpty()){%>
                                             <h6>N/A</h6>
@@ -233,14 +245,11 @@
                                             <h6><%out.print(regionsStr);%></h6>
                                             <%}%>
                                         </div>
-                                        
+
                                         <div class="col-xs-3">
                                             <%
                                                 String provincesStr = "";
-                                                ArrayList<Province> provOffices = new ArrayList();
-                                                if(request.getAttribute("provOffices") != null){
-                                                    provOffices = (ArrayList<Province>)request.getAttribute("provOffices");
-                                                }
+                                                
                                             %>
                                             <%if(provOffices.isEmpty()){%>
                                             <h6>N/A</h6>
@@ -341,21 +350,40 @@
                 String json = "";
                 
                 if(demographic == 1){ // GENDER
-                    if(category == 5){ // COUNT
-                        json = chart.getPieChartGender(allArbsList); // PIE CHART
-                    }else if(category == 4){ // Attendance Rate
-                        
-                    }else if(category == 3){ // CROPS
+                    if(category == 1){ // COUNT
+                        if(request.getAttribute("filterByREGION") != null){ // FILTER BY REGION
+                            json = chart.getBarChartRecipientsByRegion(allArbsList, regions);
+                        }else if(request.getAttribute("filterByPROVINCE") != null){ // FILTER BY PROVINCE
+                            json = chart.getBarChartRecipientsByProvOffice(allArbsList, provOffices);
+                        }else{
+                            json = chart.getPieChartGender(allArbsList); // PIE CHART
+                        }
+                    }else if(category == 2){ // Recipients
+                        if(request.getAttribute("filterByREGION") != null){ // FILTER BY REGION
+                            json = chart.getBarChartRecipientsByRegion(allArbsList, regions);
+                        }else if(request.getAttribute("filterByPROVINCE") != null){ // FILTER BY PROVINCE
+                            json = chart.getBarChartRecipientsByProvOffice(allArbsList, provOffices);
+                        }else{
+                            json = chart.getPieChartGender(allArbsList);
+                        }
+                    }else if(category == 3){ // Participants
                         ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(allArbsList);
                         ArrayList<Crop> cropHistory = cropDAO.getCropHistory(allArbsList);
                         json = chart.getCropHistory(crops,allArbsList); // LINE GRAPH
-                    }else if(category == 2){ // Self Rating
+                    }else if(category == 4){ // Participation Rate
                         
-                    }else if(category == 1){ // Credit Rating
+                    }else if(category == 5){ // APCP Mean Ave. Disbursed Amount
+                        
+                    }
+                    else if(category == 6){ // APCP Mean Ave. Past Due Amount
+                        
+                    }else if(category == 7){ // Settlement Rate
+                        
+                    }else if(category == 8){ // APCP Type Availment
                         
                     }
                 }else if(demographic == 2){ // AGE
-                    if(category == 5){ // COUNT
+                    if(category == 1){ // COUNT
                         json = chart.getBarChartAgeCount(allArbsList); // BAR CHART
                     }
                 }

@@ -1,4 +1,4 @@
-
+<!--RELEASE MODAL-->
 <div class="modal fade" id="add-release-modal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -52,7 +52,6 @@
             </form>
 
         </div>
-        <!--                                            /.modal-content -->
     </div>
     <!--                                        /.modal-dialog -->
 </div>
@@ -287,6 +286,7 @@
     <!--                                        /.modal-dialog -->
 </div>
 
+<!--PAST DUE-->
 <div class="modal fade" id="add-pastdue-modal">
     <div class="modal-dialog modal-md">
         <div class="modal-content">

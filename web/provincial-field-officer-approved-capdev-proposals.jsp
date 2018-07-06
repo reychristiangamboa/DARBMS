@@ -70,7 +70,7 @@
                                 <!-- /.box-header -->
 
 
-                                <div class="box-body"> 
+                                <%--<div class="box-body"> 
 
                                     <div class="nav-tabs-custom">
                                         <!-- Tabs within a box -->
@@ -83,7 +83,7 @@
                                         <%@include file="jspf/arboInfo.jspf"%>
                                     </div>
                                     <hr>        
-                                </div>
+                                </div>--%>
 
                                 <!-- /.box-body -->
 
@@ -101,12 +101,14 @@
                                     <div class="box-body">
                                         <div class="box-body">
                                             <div class="row col-xs-4" style="margin-bottom: 20px;">
+                                                
                                                 <label>Assign Point Person</label>
-                                                <select name="pointPersonID" class="form-control" style="width:100%;" >
+                                                <select name="pointPersonID" class="form-control select2">
                                                     <%for(User u : pointPersons){%>
                                                     <option value="<%=u.getUserID()%>"><%out.print(u.getFullName());%></option>
                                                     <%}%>
                                                 </select>
+                                                
                                             </div>
 
                                             <table class="table table-bordered table-striped">

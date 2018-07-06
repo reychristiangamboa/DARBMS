@@ -74,7 +74,7 @@
                 </tr>
             </thead>
             <tbody>
-                <%for(ARB arb : arbo.getArbList()){%>
+                <%for(ARB arb : req.getRecipients()){%>
                 <tr>
                     <td><%out.print(arb.getFLName());%></td>
                     <td><%out.print(f.format(arb.getMemberSince()));%></td>

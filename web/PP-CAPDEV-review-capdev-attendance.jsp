@@ -77,16 +77,7 @@
                                                                             <input type="text" value="<%out.print(f.format(plan.getPlanDate()));%>" class="form-control pull-right" id="datepicker" disabled>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-xs-4">
-                                                                        <div class="form-group">
-                                                                            <label for="">Technical Assistant</label>
-                                                                            <%if (b.getTechnicalAssistant() != null) {%>
-                                                                            <input type="text" name="TA" class="form-control" value="<%=b.getTechnicalAssistant()%>">
-                                                                            <%} else {%>
-                                                                            <input type="text" name="TA" class="form-control" required>
-                                                                            <%}%>
-                                                                        </div>
-                                                                    </div>
+
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-xs-4">
@@ -116,13 +107,14 @@
                                                                                 <%for (ARB arb : b.getArbList()) {%>
                                                                                 <tr>
                                                                                     <%if(arb.getIsPresent() == 1){ // PRESENT %>
-                                                                                    <td><input type="checkbox" name="attendee" checked disabled /></td>
+                                                                                    <td><input type="checkbox" checked disabled /></td>
                                                                                         <%}else if(arb.getIsPresent() == 2){ // REPLACED %>
-                                                                                    <td><input type="checkbox" name="attendee" disabled /></td>
+                                                                                    <td><input type="checkbox" disabled /></td>
                                                                                         <%}else{ // AVAILABLE/ABSENT %>
-                                                                                    <td><input type="checkbox" name="attendee" class="" /></td>
+                                                                                    <td><input type="checkbox" name="attendee" value="<%out.print(arb.getArbID());%>" /></td>
                                                                                         <%}%>
                                                                                     <td><%out.print(arb.getFullName());%></td>
+
                                                                                     <%if(arb.getIsCOMAT() > 0){%>
                                                                                     <td>&checkmark;</td>
                                                                                     <%}else{%>
@@ -135,8 +127,17 @@
                                                                             <tfoot>
                                                                                 <tr>
                                                                                     <td colspan="3">
+                                                                                        <%if(b.getActive() == 1){ // Activity Assessment Recorded, both BUTTONS disabled %>
+                                                                                        <button type="button" class="btn btn-success" disabled>Check Attendance</button>
+                                                                                        <button type="button" class="btn btn-primary" disabled>Replace</button>
+                                                                                        <%}else{ // BUTTONS are clickable %>
+                                                                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#attendanceModal">Check Attendance</button>
+                                                                                        <%if(b.getNonParticipantARBs().isEmpty()){ // IF ALL ARE INVITED, disabled %>
+                                                                                        <button type="button" class="btn btn-primary" disabled>Replace</button>
+                                                                                        <%}else{%>
                                                                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#replaceModal">Replace</button>
-                                                                                        <button type="submit" class="btn btn-success" data-toggle="modal" data-target="#attendanceModal">Check Attendance</button>
+                                                                                        <%}%>
+                                                                                        <%}%>
                                                                                     </td>
                                                                                 </tr>
                                                                             </tfoot>
@@ -189,7 +190,24 @@
                                                                                         <h4 class="modal-title">Confirm Attendance</h4>
                                                                                     </div>
                                                                                     <div class="modal-body">
-                                                                                        <p>Unchecked ARBs will be considered absent. Proceed?</p>
+                                                                                        <div class="row">
+                                                                                            <div class="col-xs-4">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="">Technical Assistant</label>
+                                                                                                    <%if (b.getTechnicalAssistant() != null) {%>
+                                                                                                    <input type="text" name="TA" class="form-control" value="<%=b.getTechnicalAssistant()%>">
+                                                                                                    <%} else {%>
+                                                                                                    <input type="text" name="TA" class="form-control" required>
+                                                                                                    <%}%>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <hr>
+                                                                                        <div class="row">
+                                                                                            <center>
+                                                                                                <p>Unchecked participants will be considered absent. Proceed?</p>
+                                                                                            </center>
+                                                                                        </div>
                                                                                     </div>
                                                                                     <div class="modal-footer">
                                                                                         <button class="btn btn-default" data-dismiss="modal">Cancel</button>

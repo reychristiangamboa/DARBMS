@@ -39,6 +39,7 @@
   ArrayList<CAPDEVActivity> activity8 = capdevDAO.getCAPDEVActivitiesByCategory(8);
   ArrayList<CAPDEVActivity> activity9 = capdevDAO.getCAPDEVActivitiesByCategory(9);
   ArrayList<CAPDEVActivity> activity10 = capdevDAO.getCAPDEVActivitiesByCategory(10);
+  ArrayList<CAPDEVActivity> allActivities = capdevDAO.getCAPDEVActivities();
             %> 
             <% User u1 = new User(); %>
             <% User u2 = new User(); %>
@@ -107,11 +108,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <%if(request.getAttribute("participants") != null){%>
+                                        <%--<%if(request.getAttribute("participants") != null){%>
                                         <%@include file="jspf/add-participants.jspf" %>
                                         <%}else{%>
                                         <%@include file="jspf/create-capdev.jspf" %>
-                                        <%}%>
+                                        <%}%>--%>
+                                        <%@include file="jspf/create-capdev.jspf" %>
                                     </div>
                                 </div>
                             </div>
@@ -128,34 +130,34 @@
         <script type="text/javascript">
 
             $(document).ready(function () {
-                alert("LOL");
+                
                 var max_fields = 9; //maximum input boxes allowed
                 var wrapper = $('.input_fields_wrap'); //Fields wrapper
                 var x = 0; //initlal text box count
-
                 $('#optional-list').on("click", ".optional-document", function (e) {
                     e.preventDefault();
                     var documentID = parseInt($(this).attr('data-documentID'));
                     var documentDesc = $(this).attr('data-documentDesc');
                     var markup = "";
+                    
                     if (documentID === 2) {
-                        markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity2){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
+                        markup = '<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-6"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity2){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-2"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
                     } else if (documentID === 3) {
-                        markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity3){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
+                        markup = '<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-6"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity3){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-2"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
                     } else if (documentID === 4) {
-                        markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity4){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
+                        markup = '<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-6"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity4){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-2"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
                     } else if (documentID === 5) {
-                        markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity5){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
+                        markup = '<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-6"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity5){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-2"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
                     } else if (documentID === 6) {
-                        markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity6){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
+                        markup = '<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-6"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity6){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-2"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
                     } else if (documentID === 7) {
-                        markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity7){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
+                        markup = '<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-6"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity7){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-2"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
                     } else if (documentID === 8) {
-                        markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity8){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
+                        markup = '<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-6"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity8){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-2"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
                     } else if (documentID === 9) {
-                        markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity9){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
+                        markup = '<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-6"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity9){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-2"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
                     } else if (documentID === 10) {
-                        markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity10){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
+                        markup = '<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-6"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity10){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-2"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
                     }
 
                     if (x < max_fields) {
@@ -171,92 +173,6 @@
 
             });
         </script>
-
-
-        <%--
-        var documentID = parseInt($(this).attr('data-documentID'));
-        var documentDesc = $(this).attr('data-documentDesc');
-        var markup = "";
-        if (documentID == 1) { 
-            markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right"></div></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
-        } else if (documentID == 2) {
-            markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity2){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right"></div></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
-        }
-        $(wrapper).append(markup);--%>
-
-
-        <%--
-var max_fields = 9; //maximum input boxes allowed
-var wrapper = $('.input_fields_wrap'); //Fields wrapper
-var add_button = $(".add_field_button"); //Add button ID
-var x = 0; //initlal text box count
-$(add_button).click(function (e) { //on add input button click
-    e.preventDefault();
-    if (x < max_fields) { //max input box allowed
-        x++; //text box increment
-        $('#count').val(x);
-        $(wrapper).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Category">Category</label><select name="activities[]" class="form-control" id="Category" style="width:100%;"><%for(CAPDEVActivity act : activity2){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity2){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right"></div></div></div>');
-        $('.select2').select2();
-    }
-});
-
-                wrapper.on("click", ".delete-row-activity", function (e) {
-                    e.preventDefault();
-                    $(this).closest("div .row").remove();
-                    x--;
-                });
-
-                $('#optional-list').on("click", ".optional-document", function (e) {
-                    e.preventDefault();
-
-                    alert("CLICKED!");
-                    var documentID = parseInt($(this).attr('data-documentID'));
-                    var documentDesc = $(this).attr('data-documentDesc');
-                    var markup = "";
-                    if (documentID === 1) { // OTHERS
-                        markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right"></div></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
-                    } else if (documentID === 2) {
-                        markup = '<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity2){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right"></div></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
-                    }
-                    $(wrapper).append(markup);
-                });
-
-        <%--<div class="row"><div class="col-xs-3"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + category + '"><input type="text" class="form-control" value="' + categoryDesc + '" disabled/></div></div><div class="col-xs-3"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-3"><div class="form-group"><label>Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="activityDates[]" class="form-control pull-right"></div></div></div><div class="col-xs-3"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>--%>
-
-
-        <%--<div class="row">
-            <div class="col-xs-3">
-                <div class="form-group">
-                    <label for="Category">Category</label>
-                    <input type="hidden" name="category" value="'category'">
-                    <input type="text" class="form-control" value="'categoryDesc'" disabled/>
-                </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="form-group">
-                    <label for="Activity">Activity</label>
-                    <select name="activities[]" class="form-control" id="Activity" style="width:100%;">
-                        <%for(CAPDEVActivity act : activity){%>
-                        <option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option>
-                        <%}%>
-                    </select>
-                </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="form-group">
-                    <label>Date</label>
-                    <div class="input-group date">
-                        <div class="input-group-addon">
-                            <i class="fa fa-calendar"></i>
-                        </div>
-                        <input type="date" name="activityDates[]" class="form-control pull-right">
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-3">
-                <button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button>
-            </div>
-        </div>--%>
 
     </body>
 </html>

@@ -148,6 +148,19 @@ public class ARBODAO {
         
         return arboList;
     }
+    
+    public ArrayList<ARBO> getAllARBOsByProvinceDesc(String provinceOfficeCode) {
+        ArrayList<ARBO> allARBOs = getAllARBOs();
+        ArrayList<ARBO> arboList = new ArrayList();
+        
+        for(ARBO arbo : allARBOs){
+            if(arbo.getProvOfficeCodeDesc().equals(provinceOfficeCode)){
+                arboList.add(arbo);
+            }
+        }
+        
+        return arboList;
+    }
 
     public ArrayList<ARBO> getAllARBOsByCityMun(int cityMun) {
         ArrayList<ARBO> allARBOs = getAllARBOs();

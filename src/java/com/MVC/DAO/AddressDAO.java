@@ -116,7 +116,7 @@ public class AddressDAO {
         ArrayList<Province> provinceList = new ArrayList();
 
         try {
-            String query = "SELECT * FROM `dar-bms`.ref_provOffice";
+            String query = "SELECT * FROM `dar-bms`.ref_provOffice p JOIN refregion r ON p.regCode = r.regCode ";
             PreparedStatement pstmt = con.prepareStatement(query);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -124,6 +124,7 @@ public class AddressDAO {
                 p.setProvCode(rs.getInt("provOfficeCode"));
                 p.setProvDesc(rs.getString("provOfficeDesc"));
                 p.setRegCode(rs.getInt("regCode"));
+                p.setRegDesc(rs.getString("regDesc"));
                 provinceList.add(p);
             }
             rs.close();
@@ -203,9 +204,41 @@ public class AddressDAO {
         ArrayList<Province> provinceList = new ArrayList();
 
         try {
-            String query = "SELECT * FROM `dar-bms`.ref_provOffice WHERE regCode = ?";
+            String query = "SELECT * FROM `dar-bms`.ref_provOffice p JOIN refregion r ON p.regCode=r.regCode WHERE r.regCode = ?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, regionID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Province p = new Province();
+                p.setProvCode(rs.getInt("provOfficeCode"));
+                p.setProvDesc(rs.getString("provOfficeDesc"));
+                p.setRegCode(rs.getInt("regCode"));
+                p.setRegDesc(rs.getString("regDesc"));
+                provinceList.add(p);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return provinceList;
+    }
+    
+    public ArrayList<Province> getAllProvOfficesRegion(String regDesc) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Province> provinceList = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.ref_provOffice p join refregion r on p.regCode = r.regCode WHERE r. regDesc = ?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setString(1, regDesc);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Province p = new Province();

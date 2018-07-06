@@ -123,7 +123,7 @@
                                     </div>
                                     <div id="collapseTwo" class="panel-collapse collapse in">
                                         <div class="box-body">
-                                            <%@include file="/jspf/disbursement-info.jspf" %>
+                                            <%@include file="jspf/disbursement-info.jspf" %>
                                         </div>
                                     </div>
                                 </div>
@@ -147,26 +147,25 @@
                                     <div class="modal-body" id="modalBody">
                                         <div class="row">
                                             <div class="col-xs-12">
-                                                <table id="example1" class="table table-bordered table-striped">
+                                                <table class="table table-bordered table-striped modTable">
                                                     <thead>
                                                         <tr>
-                                                            <th>ARB Name</th>
+                                                            <th>Action</th>
+                                                            <th>ARB</th>
                                                             <th>Address</th>
                                                             <th>Crops</th>
-                                                            <th>Action</th>
                                                         </tr>
                                                     </thead>
 
                                                     <tbody>
                                                         <%for(ARB arb : arbList){%>
                                                         <tr>
-                                                            <td><%out.print(arb.getFLName());%></td>
-                                                            <td><%out.print(arb.getFullAddress());%></td>
-                                                            <td><%out.print(arb.printAllCrops());%></td>
-
                                                             <td>
                                                                 <input type="checkbox" name="arbID" value="<%=arb.getArbID()%>"/>
                                                             </td>
+                                                            <td><%out.print(arb.getFLName());%></td>
+                                                            <td><%out.print(arb.getFullAddress());%></td>
+                                                            <td><%out.print(arb.printAllCrops());%></td>
                                                         </tr>
                                                         <%}%>
                                                     </tbody>
@@ -267,7 +266,7 @@
         <script>
             $(document).ready(function () {
                 var interestRate = <%out.print(r.getLoanReason().getLoanTerm().getArbInterestRate());%>
-                        
+
                 $('#disbursementAmount').on('input', function () {
                     var val = this.value * interestRate;
                     $('#disbursementOSBalance').val(val);

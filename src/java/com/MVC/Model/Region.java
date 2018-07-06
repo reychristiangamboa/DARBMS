@@ -5,6 +5,8 @@
  */
 package com.MVC.Model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Rey Christian
@@ -13,6 +15,7 @@ public class Region {
     
     private int regCode;
     private String regDesc;
+    private ArrayList<Province> provOffices; 
 
     public int getRegCode() {
         return regCode;

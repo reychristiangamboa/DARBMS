@@ -48,12 +48,13 @@ public class AddCAPDEVPlan extends BaseServlet {
                 java.util.Date parsedPlanDate = sdf.parse(request.getParameter("planDate"));
                 planDate = new java.sql.Date(parsedPlanDate.getTime());
             } catch (ParseException ex) {
-                Logger.getLogger(AddARBCrop.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddCAPDEVPlan.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             capdevPlan.setPlanDate(planDate);
 
         int planID = 0;
+        int requestID = Integer.parseInt(request.getParameter("requestID"));
 
         if (request.getParameter("pastDueID") != null) {
             capdevPlan.setPastDueAccountID(Integer.parseInt(request.getParameter("pastDueID")));
@@ -65,14 +66,6 @@ public class AddCAPDEVPlan extends BaseServlet {
         for (int i = 0; i < activities.length; i++) {
 
             CAPDEVActivity activity = new CAPDEVActivity();
-            java.sql.Date activityDate = null;
-
-            try {
-                java.util.Date parsedActivityDate = sdf.parse(activityDates[i]);
-                activityDate = new java.sql.Date(parsedActivityDate.getTime());
-            } catch (ParseException ex) {
-                Logger.getLogger(SendCAPDEVProposal.class.getName()).log(Level.SEVERE, null, ex);
-            }
 
             int activityType = Integer.parseInt(activities[i]);
             activity.setActivityType(activityType);
@@ -82,6 +75,7 @@ public class AddCAPDEVPlan extends BaseServlet {
 
         }
         
+        request.setAttribute("requestID", requestID);
         request.setAttribute("planID", planID);
         request.setAttribute("participants", true);
         request.getRequestDispatcher("PFO-CAPDEV-plan-activity-list.jsp").forward(request, response);

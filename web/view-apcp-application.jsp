@@ -35,8 +35,8 @@
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
 
-            <%@include file="/jspf/field-officer-navbar.jspf" %>
-            <%@include file="/jspf/pfo-apcp-sidebar.jspf" %>
+            <%@include file="jspf/field-officer-navbar.jspf" %>
+            <%@include file="jspf/pfo-apcp-sidebar.jspf" %>
 
             <%
 //            APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
@@ -110,12 +110,12 @@
                                 </div>
                                         
                                 <%
-                                            if (req.getRequestStatus() == 1){%>
-                                <%@include file="/jspf/clear-apcp-application.jspf" %>
+                                if (req.getRequestStatus() == 1){%>
+                                <%@include file="jspf/clear-apcp-application.jspf" %>
                                 <%}else if(req.getRequestStatus() == 2){%>
-                                <%@include file="/jspf/endorse-apcp-application.jspf" %>
+                                <%@include file="jspf/endorse-apcp-application.jspf" %>
                                 <%}else if(req.getRequestStatus() == 3){%>
-                                <%@include file="/jspf/approve-apcp-application.jspf" %>
+                                <%@include file="jspf/approve-apcp-application.jspf" %>
                                 <%}
                                 %>
 
@@ -136,7 +136,7 @@
         </div>
         <!-- ./wrapper -->
 
-        <%@include file="/jspf/footer.jspf"%>  
+        <%@include file="jspf/footer.jspf"%>  
         <script type="text/javascript">
 
 

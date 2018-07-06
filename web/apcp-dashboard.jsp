@@ -155,8 +155,10 @@
                                                     <option value="2">Approval Rate</option>
                                                     <option value="3">APCP Amounts</option>
                                                     <option value="4">Loan Type Availability</option>
-                                                    <option value="5">Loan Reason</option>
-                                                    <option value="6">Past Due Reason</option>
+                                                    <option value="5">Loan Term Availability</option>
+                                                    <option value="6">Loan Reason</option>
+                                                    <option value="7">Past Due Reason</option>
+                                                    <option value="8">Approved Amount %</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -207,8 +209,10 @@
                                                     <option value="2">Approval Rate</option>
                                                     <option value="3">APCP Amounts</option>
                                                     <option value="4">Loan Type Availability</option>
-                                                    <option value="5">Loan Reason</option>
-                                                    <option value="6">Past Due Reason</option>
+                                                    <option value="5">Loan Term Availability</option>
+                                                    <option value="6">Loan Reason</option>
+                                                    <option value="7">Past Due Reason</option>
+                                                    <option value="8">Approved Amount %</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -283,7 +287,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
-
+<%--
                                     <div class="row">
                                         <div class="description-block border-right">
 
@@ -668,10 +672,11 @@
                                         </div>
                                         <!-- /.modal-dialog -->
                                     </div>
-
+--%>
                                 </div>
                             </div>
                             <hr>
+                            <%--
                             <div class="row">
                                 <div class="col-xs-12">
                                     <table class="table table-bordered table-striped export">
@@ -711,6 +716,7 @@
                                     </table>
                                 </div>
                             </div>
+                                        --%>
                         </div>
                         <!-- /.row -->
                         <!-- this row will not appear when printing -->
@@ -814,8 +820,14 @@
                     json = chart.getBarChartAPCPAmounts(regions,provOffices,allArboList);
                 }else if(type == 4){ // LOAN TYPE AVAILMENT
                     json = chart.getBarChartLoanType(regions,provOffices,allArboList);
-                }else if(type == 5){ // LOAN REASON
+                }else if(type == 5){ // LOAN TERM AVAILMENT
+                    json = chart.getBarChartLoanTerm(regions,provOffices,allArboList);
+                }else if(type == 6){ // LOAN REASON
                     json = chart.getStackedBarChartLoanReason(regions,provOffices,allArboList);
+                }else if(type == 7){ // PAST DUE
+                    
+                }else if(type == 8){ // APPROVED AMOUNTS
+                    json = chart.getStackedBarChartApprovedAmounts(regions,provOffices,allArboList);
                 }
                 
             %>

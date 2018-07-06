@@ -60,9 +60,10 @@
                                         <thead>
                                             <tr>
                                                 <th>Plan DTN</th>
-                                                <th>ARBO Name</th>
+                                                <th>ARBO</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
 
@@ -74,10 +75,14 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <td><a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
-                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
+                                                <td>
+                                                    <a type="button" href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>" class="btn btn-success">ASSESS</a>
+                                                    <button type="button" href="#" class="btn btn-danger">POSTPONE</button>
+                                                </td>
                                             </tr>
                                             <%}%>
 
@@ -88,9 +93,8 @@
                                                 <th>Plan DTN</th>
                                                 <th>ARBO Name</th>
                                                 <th>No. of Activities</th>
-                                                <th>Status</th>       
+                                                <th>Action</th>       
                                             </tr>
-
                                         </tfoot>
 
                                     </table>

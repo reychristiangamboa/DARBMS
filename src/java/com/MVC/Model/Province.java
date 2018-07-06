@@ -5,6 +5,8 @@
  */
 package com.MVC.Model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Rey Christian
@@ -14,6 +16,7 @@ public class Province {
     private int provCode;
     private String provDesc;
     private int regCode;
+    private String regDesc;
 
     public int getProvCode() {
         return provCode;
@@ -37,6 +40,23 @@ public class Province {
 
     public void setRegCode(int regCode) {
         this.regCode = regCode;
+    }
+
+    public String getRegDesc() {
+        return regDesc;
+    }
+
+    public void setRegDesc(String regDesc) {
+        this.regDesc = regDesc;
+    }
+    
+    
+    
+    public boolean matchProvOfficeByDesc(Province p, String label){
+            if(p.getRegDesc().equals(label)){
+                return true;
+            }
+        return false;
     }
     
 }

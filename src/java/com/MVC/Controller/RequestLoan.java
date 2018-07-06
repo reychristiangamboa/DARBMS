@@ -10,6 +10,7 @@ import com.MVC.Model.APCPDocument;
 import com.MVC.Model.APCPRequest;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
@@ -33,6 +34,8 @@ public class RequestLoan extends BaseServlet {
         APCPRequestDAO dao = new APCPRequestDAO();
         APCPRequest r = new APCPRequest();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Long l = System.currentTimeMillis();
+        Date d = new Date(l);
 
         String[] vals = request.getParameter("loanAmount").split(",");
         StringBuilder sb = new StringBuilder();
@@ -50,13 +53,17 @@ public class RequestLoan extends BaseServlet {
         String[] arbIDsStr = request.getParameterValues("arbID");
         //ArrayList<APCPDocument> documentList = new ArrayList();
 
-        r.setRequestStatus(0); // FOR CONDUIT APPROVAL
+        r.setRequestStatus(1); // REQUESTED
         for (String str : dateSubmittedStr) {
             if (str.isEmpty()) {
                 r.setRequestStatus(8); // INCOMPLETE
             }
         }
-
+        
+        if(r.getRequestStatus() == 1){
+            r.setDateCompleted(d);
+        }
+        
         if (request.getParameter("cropProd") != null) {
             APCPRequest cropProdRequest = dao.getRequestByID(Integer.parseInt("cropProd"));
             maxAmount = cropProdRequest.getLoanAmount() * .10;
