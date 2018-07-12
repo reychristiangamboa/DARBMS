@@ -240,9 +240,6 @@
                                     </div>
                                 </div>
 
-
-
-
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <label>Loan Recipients</label>
@@ -401,6 +398,7 @@
                                                     }
 
                                                 });
+
                                                 $('#loanReason').on('change', function () { // 
                                                     if (this.value > 0) {
                                                         $('#otherReason').prop('disabled', true);
@@ -410,6 +408,7 @@
                                                         $('#otherReason').prop('required', true);
                                                     }
                                                 });
+
                                                 var max = $('#maxDuration').attr('min');
                                                 $('#maxDuration').val(max);
                                                 $('#loanTerm').on('change', function () {

@@ -65,7 +65,7 @@ public class Login extends BaseServlet {
                     } else if (u.getUserType() == 2) {   //  POINT PERSON APCP
                         request.getRequestDispatcher("point-person-view-capdev-plans.jsp").forward(request, response);
                     } else if (u.getUserType() == 3) {   //  PROVINCIAL FIELD OFFICER
-                        request.getRequestDispatcher("PFO-HEAD-home.jsp").forward(request, response);
+                        request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
                     } else if (u.getUserType() == 4) {   //  REGIONAL FIELD OFFICER
                         request.getRequestDispatcher("RFO-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 5) {   //  CENTRAL OFFICER
@@ -75,7 +75,7 @@ public class Login extends BaseServlet {
                     } else if (u.getUserType() == 7) {   //  PFO-CAPDEV
                         request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
                     } else if (u.getUserType() == 8) {   //  POINT PERSON CAPDEV
-                        request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
+                        request.getRequestDispatcher("PP-CAPDEV-view-capdev-plans.jsp").forward(request, response);
                     }
 
                 } else {    //  DEACTIVATED ACCOUNTS

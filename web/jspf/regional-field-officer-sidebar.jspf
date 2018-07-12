@@ -26,6 +26,8 @@
     AddressDAO addressDAO = new AddressDAO();
     CropDAO cropDAO = new CropDAO();
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+    
+    ArrayList<APCPRequest> allRequestStatus = apcpRequestDAO.getAllRequestStatus();
 
     ArrayList<Region> regionList = addressDAO.getAllRegions();
     //ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRequestedRequestsRegion((Integer) session.getAttribute("regOfficeCode"));
@@ -38,7 +40,7 @@
 
     ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(arbListRegion);
     ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListRegion);
-    ArrayList<APCPRequest> regionalRequest = apcpRequestDAO.getAllRegionalRequests((Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> regionalRequests = apcpRequestDAO.getAllRegionalRequests((Integer) session.getAttribute("regOfficeCode"));
     ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
     ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(2, (Integer) session.getAttribute("regOfficeCode"));
     ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
@@ -47,7 +49,7 @@
     ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(7, (Integer) session.getAttribute("regOfficeCode"));
 
     ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
-    ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(regionalRequest);
+    ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(regionalRequests);
 
     ArrayList<CAPDEVPlan> allPlans = capdevDAO.getAllRegionalCAPDEVPlan((Integer) session.getAttribute("regOfficeCode"));
     ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(1, (Integer) session.getAttribute("regOfficeCode"));

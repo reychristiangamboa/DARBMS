@@ -28,8 +28,8 @@
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
 
-            <%@include file="/jspf/field-officer-navbar.jspf"%>
-            <%@include file="/jspf/provincial-field-officer-sidebar.jspf"%>
+            <%@include file="jspf/field-officer-navbar.jspf"%>
+            <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
             <%
                 APCPRequest r = apcpRequestDAO.getRequestByID((Integer) request.getAttribute("requestID"));
                 System.out.print("RequestID = " +r.getRequestID());
@@ -136,7 +136,7 @@
                                                             <div class="input-group-addon">
                                                                 <i class="fa fa-calendar"></i>
                                                             </div>
-                                                            <input type="date" name="dateSubmitted" value="<%out.print(d.getDateSubmitted());%>" class="form-control pull-right" id="datepicker">
+                                                            <input type="date" name="dateSubmitted" value="<%out.print(d.getDateSubmitted());%>" class="form-control pull-right" id="datepicker" disabled>
                                                         </div> 
                                                     </td>
                                                 </tr>
@@ -262,7 +262,7 @@
                                                             <div class="input-group-addon">
                                                                 <i class="fa fa-calendar"></i>
                                                             </div>
-                                                            <input type="date" name="dateSubmitted" value="<%out.print(d.getDateSubmitted());%>" class="form-control pull-right" id="datepicker">
+                                                            <input type="date" name="dateSubmitted" value="<%out.print(d.getDateSubmitted());%>" class="form-control pull-right" id="datepicker" disabled>
                                                         </div> 
                                                     </td>
                                                 </tr>
@@ -353,7 +353,7 @@
         <!-- /.content-wrapper -->
     </div>
     <!-- ./wrapper -->
-    <%@include file="/jspf/footer.jspf" %>
+    <%@include file="jspf/footer.jspf" %>
 
 </body>
 </html>

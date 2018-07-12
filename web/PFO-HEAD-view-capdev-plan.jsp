@@ -73,7 +73,6 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Activity</th>
-                                                            <th>Date</th>
                                                             <th>No. of Participants</th>
                                                         </tr>
                                                     </thead>
@@ -82,7 +81,6 @@
                                                         <%for (CAPDEVActivity activity : caList) {%>
                                                         <tr>
                                                             <td><%out.print(activity.getActivityName());%></td>
-                                                            <td><%out.print(activity.getActivityDate());%></td>
                                                             <td><%out.print(activity.getArbList().size());%></td>
                                                         </tr>
                                                         <%}%>

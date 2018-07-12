@@ -48,14 +48,9 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
-            <%if ((Integer) session.getAttribute("userType") == 2) {%>
-            <%@include file="jspf/point-person-sidebar.jspf" %>
-            <%} else if ((Integer) session.getAttribute("userType") == 3) {%>
+            <%if ((Integer) session.getAttribute("userType") == 3) {%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
-            <%} else if ((Integer) session.getAttribute("userType") == 4) {%>
-            <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
-            <%} else if ((Integer) session.getAttribute("userType") == 5) {%>
-            <%@include file="jspf/central-sidebar.jspf"%>
+            
             <%}%>
 
             <%
@@ -760,7 +755,7 @@
 
 
                                         </ul>
-                                        <div class="tab-content"  style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
+                                        <%--<div class="tab-content"  style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
                                             <div class="active tab-pane" id="apcpCapdev">
                                                 <div class="col-xs-12" style="margin:10px;" >
                                                     <ul class="timeline">
@@ -896,7 +891,7 @@
 
 
                                             </div>
-                                        </div>
+                                        </div>--%>
 
 
                                         <!-- /.tab-content -->

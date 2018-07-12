@@ -65,6 +65,7 @@
                                                             out.print("active");
                                                         }%>" id="activity<%out.print(b.getActivityID());%>" style="position: relative; height: 300px;">
                                                         <%count2++;%>
+
                                                         <form method="post">
                                                             <div class="box-body">
                                                                 <div class="row">
@@ -81,19 +82,21 @@
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-xs-4">
-                                                                        <input type="radio" name="import" checked onclick="document.getElementById('manualAttendance').style.display = 'none';document.getElementById('importAttendance').style.display = 'block'">
-                                                                        <label for="">Import Attendees</label>
-                                                                        &nbsp;&nbsp;
-                                                                        <input type="radio" name="manual" onclick="document.getElementById('manualAttendance').style.display = 'block';document.getElementById('importAttendance').style.display = 'none'">
-                                                                        <label for="">Check Attendees</label>
+                                                                        <div class="form-group">
+                                                                            <input type="radio" name="attendanceMethod" checked onclick="document.getElementById('manualAttendance<%out.print(b.getActivityID());%>').style.display = 'none';document.getElementById('importAttendance<%out.print(b.getActivityID());%>').style.display = 'block'">
+                                                                            <label for="">Import Attendees</label>
+                                                                            &nbsp;&nbsp;
+                                                                            <input type="radio" name="attendanceMethod" onclick="document.getElementById('manualAttendance<%out.print(b.getActivityID());%>').style.display = 'block';document.getElementById('importAttendance<%out.print(b.getActivityID());%>').style.display = 'none'">
+                                                                            <label for="">Check Attendees</label>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col-xs-4" id="importAttendance">
+                                                                    <div class="col-xs-4" id="importAttendance<%out.print(b.getActivityID());%>">
                                                                         <label for="">Upload Participants</label>
                                                                         <input type="file" name="file">
                                                                     </div>
-                                                                    <div class="col-xs-12" id="manualAttendance">
+                                                                    <div class="col-xs-12" id="manualAttendance<%out.print(b.getActivityID());%>" style="display:none">
                                                                         <table class="table table-striped table-bordered modTable">
                                                                             <thead>
                                                                                 <tr>
@@ -131,11 +134,11 @@
                                                                                         <button type="button" class="btn btn-success" disabled>Check Attendance</button>
                                                                                         <button type="button" class="btn btn-primary" disabled>Replace</button>
                                                                                         <%}else{ // BUTTONS are clickable %>
-                                                                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#attendanceModal">Check Attendance</button>
+                                                                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#attendanceModal<%out.print(b.getActivityID());%>">Check Attendance</button>
                                                                                         <%if(b.getNonParticipantARBs().isEmpty()){ // IF ALL ARE INVITED, disabled %>
                                                                                         <button type="button" class="btn btn-primary" disabled>Replace</button>
                                                                                         <%}else{%>
-                                                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#replaceModal">Replace</button>
+                                                                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#replaceModal<%out.print(b.getActivityID());%>">Replace</button>
                                                                                         <%}%>
                                                                                         <%}%>
                                                                                     </td>
@@ -143,7 +146,7 @@
                                                                             </tfoot>
                                                                         </table>
 
-                                                                        <div id="replaceModal" class="modal fade" role="dialog">
+                                                                        <div id="replaceModal<%out.print(b.getActivityID());%>" class="modal fade" role="dialog">
                                                                             <div class="modal-dialog">
                                                                                 <div class="modal-content">
                                                                                     <div class="modal-header">
@@ -155,14 +158,14 @@
                                                                                             <thead>
                                                                                                 <tr>
                                                                                                     <th>Action</th>
-                                                                                                    <th>Full Name</th>
+                                                                                                    <th>ARB</th>
                                                                                                     <th>COMAT</th>
                                                                                                 </tr>
                                                                                             </thead>
                                                                                             <tbody>
                                                                                                 <% for(ARB nonParticipant : b.getNonParticipantARBs()){ %>
                                                                                                 <tr>
-                                                                                                    <td><input type="checkbox" name="replacee" /></td>
+                                                                                                    <td><input type="checkbox" name="replacee" value="<%out.print(nonParticipant.getArbID());%>" /></td>
                                                                                                     <td><%out.print(nonParticipant.getFLName());%></td>
                                                                                                     <%if(nonParticipant.getIsCOMAT() > 0){%>
                                                                                                     <td>&checkmark;</td>
@@ -176,13 +179,13 @@
                                                                                     </div>
                                                                                     <div class="modal-footer">
                                                                                         <button class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                                                        <button type="submit" class="btn btn-primary" onclick="form.action = 'ReplaceParticipant?activityID=<%out.print(b.getActivityID());%>&planID=<%out.print(plan.getPlanID());%>'">Replace</button>
+                                                                                        <button class="btn btn-primary" onclick="form.action = 'ReplaceParticipant?planID=<%out.print(plan.getPlanID());%>&activityID=<%out.print(b.getActivityID());%>'">Replace</button>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
 
-                                                                        <div id="attendanceModal" class="modal fade" role="dialog">
+                                                                        <div id="attendanceModal<%out.print(b.getActivityID());%>" class="modal fade" role="dialog">
                                                                             <div class="modal-dialog">
                                                                                 <div class="modal-content">
                                                                                     <div class="modal-header">
@@ -195,7 +198,7 @@
                                                                                                 <div class="form-group">
                                                                                                     <label for="">Technical Assistant</label>
                                                                                                     <%if (b.getTechnicalAssistant() != null) {%>
-                                                                                                    <input type="text" name="TA" class="form-control" value="<%=b.getTechnicalAssistant()%>">
+                                                                                                    <input type="text" name="TA" class="form-control" value="<%=b.getTechnicalAssistant()%>" disabled>
                                                                                                     <%} else {%>
                                                                                                     <input type="text" name="TA" class="form-control" required>
                                                                                                     <%}%>
@@ -211,7 +214,7 @@
                                                                                     </div>
                                                                                     <div class="modal-footer">
                                                                                         <button class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                                                        <button type="submit" class="btn btn-primary" onclick="form.action = 'CheckAttendance?planID=<%out.print(plan.getPlanID());%>&activityID=<%out.print(b.getActivityID());%>'">Confirm</button>
+                                                                                        <button class="btn btn-primary" onclick="form.action = 'CheckAttendance?planID=<%out.print(plan.getPlanID());%>&activityID=<%out.print(b.getActivityID());%>'">Confirm</button>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -219,14 +222,6 @@
                                                                     </div>
                                                                 </div>
 
-                                                            </div>
-                                                            <div class="box-footer">
-                                                                <%if ((Integer) request.getAttribute("clusterID") != null) {%>
-                                                                <input type="hidden" value="<%=(Integer) request.getAttribute("clusterID")%>" name="clusterID">
-                                                                <%}%>
-                                                                <input type="hidden" value="<%=b.getActivityID()%>" name="activityID">
-                                                                <input type="hidden" value="<%=(Integer) request.getAttribute("planID")%>" name="planID">
-                                                                <button class="btn btn-primary pull-right" onclick="form.action = 'RecordActivityAssessment'" >Submit Activity Assessment</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -240,7 +235,7 @@
                                             <div class="pull-right">
                                                 <input type="hidden" value="<%=(Integer) request.getAttribute("planID")%>" name="planID">
                                                 <% if (plan.assessmentsAreComplete()) { %>
-                                                <button type="button" class="btn btn-success" id="sendCapdevAssessment" data-toggle="modal" data-target="assessmentModal">Submit Plan Assessment</button>
+                                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#assessmentModal">Submit Plan Assessment</button>
                                                 <% }else{ %>
                                                 <button class="btn btn-success" id="sendCapdevAssessment" disabled>Submit Plan Assessment</button>
                                                 <% } %>
@@ -305,18 +300,5 @@
         </div>
 
         <%@include file="jspf/footer.jspf" %>
-
-        <script>
-            $(function () {
-
-                $('#sendCapdevAssessment').hide();
-
-                var lolVal = $('#lol').val();
-                if (lolVal) {
-                    $('#sendCapdevAssessment').show();
-                }
-            });
-        </script>
-
     </body>
 </html>

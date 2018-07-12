@@ -50,10 +50,10 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example1" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
+                                                <th>ARBO</th>
                                                 <th>Loan Reason</th>
                                                 <th>Loan Amount</th>
                                                 <th>Land Area</th>
@@ -70,7 +70,11 @@
                                             %>
                                             <tr>
                                                 <td><a href="ViewNewAccessingARBO?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
+                                                <%}else{%> <!--LOAN REASON-->
+                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
+                                                <%}%>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateRequested());%></td>

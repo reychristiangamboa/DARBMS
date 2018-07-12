@@ -36,13 +36,13 @@
 <script src="dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
+
 <!-- DataTables -->
 <script src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script> 
 <script src="bower_components/datatables.net/js/jquery.dataTables.js"></script>
 <script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script> 
-<script src="bower_components/datatables.net-bs/js/buttons.bootstrap.min.js"></script> <!--
-
---><script src="bower_components/datatables.net/js/dataTables.buttons.min.js"></script>
+<!--<script src="bower_components/datatables.net-bs/js/buttons.bootstrap.min.js"></script>-->
+<script src="bower_components/datatables.net/js/dataTables.buttons.min.js"></script>
 <script src="bower_components/datatables.net/js/buttons.flash.min.js"></script>
 <script src="bower_components/datatables.net/js/buttons.html5.min.js"></script> 
 <script src="bower_components/datatables.net/js/buttons.print.min.js"></script> 
@@ -50,6 +50,8 @@
 <script src="bower_components/datatables.net/js/pdfmake.min.js"></script> 
 <script src="bower_components/datatables.net/js/vfs_fonts.js"></script> 
 <script src="bower_components/datatables.net/js/buttons.colVis.min.js"></script> 
+<script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.js"></script> 
+<script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script> 
 
 <!-- ChartJS -->
 <script src="bower_components/chart.js/Chart.js"></script>
@@ -68,15 +70,9 @@
 
 <script src="bower_components/inputmask/dist/jquery.inputmask.bundle.js"></script>
 
-<script>
+<script type="text/javascript">
     $(document).ready(function () {
         $('.select2').select2();
-    });
-</script>
-
-<!-- page script -->
-<script type="text/javascript">
-    $(function () {
         
         $('.export').DataTable({
             dom: 'Bfrtip',
@@ -88,6 +84,7 @@
         $('.modTable').DataTable();
         
         $('.table.table-bordered.table-striped.modTable').DataTable();
+        
         $('.table.table-bordered.table-striped.export').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -106,8 +103,6 @@
                 self.Value('');
             }
         });
-
-
-
     });
 </script>
+

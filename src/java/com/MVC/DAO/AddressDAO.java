@@ -9,12 +9,16 @@ import com.MVC.Database.DBConnectionFactory;
 import com.MVC.Model.Barangay;
 import com.MVC.Model.CityMun;
 import com.MVC.Model.Province;
+import com.MVC.Model.ProvincialBudget;
 import com.MVC.Model.Region;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -155,6 +159,14 @@ public class AddressDAO {
                 p.setProvCode(rs.getInt("provOfficeCode"));
                 p.setProvDesc(rs.getString("provOfficeDesc"));
                 p.setRegCode(rs.getInt("regCode"));
+                
+                if(getAPCPBudgetByProvOffice(rs.getInt("provOfficeCode")) != null){
+                    p.setProvincialAPCPBudget(getAPCPBudgetByProvOffice(rs.getInt("provOfficeCode")));
+                }
+                
+                if(getCAPDEVBudgetByProvOffice(rs.getInt("provOfficeCode")) != null){
+                    p.setProvincialCAPDEVBudget(getCAPDEVBudgetByProvOffice(rs.getInt("provOfficeCode")));
+                }
             }
             rs.close();
             pstmt.close();
@@ -657,5 +669,165 @@ public class AddressDAO {
         }
         return id;
     }
+    
+    public ProvincialBudget getAPCPBudgetByProvOffice(int provOfficeCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        
+        ProvincialBudget p = new ProvincialBudget();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String d = f.format(cal.getTime());
+        
+        try {
+            String query = "SELECT * FROM `dar-bms`.provincialAPCPBudget "
+                    + "WHERE provOfficeCode = ? "
+                    + "AND '"+d+"' BETWEEN startDate AND endDate "
+                    + "AND approvedBy IS NOT NULL";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, provOfficeCode);
+            
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                p.setId(rs.getInt("id"));
+                p.setProvOfficeCode(rs.getInt("provOfficeCode"));
+                p.setBudget(rs.getDouble("budget"));
+                p.setRequestedBy(rs.getInt("requestedBy"));
+                p.setApprovedBy(rs.getInt("approvedBy"));
+                p.setReason(rs.getString("reason"));
+                p.setStartDate(rs.getDate("startDate"));
+                p.setEndDate(rs.getDate("endDate"));
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return p;
+    } // CURRENT DATE
+    
+    public ProvincialBudget getCAPDEVBudgetByProvOffice(int provOfficeCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        
+        ProvincialBudget p = new ProvincialBudget();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String d = f.format(cal.getTime());
+        
+        try {
+            String query = "SELECT * FROM `dar-bms`.provincialCAPDEVBudget "
+                    + "WHERE provOfficeCode = ? "
+                    + "AND '"+d+"' BETWEEN startDate AND endDate "
+                    + "AND approvedBy IS NOT NULL";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, provOfficeCode);
+            
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                p.setId(rs.getInt("id"));
+                p.setProvOfficeCode(rs.getInt("provOfficeCode"));
+                p.setBudget(rs.getDouble("budget"));
+                p.setRequestedBy(rs.getInt("requestedBy"));
+                p.setApprovedBy(rs.getInt("approvedBy"));
+                p.setReason(rs.getString("reason"));
+                p.setStartDate(rs.getDate("startDate"));
+                p.setEndDate(rs.getDate("endDate"));
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return p;
+    } // CURRENT DATE
+    
+    public double getSumAPCPBudgetByRegion(int regCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        
+        ProvincialBudget p = new ProvincialBudget();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String d = f.format(cal.getTime());
+        
+        double total = 0;
+        
+        try {
+            String query = "SELECT SUM(pb.budget) AS sum FROM ref_provOffice p "
+                    + "JOIN provincialAPCPBudget pb ON p.provOfficeCode=pb.provOfficeCode "
+                    + "WHERE p.regCode=? "
+                    + "AND '"+d+"' BETWEEN pb.startDate AND pb.endDate "
+                    + "AND pb.approvedBy IS NOT NULL";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, regCode);
+            
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                total = rs.getDouble("sum");
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return total;
+    } // CURRENT DATE
+    
+    public double getSumCAPDEVBudgetByRegion(int regCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        
+        ProvincialBudget p = new ProvincialBudget();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String d = f.format(cal.getTime());
+        
+        double total = 0;
+        
+        try {
+            String query = "SELECT SUM(pb.budget) AS sum FROM ref_provOffice p "
+                    + "JOIN provincialCAPDEVBudget pb ON p.provOfficeCode=pb.provOfficeCode "
+                    + "WHERE p.regCode=? "
+                    + "AND '"+d+"' BETWEEN pb.startDate AND pb.endDate "
+                    + "AND pb.approvedBy IS NOT NULL";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, regCode);
+            
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                total = rs.getDouble("sum");
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return total;
+    } // CURRENT DATE
 
 }

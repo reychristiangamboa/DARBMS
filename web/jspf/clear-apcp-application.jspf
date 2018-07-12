@@ -31,7 +31,7 @@
                             </thead>
                             <tbody id="supportingWrapper">
                                 <%for(APCPDocument d : req.getApcpDocument()){%>
-                                <%if(d.getDocumentType() == 2){ // APCP%>
+                                <%--<%if(d.getDocumentType() == 2){ // APCP%>--%>
                                 <tr>
 
                                     <td>
@@ -68,7 +68,7 @@
 
                                 </tr>
 
-                                <%}%>
+                                <%--<%}%>--%>
                                 <%}%>
                                 <tr>
                                     <td></td>
@@ -129,7 +129,7 @@
             <form method="post">
                 <div class="box-footer">
                     <%if(req.checkARBOHadAPCPOrientation()){%>
-                    <button type="submit" onclick="form.action = 'ClearAPCPRequest?requestID=<%out.print(req.getRequestID());%>" class="btn btn-success pull-right">Clear Request</button>
+                    <button type="submit" onclick="form.action ='ClearAPCPRequest?requestID=<%out.print(req.getRequestID());%>'" class="btn btn-success pull-right">Clear Request</button>
                     <%}else{%>
                     <button type="submit" class="btn btn-success pull-right" disabled>Clear Request</button>
                     <%}%>

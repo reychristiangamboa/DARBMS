@@ -39,6 +39,8 @@
             <%@include file="jspf/central-sidebar.jspf"%>
             <%} else if (userType == 7) {%>
             <%@include file="jspf/pfo-capdev-sidebar.jspf"%>
+            <%} else if (userType == 8) {%>
+            <%@include file="jspf/pp-capdev-sidebar.jspf"%>
             <%}%>
 
             <%

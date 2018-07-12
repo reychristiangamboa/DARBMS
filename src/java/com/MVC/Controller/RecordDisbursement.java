@@ -8,6 +8,7 @@ package com.MVC.Controller;
 import com.MVC.DAO.APCPRequestDAO;
 import com.MVC.DAO.ARBDAO;
 import com.MVC.Model.APCPRelease;
+import com.MVC.Model.APCPRequest;
 import com.MVC.Model.Disbursement;
 import com.MVC.Model.Repayment;
 import java.io.IOException;
@@ -38,16 +39,16 @@ public class RecordDisbursement extends BaseServlet {
 
         String[] arbIDs = request.getParameterValues("arbID");
 
-        APCPRelease release = dao.getAPCPReleaseByID(Integer.parseInt(request.getParameter("releaseID")));
+        APCPRequest req = dao.getRequestByID(Integer.parseInt(request.getParameter("requestID")));
 
         double limit = 0;
         double finalLimit = 0;
 
-        for (Disbursement disbursement : release.getDisbursements()) {
+        for (Disbursement disbursement : req.getDisbursements()) {
             limit += disbursement.getDisbursedAmount();
         }
 
-        finalLimit = release.getReleaseAmount() - limit;
+        finalLimit = req.getLoanAmount() - limit;
 
         String[] vals = request.getParameter("disbursementAmount").split(",");
         StringBuilder sb = new StringBuilder();
@@ -76,7 +77,7 @@ public class RecordDisbursement extends BaseServlet {
                 Disbursement d = new Disbursement();
 
                 d.setArbID(Integer.parseInt(arbID));
-                d.setReleaseID(Integer.parseInt(request.getParameter("releaseID")));
+                d.setRequestID(Integer.parseInt(request.getParameter("requestID")));
 
                 d.setDisbursedAmount(Double.parseDouble(finAmount));
                 d.setOSBalance(Double.parseDouble(request.getParameter("disbursementOSBalance")));

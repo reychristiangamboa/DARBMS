@@ -204,7 +204,7 @@
 
 
                                 </div>
-                              
+
 
                                 <div class="row">
                                     <div class="col-xs-3">
@@ -243,7 +243,7 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <label>Loan Recipients</label>
-                                        <table id="example3" class="table table-bordered table-striped">
+                                        <table class="table table-bordered table-striped modTable">
                                             <thead>
                                                 <tr>
                                                     <th>Action</th>
@@ -347,7 +347,7 @@
                                 <button type="button" id="submitBtn" class="btn btn-success pull-right" data-toggle="modal" data-target="#confirm">Submit</button>
                             </div>
                             <div class="modal fade" id="confirm">
-                                <div class="modal-dialog modal-md">
+                                <div class="modal-dialog modal-sm">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -388,32 +388,11 @@
         <!-- ./wrapper -->
 
         <%@include file="jspf/footer.jspf"%>  
+
         <script type="text/javascript">
             $(document).ready(function () {
 
-//                var docuArray = [];
-//                var conduitDocumentsDate = $('#conduitTable').children('input[type=date]');
-//                var supportingDocumentsDate = $('#supportingTable').children('input[type=date]');
-//
-//                var nullDocuments = $('#nullDocuments'); // modal content
-//                $('#submitBtn').on('click', function () {
-//                    
-//                    conduitDocumentsDate.each(function () { // docuArray accumulates labels of null date values
-//                        if (this.value == null) {
-//                            docuArray.push($(this).closest('h5 .documentLabel').val());
-//                        }
-//                    });
-//
-//                    alert(docuArray[0].value);
-//
-//                    supportingDocumentsDate.each(function () { // docuArray accumulates labels of null date values
-//                        if (this.value == null) {
-//                            docuArray.push($(this).closest('h5 .documentLabel').val());
-//                        }
-//                    });
-//
-//                    nullDocuments.html("<p class='text text-info'>The following documents don't have date submitted values: " + docuArray. + ".");
-//                });
+
 
                 $('#loanReason').on('change', function () { // 
                     if (this.value > 0) {

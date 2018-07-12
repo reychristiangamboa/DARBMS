@@ -19,6 +19,9 @@ public class CAPDEVPlan {
     private int pastDueAccountID;
     private String planDTN;
     private Date planDate;
+    private Double budget;
+    private int postponeReason;
+    private String postponeReasonDesc;
     private Date implementedDate;
     private int createdBy;
     private int assignedTo;
@@ -27,6 +30,7 @@ public class CAPDEVPlan {
     private String planStatusDesc;
     private String observations;
     private String recommendation;
+    private int active;
     private int clusterID;
     
     private ArrayList<CAPDEVActivity> activities = new ArrayList();
@@ -72,6 +76,30 @@ public class CAPDEVPlan {
         this.planDate = planDate;
     }
 
+    public Double getBudget() {
+        return budget;
+    }
+
+    public void setBudget(Double budget) {
+        this.budget = budget;
+    }
+    
+    public int getPostponeReason() {
+        return postponeReason;
+    }
+
+    public void setPostponeReason(int postponeReason) {
+        this.postponeReason = postponeReason;
+    }
+
+    public String getPostponeReasonDesc() {
+        return postponeReasonDesc;
+    }
+
+    public void setPostponeReasonDesc(String postponeReasonDesc) {
+        this.postponeReasonDesc = postponeReasonDesc;
+    }
+    
     public Date getImplementedDate() {
         return implementedDate;
     }
@@ -128,6 +156,14 @@ public class CAPDEVPlan {
     public void setRecommendation(String recommendation) {
         this.recommendation = recommendation;
     }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
     
     public ArrayList<CAPDEVActivity> getActivities() {
         return activities;
@@ -169,6 +205,15 @@ public class CAPDEVPlan {
             }
         }
         return true;
+    }
+    
+    public boolean hasPreReleaseOrientation(){
+        for(CAPDEVActivity act : this.activities){
+            if(act.getActivityType() == 12){
+                return true;
+            }
+        }
+        return false;
     }
     
 }

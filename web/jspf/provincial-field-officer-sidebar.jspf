@@ -1,38 +1,21 @@
 <%@page import="java.util.ArrayList;"%>
 <%@page import="com.MVC.Model.*;"%>
-<%@page import="com.MVC.Model.Region;"%>
-<%@page import="com.MVC.Model.Province;"%>
-<%@page import="com.MVC.Model.CityMun;"%>
-<%@page import="com.MVC.Model.User;"%>
-<%@page import="com.MVC.Model.ARBO;"%>
-<%@page import="com.MVC.Model.ARB;"%>
-<%@page import="com.MVC.Model.Crop;"%>
-<%@page import="com.MVC.Model.Evaluation;"%>
-<%@page import="com.MVC.Model.APCPRequest;"%>
-<%@page import="com.MVC.Model.APCPRelease;"%>
-<%@page import="com.MVC.Model.CAPDEVPlan;"%>
-<%@page import="com.MVC.Model.CAPDEVActivity;"%>
-<%@page import="com.MVC.Model.PastDueAccount;"%>
-<%@page import="com.MVC.Model.EducationLevel;"%>
-<%@page import="com.MVC.Model.RelationshipType;"%>
-<%@page import="com.MVC.DAO.AddressDAO;"%>
-<%@page import="com.MVC.DAO.ARBODAO;"%>
-<%@page import="com.MVC.DAO.ARBDAO;"%>
-<%@page import="com.MVC.DAO.CropDAO;"%>
-<%@page import="com.MVC.DAO.APCPRequestDAO;"%>
-<%@page import="com.MVC.DAO.CAPDEVDAO;"%>
-<%@page import="com.MVC.DAO.UserDAO;"%>
+<%@page import="com.MVC.DAO.*;"%>
 
 
 <%
-    CropDAO cropDAO = new CropDAO();
+                CropDAO cropDAO = new CropDAO();
                 AddressDAO addressDAO = new AddressDAO();
                 ARBODAO arboDAO = new ARBODAO();
                 ARBDAO arbDAO = new ARBDAO();
                 APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
                 CAPDEVDAO capdevDAO = new CAPDEVDAO();
                 UserDAO uDAO = new UserDAO();
-                APCPRelease apcpRelease = new APCPRelease();
+                
+                ProvincialBudget apcpBudget = addressDAO.getAPCPBudgetByProvOffice((Integer)session.getAttribute("provOfficeCode"));
+                ProvincialBudget capdevBudget = addressDAO.getCAPDEVBudgetByProvOffice((Integer)session.getAttribute("provOfficeCode"));
+                
+                ArrayList<APCPRequest> allRequestStatus = apcpRequestDAO.getAllRequestStatus();
 
                 ArrayList<EducationLevel> educationLevel = arbDAO.getAllEducationLevel();
                 ArrayList<RelationshipType> relationshipType = arbDAO.getAllRelationshipType();
@@ -67,6 +50,7 @@
                 ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<CAPDEVPlan> postponedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(6, (Integer) session.getAttribute("provOfficeCode"));
 
                 ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.getAttribute("provOfficeCode"));
     

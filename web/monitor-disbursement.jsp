@@ -36,7 +36,6 @@
                 
                 ArrayList<CAPDEVActivity> activities = capdevDAO99.getCAPDEVActivities();
                 APCPRequest r = apcpRequestDAO99.getRequestByID((Integer)request.getAttribute("requestID"));
-                APCPRelease release = apcpRequestDAO99.getAPCPReleaseByID((Integer)request.getAttribute("releaseID"));
                 ARBO a = arboDAO99.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO99.getAllARBsARBO(r.getArboID());
                 
@@ -210,7 +209,6 @@
                                     </div>
                                     <div class="modal-footer">
                                         <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
-                                        <input type="hidden" name="releaseID" value="<%=release.getReleaseID()%>">
                                         <button type="submit" name="manual" onclick="form.action = 'RecordDisbursement'" class="btn btn-primary pull-right">Submit</button>
                                     </div>
                                 </form>

@@ -90,7 +90,7 @@
                                     </div>
                                     <div id="collapseTwo" class="panel-collapse collapse">
                                         <div class="box-body">
-                                            <%@include file="/jspf/apcp-request-info.jspf" %>
+                                            <%@include file="jspf/apcp-request-info.jspf" %>
                                         </div>
                                     </div>
                                 </div>
@@ -104,7 +104,7 @@
                                     </div>
                                     <div id="collapseThree" class="panel-collapse collapse">
                                         <div class="box-body">
-                                            <%@include file="/jspf/arbo-information.jspf" %>
+                                            <%@include file="jspf/arbo-information.jspf" %>
                                         </div>
                                     </div>
                                 </div>

@@ -201,10 +201,6 @@
         <servlet-class>com.MVC.Controller.ReviewCAPDEVAssessment</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>RecordPreReleaseAssessment</servlet-name>
-        <servlet-class>com.MVC.Controller.RecordPreReleaseAssessment</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>MonitorPreReleaseAttendance</servlet-name>
         <servlet-class>com.MVC.Controller.MonitorPreReleaseAttendance</servlet-class>
     </servlet>
@@ -215,10 +211,6 @@
     <servlet>
         <servlet-name>RecordRequestRelease</servlet-name>
         <servlet-class>com.MVC.Controller.RecordRequestRelease</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>RecordRepayment</servlet-name>
-        <servlet-class>com.MVC.Controller.RecordRepayment</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RecordDisbursement</servlet-name>
@@ -428,6 +420,14 @@
         <servlet-name>CheckAttendance</servlet-name>
         <servlet-class>com.MVC.Controller.CheckAttendance</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReadMessages</servlet-name>
+        <servlet-class>com.MVC.Controller.ReadMessages</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AssignedPlans</servlet-name>
+        <servlet-class>com.MVC.Controller.AssignedPlans</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -629,10 +629,6 @@
         <url-pattern>/ReviewCAPDEVAssessment</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>RecordPreReleaseAssessment</servlet-name>
-        <url-pattern>/RecordPreReleaseAssessment</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>MonitorPreReleaseAttendance</servlet-name>
         <url-pattern>/MonitorPreReleaseAttendance</url-pattern>
     </servlet-mapping>
@@ -643,10 +639,6 @@
     <servlet-mapping>
         <servlet-name>RecordRequestRelease</servlet-name>
         <url-pattern>/RecordRequestRelease</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>RecordRepayment</servlet-name>
-        <url-pattern>/RecordRepayment</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RecordDisbursement</servlet-name>
@@ -855,6 +847,14 @@
     <servlet-mapping>
         <servlet-name>CheckAttendance</servlet-name>
         <url-pattern>/CheckAttendance</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReadMessages</servlet-name>
+        <url-pattern>/ReadMessages</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AssignedPlans</servlet-name>
+        <url-pattern>/AssignedPlans</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

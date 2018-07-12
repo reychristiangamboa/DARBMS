@@ -34,12 +34,12 @@ public class AddCAPDEVPlan extends BaseServlet {
         CAPDEVDAO capdevDAO = new CAPDEVDAO();
 
         String[] activities = request.getParameterValues("activities[]");
-        String[] activityDates = request.getParameterValues("activityDates[]");
 
         CAPDEVPlan capdevPlan = new CAPDEVPlan();
 
         capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         capdevPlan.setPlanDTN(request.getParameter("dtn"));
+        capdevPlan.setBudget(Double.parseDouble(request.getParameter("budget")));
         
         
         java.sql.Date planDate = null;
@@ -59,8 +59,10 @@ public class AddCAPDEVPlan extends BaseServlet {
         if (request.getParameter("pastDueID") != null) {
             capdevPlan.setPastDueAccountID(Integer.parseInt(request.getParameter("pastDueID")));
             planID = capdevDAO.addCAPDEVPlanForPastDue(capdevPlan, (Integer) session.getAttribute("userID"));
+            capdevDAO.setCAPDEVPlanDate(planDate, planID);
         } else {
             planID = capdevDAO.addCAPDEVPlan(capdevPlan, (Integer) session.getAttribute("userID"));
+            capdevDAO.setCAPDEVPlanDate(planDate, planID);
         }
 
         for (int i = 0; i < activities.length; i++) {

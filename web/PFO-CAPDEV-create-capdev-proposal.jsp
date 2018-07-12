@@ -108,11 +108,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <%--<%if(request.getAttribute("participants") != null){%>
-                                        <%@include file="jspf/add-participants.jspf" %>
-                                        <%}else{%>
-                                        <%@include file="jspf/create-capdev.jspf" %>
-                                        <%}%>--%>
+                                        
                                         <%@include file="jspf/create-capdev.jspf" %>
                                     </div>
                                 </div>

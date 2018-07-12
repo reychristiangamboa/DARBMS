@@ -45,6 +45,23 @@
 
                 <!-- Main content -->
                 <section class="content">
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box">
+                                <div class="box-header">
+                                    <h3 class="box-title"><strong>CALENDAR</strong></h3>
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                </div>
+                                <div class="box-body">
+                                    <div id="calendar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box">
@@ -80,11 +97,35 @@
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                                 <td>
-                                                    <a type="button" href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>" class="btn btn-success">ASSESS</a>
-                                                    <button type="button" href="#" class="btn btn-danger">POSTPONE</button>
+                                                    <a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>" class="btn btn-success">ASSESS</a>
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#postponeModal<%out.print(p.getPlanID());%>">POSTPONE</button>
                                                 </td>
                                             </tr>
-                                            <%}%>
+
+                                        <div class="modal fade" id="postponeModal<%out.print(p.getPlanID());%>">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                        <h4 class="modal-title">Confirm Postpone</h4>
+                                                    </div>
+                                                    <form method="post">
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label for="">Reason: </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a href="PostponePlan?planID=<%out.print(p.getPlanID());%>" class="btn btn-danger">Postpone</a>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <%}%>
 
                                         </tbody>
 
@@ -163,119 +204,6 @@
                         <!-- /.col -->
                     </div>
 
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Pre-Release Orientation</strong></h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                    </div>                         
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table id="example1" class="table table-bordered table-striped modTable">
-                                        <thead>
-                                            <tr>
-                                                <th>Plan DTN</th>
-                                                <th>ARBO Name</th>
-                                                <th>No. of Activities</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            <%
-                                                for(CAPDEVPlan p : assignedPROs){
-                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
-                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
-                                            %>
-                                            <tr>
-                                                <td><a href="MonitorPreReleaseAttendance?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(p.getPlanDTN());%></a></td>
-                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getActivities().size());%></td>
-                                                <td><%out.print(p.getPlanStatusDesc());%></td>
-                                            </tr>
-                                            <%}%>
-
-                                        </tbody>
-
-                                        <tfoot>
-                                            <tr>
-                                                <th>Plan DTN</th>
-                                                <th>ARBO Name</th>
-                                                <th>No. of Activities</th>
-                                                <th>Status</th>      
-                                            </tr>
-
-                                        </tfoot>
-
-                                    </table>
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Assigned LINKSFARM CAPDEV Proposals</strong></h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                    </div>                         
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table class="table table-bordered table-striped modTable">
-                                        <thead>
-                                            <tr>
-                                                <th>Plan DTN</th>
-                                                <th>Cluster Name</th>
-                                                <th>No. of Activities</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            <%
-                                                for(CAPDEVPlan p : assignedLINKSFARMPlans){
-                                                    Cluster c = linksfarmDAO.getClusterByID(p.getClusterID());
-                                            %>
-                                            <tr>
-                                                <td><a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>&clusterID=<%out.print(c.getClusterID());%>"><%out.print(p.getPlanDTN());%></a></td>
-                                                <td><a href="ViewCluster?clusterID=<%=c.getClusterID()%>"><%=c.getClusterName()%></a></td>
-                                                <td><%out.print(p.getActivities().size());%></td>
-                                                <td><%out.print(p.getPlanStatusDesc());%></td>
-                                            </tr>
-                                            <%}%>
-
-                                        </tbody>
-
-                                        <tfoot>
-                                            <tr>
-                                                <th>Plan DTN</th>
-                                                <th>Cluster Name</th>
-                                                <th>No. of Activities</th>
-                                                <th>Status</th>       
-                                            </tr>
-
-                                        </tfoot>
-
-                                    </table>
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                        <!-- /.col -->
-                    </div>
-
 
                     <!-- /.row -->
                 </section>
@@ -285,6 +213,25 @@
 
         <%@include file="jspf/footer.jspf" %>
 
+        <script type="text/javascript">
+            $(document).ready(function(){
+               $('#calendar').fullCalendar({
+                  theme:true,
+                  editable:false,
+                  defaultView: 'month',
+                  eventRender: function(eventObj, $el){
+                      $el.popover({
+                         title: eventObj.title,
+                         content: eventObj.description,
+                         trigger: 'hover',
+                         placement: 'top',
+                         container: 'body'
+                      });
+                  },
+                  events: '/AssignedPlans'
+               });
+            });
+        </script>
         <script type="text/javascript">
             function chg() {
                 var arboID = $('input[name=arboID]:checked').val();

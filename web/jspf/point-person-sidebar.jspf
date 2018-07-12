@@ -26,14 +26,6 @@
 <%@page import="com.MVC.DAO.UserDAO;"%>
 
 <%
-    CAPDEVDAO capdevDAO = new CAPDEVDAO();
-    ARBODAO arboDAO = new ARBODAO();
-    ARBDAO arbDAO = new ARBDAO();
-    APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
-    UserDAO uDAO = new UserDAO();
-    EvaluationDAO eDAO = new EvaluationDAO();
-    LINKSFARMDAO linksfarmDAO = new LINKSFARMDAO();
-    
     
     ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
     

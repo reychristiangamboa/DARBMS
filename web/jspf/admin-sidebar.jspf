@@ -9,14 +9,13 @@
 
 <%
 
+    UserDAO userDAO = new UserDAO();
     LogDAO logDAO = new LogDAO();
-    UserDAO uDAO = new UserDAO();
-    
     AddressDAO addressDAO = new AddressDAO();
     
     ArrayList<Log> logs = logDAO.retrieveAllLogs();
-    ArrayList<User> activeUsers = uDAO.retrieveAllActiveUsers();
-    ArrayList<User> inactiveUsers = uDAO.retrieveAllInactiveUsers();
+    ArrayList<User> activeUsers = userDAO.retrieveAllActiveUsers();
+    ArrayList<User> inactiveUsers = userDAO.retrieveAllInactiveUsers();
     
     ArrayList<Region> regionList = addressDAO.getAllRegions();
     ArrayList<Province> provOffices = addressDAO.getAllProvOffices();

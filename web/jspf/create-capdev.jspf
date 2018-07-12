@@ -16,6 +16,11 @@
                             <label>CAPDEV Proposal Document Tracking No.</label>
                             <input type="text" name="dtn" class="form-control" placeholder="DTN" required/>
                         </div>
+                        
+                        <div class="col-xs-3">
+                            <label>Budget</label>
+                            <input type="text" name="budget" class="form-control numberOnly" required/>
+                        </div>
 
                         <div class="col-xs-3 pull-right">
                             <label for="">Plan Date</label>

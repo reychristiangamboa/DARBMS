@@ -37,7 +37,7 @@ public class RecordARBRepayment extends BaseServlet {
         double limit = 0;
         double finalLimit = 0;
 
-        for (Repayment rep : req.getArboRepayments()) {
+        for (Repayment rep : req.getArbRepayments()) {
             limit += rep.getAmount();
         }
 
@@ -70,7 +70,7 @@ public class RecordARBRepayment extends BaseServlet {
             java.sql.Date repaymentDate = null;
 
             try {
-                java.util.Date parsedRepaymentDate = sdf.parse(request.getParameter("arboRepaymentDate"));
+                java.util.Date parsedRepaymentDate = sdf.parse(request.getParameter("arbRepaymentDate"));
                 repaymentDate = new java.sql.Date(parsedRepaymentDate.getTime());
             } catch (ParseException ex) {
                 Logger.getLogger(RecordRepayment.class.getName()).log(Level.SEVERE, null, ex);

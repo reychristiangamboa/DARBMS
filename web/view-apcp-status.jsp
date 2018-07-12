@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="/jspf/header.jspf"%>
+        <%@include file="jspf/header.jspf"%>
         <style>
             .example-modal .modal {
                 position: relative;
@@ -27,7 +27,7 @@
 
     </head>
 
-    <body class="hold-transition skin-blue sidebar-mini">
+    <body class="hold-transition skin-green sidebar-mini">
         <div class="wrapper">
             <%int userType = (Integer) session.getAttribute("userType");%>
             <%@include file="jspf/field-officer-navbar.jspf" %>
@@ -43,6 +43,8 @@
             <%@include file="jspf/pfo-apcp-sidebar.jspf"%>
             <%} else if (userType == 7) {%>
             <%@include file="jspf/pfo-capdev-sidebar.jspf"%>
+            <%} else if (userType == 8) {%>
+            <%@include file="jspf/pp-capdev-sidebar.jspf"%>
             <%}%>
 
             <%
@@ -344,7 +346,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="requested" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -403,7 +405,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="cleared" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -463,7 +465,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="endorsed" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -526,7 +528,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="approved" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -586,7 +588,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="forRelease" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -648,7 +650,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="released" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -708,7 +710,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="incomlpete" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>
@@ -766,7 +768,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="released" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO Name</th>

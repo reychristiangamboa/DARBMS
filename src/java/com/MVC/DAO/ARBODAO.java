@@ -268,8 +268,6 @@ public class ARBODAO {
         return success;
     }
 
-    
-
     public int getARBOType(String arboTypeDesc) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -319,5 +317,7 @@ public class ARBODAO {
         }
         return typeList;
     }
+    
+    
 
 }

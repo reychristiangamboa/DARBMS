@@ -13,6 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,13 +63,18 @@ public class APCPRequestDAO {
                 r.setCropProdID(rs.getInt("cropProdID"));
                 r.setDateCompleted(rs.getDate("dateCompleted"));
                 r.setApcpDocument(getAllAPCPDocumentsByRequest(rs.getInt("requestID")));
-                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
                 r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
+
                 r.setPlans(dao.getAllCAPDEVPlanByRequest(rs.getInt("requestID")));
+
+                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
+                r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
+
+                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
                 r.setDisbursements(getAllDisbursementsByRequest(rs.getInt("requestID")));
                 r.setArboRepayments(getAllARBORepaymentsByRequest(rs.getInt("requestID")));
                 r.setArbRepayments(getAllARBRepaymentsByRequest(rs.getInt("requestID")));
+
                 apcpRequest.add(r);
             }
             rs.close();
@@ -82,17 +90,17 @@ public class APCPRequestDAO {
         }
         return apcpRequest;
     }
-    
+
     public ArrayList<APCPRequest> getAllCropProdByRequest(int arboID) {
         ArrayList<APCPRequest> all = getAllRequests();
         ArrayList<APCPRequest> filtered = new ArrayList();
-        
-        for(APCPRequest r : all){
-            if(r.getArboID() == arboID && r.getApcpType() == 1){ // is REQUEST of ARBO and its TYPE is CROP PROD
+
+        for (APCPRequest r : all) {
+            if (r.getArboID() == arboID && r.getApcpType() == 1) { // is REQUEST of ARBO and its TYPE is CROP PROD
                 filtered.add(r);
             }
         }
-        
+
         return filtered;
     }
 
@@ -185,7 +193,6 @@ public class APCPRequestDAO {
             p.setInt(10, r.getLoanTermDuration());
             p.setInt(11, 0);
             p.setDate(12, r.getDateCompleted());
-            
 
             p.executeUpdate();
 
@@ -213,7 +220,7 @@ public class APCPRequestDAO {
         }
         return 0;
     }
-    
+
     public int requestAPCPNewAccess(APCPRequest r, int userID) {
 
         PreparedStatement p = null;
@@ -240,7 +247,6 @@ public class APCPRequestDAO {
             p.setInt(8, r.getApcpType());
             p.setInt(9, r.getLoanTermDuration());
             p.setInt(10, 1);
-            
 
             p.executeUpdate();
 
@@ -418,13 +424,13 @@ public class APCPRequestDAO {
     public ArrayList<APCPRequest> getAllARBORequestsByStatus(int statusID, int arboID) {
         ArrayList<APCPRequest> all = getAllRequests();
         ArrayList<APCPRequest> filtered = new ArrayList();
-        
-        for(APCPRequest r : all){
-            if(r.getRequestStatus() == statusID && r.getArboID() == arboID){
+
+        for (APCPRequest r : all) {
+            if (r.getRequestStatus() == statusID && r.getArboID() == arboID) {
                 filtered.add(r);
             }
         }
-        
+
         return filtered;
     }
 
@@ -432,14 +438,14 @@ public class APCPRequestDAO {
         ARBODAO dao = new ARBODAO();
         ArrayList<APCPRequest> all = getAllRequests();
         ArrayList<APCPRequest> filtered = new ArrayList();
-        
-        for(APCPRequest r : all){
+
+        for (APCPRequest r : all) {
             ARBO a = dao.getARBOByID(r.getArboID());
-            if(r.getRequestStatus()== statusID && a.getProvOfficeCode() == provinceID){
+            if (r.getRequestStatus() == statusID && a.getProvOfficeCode() == provinceID) {
                 filtered.add(r);
             }
         }
-        
+
         return filtered;
     }
 
@@ -462,14 +468,14 @@ public class APCPRequestDAO {
         ARBODAO dao = new ARBODAO();
         ArrayList<APCPRequest> all = new ArrayList();
         ArrayList<APCPRequest> filtered = new ArrayList();
-        
-        for(APCPRequest r : all){
+
+        for (APCPRequest r : all) {
             ARBO a = dao.getARBOByID(r.getArboID());
-            if(r.getRequestID() == statusID && a.getArboRegion()== regionID){
+            if (r.getRequestID() == statusID && a.getArboRegion() == regionID) {
                 filtered.add(r);
             }
         }
-        
+
         return filtered;
     }
 
@@ -486,6 +492,34 @@ public class APCPRequestDAO {
             }
         }
         return list;
+    }
+
+    public ArrayList<APCPRequest> getAllRequestStatus() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<APCPRequest> apcpRequest = new ArrayList();
+        try {
+            String query = "SELECT * FROM ref_requestStatus";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                APCPRequest r = new APCPRequest();
+                r.setRequestStatus(rs.getInt("requestStatus"));
+                r.setRequestStatusDesc(rs.getString("requestStatusDesc"));
+                apcpRequest.add(r);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return apcpRequest;
     }
 
     public boolean addAPCPRecipient(int requestID, int arbID) {
@@ -515,9 +549,9 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
+
     public void setAPCPLoanReason(int requestID, int loanReason, int loanTerm, String otherReason) {
-        
+
         PreparedStatement p = null;
         Connection con = null;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -533,7 +567,7 @@ public class APCPRequestDAO {
             p.setString(4, otherReason);
 
             p.executeUpdate();
-            
+
             p.close();
             con.commit();
             con.close();
@@ -545,9 +579,9 @@ public class APCPRequestDAO {
             }
             Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
     public boolean sendDocument(APCPDocument doc, int requestID) {
         boolean success = false;
         PreparedStatement p = null;
@@ -1177,7 +1211,7 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
+
     public boolean addARBRepayment(Repayment r) {
         boolean success = false;
         PreparedStatement p = null;
@@ -1242,7 +1276,7 @@ public class APCPRequestDAO {
         }
         return rList;
     }
-    
+
     public ArrayList<Repayment> getAllARBRepaymentsByRequest(int requestID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -1563,7 +1597,7 @@ public class APCPRequestDAO {
         }
         return list;
     } // REFERENCE
-    
+
     public ArrayList<LoanReason> getAllLoanReasonsByAPCPType(int apcpType) { // includes Others; REFERENCE
 
         ArrayList<LoanReason> list = new ArrayList();
@@ -1636,7 +1670,7 @@ public class APCPRequestDAO {
         }
         return all;
     } // REFERENCE
-    
+
     public LoanReason getAPCPLoanReasonByRequest(int requestID) {
 
         LoanReason r = new LoanReason();
@@ -1661,7 +1695,7 @@ public class APCPRequestDAO {
                 t.setPastDueInterestRate(rs.getDouble("pastDueInterestRate"));
                 t.setMinDuration(rs.getInt("minDuration"));
                 t.setMaxDuration(rs.getInt("maxDuration"));
-                
+
                 r.setLoanTerm(t);
                 r.setLoanReason(rs.getInt("loanReason"));
                 r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
@@ -1683,8 +1717,7 @@ public class APCPRequestDAO {
         }
         return r;
     }
-    
-    
+
 // FOR REPORTS
     public ArrayList<APCPRequest> getAllProvincialRequests(int provinceID) {
         ArrayList<APCPRequest> apcpRequestList = getAllRequests();
@@ -1715,13 +1748,13 @@ public class APCPRequestDAO {
     public ArrayList<APCPRequest> getAllARBORequests(int arboID) {
         ArrayList<APCPRequest> all = getAllRequests();
         ArrayList<APCPRequest> filtered = new ArrayList();
-        
-        for(APCPRequest r : all){
-            if(r.getArboID() == arboID){
+
+        for (APCPRequest r : all) {
+            if (r.getArboID() == arboID) {
                 filtered.add(r);
             }
         }
-        
+
         return filtered;
     }
 
@@ -1780,6 +1813,24 @@ public class APCPRequestDAO {
         return sum;
     }
 
+    public double getYearlySumOfReleasesByRequest(ArrayList<APCPRequest> apcpRequestList, int year) {
+        double sum = 0;
+        Calendar cal = Calendar.getInstance();
+
+        for (APCPRequest req : apcpRequestList) {
+            if (req.getReleases().size() > 0) { // IF MAYROON
+                for (APCPRelease rel : req.getReleases()) {
+                    cal.setTime(rel.getReleaseDate());
+                    if (cal.get(Calendar.YEAR) == year) {
+                        sum += rel.getReleaseAmount();
+                    }
+                }
+            }
+        }
+
+        return sum;
+    }
+
     public double getSumOfAccumulatedReleasesByRequestId(ArrayList<APCPRequest> apcpRequestList) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -1808,59 +1859,71 @@ public class APCPRequestDAO {
         return sum;
     }
 
-    public double getTotalApprovedAmount(ArrayList<APCPRequest> apcpRequestList) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
+    public double getYearlyTotalApprovedAmount(ArrayList<APCPRequest> apcpRequestList, int year) {
         double sum = 0;
-        try {
-            String query = "SELECT SUM(loanAmount) FROM apcp_requests WHERE requestID=? AND (requestStatus=4 OR requestStatus=5 OR requestStatus=7)";
-            for (APCPRequest r : apcpRequestList) {
-                PreparedStatement pstmt = con.prepareStatement(query);
-                pstmt.setInt(1, r.getRequestID());
-                ResultSet rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    sum += rs.getDouble("SUM(loanAmount)");
+        Calendar cal = Calendar.getInstance();
+
+        for (APCPRequest req : apcpRequestList) {
+            if(req.getRequestStatus() == 4 || req.getRequestStatus() == 5 || req.getRequestStatus() == 6){
+                cal.setTime(req.getDateApproved());
+                if(cal.get(Calendar.YEAR) == year){
+                    sum += req.getLoanAmount();
                 }
-                rs.close();
-                pstmt.close();
             }
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        return sum;
+    }
+    
+    public double getYearlyBudgetAllocated(ArrayList<APCPRequest> apcpRequestList, int year) {
+        double sum = 0;
+        Calendar cal = Calendar.getInstance();
+
+        for (APCPRequest req : apcpRequestList) {
+            if(req.getRequestStatus() == 0){ // CONDUIT
+                cal.setTime(req.getDateRequested());
+                if(cal.get(Calendar.YEAR) == year){
+                    sum += req.getLoanAmount();
+                }
+            }else if(req.getRequestStatus() == 1){
+                cal.setTime(req.getDateRequested());
+                if(cal.get(Calendar.YEAR) == year){
+                    sum += req.getLoanAmount();
+                }
+            }
+        }
+
         return sum;
     }
 
-    public double getTotalPastDueAmount(ArrayList<APCPRequest> apcpRequestList) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
+    public double getTotalPastDueAmount(ArrayList<APCPRequest> requestList) {
         double sum = 0;
-        try {
-            String query = "SELECT SUM(pastDueAmount) FROM past_due_accounts WHERE requestID=? AND dateSettled IS NULL";
-            for (APCPRequest r : apcpRequestList) {
-                PreparedStatement pstmt = con.prepareStatement(query);
-                pstmt.setInt(1, r.getRequestID());
-                ResultSet rs = pstmt.executeQuery();
-                if (rs.next()) {
-                    sum += rs.getDouble("SUM(pastDueAmount)");
+        for (APCPRequest req : requestList) {
+            if (req.getUnsettledPastDueAccounts().size() > 0) { // IF MAYROON
+                for (PastDueAccount pda : req.getUnsettledPastDueAccounts()) {
+                    sum += pda.getPastDueAmount();
                 }
-                rs.close();
-                pstmt.close();
             }
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        return sum;
+    }
+
+    public double getYearlyTotalPastDueAmount(ArrayList<APCPRequest> apcpRequestList) {
+        double sum = 0;
+        Calendar cal = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        for (APCPRequest req : apcpRequestList) {
+            if (req.getUnsettledPastDueAccounts().size() > 0) { // IF MAYROON
+                for (PastDueAccount pda : req.getUnsettledPastDueAccounts()) {
+                    cal2.setTime(pda.getDateRecorded());
+                    if (cal.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)) { // IF SAME YEAR
+                        sum += pda.getPastDueAmount();
+                    }
+                }
+            }
+        }
+
         return sum;
     }
 
@@ -1931,8 +1994,8 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
-    public double getTotalApprovedAmount(){
+
+    public double getTotalApprovedAmount() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         double value = 0;
@@ -1954,6 +2017,181 @@ public class APCPRequestDAO {
                 Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
             Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return value;
+    }
+
+    public int getDistinctARBOCountWithReleased(ArrayList<APCPRequest> requestList) {
+
+        ArrayList<Integer> filtered = new ArrayList();
+        for (APCPRequest req : requestList) {
+            if (req.getRequestStatus() == 5) {
+                if (!filtered.contains(req.getArboID())) { // CHECKS if filtered CONTAINS arboID
+                    filtered.add(req.getArboID());
+                }
+            }
+        }
+
+        return filtered.size();
+    }
+
+    public int getDistinctARBOCountTarget(ArrayList<APCPRequest> requestList) {
+
+        ArrayList<Integer> filtered = new ArrayList();
+        for (APCPRequest req : requestList) {
+            if (req.getRequestStatus() == 5 || req.getRequestStatus() == 4 || req.getRequestStatus() == 6) {
+                if (!filtered.contains(req.getArboID())) { // CHECKS if filtered CONTAINS arboID
+                    filtered.add(req.getArboID());
+                }
+            }
+        }
+
+        return filtered.size();
+    }
+
+    public int getDistinctRecipientCountWithReleased(ArrayList<APCPRequest> requestList) {
+
+        ArrayList<Integer> filtered = new ArrayList();
+        for (APCPRequest req : requestList) {
+            if (req.getRequestStatus() == 5) {
+                for (ARB arb : req.getRecipients()) {
+                    if (!filtered.contains(arb.getArbID())) { // CHECKS if filtered CONTAINS arbID
+                        filtered.add(arb.getArbID());
+                    }
+                }
+
+            }
+        }
+
+        return filtered.size();
+    }
+
+    public int getDistinctRecipientCountTarget(ArrayList<APCPRequest> requestList) {
+
+        ArrayList<Integer> filtered = new ArrayList();
+        for (APCPRequest req : requestList) {
+            if (req.getRequestStatus() == 5 || req.getRequestStatus() == 4 || req.getRequestStatus() == 6) {
+                for (ARB arb : req.getRecipients()) {
+                    if (!filtered.contains(arb.getArbID())) { // CHECKS if filtered CONTAINS arbID
+                        filtered.add(arb.getArbID());
+                    }
+                }
+
+            }
+        }
+
+        return filtered.size();
+    }
+
+    public int getOnTrackRequestsPerStatus(ArrayList<APCPRequest> requestList, int status) {
+
+        int count = 0;
+
+        for (APCPRequest req : requestList) {
+            if (req.getRequestStatus() == status) {
+                int difference = 0;
+                if (status == 0) {
+
+                    difference = getDateDiff(req.getDateRequested());
+
+                    if (difference < 5) {
+                        count++;
+                    }
+
+                } else if (status == 1) {
+                    difference = getDateDiff(req.getDateRequested());
+
+                    if (difference < 5) {
+                        count++;
+                    }
+                } else if (status == 2) {
+                    difference = getDateDiff(req.getDateCleared());
+
+                    if (difference < 5) {
+                        count++;
+                    }
+                } else if (status == 3) {
+                    difference = getDateDiff(req.getDateEndorsed());
+
+                    if (difference < 5) {
+                        count++;
+                    }
+                } else if (status == 4) {
+                    difference = getDateDiff(req.getDateRequested());
+
+                    if (difference < 10) {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public int getDelayedRequestsPerStatus(ArrayList<APCPRequest> requestList, int status) {
+
+        int count = 0;
+
+        for (APCPRequest req : requestList) {
+            if (req.getRequestStatus() == status) {
+                int difference = 0;
+                if (status == 0) {
+
+                    difference = getDateDiff(req.getDateRequested());
+
+                    if (difference >= 5) {
+                        count++;
+                    }
+
+                } else if (status == 1) {
+                    difference = getDateDiff(req.getDateRequested());
+
+                    if (difference >= 5) {
+                        count++;
+                    }
+                } else if (status == 2) {
+                    difference = getDateDiff(req.getDateCleared());
+
+                    if (difference >= 5) {
+                        count++;
+                    }
+                } else if (status == 3) {
+                    difference = getDateDiff(req.getDateEndorsed());
+
+                    if (difference >= 5) {
+                        count++;
+                    }
+                } else if (status == 4) {
+                    difference = getDateDiff(req.getDateRequested());
+
+                    if (difference >= 10) {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public int getDateDiff(Date date1) {
+        long diffInMillies = System.currentTimeMillis() - date1.getTime();
+        return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
+    public double getPercentage(int value1, int value2) {
+        double value = 0;
+        if (value2 > 0) {
+            value = (value1 / value2) * 100;
+        }
+        return value;
+    }
+    
+    public double getPercentage(double value1, double value2) {
+        double value = 0;
+        if (value2 > 0) {
+            value = (value1 / value2) * 100;
         }
         return value;
     }

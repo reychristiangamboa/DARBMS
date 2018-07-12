@@ -9,7 +9,6 @@
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
     UserDAO uDAO = new UserDAO();
     EvaluationDAO eDAO = new EvaluationDAO();
-    LINKSFARMDAO linksfarmDAO = new LINKSFARMDAO();
     
 %>
 

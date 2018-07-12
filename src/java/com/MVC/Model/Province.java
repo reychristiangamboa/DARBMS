@@ -17,6 +17,26 @@ public class Province {
     private String provDesc;
     private int regCode;
     private String regDesc;
+    private ProvincialBudget provincialAPCPBudget;
+    private ProvincialBudget provincialCAPDEVBudget;
+
+    public ProvincialBudget getProvincialAPCPBudget() {
+        return provincialAPCPBudget;
+    }
+
+    public void setProvincialAPCPBudget(ProvincialBudget provincialAPCPBudget) {
+        this.provincialAPCPBudget = provincialAPCPBudget;
+    }
+
+    public ProvincialBudget getProvincialCAPDEVBudget() {
+        return provincialCAPDEVBudget;
+    }
+
+    public void setProvincialCAPDEVBudget(ProvincialBudget provincialCAPDEVBudget) {
+        this.provincialCAPDEVBudget = provincialCAPDEVBudget;
+    }
+    
+    
 
     public int getProvCode() {
         return provCode;

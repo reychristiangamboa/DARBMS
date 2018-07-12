@@ -184,14 +184,21 @@ public class CAPDEVActivity {
         ArrayList<ARB> filtered = new ArrayList();
 
         for (ARB arb : arbList) {
-            for (ARB participant : this.arbList) {
-                if (arb.getArbID() != participant.getArbID()) { // if this activity doesn't recognize this ARB 
-                    filtered.add(arb);                          // as a participant, ADD to filtered
-                }
+            if(!isParticipant(arb.getArbID())){
+                filtered.add(arb);
             }
         }
 
         return filtered;
+    }
+
+    public boolean isParticipant(int arbID) {
+        for (ARB arb : this.arbList) {
+            if (arb.getArbID() == arbID) { // if this activity doesn't recognize this ARB 
+                return true;                          // as a participant, ADD to filtered
+            }
+        }
+        return false;
     }
 
 }
