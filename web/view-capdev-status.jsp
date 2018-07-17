@@ -62,12 +62,18 @@
                 ArrayList<CAPDEVPlan> approvedPlans = new ArrayList();
                 ArrayList<CAPDEVPlan> disapprovedPlans = new ArrayList();
                 ArrayList<CAPDEVPlan> implementedPlans = new ArrayList();
+                ArrayList<CAPDEVPlan> postponedPlans = new ArrayList();
+
+                ArrayList<User> pointPersons = new ArrayList();
+                
                 ArrayList<APCPRequest> requestedRequests = new ArrayList();
     
-                if(userType == 3 || userType == 7){
+                if(userType == 3 || userType == 7){ // PFO-HEAD && PFO-CAPDEV
                     ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
                     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
                     cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
+                    
+                    pointPersons = uDAO.getAllPointPersonProvince((Integer) session.getAttribute("provOfficeCode"));
                     
                     requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
                     allPlans = capdevDAO.getAllProvincialCAPDEVPlan((Integer) session.getAttribute("provOfficeCode"));
@@ -75,7 +81,10 @@
                     approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
                     disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
                     implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
-                } else if(userType == 4){
+                    postponedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(6, (Integer) session.getAttribute("provOfficeCode"));
+                    
+                    
+                } else if(userType == 4){ // RFO
                     ArrayList<ARBO> arboListRegion = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
                     ArrayList<ARB> arbListRegion = arbDAO.getAllARBsOfARBOs(arboListRegion);
                     requestedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
@@ -84,13 +93,15 @@
                     approvedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(2, (Integer) session.getAttribute("regOfficeCode"));
                     disapprovedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
                     implementedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(5, (Integer) session.getAttribute("regOfficeCode"));
-                } else if (userType == 5){
+                    postponedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(6, (Integer) session.getAttribute("regOfficeCode"));
+                } else if (userType == 5){ // CO
                     requestedRequests = apcpRequestDAO.getAllRequestsByStatus(1);
                     allPlans = capdevDAO.getAllCAPDEVPlan();
                     pendingPlans = capdevDAO.getAllCAPDEVPlanByStatus(1);
                     approvedPlans = capdevDAO.getAllCAPDEVPlanByStatus(2);
                     disapprovedPlans = capdevDAO.getAllCAPDEVPlanByStatus(3);
                     implementedPlans = capdevDAO.getAllCAPDEVPlanByStatus(5);
+                    postponedPlans = capdevDAO.getAllCAPDEVPlanByStatus(6);
                 }
                 
                 if(request.getAttribute("requested") != null){
@@ -290,7 +301,8 @@
                     </div>
 
 
-                    <!--PENDING-->
+                    <!--PENDING--> 
+                    <!--PFO-HEAD APPROVES/DISAPPROVES-->
                     <div class="row" id="1" style="display:none;">
                         <div class="col-xs-12" >
                             <div class="box bg-warning">
@@ -302,7 +314,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Plan DTN</th>
@@ -325,7 +337,7 @@
                                                     <%}else{%>
                                                 <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
                                                     <%}%>
-                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><span class="label label-warning"><%out.print(p.getPlanStatusDesc());%></span></td>
                                             </tr>
@@ -352,7 +364,8 @@
                         <!-- /.col -->
                     </div>
 
-                    <!--                    APPROVED-->
+                    <!--APPROVED-->
+                    <!--PP MONITORS CAPDEV-->
                     <div class="row" id="2" style="display:none;">
                         <div class="col-xs-12">
                             <div class="box bg-green-gradient">
@@ -364,7 +377,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example6" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Plan DTN</th>
@@ -382,12 +395,8 @@
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
-                                                <%if(userType == 7){%>
-                                                <td><a href="ProceedAssignPointPerson?planID=<%out.print(p.getPlanID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(p.getPlanDTN());%></a></td>
-                                                    <%}else{%>
                                                 <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
-                                                    <%}%>
-                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><span class="label label-success"><%out.print(p.getPlanStatusDesc());%></span></td>
                                             </tr>
@@ -414,7 +423,7 @@
                         <!-- /.col -->
                     </div>
 
-                    <!--                                            DISAPPROVED-->
+                    <!--DISAPPROVED-->
                     <div class="row" id="3" style="display:none;">
                         <div class="col-xs-12">
                             <div class="box bg-red">
@@ -426,7 +435,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="apcp3" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Plan DTN</th>
@@ -446,7 +455,7 @@
                                             <tr>
                                                 <!--WITH CAPDEV-->
                                                 <td><%out.print(p.getPlanDTN());%></td>
-                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                                 <td><span class="label label-danger"><%out.print(p.getPlanStatusDesc());%></span></td>
@@ -473,6 +482,7 @@
                         </div>
                         <!-- /.col -->
                     </div>
+
                     <!--IMPLEMENTED-->
                     <div class="row" id="4" style="display:none;">
                         <div class="col-xs-12" >
@@ -485,7 +495,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table id="example3" class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Plan DTN</th>
@@ -504,11 +514,145 @@
                                             %>
                                             <tr>
                                                 <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
-                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><span class="label label-success"><%out.print(p.getPlanStatusDesc());%></span></td>
                                             </tr>
                                             <%}%>
+
+                                        </tbody>
+
+                                        <tfoot>
+                                            <tr>
+                                                <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>           
+                                            </tr>
+
+                                        </tfoot>
+
+                                    </table>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+
+                    <!--POSTPONED-->
+                    <!--PFO-HEAD RESCHEDULES-->
+                    <div class="row" id="5" style="display:none;">
+                        <div class="col-xs-12" >
+                            <div class="box bg-green-active">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><strong>Postponed</strong></h3>
+                                    <div class="btn-group pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>                         
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">             
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Plan DTN</th>
+                                                <th>ARBO Name</th>
+                                                <th>No. of Activities</th>
+                                                <th>Status</th>    
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                            <%
+                                                for(CAPDEVPlan p : postponedPlans){
+                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
+                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                            %>
+                                            <tr>
+                                                <%if(userType == 7){%>
+                                                <td><a data-toggle="modal" data-target="#rescheduleModal<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ReviewCAPDEVAssessment?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
+                                                    <%}%>
+
+                                                <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(p.getActivities().size());%></td>
+                                                <td><span class="label label-success"><%out.print(p.getPlanStatusDesc());%></span></td>
+                                            </tr>
+
+                                            <%if(userType == 7){ // PFO-CAPDEV %>
+                                        <div class="modal fade" id="rescheduleModal<%out.print(p.getPlanID());%>">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                        <h4 class="modal-title">RESCHEDULE</h4>
+                                                    </div>
+                                                    <form method="post">
+                                                        <div class="modal-body">
+
+                                                            <div class="row">
+                                                                <div class="col-xs-4">
+                                                                    <div class="form-group">
+                                                                        <label for="">Budget Spent (Optional)</label>
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-addon">
+                                                                                <i>&#8369;</i>
+                                                                            </div>
+                                                                            <input name="budgetSpent" class="form-control numberOnly" value="0">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-xs-4">
+                                                                    <div class="form-group">
+                                                                        <label for="">Plan Date</label>
+                                                                        <input type="date" class="form-control" name="planDate" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xs-4">
+                                                                    <div class="form-group">
+                                                                        <label for="">Budget for Rescheduled Plan</label>
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-addon">
+                                                                                <i>&#8369;</i>
+                                                                            </div>
+                                                                            <input name="budgetRescheduled" class="form-control numberOnly" required>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-xs-4">
+                                                                    <div class="form-group">
+                                                                        <label for="">Assign Point Person</label>
+                                                                        <select name="pointPersonID" class="form-control select2" required>
+                                                                            <%for(User u : pointPersons){%>
+                                                                            <option value="<%=u.getUserID()%>"><%out.print(u.getFullName());%></option>
+                                                                            <%}%>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a href="ReschedulePlan?planID=<%out.print(p.getPlanID());%>" class="btn btn-danger">Reschedule</a>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <%}%>
+
+                                        <%}%>
 
                                         </tbody>
 

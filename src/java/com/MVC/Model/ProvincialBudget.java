@@ -22,6 +22,7 @@ public class ProvincialBudget {
     private String reason;
     private Date startDate;
     private Date endDate;
+    private boolean isDisapproved;
 
     public int getId() {
         return id;
@@ -86,6 +87,15 @@ public class ProvincialBudget {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+    public boolean isIsDisapproved() {
+        return isDisapproved;
+    }
+
+    public void setIsDisapproved(boolean isDisapproved) {
+        this.isDisapproved = isDisapproved;
+    }
+    
     
     public double getRemainingAPCPBudget(ArrayList<APCPRequest> requestList){
         

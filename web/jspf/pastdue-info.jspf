@@ -141,3 +141,98 @@
         <%}%>
     </div>
 </div>
+<div class="modal fade" id="add-pastdue-modal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Record Past Due Account</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="">Amount</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i>&#8369;</i>
+                                    </div>
+                                    <input type="text" class="form-control numberOnly" name="pastDueAmount" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="">Reason for Past Due </label>
+                                <select class="form-control" name="reasonPastDue" id="">
+                                    <%for (PastDueAccount p : reasons) {%>
+                                    <option value="<%=p.getReasonPastDue()%>"><%out.print(p.getReasonPastDueDesc());%></option>
+                                    <%}%>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="">Date Recorded</label>
+                                <input type="date" class="form-control" name="recordedDate" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="">Other Reason</label>
+                                <textarea class="form-control" name="otherReason" id="" cols="10" rows="3">N/A</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" name="manual" onclick="form.action = 'RecordPastDueAccount'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
+</div>
+<div class="modal fade" id="import-pastdue-modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Import Past Due Accounts</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="">Import File</label>
+                                <input type="file" class="form-control" name="file" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" name="manual" onclick="form.action = 'ImportPastDueAccount'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
+</div>

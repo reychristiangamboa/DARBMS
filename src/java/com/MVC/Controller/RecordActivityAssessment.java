@@ -5,17 +5,8 @@
  */
 package com.MVC.Controller;
 
-import com.MVC.DAO.APCPRequestDAO;
-import com.MVC.DAO.ARBDAO;
-import com.MVC.DAO.ARBODAO;
-import com.MVC.DAO.CAPDEVDAO;
-import com.MVC.DAO.LINKSFARMDAO;
-import com.MVC.Model.APCPRequest;
-import com.MVC.Model.ARB;
-import com.MVC.Model.ARBO;
-import com.MVC.Model.CAPDEVActivity;
-import com.MVC.Model.CAPDEVPlan;
-import com.MVC.Model.Cluster;
+import com.MVC.DAO.*;
+import com.MVC.Model.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -45,17 +36,9 @@ public class RecordActivityAssessment extends BaseServlet {
         ARBDAO arbDAO = new ARBDAO();
         APCPRequestDAO rDAO = new APCPRequestDAO();
         ARBODAO arboDAO = new ARBODAO();
-        LINKSFARMDAO dao = new LINKSFARMDAO();
 
         int activityID = Integer.parseInt(request.getParameter("activityID"));
         int planID = Integer.parseInt(request.getParameter("planID"));
-        int clusterID = 0;
-        Cluster c = new Cluster();
-
-        if (request.getParameter("clusterID") != null) {
-            clusterID = Integer.parseInt(request.getParameter("clusterID"));
-            c = dao.getClusterByID(clusterID);
-        }
 
         CAPDEVPlan plan = cDAO.getCAPDEVPlan(planID);
         APCPRequest req = rDAO.getRequestByID(plan.getRequestID());

@@ -16,6 +16,7 @@ import be.ceau.chart.dataset.BarDataset;
 import be.ceau.chart.dataset.LineDataset;
 import be.ceau.chart.dataset.PieDataset;
 import be.ceau.chart.options.BarOptions;
+import be.ceau.chart.options.LineOptions;
 import be.ceau.chart.options.Title;
 import be.ceau.chart.options.scales.BarScale;
 import be.ceau.chart.options.scales.*;
@@ -1661,117 +1662,116 @@ public class Chart {
 
     }
 
-    public String getBarChartAPCPAmounts(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
-
-        ArrayList<String> labels = new ArrayList();
-        boolean b = true;
-
-        if (regionList.isEmpty()) {
-            labels.add("REGION I (ILOCOS REGION)");
-            labels.add("REGION II (CAGAYAN VALLEY)");
-            labels.add("REGION III (CENTRAL LUZON)");
-            labels.add("REGION IV-A (CALABARZON)");
-            labels.add("REGION IV-B (MIMAROPA)");
-            labels.add("REGION V (BICOL REGION)");
-            labels.add("REGION VI (WESTERN VISAYAS)");
-            labels.add("REGION VII (CENTRAL VISAYAS)");
-            labels.add("REGION VIII (EASTERN VISAYAS)");
-            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
-            labels.add("REGION X (NORTHERN MINDANAO)");
-            labels.add("REGION XI (DAVAO REGION)");
-            labels.add("REGION XII (SOCCSKSARGEN)");
-            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
-            labels.add("REGION XIII (Caraga)");
-            System.out.println("REGION EMPTY!");
-        } else if (provList.isEmpty()) {
-            for (Region r : regionList) {
-                labels.add(r.getRegDesc());
-            }
-
-        } else {
-            for (Province p : provList) {
-                labels.add(p.getProvDesc());
-            }
-            b = false;
-        }
-
-        BarData data = new BarData();
-
-        BarDataset one = new BarDataset();
-        BarDataset two = new BarDataset();
-        BarDataset three = new BarDataset();
-        BarDataset four = new BarDataset();
-        ArrayList<Integer> aa = new ArrayList();
-        ArrayList<Integer> bb = new ArrayList();
-        ArrayList<Integer> cc = new ArrayList();
-        ArrayList<Integer> dd = new ArrayList();
-
-        APCPRequestDAO dao = new APCPRequestDAO();
-
-        Calendar current = Calendar.getInstance();
-        int year = current.get(Calendar.YEAR);
-
-        for (int i = 0; i < labels.size(); i++) {
-            int a1 = 0;
-            int a2 = 0;
-            int a3 = 0;
-            int a4 = 0;
-            for (ARBO arbo : arboList) {
-                if (b) { // REGIONAL
-                    if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
-                        a1 += dao.getTotalPastDueAmount(arbo.getRequestList());
-                        a2 += dao.getYearlySumOfReleasesByRequestId(arbo.getRequestList(), year);
-                        a3 += dao.getSumOfAccumulatedReleasesByRequestId(arbo.getRequestList());
-                        a4 += dao.getTotalApprovedAmount(arbo.getRequestList());
-                    }
-                } else { // PROVINCIAL OFFICE
-                    if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
-                        a1 += dao.getTotalPastDueAmount(arbo.getRequestList());
-                        a2 += dao.getYearlySumOfReleasesByRequestId(arbo.getRequestList(), year);
-                        a3 += dao.getSumOfAccumulatedReleasesByRequestId(arbo.getRequestList());
-                        a4 += dao.getTotalApprovedAmount(arbo.getRequestList());
-                    }
-                }
-            }
-            aa.add(a1);
-            bb.add(a2);
-            cc.add(a3);
-            dd.add(a4);
-        }
-
-        for (int value : aa) {
-            one.addData(value);
-            one.addBackgroundColor(Color.random());
-            one.setLabel("TOTAL PAST DUE AMOUNT");
-        }
-
-        for (int value : bb) {
-            two.addData(value);
-            two.addBackgroundColor(Color.random());
-            two.setLabel("YEARLY RELEASES");
-        }
-
-        for (int value : cc) {
-            three.addData(value);
-            three.addBackgroundColor(Color.random());
-            three.setLabel("ACCUMULATED RELEASES");
-        }
-
-        for (int value : dd) {
-            four.addData(value);
-            four.addBackgroundColor(Color.random());
-            four.setLabel("APPROVED AMOUNT");
-        }
-
-        data.addDataset(one);
-        data.addDataset(two);
-        data.addDataset(three);
-        data.addDataset(four);
-
-        return new BarChart(data).toJson();
-
-    }
-
+//    public String getBarChartAPCPAmounts(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+//
+//        ArrayList<String> labels = new ArrayList();
+//        boolean b = true;
+//
+//        if (regionList.isEmpty()) {
+//            labels.add("REGION I (ILOCOS REGION)");
+//            labels.add("REGION II (CAGAYAN VALLEY)");
+//            labels.add("REGION III (CENTRAL LUZON)");
+//            labels.add("REGION IV-A (CALABARZON)");
+//            labels.add("REGION IV-B (MIMAROPA)");
+//            labels.add("REGION V (BICOL REGION)");
+//            labels.add("REGION VI (WESTERN VISAYAS)");
+//            labels.add("REGION VII (CENTRAL VISAYAS)");
+//            labels.add("REGION VIII (EASTERN VISAYAS)");
+//            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+//            labels.add("REGION X (NORTHERN MINDANAO)");
+//            labels.add("REGION XI (DAVAO REGION)");
+//            labels.add("REGION XII (SOCCSKSARGEN)");
+//            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+//            labels.add("REGION XIII (Caraga)");
+//            System.out.println("REGION EMPTY!");
+//        } else if (provList.isEmpty()) {
+//            for (Region r : regionList) {
+//                labels.add(r.getRegDesc());
+//            }
+//
+//        } else {
+//            for (Province p : provList) {
+//                labels.add(p.getProvDesc());
+//            }
+//            b = false;
+//        }
+//
+//        BarData data = new BarData();
+//
+//        BarDataset one = new BarDataset();
+//        BarDataset two = new BarDataset();
+//        BarDataset three = new BarDataset();
+//        BarDataset four = new BarDataset();
+//        ArrayList<Integer> aa = new ArrayList();
+//        ArrayList<Integer> bb = new ArrayList();
+//        ArrayList<Integer> cc = new ArrayList();
+//        ArrayList<Integer> dd = new ArrayList();
+//
+//        APCPRequestDAO dao = new APCPRequestDAO();
+//
+//        Calendar current = Calendar.getInstance();
+//        int year = current.get(Calendar.YEAR);
+//
+//        for (int i = 0; i < labels.size(); i++) {
+//            int a1 = 0;
+//            int a2 = 0;
+//            int a3 = 0;
+//            int a4 = 0;
+//            for (ARBO arbo : arboList) {
+//                if (b) { // REGIONAL
+//                    if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+//                        a1 += dao.getTotalPastDueAmount(arbo.getRequestList());
+//                        a2 += dao.getYearlySumOfReleasesByRequestId(arbo.getRequestList(), year);
+//                        a3 += dao.getSumOfAccumulatedReleasesByRequestId(arbo.getRequestList());
+//                        a4 += dao.getTotalApprovedAmount(arbo.getRequestList());
+//                    }
+//                } else { // PROVINCIAL OFFICE
+//                    if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+//                        a1 += dao.getTotalPastDueAmount(arbo.getRequestList());
+//                        a2 += dao.getYearlySumOfReleasesByRequestId(arbo.getRequestList(), year);
+//                        a3 += dao.getSumOfAccumulatedReleasesByRequestId(arbo.getRequestList());
+//                        a4 += dao.getTotalApprovedAmount(arbo.getRequestList());
+//                    }
+//                }
+//            }
+//            aa.add(a1);
+//            bb.add(a2);
+//            cc.add(a3);
+//            dd.add(a4);
+//        }
+//
+//        for (int value : aa) {
+//            one.addData(value);
+//            one.addBackgroundColor(Color.random());
+//            one.setLabel("TOTAL PAST DUE AMOUNT");
+//        }
+//
+//        for (int value : bb) {
+//            two.addData(value);
+//            two.addBackgroundColor(Color.random());
+//            two.setLabel("YEARLY RELEASES");
+//        }
+//
+//        for (int value : cc) {
+//            three.addData(value);
+//            three.addBackgroundColor(Color.random());
+//            three.setLabel("ACCUMULATED RELEASES");
+//        }
+//
+//        for (int value : dd) {
+//            four.addData(value);
+//            four.addBackgroundColor(Color.random());
+//            four.setLabel("APPROVED AMOUNT");
+//        }
+//
+//        data.addDataset(one);
+//        data.addDataset(two);
+//        data.addDataset(three);
+//        data.addDataset(four);
+//
+//        return new BarChart(data).toJson();
+//
+//    }
     public String getStackedBarChartApprovedAmounts(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
 
         APCPRequestDAO requestDAO = new APCPRequestDAO();
@@ -2200,7 +2200,7 @@ public class Chart {
                 labels.add(p.getProvDesc());
             }
             b = false;
-            System.out.println("");
+
         }
 
         BarData data = new BarData();
@@ -2264,8 +2264,876 @@ public class Chart {
 
     }
     //</editor-fold>
-    
+
     //<editor-fold desc="PFO-HEAD DASHBOARD">
-    
+    //APCP
+    public String getStackedBarChartAPCPOnTrackDelayedByStatus(ArrayList<ARBO> arboList, int status, int userType, String titleStr) {
+
+        ArrayList<String> labels = new ArrayList();
+        APCPRequestDAO requestDAO = new APCPRequestDAO();
+
+        BarOptions options = new BarOptions();
+        BarScale scales = new BarScale();
+        XAxis x = new XAxis();
+        YAxis y = new YAxis();
+        x.setStacked(Boolean.TRUE);
+        y.setStacked(Boolean.TRUE);
+        scales.addxAxes(x);
+        scales.addyAxes(y);
+        options.setScales(scales);
+
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText(titleStr);
+
+        options.setTitle(title);
+
+        // SETTING OF LABELS
+        if (userType == 3) { // PROVINCIAL
+            if (!arboList.isEmpty()) {
+                labels.add(arboList.get(0).getProvOfficeCodeDesc());
+            }
+        } else if (userType == 2) { // REGIONAL
+            if (!arboList.isEmpty()) {
+                for (ARBO arbo : arboList) {
+                    if (!labels.contains(arbo.getProvOfficeCodeDesc())) {
+                        labels.add(arbo.getProvOfficeCodeDesc());
+                    }
+                }
+            }
+        } else if (userType == 1) { // CENTRAL
+            if (!arboList.isEmpty()) {
+                for (ARBO arbo : arboList) {
+                    if (!labels.contains(arbo.getArboRegionDesc())) {
+                        labels.add(arbo.getArboRegionDesc());
+                    }
+                }
+            }
+        }
+
+        BarDataset onTrack = new BarDataset();
+        onTrack.setLabel("ON TRACK");
+        onTrack.setBackgroundColor(Color.GREEN);
+
+        BarDataset delayed = new BarDataset();
+        delayed.setLabel("DELAYED");
+        delayed.setBackgroundColor(Color.YELLOW);
+
+        for (String label : labels) {
+            int onTrackCount = 0;
+            int delayedCount = 0;
+            for (ARBO arbo : arboList) {
+                if (userType == 3) { // PROVINCIAL
+                    if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) {
+                        onTrackCount += requestDAO.getOnTrackRequestsPerStatus(arbo.getRequestList(), status);
+                        delayedCount += requestDAO.getDelayedRequestsPerStatus(arbo.getRequestList(), status);
+                    }
+                } else if (userType == 2) { // REGIONAL
+                    if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) {
+                        onTrackCount += requestDAO.getOnTrackRequestsPerStatus(arbo.getRequestList(), status);
+                        delayedCount += requestDAO.getDelayedRequestsPerStatus(arbo.getRequestList(), status);
+                    }
+                } else if (userType == 1) { // CENTRAL
+                    if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) {
+                        onTrackCount += requestDAO.getOnTrackRequestsPerStatus(arbo.getRequestList(), status);
+                        delayedCount += requestDAO.getDelayedRequestsPerStatus(arbo.getRequestList(), status);
+                    }
+                }
+            }
+            onTrack.addData(onTrackCount);
+            delayed.addData(delayedCount);
+        }
+
+        BarData data = new BarData();
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(onTrack);
+        datasets.add(delayed);
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new BarChart(data, options).setHorizontal().toJson();
+    }
+
+    public String getLineChartAPCPTotalARBOs(ArrayList<APCPRequest> requestList, String titleStr) {
+        ArrayList<String> labels = new ArrayList();
+        LineOptions options = new LineOptions();
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText(titleStr);
+
+        options.setTitle(title);
+
+        Calendar current = Calendar.getInstance();
+
+        Calendar last = Calendar.getInstance();
+        last.add(Calendar.YEAR, -1);
+
+        labels.add("Q1");
+        labels.add("Q2");
+        labels.add("Q3");
+        labels.add("Q4");
+
+        LineDataset currentYear = new LineDataset();
+        currentYear.setLabel(String.valueOf(current.get(Calendar.YEAR)));
+        currentYear.addPointBackgroundColor(Color.GREEN);
+        currentYear.setBorderColor(Color.GREEN);
+        currentYear.setBackgroundColor(Color.TRANSPARENT);
+
+        LineDataset lastYear = new LineDataset();
+        lastYear.setLabel(String.valueOf(last.get(Calendar.YEAR)));
+        lastYear.addPointBackgroundColor(Color.LIGHT_BLUE);
+        lastYear.setBorderColor(Color.LIGHT_BLUE);
+        lastYear.setBackgroundColor(Color.TRANSPARENT);
+
+        Calendar releaseDate = Calendar.getInstance();
+
+        int currentCount = 0;
+        int lastCount = 0;
+
+        ArrayList<Integer> currentARBOs = new ArrayList();
+        ArrayList<Integer> lastARBOs = new ArrayList();
+
+        for (String label : labels) {
+            for (APCPRequest req : requestList) {
+                for (APCPRelease rel : req.getReleases()) {
+                    releaseDate.setTime(rel.getReleaseDate());
+                    if (label.equalsIgnoreCase("Q1")) {
+                        if (releaseDate.get(Calendar.MONTH) == 0 || releaseDate.get(Calendar.MONTH) == 1 || releaseDate.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
+                            if (releaseDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                if (!currentARBOs.contains(req.getArboID())) { // IF NOT YET ON THE LIST, ADD
+                                    currentARBOs.add(req.getArboID()); // ADDS THE ARBO ID
+                                    currentCount++; // ADDS THE COUNT FOR Q1
+                                }
+                            } else if (releaseDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                if (!lastARBOs.contains(req.getArboID())) {
+                                    lastARBOs.add(req.getArboID());
+                                    lastCount++;
+                                }
+                            }
+                        }
+                    } else if (label.equalsIgnoreCase("Q2")) {
+                        if (releaseDate.get(Calendar.MONTH) == 3 || releaseDate.get(Calendar.MONTH) == 4 || releaseDate.get(Calendar.MONTH) == 5) { // FIRST, CHECK IF Q2
+                            if (releaseDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                if (!currentARBOs.contains(req.getArboID())) { // IF NOT YET ON THE LIST, ADD
+                                    currentARBOs.add(req.getArboID()); // ADDS THE ARBO ID
+                                    currentCount++; // ADDS THE COUNT FOR Q2
+                                }
+                            } else if (releaseDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                if (!lastARBOs.contains(req.getArboID())) {
+                                    lastARBOs.add(req.getArboID());
+                                    lastCount++;
+                                }
+                            }
+                        }
+                    } else if (label.equalsIgnoreCase("Q3")) {
+                        if (releaseDate.get(Calendar.MONTH) == 6 || releaseDate.get(Calendar.MONTH) == 7 || releaseDate.get(Calendar.MONTH) == 8) { // FIRST, CHECK IF Q3
+                            if (releaseDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                if (!currentARBOs.contains(req.getArboID())) { // IF NOT YET ON THE LIST, ADD
+                                    currentARBOs.add(req.getArboID()); // ADDS THE ARBO ID
+                                    currentCount++; // ADDS THE COUNT FOR Q3
+                                }
+                            } else if (releaseDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                if (!lastARBOs.contains(req.getArboID())) {
+                                    lastARBOs.add(req.getArboID());
+                                    lastCount++;
+                                }
+                            }
+                        }
+                    } else if (label.equalsIgnoreCase("Q4")) {
+                        if (releaseDate.get(Calendar.MONTH) == 9 || releaseDate.get(Calendar.MONTH) == 10 || releaseDate.get(Calendar.MONTH) == 11) { // FIRST, CHECK IF Q4
+                            if (releaseDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                if (!currentARBOs.contains(req.getArboID())) { // IF NOT YET ON THE LIST, ADD
+                                    currentARBOs.add(req.getArboID()); // ADDS THE ARBO ID
+                                    currentCount++; // ADDS THE COUNT FOR Q1
+                                }
+                            } else if (releaseDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                if (!lastARBOs.contains(req.getArboID())) {
+                                    lastARBOs.add(req.getArboID());
+                                    lastCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            currentYear.addData(currentCount);
+            lastYear.addData(lastCount);
+        }
+
+        LineData data = new LineData();
+        ArrayList<LineDataset> datasets = new ArrayList();
+        datasets.add(lastYear);
+        datasets.add(currentYear);
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new LineChart(data, options).toJson();
+
+    }
+
+    public String getLineChartAPCPTotalARBs(ArrayList<APCPRequest> requestList, String titleStr) {
+        ArrayList<String> labels = new ArrayList();
+        LineOptions options = new LineOptions();
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText(titleStr);
+
+        options.setTitle(title);
+
+        Calendar current = Calendar.getInstance();
+
+        Calendar last = Calendar.getInstance();
+        last.add(Calendar.YEAR, -1);
+
+        labels.add("Q1");
+        labels.add("Q2");
+        labels.add("Q3");
+        labels.add("Q4");
+
+        LineDataset currentYear = new LineDataset();
+        currentYear.setLabel(String.valueOf(current.get(Calendar.YEAR)));
+        currentYear.addPointBackgroundColor(Color.GREEN);
+        currentYear.setBorderColor(Color.GREEN);
+        currentYear.setBackgroundColor(Color.TRANSPARENT);
+
+        LineDataset lastYear = new LineDataset();
+        lastYear.setLabel(String.valueOf(last.get(Calendar.YEAR)));
+        lastYear.addPointBackgroundColor(Color.LIGHT_BLUE);
+        lastYear.setBorderColor(Color.LIGHT_BLUE);
+        lastYear.setBackgroundColor(Color.TRANSPARENT);
+
+        Calendar disbursementDate = Calendar.getInstance();
+
+        int currentCount = 0;
+        int lastCount = 0;
+
+        ArrayList<Integer> currentARBs = new ArrayList();
+        ArrayList<Integer> lastARBs = new ArrayList();
+
+        for (String label : labels) {
+            for (APCPRequest req : requestList) {
+                for (Disbursement d : req.getDisbursements()) {
+                    disbursementDate.setTime(d.getDateDisbursed());
+                    if (label.equalsIgnoreCase("Q1")) {
+                        if (disbursementDate.get(Calendar.MONTH) == 0 || disbursementDate.get(Calendar.MONTH) == 1 || disbursementDate.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
+                            if (disbursementDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                if (!currentARBs.contains(d.getArbID())) { // IF NOT YET ON THE LIST, ADD
+                                    currentARBs.add(d.getArbID()); // ADDS THE ARB ID
+                                    currentCount++; // ADDS THE COUNT FOR Q1
+                                }
+                            } else if (disbursementDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                if (!lastARBs.contains(d.getArbID())) {
+                                    lastARBs.add(d.getArbID());
+                                    lastCount++;
+                                }
+                            }
+                        }
+                    } else if (label.equalsIgnoreCase("Q2")) {
+                        if (disbursementDate.get(Calendar.MONTH) == 3 || disbursementDate.get(Calendar.MONTH) == 4 || disbursementDate.get(Calendar.MONTH) == 5) { // FIRST, CHECK IF Q2
+                            if (disbursementDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                if (!currentARBs.contains(d.getArbID())) { // IF NOT YET ON THE LIST, ADD
+                                    currentARBs.add(d.getArbID()); // ADDS THE ARBO ID
+                                    currentCount++; // ADDS THE COUNT FOR Q2
+                                }
+                            } else if (disbursementDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                if (!lastARBs.contains(d.getArbID())) {
+                                    lastARBs.add(d.getArbID());
+                                    lastCount++;
+                                }
+                            }
+                        }
+                    } else if (label.equalsIgnoreCase("Q3")) {
+                        if (disbursementDate.get(Calendar.MONTH) == 6 || disbursementDate.get(Calendar.MONTH) == 7 || disbursementDate.get(Calendar.MONTH) == 8) { // FIRST, CHECK IF Q3
+                            if (disbursementDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                if (!currentARBs.contains(d.getArbID())) { // IF NOT YET ON THE LIST, ADD
+                                    currentARBs.add(d.getArbID()); // ADDS THE ARBO ID
+                                    currentCount++; // ADDS THE COUNT FOR Q3
+                                }
+                            } else if (disbursementDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                if (!lastARBs.contains(d.getArbID())) {
+                                    lastARBs.add(d.getArbID());
+                                    lastCount++;
+                                }
+                            }
+                        }
+                    } else if (label.equalsIgnoreCase("Q4")) {
+                        if (disbursementDate.get(Calendar.MONTH) == 9 || disbursementDate.get(Calendar.MONTH) == 10 || disbursementDate.get(Calendar.MONTH) == 11) { // FIRST, CHECK IF Q4
+                            if (disbursementDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                if (!currentARBs.contains(d.getArbID())) { // IF NOT YET ON THE LIST, ADD
+                                    currentARBs.add(d.getArbID()); // ADDS THE ARBO ID
+                                    currentCount++; // ADDS THE COUNT FOR Q1
+                                }
+                            } else if (disbursementDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                if (!lastARBs.contains(d.getArbID())) {
+                                    lastARBs.add(d.getArbID());
+                                    lastCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            currentYear.addData(currentCount);
+            lastYear.addData(lastCount);
+        }
+
+        LineData data = new LineData();
+        ArrayList<LineDataset> datasets = new ArrayList();
+        datasets.add(lastYear);
+        datasets.add(currentYear);
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new LineChart(data, options).toJson();
+
+    }
+
+    public String getLineChartTotalReleasedAmount(ArrayList<APCPRequest> requestList, String titleStr) {
+        ArrayList<String> labels = new ArrayList();
+        LineOptions options = new LineOptions();
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText(titleStr);
+
+        options.setTitle(title);
+
+        Calendar current = Calendar.getInstance();
+
+        Calendar last = Calendar.getInstance();
+        last.add(Calendar.YEAR, -1);
+
+        labels.add("Q1");
+        labels.add("Q2");
+        labels.add("Q3");
+        labels.add("Q4");
+
+        LineDataset currentYear = new LineDataset();
+        currentYear.setLabel(String.valueOf(current.get(Calendar.YEAR)));
+        currentYear.addPointBackgroundColor(Color.GREEN);
+        currentYear.setBorderColor(Color.GREEN);
+        currentYear.setBackgroundColor(Color.TRANSPARENT);
+
+        LineDataset lastYear = new LineDataset();
+        lastYear.setLabel(String.valueOf(last.get(Calendar.YEAR)));
+        lastYear.addPointBackgroundColor(Color.LIGHT_BLUE);
+        lastYear.setBorderColor(Color.LIGHT_BLUE);
+        lastYear.setBackgroundColor(Color.TRANSPARENT);
+
+        Calendar releaseDate = Calendar.getInstance();
+
+        double currentSum = 0;
+        double lastSum = 0;
+
+        ArrayList<Integer> currentARBOs = new ArrayList();
+        ArrayList<Integer> lastARBOs = new ArrayList();
+
+        for (String label : labels) {
+            for (APCPRequest req : requestList) {
+                for (APCPRelease rel : req.getReleases()) {
+                    releaseDate.setTime(rel.getReleaseDate());
+                    if (label.equalsIgnoreCase("Q1")) {
+                        if (releaseDate.get(Calendar.MONTH) == 0 || releaseDate.get(Calendar.MONTH) == 1 || releaseDate.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
+                            if (releaseDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                currentSum += rel.getReleaseAmount();
+                            } else if (releaseDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                lastSum += rel.getReleaseAmount();
+                            }
+                        }
+                    } else if (label.equalsIgnoreCase("Q2")) {
+                        if (releaseDate.get(Calendar.MONTH) == 3 || releaseDate.get(Calendar.MONTH) == 4 || releaseDate.get(Calendar.MONTH) == 5) { // FIRST, CHECK IF Q2
+                            if (releaseDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                currentSum += rel.getReleaseAmount();
+                            } else if (releaseDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                lastSum += rel.getReleaseAmount();
+                            }
+                        }
+                    } else if (label.equalsIgnoreCase("Q3")) {
+                        if (releaseDate.get(Calendar.MONTH) == 6 || releaseDate.get(Calendar.MONTH) == 7 || releaseDate.get(Calendar.MONTH) == 8) { // FIRST, CHECK IF Q3
+                            if (releaseDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                currentSum += rel.getReleaseAmount();
+                            } else if (releaseDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                lastSum += rel.getReleaseAmount();
+                            }
+                        }
+                    } else if (label.equalsIgnoreCase("Q4")) {
+                        if (releaseDate.get(Calendar.MONTH) == 9 || releaseDate.get(Calendar.MONTH) == 10 || releaseDate.get(Calendar.MONTH) == 11) { // FIRST, CHECK IF Q4
+                            if (releaseDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                currentSum += rel.getReleaseAmount();
+                            } else if (releaseDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                lastSum += rel.getReleaseAmount();
+                            }
+                        }
+                    }
+                }
+            }
+            currentYear.addData(currentSum);
+            lastYear.addData(lastSum);
+        }
+
+        LineData data = new LineData();
+        ArrayList<LineDataset> datasets = new ArrayList();
+        datasets.add(lastYear);
+        datasets.add(currentYear);
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new LineChart(data, options).toJson();
+
+    }
+
+    public String getLineChartTotalPastDueAmount(ArrayList<APCPRequest> requestList, String titleStr) {
+        ArrayList<String> labels = new ArrayList();
+        LineOptions options = new LineOptions();
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText(titleStr);
+
+        options.setTitle(title);
+
+        Calendar current = Calendar.getInstance();
+
+        Calendar last = Calendar.getInstance();
+        last.add(Calendar.YEAR, -1);
+
+        labels.add("Q1");
+        labels.add("Q2");
+        labels.add("Q3");
+        labels.add("Q4");
+
+        LineDataset currentYear = new LineDataset();
+        currentYear.setLabel(String.valueOf(current.get(Calendar.YEAR)));
+        currentYear.addPointBackgroundColor(Color.GREEN);
+        currentYear.setBorderColor(Color.GREEN);
+        currentYear.setBackgroundColor(Color.TRANSPARENT);
+
+        LineDataset lastYear = new LineDataset();
+        lastYear.setLabel(String.valueOf(last.get(Calendar.YEAR)));
+        lastYear.addPointBackgroundColor(Color.LIGHT_BLUE);
+        lastYear.setBorderColor(Color.LIGHT_BLUE);
+        lastYear.setBackgroundColor(Color.TRANSPARENT);
+
+        Calendar dateRecorded = Calendar.getInstance();
+
+        double currentSum = 0;
+        double lastSum = 0;
+
+        ArrayList<Integer> currentARBOs = new ArrayList();
+        ArrayList<Integer> lastARBOs = new ArrayList();
+
+        for (String label : labels) {
+            for (APCPRequest req : requestList) {
+                if (!req.getUnsettledPastDueAccounts().isEmpty()) {
+                    for (PastDueAccount pda : req.getUnsettledPastDueAccounts()) {
+                        dateRecorded.setTime(pda.getDateRecorded());
+                        if (label.equalsIgnoreCase("Q1")) {
+                            if (dateRecorded.get(Calendar.MONTH) == 0 || dateRecorded.get(Calendar.MONTH) == 1 || dateRecorded.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
+                                if (dateRecorded.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                    currentSum += pda.getPastDueAmount();
+                                } else if (dateRecorded.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                    lastSum += pda.getPastDueAmount();
+                                }
+                            }
+                        } else if (label.equalsIgnoreCase("Q2")) {
+                            if (dateRecorded.get(Calendar.MONTH) == 3 || dateRecorded.get(Calendar.MONTH) == 4 || dateRecorded.get(Calendar.MONTH) == 5) { // FIRST, CHECK IF Q1
+                                if (dateRecorded.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                    currentSum += pda.getPastDueAmount();
+                                } else if (dateRecorded.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                    lastSum += pda.getPastDueAmount();
+                                }
+                            }
+                        } else if (label.equalsIgnoreCase("Q3")) {
+                            if (dateRecorded.get(Calendar.MONTH) == 6 || dateRecorded.get(Calendar.MONTH) == 7 || dateRecorded.get(Calendar.MONTH) == 8) { // FIRST, CHECK IF Q1
+                                if (dateRecorded.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                    currentSum += pda.getPastDueAmount();
+                                } else if (dateRecorded.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                    lastSum += pda.getPastDueAmount();
+                                }
+                            }
+                        } else if (label.equalsIgnoreCase("Q4")) {
+                            if (dateRecorded.get(Calendar.MONTH) == 9 || dateRecorded.get(Calendar.MONTH) == 10 || dateRecorded.get(Calendar.MONTH) == 11) { // FIRST, CHECK IF Q1
+                                if (dateRecorded.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                    currentSum += pda.getPastDueAmount();
+                                } else if (dateRecorded.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                    lastSum += pda.getPastDueAmount();
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            currentYear.addData(currentSum);
+            lastYear.addData(lastSum);
+        }
+
+        LineData data = new LineData();
+        ArrayList<LineDataset> datasets = new ArrayList();
+        datasets.add(lastYear);
+        datasets.add(currentYear);
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new LineChart(data, options).toJson();
+
+    }
+
+    //CAPDEV
+    public String getStackedBarChartCAPDEVOnTrackDelayedByStatus(ArrayList<ARBO> arboList, int status, int userType, String titleStr) {
+
+        ArrayList<String> labels = new ArrayList();
+        CAPDEVDAO capdevDAO = new CAPDEVDAO();
+
+        BarOptions options = new BarOptions();
+        BarScale scales = new BarScale();
+        XAxis x = new XAxis();
+        YAxis y = new YAxis();
+        x.setStacked(Boolean.TRUE);
+        y.setStacked(Boolean.TRUE);
+        scales.addxAxes(x);
+        scales.addyAxes(y);
+        options.setScales(scales);
+
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText(titleStr);
+
+        options.setTitle(title);
+
+        // SETTING OF LABELS
+        if (userType == 3) { // PROVINCIAL
+            if (!arboList.isEmpty()) {
+                labels.add(arboList.get(0).getProvOfficeCodeDesc());
+            }
+        } else if (userType == 2) { // REGIONAL
+            if (!arboList.isEmpty()) {
+                for (ARBO arbo : arboList) {
+                    if (!labels.contains(arbo.getProvOfficeCodeDesc())) {
+                        labels.add(arbo.getProvOfficeCodeDesc());
+                    }
+                }
+            }
+        } else if (userType == 1) { // CENTRAL
+            if (!arboList.isEmpty()) {
+                for (ARBO arbo : arboList) {
+                    if (!labels.contains(arbo.getArboRegionDesc())) {
+                        labels.add(arbo.getArboRegionDesc());
+                    }
+                }
+            }
+        }
+
+        BarDataset onTrack = new BarDataset();
+        onTrack.setLabel("ON TRACK");
+        onTrack.setBackgroundColor(Color.GREEN);
+
+        BarDataset delayed = new BarDataset();
+        delayed.setLabel("DELAYED");
+        delayed.setBackgroundColor(Color.YELLOW);
+
+        for (String label : labels) {
+            int onTrackCount = 0;
+            int delayedCount = 0;
+            for (ARBO arbo : arboList) {
+                if (userType == 3) { // PROVINCIAL
+                    if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) {
+                        for (APCPRequest req : arbo.getRequestList()) {
+                            onTrackCount += capdevDAO.getOnTrackPlansPerStatus(req.getPlans(), status);
+                            delayedCount += capdevDAO.getDelayedPlansPerStatus(req.getPlans(), status);
+                        }
+                    }
+                } else if (userType == 2) { // REGIONAL
+                    if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) {
+                        for (APCPRequest req : arbo.getRequestList()) {
+                            onTrackCount += capdevDAO.getOnTrackPlansPerStatus(req.getPlans(), status);
+                            delayedCount += capdevDAO.getDelayedPlansPerStatus(req.getPlans(), status);
+                        }
+                    }
+                } else if (userType == 1) { // CENTRAL
+                    if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) {
+                        for (APCPRequest req : arbo.getRequestList()) {
+                            onTrackCount += capdevDAO.getOnTrackPlansPerStatus(req.getPlans(), status);
+                            delayedCount += capdevDAO.getDelayedPlansPerStatus(req.getPlans(), status);
+                        }
+                    }
+                }
+            }
+            onTrack.addData(onTrackCount);
+            delayed.addData(delayedCount);
+        }
+
+        BarData data = new BarData();
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(onTrack);
+        datasets.add(delayed);
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new BarChart(data, options).setHorizontal().toJson();
+    }
+
+    public String getLineChartCAPDEVTotalARBOs(ArrayList<CAPDEVPlan> planList, String titleStr) {
+
+        APCPRequestDAO requestDAO = new APCPRequestDAO();
+        ArrayList<String> labels = new ArrayList();
+        LineOptions options = new LineOptions();
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText(titleStr);
+
+        options.setTitle(title);
+
+        Calendar current = Calendar.getInstance();
+
+        Calendar last = Calendar.getInstance();
+        last.add(Calendar.YEAR, -1);
+
+        labels.add("Q1");
+        labels.add("Q2");
+        labels.add("Q3");
+        labels.add("Q4");
+
+        LineDataset currentYear = new LineDataset();
+        currentYear.setLabel(String.valueOf(current.get(Calendar.YEAR)));
+        currentYear.addPointBackgroundColor(Color.GREEN);
+        currentYear.setBorderColor(Color.GREEN);
+        currentYear.setBackgroundColor(Color.TRANSPARENT);
+
+        LineDataset lastYear = new LineDataset();
+        lastYear.setLabel(String.valueOf(last.get(Calendar.YEAR)));
+        lastYear.addPointBackgroundColor(Color.LIGHT_BLUE);
+        lastYear.setBorderColor(Color.LIGHT_BLUE);
+        lastYear.setBackgroundColor(Color.TRANSPARENT);
+
+        Calendar implementedDate = Calendar.getInstance();
+
+        int currentCount = 0;
+        int lastCount = 0;
+
+        ArrayList<Integer> currentARBOs = new ArrayList();
+        ArrayList<Integer> lastARBOs = new ArrayList();
+
+        for (String label : labels) {
+            for (CAPDEVPlan plan : planList) {
+                implementedDate.setTime(plan.getImplementedDate());
+                if (label.equalsIgnoreCase("Q1")) {
+                    if (implementedDate.get(Calendar.MONTH) == 0 || implementedDate.get(Calendar.MONTH) == 1 || implementedDate.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
+
+                        APCPRequest req = requestDAO.getRequestByID(plan.getRequestID());
+
+                        if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                            if (!currentARBOs.contains(req.getArboID())) { // IF NOT YET ON THE LIST, ADD
+                                currentARBOs.add(req.getArboID()); // ADDS THE ARBO ID
+                                currentCount++; // ADDS THE COUNT FOR Q1
+                            }
+                        } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                            if (!lastARBOs.contains(req.getArboID())) {
+                                lastARBOs.add(req.getArboID());
+                                lastCount++;
+                            }
+                        }
+                    }
+                } else if (label.equalsIgnoreCase("Q2")) {
+                    if (implementedDate.get(Calendar.MONTH) == 3 || implementedDate.get(Calendar.MONTH) == 4 || implementedDate.get(Calendar.MONTH) == 5) { // FIRST, CHECK IF Q1
+
+                        APCPRequest req = requestDAO.getRequestByID(plan.getRequestID());
+
+                        if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                            if (!currentARBOs.contains(req.getArboID())) { // IF NOT YET ON THE LIST, ADD
+                                currentARBOs.add(req.getArboID()); // ADDS THE ARBO ID
+                                currentCount++; // ADDS THE COUNT FOR Q1
+                            }
+                        } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                            if (!lastARBOs.contains(req.getArboID())) {
+                                lastARBOs.add(req.getArboID());
+                                lastCount++;
+                            }
+                        }
+                    }
+                } else if (label.equalsIgnoreCase("Q3")) {
+                    if (implementedDate.get(Calendar.MONTH) == 6 || implementedDate.get(Calendar.MONTH) == 7 || implementedDate.get(Calendar.MONTH) == 8) { // FIRST, CHECK IF Q1
+
+                        APCPRequest req = requestDAO.getRequestByID(plan.getRequestID());
+
+                        if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                            if (!currentARBOs.contains(req.getArboID())) { // IF NOT YET ON THE LIST, ADD
+                                currentARBOs.add(req.getArboID()); // ADDS THE ARBO ID
+                                currentCount++; // ADDS THE COUNT FOR Q1
+                            }
+                        } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                            if (!lastARBOs.contains(req.getArboID())) {
+                                lastARBOs.add(req.getArboID());
+                                lastCount++;
+                            }
+                        }
+                    }
+                } else if (label.equalsIgnoreCase("Q4")) {
+                    if (implementedDate.get(Calendar.MONTH) == 9 || implementedDate.get(Calendar.MONTH) == 10 || implementedDate.get(Calendar.MONTH) == 11) { // FIRST, CHECK IF Q1
+
+                        APCPRequest req = requestDAO.getRequestByID(plan.getRequestID());
+
+                        if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                            if (!currentARBOs.contains(req.getArboID())) { // IF NOT YET ON THE LIST, ADD
+                                currentARBOs.add(req.getArboID()); // ADDS THE ARBO ID
+                                currentCount++; // ADDS THE COUNT FOR Q1
+                            }
+                        } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                            if (!lastARBOs.contains(req.getArboID())) {
+                                lastARBOs.add(req.getArboID());
+                                lastCount++;
+                            }
+                        }
+                    }
+                }
+
+            }
+            currentYear.addData(currentCount);
+            lastYear.addData(lastCount);
+        }
+
+        LineData data = new LineData();
+        ArrayList<LineDataset> datasets = new ArrayList();
+        datasets.add(lastYear);
+        datasets.add(currentYear);
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new LineChart(data, options).toJson();
+
+    }
+
+    public String getLineChartCAPDEVTotalARBs(ArrayList<CAPDEVPlan> planList, String titleStr) {
+        ArrayList<String> labels = new ArrayList();
+        LineOptions options = new LineOptions();
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText(titleStr);
+
+        options.setTitle(title);
+
+        Calendar current = Calendar.getInstance();
+
+        Calendar last = Calendar.getInstance();
+        last.add(Calendar.YEAR, -1);
+
+        labels.add("Q1");
+        labels.add("Q2");
+        labels.add("Q3");
+        labels.add("Q4");
+
+        LineDataset currentYear = new LineDataset();
+        currentYear.setLabel(String.valueOf(current.get(Calendar.YEAR)));
+        currentYear.addPointBackgroundColor(Color.GREEN);
+        currentYear.setBorderColor(Color.GREEN);
+        currentYear.setBackgroundColor(Color.TRANSPARENT);
+
+        LineDataset lastYear = new LineDataset();
+        lastYear.setLabel(String.valueOf(last.get(Calendar.YEAR)));
+        lastYear.addPointBackgroundColor(Color.LIGHT_BLUE);
+        lastYear.setBorderColor(Color.LIGHT_BLUE);
+        lastYear.setBackgroundColor(Color.TRANSPARENT);
+
+        Calendar implementedDate = Calendar.getInstance();
+
+        int currentCount = 0;
+        int lastCount = 0;
+
+        ArrayList<Integer> currentARBs = new ArrayList();
+        ArrayList<Integer> lastARBs = new ArrayList();
+
+        for (String label : labels) {
+            for (CAPDEVPlan plan : planList) {
+
+                implementedDate.setTime(plan.getImplementedDate());
+
+                if (label.equalsIgnoreCase("Q1")) {
+                    if (implementedDate.get(Calendar.MONTH) == 0 || implementedDate.get(Calendar.MONTH) == 1 || implementedDate.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
+                        for (int arbID : plan.getAllAttenededParticipants()) {
+                            if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                if (!currentARBs.contains(arbID)) { // IF NOT YET ON THE LIST, ADD
+                                    currentARBs.add(arbID); // ADDS THE ARB ID
+                                    currentCount++; // ADDS THE COUNT FOR Q1
+                                }
+                            } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                if (!lastARBs.contains(arbID)) {
+                                    lastARBs.add(arbID);
+                                    lastCount++;
+                                }
+                            }
+                        }
+                    }
+                } else if (label.equalsIgnoreCase("Q2")) {
+                    if (implementedDate.get(Calendar.MONTH) == 3 || implementedDate.get(Calendar.MONTH) == 4 || implementedDate.get(Calendar.MONTH) == 5) { // FIRST, CHECK IF Q1
+                        for (int arbID : plan.getAllAttenededParticipants()) {
+                            if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                if (!currentARBs.contains(arbID)) { // IF NOT YET ON THE LIST, ADD
+                                    currentARBs.add(arbID); // ADDS THE ARB ID
+                                    currentCount++; // ADDS THE COUNT FOR Q1
+                                }
+                            } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                if (!lastARBs.contains(arbID)) {
+                                    lastARBs.add(arbID);
+                                    lastCount++;
+                                }
+                            }
+                        }
+                    }
+                } else if (label.equalsIgnoreCase("Q3")) {
+                    if (implementedDate.get(Calendar.MONTH) == 6 || implementedDate.get(Calendar.MONTH) == 7 || implementedDate.get(Calendar.MONTH) == 8) { // FIRST, CHECK IF Q1
+                        for (int arbID : plan.getAllAttenededParticipants()) {
+                            if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                if (!currentARBs.contains(arbID)) { // IF NOT YET ON THE LIST, ADD
+                                    currentARBs.add(arbID); // ADDS THE ARB ID
+                                    currentCount++; // ADDS THE COUNT FOR Q1
+                                }
+                            } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                if (!lastARBs.contains(arbID)) {
+                                    lastARBs.add(arbID);
+                                    lastCount++;
+                                }
+                            }
+                        }
+                    }
+                } else if (label.equalsIgnoreCase("Q4")) {
+                    if (implementedDate.get(Calendar.MONTH) == 9 || implementedDate.get(Calendar.MONTH) == 10 || implementedDate.get(Calendar.MONTH) == 11) { // FIRST, CHECK IF Q1
+                        for (int arbID : plan.getAllAttenededParticipants()) {
+                            if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                if (!currentARBs.contains(arbID)) { // IF NOT YET ON THE LIST, ADD
+                                    currentARBs.add(arbID); // ADDS THE ARB ID
+                                    currentCount++; // ADDS THE COUNT FOR Q1
+                                }
+                            } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                if (!lastARBs.contains(arbID)) {
+                                    lastARBs.add(arbID);
+                                    lastCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            currentYear.addData(currentCount);
+            lastYear.addData(lastCount);
+        }
+
+        LineData data = new LineData();
+        ArrayList<LineDataset> datasets = new ArrayList();
+        datasets.add(lastYear);
+        datasets.add(currentYear);
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new LineChart(data, options).toJson();
+
+    }
+
     //</editor-fold>
 }

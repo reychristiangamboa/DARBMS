@@ -9,6 +9,7 @@ import com.MVC.DAO.APCPRequestDAO;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -56,7 +57,6 @@ public class APCPRequest {
     private ArrayList<PastDueAccount> pastDueReasons = new ArrayList();
     private Date dateLastRelease;
 
-    
     public ArrayList<Disbursement> getDisbursements() {
         return disbursements;
     }
@@ -70,30 +70,30 @@ public class APCPRequest {
         for (APCPRelease r : this.releases) {
             value += r.getOSBalance();
         }
-        for(Repayment p : this.arboRepayments){
+        for (Repayment p : this.arboRepayments) {
             value -= p.getAmount();
         }
         return value;
     }
-    
-    public double getTotalARBOSBalance(int arbID){
+
+    public double getTotalARBOSBalance(int arbID) {
         APCPRequestDAO dao = new APCPRequestDAO();
         ArrayList<Repayment> arbRepayments = dao.getArbRepaymentsByARB(arbID);
         ArrayList<Disbursement> arbDisbursements = dao.getAllDisbursementsByARB(arbID);
-        
-        double totDisbursements  = 0;
-        for(Disbursement d : arbDisbursements){
+
+        double totDisbursements = 0;
+        for (Disbursement d : arbDisbursements) {
             totDisbursements += d.getDisbursedAmount();
         }
-        
+
         double totRepayments = 0;
-        for(Repayment r : arbRepayments){
+        for (Repayment r : arbRepayments) {
             totRepayments += r.getAmount();
         }
-        
+
         return totDisbursements - totRepayments;
     }
-    
+
     public Date getDateCompleted() {
         return dateCompleted;
     }
@@ -129,7 +129,7 @@ public class APCPRequest {
     public int getArboID() {
         return arboID;
     }
-    
+
     public void setArboID(int arboID) {
         this.arboID = arboID;
     }
@@ -165,7 +165,7 @@ public class APCPRequest {
     public void setLoanTermDuration(int loanTermDuration) {
         this.loanTermDuration = loanTermDuration;
     }
-    
+
     public double getLoanAmount() {
         return loanAmount;
     }
@@ -253,7 +253,7 @@ public class APCPRequest {
     public void setIsNewAccessingRequest(int isNewAccessingRequest) {
         this.isNewAccessingRequest = isNewAccessingRequest;
     }
-    
+
     public int getRequestedTo() {
         return requestedTo;
     }
@@ -317,7 +317,7 @@ public class APCPRequest {
     public void setPlans(ArrayList<CAPDEVPlan> plans) {
         this.plans = plans;
     }
-    
+
     public double getTotalPDAAmountPerRequest() {
         double val = 0;
         for (PastDueAccount pda : this.unsettledPastDueAccounts) {
@@ -375,7 +375,7 @@ public class APCPRequest {
     public void setArboRepayments(ArrayList<Repayment> repayments) {
         this.arboRepayments = repayments;
     }
-    
+
     public ArrayList<Repayment> getArbRepayments() {
         return arbRepayments;
     }
@@ -453,7 +453,7 @@ public class APCPRequest {
         }
         return null;
     }
-    
+
     public Date getDateFirstReleasedPerRequest() {
         if (!releases.isEmpty()) {
             return releases.get(0).getReleaseDate();
@@ -469,9 +469,9 @@ public class APCPRequest {
         StringBuilder sb = new StringBuilder();
         if (!this.pastDueReasons.isEmpty()) {
             for (PastDueAccount pda : this.pastDueReasons) {
-                if(pda.getReasonPastDue() == this.pastDueReasons.get(this.pastDueReasons.size()-1).getReasonPastDue()){
+                if (pda.getReasonPastDue() == this.pastDueReasons.get(this.pastDueReasons.size() - 1).getReasonPastDue()) {
                     sb.append(pda.getReasonPastDueDesc());
-                }else{
+                } else {
                     sb.append(pda.getReasonPastDueDesc() + ", ");
                 }
             }
@@ -479,7 +479,7 @@ public class APCPRequest {
 
         return sb.toString();
     }
-    
+
     public boolean checkARBOHadAPCPOrientation() {
         for (CAPDEVPlan plan : this.plans) {
             for (CAPDEVActivity act : plan.getActivities()) {
@@ -490,7 +490,18 @@ public class APCPRequest {
         }
         return false;
     }
-    
-    
+
+    public boolean checkIfRequestIsOnTrack(Date date) {
+
+        if (getDateDiff(date) < 5) {
+            return true;
+        }
+        return false;
+    }
+
+    public int getDateDiff(Date date1) {
+        long diffInMillies = System.currentTimeMillis() - date1.getTime();
+        return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
 
 }

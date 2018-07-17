@@ -20,15 +20,14 @@ public class ProceedAssignPointPerson extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
         int planID = Integer.parseInt(request.getParameter("planID"));
-        if(request.getParameter("linksfarm") != null){
-            request.setAttribute("linksfarm", 1);
-        }
+        
         if(request.getParameter("requestID") != null){
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
         }
         request.setAttribute("planID", planID);
-        request.getRequestDispatcher("provincial-field-officer-approved-capdev-proposals.jsp").forward(request, response);
+        request.getRequestDispatcher("PFO-CAPDEV-view-approved-plan.jsp").forward(request, response);
     }
 
 }

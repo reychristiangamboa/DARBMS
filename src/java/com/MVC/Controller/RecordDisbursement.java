@@ -47,25 +47,22 @@ public class RecordDisbursement extends BaseServlet {
         for (Disbursement disbursement : req.getDisbursements()) {
             limit += disbursement.getDisbursedAmount();
         }
-
-        finalLimit = req.getLoanAmount() - limit;
-
-        String[] vals = request.getParameter("disbursementAmount").split(",");
-        StringBuilder sb = new StringBuilder();
-        for (String val : vals) {
-            sb.append(val);
-        }
         
-        String[] vals2 = request.getParameter("OSBalance").split(",");
-        StringBuilder sb2 = new StringBuilder();
-        for (String val : vals2) {
-            sb2.append(val);
-        }
+        double OSBalance = Double.parseDouble(request.getParameter("disbursementAmount")) * req.getLoanReason().getLoanTerm().getArbInterestRate();
 
-        String finAmount = sb.toString();
-        String OSBalance = sb2.toString();
+        finalLimit = req.getTotalReleasedAmount() - limit;
 
-        double finalVal = Double.parseDouble(finAmount) * arbIDs.length;
+//        String[] vals = request.getParameter("disbursementAmount").split(",");
+//        StringBuilder sb = new StringBuilder();
+//        for (String val : vals) {
+//            sb.append(val);
+//        }
+//        
+//        String finAmount = sb.toString();
+        
+
+//        double finalVal = Double.parseDouble(finAmount) * arbIDs.length;
+        double finalVal = Double.parseDouble(request.getParameter("disbursementAmount")) * arbIDs.length;
 
         if (finalVal > finalLimit) {
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
@@ -79,8 +76,8 @@ public class RecordDisbursement extends BaseServlet {
                 d.setArbID(Integer.parseInt(arbID));
                 d.setRequestID(Integer.parseInt(request.getParameter("requestID")));
 
-                d.setDisbursedAmount(Double.parseDouble(finAmount));
-                d.setOSBalance(Double.parseDouble(request.getParameter("disbursementOSBalance")));
+                d.setDisbursedAmount(Double.parseDouble(request.getParameter("disbursementAmount")));
+                d.setOSBalance(OSBalance);
 
                 java.sql.Date disbursedDate = null;
 
@@ -99,7 +96,6 @@ public class RecordDisbursement extends BaseServlet {
             }
 
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-            request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
             request.setAttribute("success", "Disbursement successfully recorded!");
             request.getRequestDispatcher("monitor-disbursement.jsp").forward(request, response);
 

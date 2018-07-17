@@ -33,8 +33,8 @@
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
 
-            <%@include file="/jspf/field-officer-navbar.jspf" %>
-            <%@include file="/jspf/pfo-apcp-sidebar.jspf" %>
+            <%@include file="jspf/field-officer-navbar.jspf" %>
+            <%@include file="jspf/pfo-apcp-sidebar.jspf" %>
             <%
                 int arboID = (Integer) request.getAttribute("arboID");
                 ARBO arbo = arboDAO.getARBOByID(arboID);
@@ -70,43 +70,7 @@
                         <!-- /.box-header -->
                         <form method="post">
                             <div class="box-body">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="">Name of ARBO</label>
-                                            <input type="text" class="form-control" value="<%out.print(arbo.getArboName());%>"disabled >
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <!-- /.form-group -->
-                                        <div class="form-group">
-                                            <label for="Type">ARBO Type</label>
-                                            <input type="text" class="form-control" id="Type" value="<%out.print(arbo.getArboTypeDesc());%>">
-                                        </div>
-                                        <!-- /.form-group -->
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>ARBO Members</label>
-
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
-                                                <div class="input-group-btn">
-                                                    <button type="button" class="btn btn-info">View</button>
-                                                </div>
-                                            </div>
-                                            <!-- /.input group -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <label>Address</label>
-                                            <input type="text" class="form-control" id="address" value="<%out.print(arbo.getFullAddress());%>" disabled>
-                                        </div>
-                                    </div>
-                                </div>
+                                <%@include file="jspf/arbo-information.jspf" %>
                                 <!-- /.row -->
                                 <div class="box-header with-border">
                                     <h4 class="box-title"><strong>Conduit Qualification Checklist</strong></h4>
@@ -364,7 +328,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <input type="hidden" name="arboID" value="<%out.print(arbo.getArboID());%>">
-                                            <button type="submit" name="manual" onclick="form.action = 'RequestConduit'" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i> Submit</button>
+                                            <button type="submit" name="manual" onclick="form.action = 'RequestLoan'" class="btn btn-primary pull-right"><i class="fa fa-send margin-r-5"></i> Submit</button>
                                         </div>
                                     </div>
                                     <!--                                            /.modal-content -->

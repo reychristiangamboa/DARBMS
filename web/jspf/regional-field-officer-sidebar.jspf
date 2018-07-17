@@ -46,7 +46,7 @@
     ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
     ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(4, (Integer) session.getAttribute("regOfficeCode"));
     ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(5, (Integer) session.getAttribute("regOfficeCode"));
-    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(7, (Integer) session.getAttribute("regOfficeCode"));
+    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(6, (Integer) session.getAttribute("regOfficeCode"));
 
     ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
     ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(regionalRequests);

@@ -12,7 +12,7 @@
 
         <tbody>
             <%
-                for (Repayment repayment : r.getRepayments()) {
+                for (Repayment repayment : r.getArbRepayments()) {
                     User u = new User();
                     u = uDAO99.searchUser(repayment.getRecordedBy());
                     ARB arb = new ARB();
@@ -21,7 +21,7 @@
             <tr>
                 <td><%out.print(currency.format(repayment.getAmount()));%></td>
                 <td><%out.print(repayment.getDateRepayment());%></td>
-                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                <td><a href="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
                 <td><%out.print(u.getFullName());%></td>
             </tr>
             <%}%>
@@ -45,4 +45,111 @@
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-arb-repayment-modal">Add Repayment</button>
         <%}%>
     </div>
+</div>
+
+<div class="modal fade" id="add-arb-repayment-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Record Repayment</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <center>
+                            <div class="form-group">
+                                <label for=""></label>
+                                <select name="arbID" id='arbRepaymentSelect' class="form-control select2" onchange='chg()'>
+                                    <%for(ARB arb : r.getRecipients()){%>
+                                    <option value="<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></option>
+                                    <%}%>
+                                </select>
+                            </div>
+                        </center>
+                    </div>
+
+                    <div class="row" id='arbRepaymentDetails'>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">ARB</label>
+                                <input type="text" class="form-control" name='arbIDRepayment' disabled/>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">O/S Balance</label>
+                                <input type="text" class="form-control" name='arbRepaymentOSBalance' disabled/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="">Amount</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i>&#8369;</i>
+                                    </div>
+                                    <input type="text" class="form-control numberOnly" name="arbRepaymentAmount" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="">Repayment Date</label>
+                                <div class="input-group date">
+                                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                    <input type="date" class="form-control" name="arbRepaymentDate" />        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" name="manual" onclick="form.action = 'RecordARBRepayment'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
+</div>
+<div class="modal fade" id="import-arb-repayment-modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Import Repayments</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="">Import File</label>
+                                <input type="file" class="form-control" name="file" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" name="manual" onclick="form.action = 'ImportRepayment'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
 </div>

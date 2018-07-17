@@ -35,8 +35,11 @@ public class SelectARBORequest extends BaseServlet {
             request.getRequestDispatcher("PFO-APCP-request-access-select-arbo.jsp").forward(request, response);
         } else {
 
-            request.setAttribute("newAccessing", true);
-            request.getRequestDispatcher("PFO-APCP-request-apcp-access.jsp").forward(request, response);
+            if (arbo.getQualifiedSince() != null) {
+                request.getRequestDispatcher("PFO-APCP-request-loan.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("PFO-APCP-request-apcp-access.jsp").forward(request, response);
+            }
 
         }
 

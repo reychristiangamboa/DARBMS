@@ -20,7 +20,7 @@
             <%if ((Integer) session.getAttribute("userType") == 1) {%>
             <%@include file="jspf/admin-sidebar.jspf"%>
             <%} else if ((Integer) session.getAttribute("userType") == 2) {%>
-            <%@include file="jspf/point-person-sidebar.jspf"%>
+            <%@include file="jspf/pp-apcp-sidebar.jspf"%>
             <%} else if ((Integer) session.getAttribute("userType") == 3) {%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
             <%} else if ((Integer) session.getAttribute("userType") == 4) {%>
@@ -38,10 +38,11 @@
                 ArrayList<CAPDEVActivity> activities = capdevDAO99.getCAPDEVActivities();
                 APCPRequest r = apcpRequestDAO99.getRequestByID((Integer)request.getAttribute("requestID"));
                 
-                ARBO a = arboDAO99.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO99.getAllARBsARBO(r.getArboID());
                 ArrayList<APCPRelease> releaseList = apcpRequestDAO99.getAllAPCPReleasesByRequest((Integer) request.getAttribute("requestID"));
                 ArrayList<PastDueAccount> reasons = capdevDAO99.getAllPastDueReasons();
+                
+                
                     
         int reqID = (Integer) request.getAttribute("requestID");
         APCPRequest req = apcpRequestDAO99.getRequestByID(reqID);
@@ -89,7 +90,7 @@
                                 </div>  
                                 <div class="box-body"> 
                                     <div class="box-group" id="accordion">
-                                        <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                        <!--ARBO-->
                                         <div class="panel box box-info">
                                             <div class="box-header with-border">
                                                 <h4 class="box-title">
@@ -104,6 +105,7 @@
                                                 </div>
                                             </div> 
                                         </div>
+                                        <!--APCP-->
                                         <div class="panel box box-info">
                                             <div class="box-header with-border">
                                                 <h4 class="box-title">
@@ -134,7 +136,23 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
+                                        <!--DISBURSEMENTS-->
+                                        <div class="panel box box-info">
+                                            <div class="box-header with-border">
+                                                <h4 class="box-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseWEW">
+                                                        Disbursement Information
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseWEW" class="panel-collapse collapse">
+                                                <div class="box-body">
+                                                    <%@include file="jspf/disbursement-info.jspf" %>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <!--ARBO REPAYMENT-->
                                         <div class="panel box box-primary">
                                             <div class="box-header with-border">
@@ -150,7 +168,7 @@
                                                 </div>
                                             </div>
                                         </div> 
-                                        
+
                                         <!--ARB REPAYMENT-->  
                                         <div class="panel box box-primary">
                                             <div class="box-header with-border">
@@ -166,7 +184,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <!--PAST DUE REPAYMENT-->
                                         <div class="panel box box-primary">
                                             <div class="box-header with-border">
@@ -188,7 +206,7 @@
 
                         </div>
                     </div>
-                    <%@include file="jspf/modal-info.jspf"%>
+                    
                 </section>
                 <!-- /.col -->
             </div>
@@ -201,10 +219,19 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 var arboInterestRate = <%out.print(r.getLoanReason().getLoanTerm().getArboInterestRate());%>
+                alert(arboInterestRate);
                 $('#releaseAmount').on('input', function () {
                     var val = this.value * arboInterestRate;
                     $('#releaseOSBalance').val(val);
                 });
+                
+                var interestRate = <%out.print(r.getLoanReason().getLoanTerm().getArbInterestRate());%>
+
+                $('#disbursementAmount').on('input', function () {
+                    var val = this.value * interestRate;
+                    $('#disbursementOSBalance').val(val);
+                });
+                
             });
 
             function chg() {

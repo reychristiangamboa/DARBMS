@@ -71,7 +71,7 @@ public class RecordARBORepayment extends BaseServlet {
                     java.util.Date parsedRepaymentDate = sdf.parse(request.getParameter("arboRepaymentDate"));
                     repaymentDate = new java.sql.Date(parsedRepaymentDate.getTime());
                 } catch (ParseException ex) {
-                    Logger.getLogger(RecordRepayment.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(RecordARBORepayment.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
                 r.setDateRepayment(repaymentDate);

@@ -17,12 +17,12 @@
 
         <tbody>
             <%
-                for (APCPRelease release : r.getReleases()) {
+                for (APCPRelease release : req.getReleases()) {
                     User u = new User();
                     u = uDAO99.searchUser(release.getReleasedBy());
             %>
             <tr>
-                <td><a target="_blank" rel="noopener noreferrer" href="MonitorDisbursement?releaseID=<%out.print(release.getReleaseID());%>&requestID=<%out.print(r.getRequestID());%>"><%out.print(currency.format(release.getReleaseAmount()));%></a></td>
+                <td><%out.print(currency.format(release.getReleaseAmount()));%></td>
                 <td><%out.print(release.getReleaseDate());%></td>
                 <td><%out.print(u.getFullName());%></td>
             </tr>
@@ -38,4 +38,93 @@
         </tfoot>
 
     </table>
+</div>
+
+<div class="modal fade" id="add-release-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Record Release</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">Release Amount</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i>&#8369;</i>
+                                    </div>
+                                    <input type="text" id="releaseAmount" class="form-control numberOnly" name="releaseAmount" autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">O/S Balance</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i>&#8369;</i>
+                                    </div>
+                                    <input type="text" id="releaseOSBalance" class="form-control numberOnly" name="releaseOSBalance" autocomplete="off" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label for="">Release Date</label>
+                                <div class="input-group date">
+                                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                    <input type="date" class="form-control" name="releaseDate" />        
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" onclick="form.action = 'RecordRequestRelease'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <!--                                        /.modal-dialog -->
+</div>
+<div class="modal fade" id="import-release-modal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Import Releases</h4>
+            </div>
+
+            <form method="post">
+                <div class="modal-body" id="modalBody">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="">Import File</label>
+                                <input type="file" class="form-control" name="file" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                    <button type="submit" name="manual" onclick="form.action = 'ImportRelease'" class="btn btn-primary pull-right">Submit</button>
+                </div>
+            </form>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
 </div>

@@ -19,7 +19,7 @@
             <%if ((Integer) session.getAttribute("userType") == 1) {%>
             <%@include file="jspf/admin-sidebar.jspf"%>
             <%} else if ((Integer) session.getAttribute("userType") == 2) {%>
-            <%@include file="jspf/point-person-sidebar.jspf"%>
+            <%@include file="jspf/pp-apcp-sidebar.jspf"%>
             <%} else if ((Integer) session.getAttribute("userType") == 3) {%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
             <%} else if ((Integer) session.getAttribute("userType") == 4) {%>
@@ -38,6 +38,8 @@
                 APCPRequest r = apcpRequestDAO99.getRequestByID((Integer)request.getAttribute("requestID"));
                 ARBO a = arboDAO99.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO99.getAllARBsARBO(r.getArboID());
+                
+                APCPRelease release = apcpRequestDAO99.getAPCPReleaseByID((Integer)request.getAttribute("releaseID"));
                 
         int reqID = (Integer) request.getAttribute("requestID");
         APCPRequest req = apcpRequestDAO99.getRequestByID(reqID);
@@ -209,6 +211,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
+                                        <input type="hidden" name="releaseID" value="<%=release.getReleaseID()%>">
                                         <button type="submit" name="manual" onclick="form.action = 'RecordDisbursement'" class="btn btn-primary pull-right">Submit</button>
                                     </div>
                                 </form>

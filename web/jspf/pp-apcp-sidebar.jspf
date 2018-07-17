@@ -10,6 +10,9 @@
     UserDAO uDAO = new UserDAO();
     EvaluationDAO eDAO = new EvaluationDAO();
     
+    ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
+    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(6, (Integer) session.getAttribute("provOfficeCode"));
+    
 %>
 
 <!-- Left side column. contains the logo and sidebar -->
@@ -41,7 +44,7 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
             <li>
-                <a href="view-apcp-status.jsp">
+                <a href="PP-APCP-view-apcp-requests.jsp">
                     <i class="fa fa-edit"></i> <span> View APCP</span>
                 </a>
             </li>

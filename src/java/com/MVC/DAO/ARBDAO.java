@@ -73,6 +73,7 @@ public class ARBDAO {
                 arb.setArbStatus(rs.getInt("arbStatus"));
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
                 arb.setClusterID(rs.getInt("clusterID"));
+                //arb.setNonARB(rs.getBoolean("nonARB"));
             } else {
                 return null;
             }
@@ -164,6 +165,7 @@ public class ARBDAO {
                 arb.setArbStatus(rs.getInt("arbStatus"));
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
                 arb.setClusterID(rs.getInt("clusterID"));
+                //arb.setNonARB(rs.getBoolean("nonARB"));
                 arbList.add(arb);
             }
             pstmt.close();
@@ -345,7 +347,7 @@ public class ARBDAO {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`arbs` (`arboID`, `isCOMAT`, `firstName`, `middleName`, "
                     + "`lastName`, `memberSince`,`arbUnitNumStreet`,`brgyCode`,`cityMunCode`,`provCode`,`regCode`, "
-                    + "`gender`, `educationLevel`, `landArea`,`TIN`,`arbID`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                    + "`gender`, `educationLevel`, `landArea`,`TIN`,`arbID`, `nonARB`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
             pstmt = con.prepareStatement(query);
             pstmt.setInt(1, arb.getArboID());
             pstmt.setInt(2, arb.getIsCOMAT());
@@ -363,6 +365,7 @@ public class ARBDAO {
             pstmt.setDouble(14, arb.getLandArea());
             pstmt.setInt(15, arb.getTIN());
             pstmt.setInt(16, arb.getArbID());
+            pstmt.setBoolean(17, arb.isNonARB());
             pstmt.executeUpdate();
 
             pstmt.close();

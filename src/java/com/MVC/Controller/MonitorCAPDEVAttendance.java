@@ -22,12 +22,6 @@ public class MonitorCAPDEVAttendance extends BaseServlet {
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         int planID = Integer.parseInt(request.getParameter("planID"));
-        
-        if(request.getParameter("clusterID") != null){
-            int clusterID = Integer.parseInt(request.getParameter("clusterID"));
-            request.setAttribute("clusterID", clusterID);
-        }
-        
         request.setAttribute("planID", planID);
         request.getRequestDispatcher("PP-CAPDEV-review-capdev-attendance.jsp").forward(request, response);
 

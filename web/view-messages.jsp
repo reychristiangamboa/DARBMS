@@ -12,13 +12,13 @@
     </head>
     <body class="hold-transition skin-green sidebar-mini">
         <div class="wrapper">
-            
+
             <%if ((Integer) session.getAttribute("userType") == 1) {%>
             <%@include file="jspf/admin-navbar.jspf" %>
             <%@include file="jspf/admin-sidebar.jspf" %>
             <%} else if ((Integer) session.getAttribute("userType") == 2) {%>
             <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/pp-apcp-sidebar-navbar.jspf" %>
+            <%@include file="jspf/pp-apcp-sidebar.jspf" %>
             <%} else if ((Integer) session.getAttribute("userType") == 3) {%>
             <%@include file="jspf/field-officer-navbar.jspf" %>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf" %>
@@ -41,7 +41,11 @@
             <%
                 MessageDAO mDAO = new MessageDAO();
                 UserDAO uDAO = new UserDAO();
+                
                 ArrayList<Message> mList = new ArrayList();
+                ArrayList<User> uList = new ArrayList();
+                
+                uList = uDAO.getAllUsers();
                 mList = mDAO.retrieveMyMessages((Integer) session.getAttribute("userID"));
             %>
 
@@ -54,11 +58,30 @@
                 </section>
 
                 <section class="content">
+
+                    <%if(request.getAttribute("success") != null){%>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
+                    </div>
+                    <%}else if(request.getAttribute("errMessage") != null){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                    </div>
+                    <%}%>
+
+                    <div class="row">
+                        <div class="col-xs-3 pull-right">
+                            <button class="btn btn-primary pull-right" data-target="#messageModal" data-toggle="modal">Create Message</button>    
+                        </div>
+
+                    </div>
                     <div class="row">
                         <div class="col-xs-12">  
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">ARBO Information</h3>
+                                    <h3 class="box-title">Messages</h3>
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
                                     </div>  
@@ -94,7 +117,48 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
+                        </div>
+                    </div>
+                    <div class="modal fade" id="messageModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title">Create Message</h4>
+                                </div>
+                                <form method="post">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    To: 
+                                                    <select name="sendTo" id="" class="form-control">
+                                                        <%for(User u : uList){%>
+                                                        <option value="<%out.print(u.getUserID());%>"><%out.print(u.getFullName());%></option>
+                                                        <%}%>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <label for="">Message</label>
+                                                    <textarea name="message" id="" cols="3" rows="2" class="form-control" required></textarea>
+                                                </div>
+                                            </div>
+                                        </div>    
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" onclick="form.action = 'SendMessage'" class="btn btn-success pull-right">Send</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </section>

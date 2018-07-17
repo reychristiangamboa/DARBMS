@@ -43,13 +43,13 @@ public class SendCAPDEVAssessment extends BaseServlet {
             java.util.Date parsedImplementedDate = sdf.parse(request.getParameter("implementationDate"));
             implementedDate = new java.sql.Date(parsedImplementedDate.getTime());
         } catch (ParseException ex) {
-            Logger.getLogger(RecordRepayment.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SendCAPDEVAssessment.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         dao.assessCAPDEV(request.getParameter("observation"), request.getParameter("recommendation"), planID);
 
         if (plan.hasPreReleaseOrientation()) { // IF PLAN HAS PRE-RELEASE, UPDATE REQUEST STATUS TO RELEASE
-            if (dao.updatePlanStatus(planID, 5, implementedDate) && dao2.updateRequestStatus(plan.getRequestID(), 7)) {
+            if (dao.updatePlanStatus(planID, 5, implementedDate) && dao2.updateRequestStatus(plan.getRequestID(), 6)) {
                 request.setAttribute("success", "CAPDEV Assessment sent!");
                 request.getRequestDispatcher("PP-CAPDEV-view-capdev-plans.jsp").forward(request, response);
             } else {

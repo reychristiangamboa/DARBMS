@@ -16,6 +16,7 @@
                 ProvincialBudget capdevBudget = addressDAO.getCAPDEVBudgetByProvOffice((Integer)session.getAttribute("provOfficeCode"));
                 
                 ArrayList<APCPRequest> allRequestStatus = apcpRequestDAO.getAllRequestStatus();
+                ArrayList<CAPDEVPlan> allPlanStatus = capdevDAO.getAllPlanStatus();
 
                 ArrayList<EducationLevel> educationLevel = arbDAO.getAllEducationLevel();
                 ArrayList<RelationshipType> relationshipType = arbDAO.getAllRelationshipType();
@@ -38,7 +39,7 @@
                 ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(6, (Integer) session.getAttribute("provOfficeCode"));
 
                 ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(provincialRequests);
 
@@ -52,7 +53,7 @@
                 ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<CAPDEVPlan> postponedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(6, (Integer) session.getAttribute("provOfficeCode"));
 
-                ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.getAttribute("provOfficeCode"));
+                
     
 %>
 
@@ -127,19 +128,11 @@
 
                 </ul>
             </li>
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-list-alt"></i> <span>LINKSFARM</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
+            <li>
+                <a href="PFO-HEAD-request-budget.jsp">
+                    <i class="fa fa-money"></i> <span>Request Budget</span>
                 </a>
-                <ul class="treeview-menu">
-                    <li><a href="provincial-field-officer-linksfarm-select-project-sites.jsp"><i class="fa fa-dot-circle-o"></i>Select Project Site</a></li>
-                </ul>
-                <ul class="treeview-menu">
-                    <li><a href="view-linksfarm-capdev-status.jsp"><i class="fa fa-dot-circle-o"></i>View LINKSFARM CAPDEV</a></li>
-                </ul>
+                
             </li>
             <li>
                 <a href="PFO-HEAD-manage-past-due-reasons.jsp">

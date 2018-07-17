@@ -9,6 +9,7 @@ import com.MVC.DAO.CAPDEVDAO;
 import com.MVC.Model.CAPDEVActivity;
 import com.MVC.Model.CAPDEVPlan;
 import com.MVC.Model.CalendarEvent;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -24,10 +25,9 @@ import javax.servlet.http.HttpSession;
  *
  * @author Rey Christian
  */
-public class AssignedPlans extends BaseServlet {
+public class AssignedPlans extends HttpServlet {
 
-    @Override
-    protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         
         HttpSession session = request.getSession();
         
@@ -40,17 +40,18 @@ public class AssignedPlans extends BaseServlet {
         
         CAPDEVDAO capdevDAO = new CAPDEVDAO();
         ArrayList<CAPDEVPlan> assignedPlans = capdevDAO.getAssignedRequestCAPDEVPlans((Integer)session.getAttribute("userID"));
+        System.out.println(assignedPlans.size());
         
         String id = "";
         
         for(CAPDEVPlan plan : assignedPlans){
             for(CAPDEVActivity activity : plan.getActivities()){
                 
-                id = plan.getPlanID() + " " + activity.getActivityID();
+                id = plan.getPlanID() + "" + activity.getActivityID();
                 
                 CalendarEvent e = new CalendarEvent();
                 
-                e.setId(Integer.parseInt(id));
+                e.setId(activity.getActivityID());
                 
                 e.setTitle(plan.getPlanDTN() + ": " + activity.getActivityName());
                 e.setDescription(activity.getActivityDesc());
@@ -65,6 +66,7 @@ public class AssignedPlans extends BaseServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
+        System.out.println(new Gson().toJson(l));
         out.write(new Gson().toJson(l));
     }
 

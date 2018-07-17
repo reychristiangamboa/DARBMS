@@ -63,7 +63,7 @@ public class Login extends BaseServlet {
                     if (u.getUserType() == 1) {   // ADMINISTRATOR
                         request.getRequestDispatcher("admin-system-logs.jsp").forward(request, response);
                     } else if (u.getUserType() == 2) {   //  POINT PERSON APCP
-                        request.getRequestDispatcher("point-person-view-capdev-plans.jsp").forward(request, response);
+                        request.getRequestDispatcher("PP-APCP-view-apcp-requests.jsp").forward(request, response);
                     } else if (u.getUserType() == 3) {   //  PROVINCIAL FIELD OFFICER
                         request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
                     } else if (u.getUserType() == 4) {   //  REGIONAL FIELD OFFICER

@@ -18,13 +18,11 @@
             <%@include file="jspf/field-officer-navbar.jspf"%>
             <%@include file="jspf/pfo-capdev-sidebar.jspf"%>
             <%
-//            APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
-//            ARBODAO arboDAO = new ARBODAO();
-            
-  
   int reqID = (Integer) request.getAttribute("requestID");
   APCPRequest req = apcpRequestDAO.getRequestByID(reqID);
   ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+  System.out.print(arbo);
+  
   UserDAO userDAO = new UserDAO();
   ArrayList<CAPDEVActivity> categories = capdevDAO.getCAPDEVCategories();
   ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(req.getArboID());
@@ -79,7 +77,6 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <div class="box-group" id="accordion">
-                                        <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
                                         <div class="panel box box-info">
                                             <div class="box-header with-border">
                                                 <h4 class="box-title">

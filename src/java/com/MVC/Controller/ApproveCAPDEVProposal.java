@@ -22,20 +22,11 @@ public class ApproveCAPDEVProposal extends BaseServlet {
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         CAPDEVDAO capdevDAO = new CAPDEVDAO();
-        int linksfarm = 0;
-
-        if (request.getParameter("linksfarm") != null) {
-            linksfarm = Integer.parseInt(request.getParameter("linksfarm"));
-        }
 
         if (capdevDAO.updatePlanStatus(Integer.parseInt(request.getParameter("planID")), 2)) {
-            if (linksfarm > 0) {
-                request.setAttribute("success", "CAPDEV Plan approved!");
-                request.getRequestDispatcher("view-linksfarm-capdev-status.jsp").forward(request, response);
-            } else {
-                request.setAttribute("success", "CAPDEV Plan approved!");
-                request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
-            }
+
+            request.setAttribute("success", "CAPDEV Plan approved!");
+            request.getRequestDispatcher("view-capdev-status.jsp").forward(request, response);
 
         } else {
             request.setAttribute("errMessage", "Error in approving CAPDEV plan. Try again.");

@@ -22,6 +22,7 @@ public class CAPDEVPlan {
     private Double budget;
     private int postponeReason;
     private String postponeReasonDesc;
+    private String reason;
     private Date implementedDate;
     private int createdBy;
     private int assignedTo;
@@ -31,6 +32,7 @@ public class CAPDEVPlan {
     private String observations;
     private String recommendation;
     private int active;
+    private int capdevAssignmentID;
     private int clusterID;
     
     private ArrayList<CAPDEVActivity> activities = new ArrayList();
@@ -99,7 +101,15 @@ public class CAPDEVPlan {
     public void setPostponeReasonDesc(String postponeReasonDesc) {
         this.postponeReasonDesc = postponeReasonDesc;
     }
-    
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     public Date getImplementedDate() {
         return implementedDate;
     }
@@ -188,6 +198,31 @@ public class CAPDEVPlan {
     public void setClusterID(int clusterID) {
         this.clusterID = clusterID;
     }
+
+    public int getCapdevAssignmentID() {
+        return capdevAssignmentID;
+    }
+
+    public void setCapdevAssignmentID(int capdevAssignmentID) {
+        this.capdevAssignmentID = capdevAssignmentID;
+    }
+    
+    public ArrayList<Integer> getAllAttenededParticipants(){
+        
+        ArrayList<Integer> filtered = new ArrayList();
+        
+        for(CAPDEVActivity act : this.activities){
+            for(ARB arb : act.getArbList()){
+                if(arb.getIsPresent() > 0){
+                    if(!filtered.contains(arb.getArbID())){
+                        filtered.add(arb.getArbID());
+                    }
+                }
+            }
+        }
+        
+        return filtered;
+    }
     
     public boolean checkAllActivitiesHaveParticipants(){
         for(CAPDEVActivity act : this.activities){
@@ -209,7 +244,7 @@ public class CAPDEVPlan {
     
     public boolean hasPreReleaseOrientation(){
         for(CAPDEVActivity act : this.activities){
-            if(act.getActivityType() == 12){
+            if(act.getActivityType() == 3){
                 return true;
             }
         }

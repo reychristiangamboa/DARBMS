@@ -1,22 +1,6 @@
-<%@page import="com.MVC.Model.CAPDEVPlan"%>
-<%@page import="com.MVC.Model.PastDueAccount"%>
-<%@page import="com.MVC.Model.Crop"%>
-<%@page import="com.MVC.DAO.CropDAO"%>
+<%@page import="com.MVC.Model.*"%>
+<%@page import="com.MVC.DAO.*"%>
 <%@page import="java.util.ArrayList;"%>
-<%@page import="com.MVC.Model.Region;"%>
-<%@page import="com.MVC.Model.Province;"%>
-<%@page import="com.MVC.Model.CityMun;"%>
-<%@page import="com.MVC.Model.ARBO;"%>
-<%@page import="com.MVC.Model.ARB;"%>
-<%@page import="com.MVC.Model.Question;"%>
-<%@page import="com.MVC.Model.CAPDEVActivity;"%>
-<%@page import="com.MVC.Model.APCPRequest;"%>
-<%@page import="com.MVC.DAO.AddressDAO;"%>
-<%@page import="com.MVC.DAO.ARBODAO;"%>
-<%@page import="com.MVC.DAO.ARBDAO;"%>
-<%@page import="com.MVC.DAO.APCPRequestDAO;"%>
-<%@page import="com.MVC.DAO.CAPDEVDAO;"%>
-<%@page import="com.MVC.DAO.UserDAO;"%>
 
 
 <%
@@ -38,7 +22,7 @@
     ArrayList<Crop> cropHistory = cropDAO.getCropHistory(allArbsList);
 
     ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllRequestsByStatus(5);
-    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllRequestsByStatus(7);
+    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllRequestsByStatus(6);
     ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllRequestsByStatus(4);
     ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllRequestsByStatus(3);
     ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllRequestsByStatus(2);

@@ -83,20 +83,20 @@
                                                                 <div class="row">
                                                                     <div class="col-xs-4">
                                                                         <div class="form-group">
-                                                                            <input type="radio" name="attendanceMethod" checked onclick="document.getElementById('manualAttendance<%out.print(b.getActivityID());%>').style.display = 'none';document.getElementById('importAttendance<%out.print(b.getActivityID());%>').style.display = 'block'">
-                                                                            <label for="">Import Attendees</label>
-                                                                            &nbsp;&nbsp;
-                                                                            <input type="radio" name="attendanceMethod" onclick="document.getElementById('manualAttendance<%out.print(b.getActivityID());%>').style.display = 'block';document.getElementById('importAttendance<%out.print(b.getActivityID());%>').style.display = 'none'">
+                                                                            <input type="radio" name="attendanceMethod" checked onclick="document.getElementById('manualAttendance<%out.print(b.getActivityID());%>').style.display = 'block';document.getElementById('importAttendance<%out.print(b.getActivityID());%>').style.display = 'none'">
                                                                             <label for="">Check Attendees</label>
-                                                                        </div>
+                                                                            &nbsp;&nbsp;
+                                                                            <input type="radio" name="attendanceMethod" onclick="document.getElementById('manualAttendance<%out.print(b.getActivityID());%>').style.display = 'none';document.getElementById('importAttendance<%out.print(b.getActivityID());%>').style.display = 'block'">
+                                                                            <label for="">Import Attendees</label>
+                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col-xs-4" id="importAttendance<%out.print(b.getActivityID());%>">
+                                                                    <div class="col-xs-4" id="importAttendance<%out.print(b.getActivityID());%>"  style="display:none">
                                                                         <label for="">Upload Participants</label>
-                                                                        <input type="file" name="file">
+                                                                        <input type="file" name="file" disabled>
                                                                     </div>
-                                                                    <div class="col-xs-12" id="manualAttendance<%out.print(b.getActivityID());%>" style="display:none">
+                                                                    <div class="col-xs-12" id="manualAttendance<%out.print(b.getActivityID());%>">
                                                                         <table class="table table-striped table-bordered modTable">
                                                                             <thead>
                                                                                 <tr>

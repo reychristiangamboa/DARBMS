@@ -29,7 +29,7 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/point-person-sidebar.jspf" %>
+            <%@include file="jspf/pp-apcp-sidebar.jspf" %>
 
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
@@ -78,7 +78,11 @@
                                             <tr>
 
                                                 <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
+                                                <%}else{%> <!--LOAN REASON-->
+                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
+                                                <%}%>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateApproved());%></td>
@@ -123,12 +127,16 @@
 
                                         <tbody>
                                             <%
-                                                for(APCPRequest r : ReleasedRequests){
+                                                for(APCPRequest r : releasedRequests){
                                                 ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>
                                                 <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(r.getLoanReason());%></td>
+                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
+                                                <%}else{%> <!--LOAN REASON-->
+                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
+                                                <%}%>
                                                 <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
                                                 <td><%out.print(r.getDateLastReleasedPerRequest());%></td>

@@ -23,12 +23,12 @@ import java.sql.Time;
  */
 public class MessageDAO {
     
-    public boolean addMessageFromCustomer(Message m){
+    public boolean addMessage(Message m){
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `lrsys-db`.`messages` (`body`, `dateSent`, `timeSent`, `sentBy`, `sentTo`) "
+            String query = "INSERT INTO `messages` (`body`, `dateSent`, `timeSent`, `sentBy`, `sentTo`) "
                     + "VALUES (?, ?, ?, ?, ?);";
             
             long s = System.currentTimeMillis();
@@ -67,7 +67,7 @@ public class MessageDAO {
         Connection con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "SELECT * FROM `lrsys-db`.messages WHERE `sentTo`=? AND `isRead`='1' ORDER BY messageID DESC";
+            String query = "SELECT * FROM messages WHERE `sentTo`=? AND `isRead`='1' ORDER BY messageID DESC";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, userID);
             ResultSet rs = p.executeQuery();
@@ -102,7 +102,7 @@ public class MessageDAO {
         Connection con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "SELECT count(*) FROM `lrsys-db`.messages WHERE `sentTo`=? AND `isRead`='0' ORDER BY messageID DESC";
+            String query = "SELECT count(*) FROM messages WHERE `sentTo`=? AND `isRead`='0' ORDER BY messageID DESC";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, userID);
             ResultSet rs = p.executeQuery();
@@ -130,10 +130,10 @@ public class MessageDAO {
         Connection con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE `lrsys-db`.`messages` SET `isRead`='1' WHERE `sentTo`=?;";
+            String query = "UPDATE `messages` SET `isRead`='1' WHERE `sentTo`=?;";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, userID);
-            p.execute();
+            p.executeUpdate();
             
             p.close();
             con.commit();
@@ -154,7 +154,7 @@ public class MessageDAO {
         Connection con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `lrsys-db`.`messages` (`body`, `dateSent`, `timeSent`, `sentBy`, `sentTo`) "
+            String query = "INSERT INTO `messages` (`body`, `dateSent`, `timeSent`, `sentBy`, `sentTo`) "
                     + "VALUES (?, ?, ?, ?, ?);";
             
             long s = System.currentTimeMillis();

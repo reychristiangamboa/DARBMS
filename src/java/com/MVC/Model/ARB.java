@@ -46,6 +46,7 @@ public class ARB {
     private int arbActive;
     private int isPresent;
     private int clusterID;
+    private boolean nonARB;
     private ArrayList<CAPDEVActivity> activities = new ArrayList();
     private ArrayList<Repayment> repayments = new ArrayList();
 
@@ -320,6 +321,14 @@ public class ARB {
         this.clusterID = clusterID;
     }
 
+    public boolean isNonARB() {
+        return nonARB;
+    }
+
+    public void setNonARB(boolean nonARB) {
+        this.nonARB = nonARB;
+    }
+    
     public ArrayList<CAPDEVActivity> getActivities() {
         return activities;
     }

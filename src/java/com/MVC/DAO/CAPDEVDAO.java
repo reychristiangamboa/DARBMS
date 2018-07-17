@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,29 +29,53 @@ import java.util.logging.Logger;
  */
 public class CAPDEVDAO {
 
-    public int addCAPDEVPlan(CAPDEVPlan cp, int userID) {
+    public ArrayList<CAPDEVPlan> getAllCAPDEVPlan() {
 
+        ArrayList<CAPDEVPlan> planList = new ArrayList();
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
 
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`capdev_plans` (`requestID`,`planDTN`,`createdBy`,`budget`) VALUES (?,?,?,?);";
-            PreparedStatement p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-            p.setInt(1, cp.getRequestID());
-            p.setString(2, cp.getPlanDTN());
-            p.setInt(3, userID);
-            p.setDouble(4, cp.getBudget());
-            p.executeUpdate();
+            String query = "Select * from `dar-bms`.`capdev_plans` p "
+                    + "JOIN capdev_assignment r ON p.planID=r.planID "
+                    + "JOIN ref_planStatus s ON r.planStatus=s.planStatus "
+                    + "WHERE r.active = 1 ";
+            PreparedStatement p = con.prepareStatement(query);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                CAPDEVPlan cp = new CAPDEVPlan();
+                cp.setPlanID(rs.getInt("planID"));
+                cp.setRequestID(rs.getInt("requestID"));
+                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                cp.setPlanStatus(rs.getInt("planStatus"));
+                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
+                cp.setPlanDTN(rs.getString("planDTN"));
+                cp.setPlanDate(rs.getDate("planDate"));
+                cp.setBudget(rs.getDouble("budget"));
+                cp.setPostponeReason(rs.getInt("postponeReason"));
+                cp.setReason(rs.getString("reason"));
+                cp.setImplementedDate(rs.getDate("implementedDate"));
+                cp.setAssignedTo(rs.getInt("assignedTo"));
+                cp.setCreatedBy(rs.getInt("createdBy"));
+                cp.setApprovedBy(rs.getInt("approvedBy"));
+                cp.setClusterID(rs.getInt("clusterID"));
+                cp.setObservations(rs.getString("observations"));
+                cp.setRecommendation(rs.getString("recommendation"));
+                cp.setActive(rs.getInt("active"));
+                cp.setCapdevAssignmentID(rs.getInt("id"));
+                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
 
-            ResultSet rs = p.getGeneratedKeys();
-            if (rs.next()) {
-                int n = rs.getInt(1);
-                p.close();
-                con.commit();
-                con.close();
-                return n;
+                if (cp.getPostponeReason() > 0) {
+                    cp.setPostponeReasonDesc(getPostponeReasonDesc(cp.getPostponeReason()));
+                }
+
+                planList.add(cp);
             }
+            con.commit();
+            rs.close();
+            p.close();
+            con.close();
 
         } catch (Exception ex) {
             try {
@@ -60,7 +85,172 @@ public class CAPDEVDAO {
             }
             Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+
+        return planList;
+    }
+
+    public CAPDEVPlan getCAPDEVPlan(int planID) {
+        CAPDEVPlan cp = null;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "Select * from `dar-bms`.`capdev_plans` p "
+                    + "JOIN capdev_assignment r ON p.planID=r.planID "
+                    + "JOIN ref_planStatus s ON r.planStatus=s.planStatus "
+                    + "WHERE p.planID = ? AND r.active = 1";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, planID);
+            ResultSet rs = p.executeQuery();
+            if (rs.next()) {
+                cp = new CAPDEVPlan();
+                cp.setPlanID(rs.getInt("planID"));
+                cp.setRequestID(rs.getInt("requestID"));
+                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
+                cp.setPlanStatus(rs.getInt("planStatus"));
+                cp.setAssignedTo(rs.getInt("assignedTo"));
+                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
+                cp.setPlanDTN(rs.getString("planDTN"));
+                cp.setBudget(rs.getDouble("budget"));
+                cp.setPlanDate(rs.getDate("planDate"));
+                cp.setPostponeReason(rs.getInt("postponeReason"));
+                cp.setReason(rs.getString("reason"));
+                cp.setImplementedDate(rs.getDate("implementedDate"));
+                cp.setCreatedBy(rs.getInt("createdBy"));
+                cp.setApprovedBy(rs.getInt("approvedBy"));
+                cp.setObservations(rs.getString("observations"));
+                cp.setRecommendation(rs.getString("recommendation"));
+                cp.setActive(rs.getInt("active"));
+                cp.setClusterID(rs.getInt("clusterID"));
+                cp.setCapdevAssignmentID(rs.getInt("id"));
+                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
+
+                if (cp.getPostponeReason() > 0) {
+                    cp.setPostponeReasonDesc(getPostponeReasonDesc(cp.getPostponeReason()));
+                }
+            }
+            con.commit();
+            rs.close();
+            p.close();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return cp;
+    }
+
+    public ArrayList<CAPDEVPlan> getAllPlanStatus() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<CAPDEVPlan> planStatus = new ArrayList();
+        try {
+            String query = "SELECT * FROM ref_planstatus";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                CAPDEVPlan r = new CAPDEVPlan();
+                r.setPlanStatus(rs.getInt("planStatus"));
+                r.setPlanStatusDesc(rs.getString("planStatusDesc"));
+                planStatus.add(r);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return planStatus;
+    }
+
+    public String getPostponeReasonDesc(int postponeReason) {
+        ArrayList<CAPDEVPlan> planList = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        String desc = "";
+        try {
+            con.setAutoCommit(false);
+            String query = "SELECT * FROM capdev_assignment a JOIN ref_postponeReasons r ON a.postponeReason=r.postponeReason WHERE a.postponeReason=?";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, postponeReason);
+            ResultSet rs = p.executeQuery();
+            if (rs.next()) {
+                desc = rs.getString("postponeReasonDesc");
+            }
+            con.commit();
+            rs.close();
+            p.close();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return desc;
+    }
+
+    public int addCAPDEVPlan(CAPDEVPlan cp, int userID) {
+
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        int n = 0;
+
+        try {
+            con.setAutoCommit(false);
+            String query = "INSERT INTO `dar-bms`.`capdev_plans` (`requestID`,`planDTN`,`createdBy`) VALUES (?,?,?);";
+            PreparedStatement p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+            p.setInt(1, cp.getRequestID());
+            p.setString(2, cp.getPlanDTN());
+            p.setInt(3, userID);
+            p.executeUpdate();
+
+            ResultSet rs = p.getGeneratedKeys();
+            if (rs.next()) {
+                n = rs.getInt(1);
+                p.close();
+
+            }
+
+            System.out.println("ITO PLAN ID oh: " + n);
+
+            String query2 = "INSERT INTO `dar-bms`.`capdev_assignment` (`planID`,`budget`,`planDate`,`assignedTo`) VALUES (?,?,?,?);";
+            PreparedStatement p2 = con.prepareStatement(query2);
+            p2.setInt(1, n);
+            p2.setDouble(2, cp.getBudget());
+            p2.setDate(3, cp.getPlanDate());
+            p2.setInt(4, cp.getAssignedTo());
+            p2.executeUpdate();
+            p2.close();
+
+            con.commit();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
     }
 
     public void setCAPDEVPlanDate(Date planDate, int planID) {
@@ -70,7 +260,7 @@ public class CAPDEVDAO {
 
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`capdev_postponeReason` (`planDate`,`planID`) VALUES (?,?);";
+            String query = "INSERT INTO `dar-bms`.`capdev_assignment` (`planDate`,`planID`) VALUES (?,?);";
             PreparedStatement p = con.prepareStatement(query);
             p.setDate(1, planDate);
             p.setInt(2, planID);
@@ -87,7 +277,7 @@ public class CAPDEVDAO {
             }
             Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    } // INCLUDES INSERT planStatus (PENDING) and active (1)
 
     public int addCAPDEVPlanForPastDue(CAPDEVPlan cp, int userID) {
 
@@ -123,147 +313,6 @@ public class CAPDEVDAO {
             Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
-    }
-
-    public int addPreReleaseOrientation(CAPDEVPlan plan) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "INSERT INTO `dar-bms`.`capdev_plans` "
-                    + "(`requestID`,`createdBy`,`planDTN`, `planStatus`,`assignedTo`) "
-                    + "VALUES (?,?,?,?,?);";
-
-            PreparedStatement p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-            p.setInt(1, plan.getRequestID());
-            p.setInt(2, plan.getCreatedBy());
-            p.setString(3, plan.getPlanDTN());
-            p.setInt(4, plan.getPlanStatus());
-            p.setInt(5, plan.getAssignedTo());
-            p.executeUpdate();
-
-            ResultSet rs = p.getGeneratedKeys();
-            if (rs.next()) {
-                int n = rs.getInt(1);
-                p.close();
-                con.commit();
-                con.close();
-                return n;
-            }
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return 0;
-    }
-
-    public CAPDEVPlan getCAPDEVPlan(int planID) {
-        CAPDEVPlan cp = null;
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "Select * from `dar-bms`.`capdev_plans` p "
-                    + "JOIN ref_planStatus s ON p.planStatus=s.planStatus "
-                    + "JOIN capdev_postponeReason r ON p.planID=r.planID "
-                    + "WHERE p.planID = ? AND r.active = 1";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, planID);
-            ResultSet rs = p.executeQuery();
-            if (rs.next()) {
-                cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setBudget(rs.getDouble("budget"));
-                cp.setPlanDate(rs.getDate("planDate"));
-                cp.setPostponeReason(rs.getInt("postponeReason"));
-                cp.setImplementedDate(rs.getDate("implementedDate"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setObservations(rs.getString("observations"));
-                cp.setRecommendation(rs.getString("recommendation"));
-                cp.setActive(rs.getInt("active"));
-                cp.setClusterID(rs.getInt("clusterID"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return cp;
-    }
-
-    public ArrayList<CAPDEVPlan> getAllCityMunCAPDEVPlanByStatus(int status, ArrayList<Integer> cityMunIDs) {
-
-        ArrayList<CAPDEVPlan> planList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            for (int cityMunCode : cityMunIDs) {
-                String query = "SELECT * FROM capdev_plans c "
-                        + "JOIN ref_planStatus ps ON c.planStatus=ps.planStatus "
-                        + "JOIN apcp_requests r ON c.requestID=r.requestID "
-                        + "JOIN ref_requestStatus rs ON r.requestStatus=rs.requestStatus "
-                        + "JOIN arbos a ON r.arboID=a.arboID "
-                        + "WHERE c.planStatus = ? AND a.arboCityMun = ?";
-                PreparedStatement p = con.prepareStatement(query);
-                p.setInt(1, status);
-                p.setInt(2, cityMunCode);
-                ResultSet rs = p.executeQuery();
-                while (rs.next()) {
-                    CAPDEVPlan cp = new CAPDEVPlan();
-                    cp.setPlanID(rs.getInt("planID"));
-                    cp.setRequestID(rs.getInt("requestID"));
-                    cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                    cp.setPlanStatus(rs.getInt("planStatus"));
-                    cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                    cp.setAssignedTo(rs.getInt("assignedTo"));
-                    cp.setPlanDTN(rs.getString("planDTN"));
-                    cp.setCreatedBy(rs.getInt("createdBy"));
-                    cp.setApprovedBy(rs.getInt("approvedBy"));
-                    cp.setClusterID(rs.getInt("clusterID"));
-                    cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                    planList.add(cp);
-                    rs.close();
-                    p.close();
-                }
-            }
-
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return planList;
     }
 
     public ArrayList<CAPDEVPlan> getAllProvincialCAPDEVPlanByStatus(int status, int provOfficeCode) {
@@ -303,202 +352,20 @@ public class CAPDEVDAO {
         return planList;
     }
 
-    public ArrayList<CAPDEVPlan> getAllProvincialCAPDEVPlan(int provOfficeCode) {
-
-        ArrayList<CAPDEVPlan> planList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "SELECT * FROM capdev_plans c "
-                    + "JOIN ref_planStatus ps ON c.planStatus=ps.planStatus "
-                    + "JOIN apcp_requests r ON c.requestID=r.requestID "
-                    + "JOIN ref_requestStatus rs ON r.requestStatus=rs.requestStatus "
-                    + "JOIN arbos a ON r.arboID=a.arboID "
-                    + "WHERE a.provOfficeCode = ? AND c.planStatus != 4";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, provOfficeCode);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVPlan cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setClusterID(rs.getInt("clusterID"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                planList.add(cp);
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return planList;
-    }
-
-    public ArrayList<CAPDEVPlan> getAllRegionalCAPDEVPlan(int regCode) {
-
-        ArrayList<CAPDEVPlan> planList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "SELECT * FROM capdev_plans c "
-                    + "JOIN ref_planStatus ps ON c.planStatus=ps.planStatus "
-                    + "JOIN apcp_requests r ON c.requestID=r.requestID "
-                    + "JOIN ref_requestStatus rs ON r.requestStatus=rs.requestStatus "
-                    + "JOIN arbos a ON r.arboID=a.arboID "
-                    + "WHERE a.arboRegion = ? AND c.planStatus != 4";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, regCode);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVPlan cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setClusterID(rs.getInt("clusterID"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                planList.add(cp);
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return planList;
-    }
-
-    public ArrayList<CAPDEVPlan> getAllCAPDEVPlan() {
-
-        ArrayList<CAPDEVPlan> planList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "Select * from `dar-bms`.`capdev_plans` p "
-                    + "JOIN ref_planStatus s ON p.planStatus=s.planStatus "
-                    + "JOIN capdev_postponeReason r ON p.planID=r.planID "
-                    + "WHERE r.active = 1 ";
-            PreparedStatement p = con.prepareStatement(query);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVPlan cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setPlanDate(rs.getDate("planDate"));
-                cp.setBudget(rs.getDouble("budget"));
-                cp.setPostponeReason(rs.getInt("postponeReason"));
-                cp.setImplementedDate(rs.getDate("implementedDate"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setClusterID(rs.getInt("clusterID"));
-                cp.setObservations(rs.getString("observations"));
-                cp.setRecommendation(rs.getString("recommendation"));
-                cp.setActive(rs.getInt("active"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                planList.add(cp);
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return planList;
-    }
-
     public ArrayList<CAPDEVPlan> getAllRegionalCAPDEVPlanByStatus(int status, int regCode) {
 
+        ArrayList<CAPDEVPlan> allCAPDEVPlans = getAllCAPDEVPlanByStatus(status);
         ArrayList<CAPDEVPlan> planList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
+        APCPRequestDAO dao = new APCPRequestDAO();
+        ARBODAO dao2 = new ARBODAO();
+        for (CAPDEVPlan c : allCAPDEVPlans) {
 
-        try {
-            con.setAutoCommit(false);
-            String query = "SELECT * FROM capdev_plans c "
-                    + "JOIN ref_planStatus ps ON c.planStatus=ps.planStatus "
-                    + "JOIN apcp_requests r ON c.requestID=r.requestID "
-                    + "JOIN ref_requestStatus rs ON r.requestStatus=rs.requestStatus "
-                    + "JOIN arbos a ON r.arboID=a.arboID "
-                    + "WHERE c.planStatus = ? AND a.arboRegion = ? AND c.pastDueAccountID IS NULL";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, status);
-            p.setInt(2, regCode);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVPlan cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setClusterID(rs.getInt("clusterID"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                planList.add(cp);
+            APCPRequest r = dao.getRequestByID(c.getRequestID());
+            ARBO a = dao2.getARBOByID(r.getArboID());
+            if (a.getArboRegion() == regCode) {
+                planList.add(c);
             }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
 
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return planList;
@@ -523,6 +390,43 @@ public class CAPDEVDAO {
         return planList;
     }
 
+    public ArrayList<CAPDEVPlan> getAllProvincialCAPDEVPlan(int provOfficeCode) {
+
+        ArrayList<CAPDEVPlan> allCAPDEVPlans = getAllCAPDEVPlan();
+        ArrayList<CAPDEVPlan> planList = new ArrayList();
+        APCPRequestDAO dao = new APCPRequestDAO();
+        ARBODAO dao2 = new ARBODAO();
+        for (CAPDEVPlan c : allCAPDEVPlans) {
+
+            APCPRequest r = dao.getRequestByID(c.getRequestID());
+            ARBO a = dao2.getARBOByID(r.getArboID());
+            if (a.getProvOfficeCode() == provOfficeCode) {
+                planList.add(c);
+            }
+
+        }
+
+        return planList;
+    }
+
+    public ArrayList<CAPDEVPlan> getAllRegionalCAPDEVPlan(int regCode) {
+
+        ArrayList<CAPDEVPlan> allCAPDEVPlans = getAllCAPDEVPlan();
+        ArrayList<CAPDEVPlan> planList = new ArrayList();
+        APCPRequestDAO dao = new APCPRequestDAO();
+        ARBODAO dao2 = new ARBODAO();
+
+        for (CAPDEVPlan c : allCAPDEVPlans) {
+            APCPRequest r = dao.getRequestByID(c.getRequestID());
+            ARBO a = dao2.getARBOByID(r.getArboID());
+            if (a.getArboRegion() == regCode) {
+                planList.add(c);
+            }
+        }
+
+        return planList;
+    }
+
     public ArrayList<CAPDEVPlan> getAllCAPDEVPlanByStatus(int status) {
 
         ArrayList<CAPDEVPlan> allCAPDEVPlans = getAllCAPDEVPlan();
@@ -535,7 +439,7 @@ public class CAPDEVDAO {
         }
 
         return planList;
-    }
+    } // PLANS W/OUT PAST DUE
 
     public ArrayList<CAPDEVPlan> getAllCAPDEVPlanByRequest(int requestID) {
 
@@ -648,6 +552,21 @@ public class CAPDEVDAO {
         }
 
         return planList;
+    }
+
+    public ArrayList<CAPDEVPlan> getAssignedRequestCAPDEVPlans(int userID) {
+
+        ArrayList<CAPDEVPlan> cpList = new ArrayList();
+        ArrayList<CAPDEVPlan> allPlans = getAllCAPDEVPlan();
+
+        for (CAPDEVPlan p : allPlans) {
+            if (p.getAssignedTo() == userID && p.getPlanStatus() == 2) {
+                cpList.add(p);
+            }
+        }
+
+        return cpList;
+
     }
 
     public int addCAPDEVPlanActivity(CAPDEVActivity activity) {
@@ -905,53 +824,6 @@ public class CAPDEVDAO {
         return caList;
     }
 
-    public ArrayList<CAPDEVActivity> getLINKSFARMCAPDEVActivityHistoryByARB(int arbID) {
-
-        ArrayList<CAPDEVActivity> caList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "SELECT * FROM `dar-bms`.capdev_activities a "
-                    + "JOIN ref_activity r ON a.activityType=r.activityType "
-                    + "JOIN ref_activityCategory c ON r.activityCategory=c.activityCategory "
-                    + "JOIN capdev_participants p ON p.activityID=a.activityID "
-                    + "WHERE p.arbID=? AND a.active=1 AND c.activityCategory=3;";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, arbID);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVActivity ca = new CAPDEVActivity();
-                ca.setActivityID(rs.getInt("activityID"));
-                ca.setActivityType(rs.getInt("activityType"));
-                ca.setPlanID(rs.getInt("planID"));
-                ca.setActivityName(rs.getString("activityName"));
-                ca.setActivityDesc(rs.getString("activityDesc"));
-                ca.setActivityCategory(rs.getInt("activityCategory"));
-                ca.setActivityCategoryDesc(rs.getString("activityCategoryDesc"));
-                ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
-                ca.setActive(rs.getInt("active"));
-                ca.setIsPresent(rs.getInt("isPresent"));
-                ca.setArbList(getCAPDEVPlanActivityParticipants(rs.getInt("activityID")));
-                caList.add(ca);
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return caList;
-    }
-
     public boolean addCAPDEVPlanActivityParticipants(ArrayList<ARB> arbList, int activityID) {
         boolean success = false;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -1054,368 +926,6 @@ public class CAPDEVDAO {
         return aList;
     }
 
-    public ArrayList<CAPDEVPlan> getPendingRequestCAPDEVPlans(int requestID) {
-
-        ArrayList<CAPDEVPlan> cpList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "SELECT * from capdev_plans p join apcp_requests r where r.requestID =? AND p.planStatus=1 AND p.pastDueAccountID IS NULL";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, requestID);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVPlan cp = new CAPDEVPlan();
-                cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setClusterID(rs.getInt("clusterID"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                cpList.add(cp);
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return cpList;
-    }
-
-    public ArrayList<CAPDEVPlan> getPendingRequestCAPDEVPlansPastDue(int requestID) {
-
-        ArrayList<CAPDEVPlan> cpList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "SELECT * from capdev_plans p join apcp_requests r where r.requestID =? AND p.planStatus=1 AND p.pastDueAccountID IS NOT NULL";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, requestID);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVPlan cp = new CAPDEVPlan();
-                cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setClusterID(rs.getInt("clusterID"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                cpList.add(cp);
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return cpList;
-    }
-
-    public ArrayList<CAPDEVPlan> getApprovedRequestCAPDEVPlans(int requestID) {
-
-        ArrayList<CAPDEVPlan> cpList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "select * from capdev_plans p join apcp_requests r where r.requestID =? AND p.planStatus=2 AND p.pastDueAccountID IS NULL";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, requestID);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVPlan cp = new CAPDEVPlan();
-                cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setClusterID(rs.getInt("clusterID"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                cpList.add(cp);
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return cpList;
-    }
-
-    public ArrayList<CAPDEVPlan> getApprovedRequestCAPDEVPlansPastDue(int requestID) {
-
-        ArrayList<CAPDEVPlan> cpList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "select * from capdev_plans p join apcp_requests r where r.requestID =? AND p.planStatus=2 AND p.pastDueAccountID IS NOT NULL";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, requestID);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVPlan cp = new CAPDEVPlan();
-                cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setClusterID(rs.getInt("clusterID"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                cpList.add(cp);
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return cpList;
-    }
-
-    public ArrayList<CAPDEVPlan> getAssignedRequestCAPDEVPlans(int userID) {
-
-        ArrayList<CAPDEVPlan> cpList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "select * from capdev_plans p "
-                    + "join ref_planStatus s on p.planStatus=s.planStatus "
-                    + "where p.assignedTo=? AND p.planStatus=4 AND p.pastDueAccountID IS NULL";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, userID);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVPlan cp = new CAPDEVPlan();
-                cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setClusterID(rs.getInt("clusterID"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                cpList.add(cp);
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return cpList;
-    }
-
-    public ArrayList<CAPDEVPlan> getAssignedRequestCAPDEVPlansPastDue(int userID) {
-
-        ArrayList<CAPDEVPlan> cpList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "select * from capdev_plans p "
-                    + "join ref_planStatus s on p.planStatus=s.planStatus "
-                    + "where p.planStatus=4 AND p.pastDueAccountID IS NOT NULL AND p.assignedTo=?";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, userID);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVPlan cp = new CAPDEVPlan();
-                cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setClusterID(rs.getInt("clusterID"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                cpList.add(cp);
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return cpList;
-    }
-
-    public ArrayList<CAPDEVPlan> getAllProvincialPreReleasePlans(int provOfficeCode) {
-
-        ArrayList<CAPDEVPlan> cpList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "select * from capdev_plans p "
-                    + "join ref_planStatus s on p.planStatus=s.planStatus "
-                    + "join apcp_requests r on p.requestID=r.requestID "
-                    + "join arbos a on r.arboID=a.arboID "
-                    + "where p.planStatus=6 AND a.provOfficeCode=?";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, provOfficeCode);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVPlan cp = new CAPDEVPlan();
-                cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                cpList.add(cp);
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return cpList;
-    }
-
-    public ArrayList<CAPDEVPlan> getAllAssignedPreReleasePlans(int userID) {
-
-        ArrayList<CAPDEVPlan> cpList = new ArrayList();
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            con.setAutoCommit(false);
-            String query = "select * from capdev_plans p "
-                    + "join ref_planStatus s on p.planStatus=s.planStatus "
-                    + "join apcp_requests r on p.requestID=r.requestID "
-                    + "join arbos a on r.arboID=a.arboID "
-                    + "where p.planStatus=6 AND p.assignedTo=?";
-            PreparedStatement p = con.prepareStatement(query);
-            p.setInt(1, userID);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                CAPDEVPlan cp = new CAPDEVPlan();
-                cp = new CAPDEVPlan();
-                cp.setPlanID(rs.getInt("planID"));
-                cp.setRequestID(rs.getInt("requestID"));
-                cp.setPastDueAccountID(rs.getInt("pastDueAccountID"));
-                cp.setPlanStatus(rs.getInt("planStatus"));
-                cp.setPlanStatusDesc(rs.getString("planStatusDesc"));
-                cp.setPlanDTN(rs.getString("planDTN"));
-                cp.setCreatedBy(rs.getInt("createdBy"));
-                cp.setAssignedTo(rs.getInt("assignedTo"));
-                cp.setApprovedBy(rs.getInt("approvedBy"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
-                cpList.add(cp);
-            }
-            con.commit();
-            rs.close();
-            p.close();
-            con.close();
-
-        } catch (Exception ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return cpList;
-    }
-
     public boolean addCAPDEVActivity(CAPDEVActivity cAct) {
         boolean success = false;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -1475,6 +985,118 @@ public class CAPDEVDAO {
         }
         return success;
     }
+
+    public boolean postponePlan(int planID, int postponeReason, String reason) {
+        boolean success = false;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "UPDATE `dar-bms`.`capdev_assignment` SET `postponeReason`=?, `reason`=? WHERE `planID`=?";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, postponeReason);
+            p.setString(2, reason);
+            p.setInt(3, planID);
+
+            p.executeUpdate();
+            success = true;
+            p.close();
+
+            con.commit();
+            con.close();
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
+    } // UPDATE postponeReason
+
+    // UPDATE budgetSpent && INSERT budgetRescheduled, planDate, pointPersonID && UPDATES PLANSTATUS (ASSIGNED)
+    public boolean reschedulePlan(int planID, int pointPersonID, double budgetSpent, double budgetRescheduled, Date planDate) {
+        boolean success = false;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        int n = 0;
+        try {
+            con.setAutoCommit(false);
+            String query = "UPDATE `dar-bms`.`capdev_assignment` SET `budget`=? AND `active`=0 WHERE `planID`=?";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setDouble(1, budgetSpent);
+            p.setInt(2, planID);
+            p.executeUpdate();
+            p.close();
+
+            String query2 = "INSERT INTO `dar-bms`.`capdev_assignment` (`planDate`,`budget`,`assignedTo`) VALUES (?,?,?)";
+            PreparedStatement p2 = con.prepareStatement(query2);
+            p2.setDate(1, planDate);
+            p2.setDouble(2, budgetRescheduled);
+            p2.setInt(3, pointPersonID);
+            p2.executeUpdate();
+
+            ResultSet rs = p2.getGeneratedKeys();
+            if (rs.next()) {
+                n = rs.getInt(1);
+                p2.close();
+            }
+
+            String query3 = "UPDATE `dar-bms`.`capdev_assignment` SET `planStatus`=2 WHERE `id`=?";
+            PreparedStatement p3 = con.prepareStatement(query3);
+            p3.setInt(1, n);
+            p3.executeUpdate();
+            p3.close();
+
+            success = true;
+
+            con.commit();
+            con.close();
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
+    }
+
+    public ArrayList<CAPDEVPlan> getAllPostponeReasons() {
+        ArrayList<CAPDEVPlan> reasons = new ArrayList();
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            con.setAutoCommit(false);
+            String query = "Select * from `dar-bms`.`ref_postponeReasons` p";
+            PreparedStatement p = con.prepareStatement(query);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                CAPDEVPlan cp = new CAPDEVPlan();
+                cp.setPostponeReason(rs.getInt("postponeReason"));
+                cp.setPostponeReasonDesc(rs.getString("postponeReasonDesc"));
+                reasons.add(cp);
+            }
+            con.commit();
+            rs.close();
+            p.close();
+            con.close();
+
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(CAPDEVDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return reasons;
+    } // REFERENCE: REASONS
 
     public ArrayList<CAPDEVActivity> getCAPDEVActivities() {
         ArrayList<CAPDEVActivity> caList = new ArrayList();
@@ -1593,7 +1215,7 @@ public class CAPDEVDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE capdev_postponeReason SET `assignedTo`=? WHERE `planID`=?";
+            String query = "UPDATE capdev_assignment SET `assignedTo`=? WHERE `planID`=?";
             p = con.prepareStatement(query);
             p.setInt(1, userID);
             p.setInt(2, planID);
@@ -1622,7 +1244,7 @@ public class CAPDEVDAO {
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE capdev_plans SET `planStatus`=? WHERE `planID`=?";
+            String query = "UPDATE capdev_assignment SET `planStatus`=? WHERE `planID`=?";
             p = con.prepareStatement(query);
             p.setInt(1, status);
             p.setInt(2, planID);
@@ -1646,19 +1268,26 @@ public class CAPDEVDAO {
     public boolean updatePlanStatus(int planID, int status, Date implementedDate) {
         boolean success = false;
         PreparedStatement p = null;
+        PreparedStatement p2 = null;
         Connection con = null;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE capdev_plans SET `planStatus`=?, `implementedDate`=? WHERE `planID`=?";
+            String query = "UPDATE capdev_assignment SET `planStatus`=? WHERE `planID`=?";
             p = con.prepareStatement(query);
             p.setInt(1, status);
-            p.setDate(2, implementedDate);
-            p.setInt(3, planID);
+            p.setInt(2, planID);
+
+            String query2 = "UPDATE capdev_plans SET `implementedDate`=? WHERE `planID`=?";
+            p2 = con.prepareStatement(query2);
+            p2.setDate(1, implementedDate);
+            p2.setInt(2, planID);
 
             p.executeUpdate();
+            p2.executeUpdate();
             p.close();
+            p2.close();
             con.commit();
             con.close();
             success = true;
@@ -1946,15 +1575,34 @@ public class CAPDEVDAO {
         ArrayList<Integer> filtered = new ArrayList();
         Calendar cal = Calendar.getInstance();
         for (CAPDEVPlan c : planList) {
-            if (c.getPlanStatus() == 5) {
-                cal.setTime(c.getImplementedDate());
+
+            cal.setTime(c.getImplementedDate());
+            if (cal.get(Calendar.YEAR) == year) {
+                APCPRequest request = requestDAO.getRequestByID(c.getRequestID());
+                if (!filtered.contains(request.getArboID())) {
+                    filtered.add(request.getArboID());
+                }
+            }
+
+        }
+
+        return filtered.size();
+    }
+
+    public int getDistinctARBOCountTarget(ArrayList<CAPDEVPlan> planList, int year) {
+
+        APCPRequestDAO requestDAO = new APCPRequestDAO();
+        ArrayList<Integer> filtered = new ArrayList();
+        Calendar cal = Calendar.getInstance();
+        for (CAPDEVPlan c : planList) {
+            if (c.getPlanStatus() == 5 || c.getPlanStatus() == 4) {
+                cal.setTime(c.getPlanDate());
                 if (cal.get(Calendar.YEAR) == year) {
                     APCPRequest request = requestDAO.getRequestByID(c.getRequestID());
                     if (!filtered.contains(request.getArboID())) {
                         filtered.add(request.getArboID());
                     }
                 }
-
             }
         }
 
@@ -1962,6 +1610,31 @@ public class CAPDEVDAO {
     }
 
     public int getDistinctParticipantCountWithImplemented(ArrayList<CAPDEVPlan> planList, int year) {
+        
+        ArrayList<Integer> filtered = new ArrayList();
+        Calendar cal = Calendar.getInstance();
+
+        for (CAPDEVPlan c : planList) {
+
+            if (c.getPlanStatus() == 5) {
+                cal.setTime(c.getImplementedDate());
+                if (cal.get(Calendar.YEAR) == year) {
+
+                    for (CAPDEVActivity act : c.getActivities()) {
+                        for (ARB arb : act.getArbList()) {
+                            if (!filtered.contains(arb.getArbID())) {
+                                filtered.add(arb.getArbID());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return filtered.size();
+    }
+
+    public int getDistinctParticipantCountTarget(ArrayList<CAPDEVPlan> planList, int year) {
 
         APCPRequestDAO requestDAO = new APCPRequestDAO();
         ARBODAO arboDAO = new ARBODAO();
@@ -1970,8 +1643,8 @@ public class CAPDEVDAO {
 
         for (CAPDEVPlan c : planList) {
 
-            if (c.getPlanStatus() == 5) {
-                cal.setTime(c.getImplementedDate());
+            if (c.getPlanStatus() == 5 || c.getPlanStatus() == 4) {
+                cal.setTime(c.getPlanDate());
                 if (cal.get(Calendar.YEAR) == year) {
                     APCPRequest request = requestDAO.getRequestByID(c.getRequestID());
                     ARBO arbo = arboDAO.getARBOByID(request.getArboID());
@@ -2007,6 +1680,111 @@ public class CAPDEVDAO {
         }
 
         return sum;
+    }
+
+    public double getYearlyImplementedBudget(ArrayList<CAPDEVPlan> planList, int year) {
+        double sum = 0;
+        Calendar cal = Calendar.getInstance();
+        for (CAPDEVPlan plan : planList) {
+            cal.setTime(plan.getImplementedDate());
+            if (cal.get(Calendar.YEAR) == year) {
+                sum += plan.getBudget();
+            }
+        }
+
+        return sum;
+    }
+
+    public int getYearlyImplementedCount(ArrayList<CAPDEVPlan> planList, int year) {
+        int count = 0;
+        Calendar cal = Calendar.getInstance();
+        for (CAPDEVPlan plan : planList) {
+            cal.setTime(plan.getImplementedDate());
+            if (cal.get(Calendar.YEAR) == year) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public int getYearlyPlanCount(ArrayList<CAPDEVPlan> planList, int year) {
+        int count = 0;
+        Calendar cal = Calendar.getInstance();
+        for (CAPDEVPlan plan : planList) {
+            if (plan.getPlanStatus() == 5 || plan.getPlanStatus() == 4) {
+                cal.setTime(plan.getPlanDate());
+                if (cal.get(Calendar.YEAR) == year) {
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public int getOnTrackPlansPerStatus(ArrayList<CAPDEVPlan> planList, int status) {
+
+        int count = 0;
+
+        for (CAPDEVPlan plan : planList) {
+            if (plan.getPlanStatus() == status) {
+                int difference = 0;
+                if (status == 1 || status == 2 || status == 4) {
+
+                    difference = getDateDiff(plan.getPlanDate());
+
+                    if (difference < 5) {
+                        count++;
+                    }
+
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public int getDelayedPlansPerStatus(ArrayList<CAPDEVPlan> planList, int status) {
+
+        int count = 0;
+
+        for (CAPDEVPlan plan : planList) {
+            if (plan.getPlanStatus() == status) {
+                int difference = 0;
+                if (status == 1 || status == 2 || status == 4) {
+
+                    difference = getDateDiff(plan.getPlanDate());
+
+                    if (difference >= 5) {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public int getDateDiff(Date date1) {
+        long diffInMillies = System.currentTimeMillis() - date1.getTime();
+        return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
+    public double getPercentage(int value1, int value2) {
+        double value = 0;
+        if (value2 > 0) {
+            value = (value1 / value2) * 100;
+        }
+        return value;
+    }
+
+    public double getPercentage(double value1, double value2) {
+        double value = 0;
+        if (value2 > 0) {
+            value = (value1 / value2) * 100;
+        }
+        return value;
     }
 
 }

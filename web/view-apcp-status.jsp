@@ -337,7 +337,7 @@
                     <div class="row"  id="1" style="display:none;">
                         <!--REQUESTED-->
                         <div class="col-xs-12">
-                            <div class="box bg-info">
+                            <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Requested</strong></h3>
                                     <div class="btn-group pull-right">
@@ -396,7 +396,7 @@
                     <div class="row" id="2" style="display:none;">
                         <!--CLEARED-->
                         <div class="col-xs-12">
-                            <div class="box bg-primary">
+                            <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Cleared</strong></h3>
                                     <div class="btn-group pull-right">
@@ -456,7 +456,7 @@
                     <div class="row" id="3" style="display:none;">
                         <!--ENDORSED-->
                         <div class="col-xs-12">
-                            <div class="box bg-navy">
+                            <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Endorsed</strong></h3>
                                     <div class="btn-group pull-right">

@@ -41,10 +41,25 @@
                     </h1>
                 </section>
 
-                <!-- Main content -->
+                <%
+                ArrayList<CAPDEVPlan> reasons = capdevDAO.getAllPostponeReasons();
+                %>
 
                 <!-- Main content -->
                 <section class="content">
+
+                    <%if(request.getAttribute("success") != null){%>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
+                    </div>
+                    <%}else if(request.getAttribute("errMessage") != null){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                    </div>
+
+                    <%}%>
 
                     <div class="row">
                         <div class="col-xs-12">
@@ -66,7 +81,7 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>Pending CAPDEV Proposals</strong></h3>
+                                    <h3 class="box-title"><strong>Assigned CAPDEV Proposals</strong></h3>
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                     </div>                         
@@ -115,6 +130,15 @@
                                                         <div class="modal-body">
                                                             <div class="form-group">
                                                                 <label for="">Reason: </label>
+                                                                <select name="postponeReason" id="" class="form-control">
+                                                                    <%for(CAPDEVPlan reason : reasons){%>
+                                                                    <option value="<%out.print(reason.getPostponeReason());%>"><%out.print(reason.getPostponeReasonDesc());%></option>
+                                                                    <%}%>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for=""></label>
+                                                                <textarea name="reason" id="" cols="3" rows="2" class="form-control"></textarea>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -132,9 +156,10 @@
                                         <tfoot>
                                             <tr>
                                                 <th>Plan DTN</th>
-                                                <th>ARBO Name</th>
+                                                <th>ARBO</th>
                                                 <th>No. of Activities</th>
-                                                <th>Action</th>       
+                                                <th>Status</th>
+                                                <th>Action</th>      
                                             </tr>
                                         </tfoot>
 
@@ -147,7 +172,7 @@
                         <!-- /.col -->
                     </div>
 
-                    <div class="row">
+                    <%--<div class="row">
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -202,7 +227,7 @@
                             <!-- /.box -->
                         </div>
                         <!-- /.col -->
-                    </div>
+                    </div>--%>
 
 
                     <!-- /.row -->
@@ -214,29 +239,44 @@
         <%@include file="jspf/footer.jspf" %>
 
         <script type="text/javascript">
-            $(document).ready(function(){
-               $('#calendar').fullCalendar({
-                  theme:true,
-                  editable:false,
-                  defaultView: 'month',
-                  eventRender: function(eventObj, $el){
-                      $el.popover({
-                         title: eventObj.title,
-                         content: eventObj.description,
-                         trigger: 'hover',
-                         placement: 'top',
-                         container: 'body'
-                      });
-                  },
-                  events: '/AssignedPlans'
-               });
+//            $(document).ready(function () {
+//                $('#calendar').fullCalendar({
+//                    theme: true,
+//                    editable: false,
+//                    defaultView: 'month',
+//                    events: '/AssignedPlans'
+//                });
+//            });
+
+            $(document).ready(function () {
+
+                $.ajax({
+                    url: 'AssignedPlans',
+                    dataType: "json",
+                    success: function (response) {
+                        $('#calendar').fullCalendar({
+                            header: {
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'month,agendaWeek,agendaDay'
+                            },
+                            editable: true,
+                            axisFormat: 'H:mmtt',
+                            slotMinutes: 10,
+                            firstHour: 8,
+                            minTime: 8,
+                            maxTime: 22,
+                            // use "[response]" if only one event
+                            events: response
+                        });
+                    }
+                });
             });
         </script>
         <script type="text/javascript">
             function chg() {
                 var arboID = $('input[name=arboID]:checked').val();
                 var xhttp = new XMLHttpRequest();
-
                 xhttp.onreadystatechange = function () {
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
                         document.getElementById('arboName').innerHTML = xhttp.responseText;

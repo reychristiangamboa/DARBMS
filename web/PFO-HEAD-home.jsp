@@ -29,11 +29,11 @@
 
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="info-box">
-                                <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+                                <span class="info-box-icon bg-yellow"><i class="fa fa-warning"></i></span>
 
                                 <div class="info-box-content">
                                     <span class="info-box-text">Delayed Requests</span>
-                                    <span class="info-box-number">90<small>%</small></span>
+                                    <span class="info-box-number"><%out.print(apcpRequestDAO.getPercentage(apcpRequestDAO.getDelayedRequests(provincialRequests),provincialRequests.size()));%><small>%</small></span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
@@ -42,7 +42,7 @@
                         <!-- /.col -->
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="info-box">
-                                <span class="info-box-icon bg-red"><i class="fa fa-google-plus"></i></span>
+                                <span class="info-box-icon bg-red"><i class="fa fa-hourglass-end"></i></span>
 
                                 <div class="info-box-content">
                                     <span class="info-box-text">Past Due Accounts</span>
@@ -59,7 +59,7 @@
 
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="info-box">
-                                <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
+                                <span class="info-box-icon bg-orange"><i class="fa fa-pause"></i></span>
 
                                 <div class="info-box-content">
                                     <span class="info-box-text">Postponed Plans</span>
@@ -77,7 +77,7 @@
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="info-box">
-                                <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
+                                <span class="info-box-icon bg-green"><i class="fa fa-money"></i></span>
 
                                 <div class="info-box-content">
                                     <span class="info-box-text">APCP BUDGET</span>
@@ -89,7 +89,7 @@
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="info-box">
-                                <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
+                                <span class="info-box-icon bg-green"><i class="fa fa-money"></i></span>
 
                                 <div class="info-box-content">
                                     <span class="info-box-text">CAPDEV BUDGET</span>
@@ -111,7 +111,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">
-                                    <table class="table table-bordered table-striped modTable">
+                                    <table id="table" class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>ARBO</th>
@@ -204,13 +204,6 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">
 
-
-                                    <div class="row">
-                                        <div class="col-xs-12">
-
-                                        </div>
-                                    </div>
-
                                     <div class="row">
                                         <div class="col-md-8 text-center">
 
@@ -226,19 +219,19 @@
 
                                             <div class="progress-group">
                                                 <span class="progress-text">ARBOs SERVED</span>
-                                                <span class="progress-number"><%out.print(apcpRequestDAO.getDistinctARBOCountWithReleased(provincialRequests));%>/<strong><%out.print(apcpRequestDAO.getDistinctARBOCountTarget(provincialRequests));%></strong></span> 
+                                                <span class="progress-number"><%out.print(apcpRequestDAO.getDistinctARBOCountWithReleased(provincialRequests,year));%>/<strong><%out.print(apcpRequestDAO.getDistinctARBOCountTarget(provincialRequests,year));%></strong></span> 
 
                                                 <div class="progress sm">
-                                                    <div class="progress-bar progress-bar-aqua" style="width: <%out.print(apcpRequestDAO.getPercentage(apcpRequestDAO.getDistinctARBOCountWithReleased(provincialRequests),apcpRequestDAO.getDistinctARBOCountTarget(provincialRequests)) + "%");%>"></div>
+                                                    <div class="progress-bar progress-bar-aqua" style="width: <%out.print(apcpRequestDAO.getPercentage(apcpRequestDAO.getDistinctARBOCountWithReleased(provincialRequests,year),apcpRequestDAO.getDistinctARBOCountTarget(provincialRequests,year)) + "%");%>"></div>
                                                 </div>
                                             </div>
 
                                             <div class="progress-group">
                                                 <span class="progress-text">ARBs SERVED</span>
-                                                <span class="progress-number"><%out.print(apcpRequestDAO.getDistinctRecipientCountWithReleased(provincialRequests));%>/<strong><%out.print(apcpRequestDAO.getDistinctRecipientCountTarget(provincialRequests));%></strong></span>
+                                                <span class="progress-number"><%out.print(apcpRequestDAO.getDistinctRecipientCountWithReleased(provincialRequests,year));%>/<strong><%out.print(apcpRequestDAO.getDistinctRecipientCountTarget(provincialRequests,year));%></strong></span>
 
                                                 <div class="progress sm">
-                                                    <div class="progress-bar progress-bar-red" style="width: <%out.print(apcpRequestDAO.getPercentage(apcpRequestDAO.getDistinctRecipientCountWithReleased(provincialRequests),apcpRequestDAO.getDistinctRecipientCountTarget(provincialRequests)) + "%");%>"></div>
+                                                    <div class="progress-bar progress-bar-red" style="width: <%out.print(apcpRequestDAO.getPercentage(apcpRequestDAO.getDistinctRecipientCountWithReleased(provincialRequests,year),apcpRequestDAO.getDistinctRecipientCountTarget(provincialRequests,year)) + "%");%>"></div>
                                                 </div>
                                             </div>
 
@@ -261,35 +254,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- /.row -->
-                                    <!--
-                                             <div class="col-md-2">
-                                             <p class="text-center">
-                                                <strong>Key Findings</strong>
-                                            </p>
-                                            <div class="row">
-                                                <div class="box no-border">
-                                                    <div class="box-body">
-                                                        <p>Hello World</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="box no-border">
-                                                    <div class="box-body">
-                                                        <p>Hello World</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="box no-border">
-                                                    <div class="box-body">
-                                                        <p>Hello World</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    -->
                                     <hr>
                                     <div class="row">
                                         <center>
@@ -297,7 +261,7 @@
                                                         for(APCPRequest req : allRequestStatus){ // THIS IS A STATUS
                                                         if(req.getRequestStatus() >= 0 && req.getRequestStatus() <= 4){
                                             %>
-                                            <button class="btn btn-primary"><%out.print(req.getRequestStatusDesc());%> : <%out.print(apcpRequestDAO.getOnTrackRequestsPerStatus(provincialRequests,req.getRequestStatus()));%> | <strong><%out.print(apcpRequestDAO.getDelayedRequestsPerStatus(provincialRequests,req.getRequestStatus()));%></strong>  </button>
+                                            <button class="btn btn-primary" id="APCPOnTrackDelayed<%out.print(req.getRequestStatus());%>"><%out.print(req.getRequestStatusDesc());%> : <%out.print(apcpRequestDAO.getOnTrackRequestsPerStatus(provincialRequests,req.getRequestStatus()));%> | <strong><%out.print(apcpRequestDAO.getDelayedRequestsPerStatus(provincialRequests,req.getRequestStatus()));%></strong></button>
                                             <%}%>
                                             <%}%>
                                             <div class="row">
@@ -306,13 +270,12 @@
                                         </center>
                                     </div>
                                 </div>
-                                <!-- ./box-body -->
                                 <div class="box-footer">
                                     <div class="row">
                                         <div class="col-sm-3 col-xs-6" id="totalARBOsAPCP">
                                             <div class="description-block border-right">
                                                 <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span>
-                                                <h5 class="description-header"><%out.print(apcpRequestDAO.getDistinctARBOCountWithReleased(provincialRequests));%></h5>
+                                                <h5 class="description-header"><%out.print(apcpRequestDAO.getDistinctARBOCountWithReleased(provincialRequests,year));%></h5>
                                                 <span class="description-text">TOTAL ARBOs</span>
                                             </div>
                                             <!-- /.description-block -->
@@ -321,7 +284,7 @@
                                         <div class="col-sm-3 col-xs-6" id="totalARBsAPCP">
                                             <div class="description-block border-right">
                                                 <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                                                <h5 class="description-header"><%out.print(apcpRequestDAO.getDistinctRecipientCountWithReleased(provincialRequests));%></h5>
+                                                <h5 class="description-header"><%out.print(apcpRequestDAO.getDistinctRecipientCountWithReleased(provincialRequests,year));%></h5>
                                                 <span class="description-text">TOTAL ARBs</span>
                                             </div>
                                             <!-- /.description-block -->
@@ -330,7 +293,7 @@
                                         <div class="col-sm-3 col-xs-6" id="totalReleasedAmountAPCP">
                                             <div class="description-block border-right">
                                                 <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 20%</span>
-                                                <h5 class="description-header"><%out.print(currency.format(apcpRequestDAO.getYearlySumOfReleasesByRequestId(provincialRequests,year)));%></h5>
+                                                <h5 class="description-header"><%out.print(currency.format(apcpRequestDAO.getYearlySumOfReleasesByRequest(provincialRequests,year)));%></h5>
                                                 <span class="description-text">TOTAL RELEASED AMOUNT (<%out.print(year);%>)</span>
                                             </div>
                                             <!-- /.description-block -->
@@ -339,7 +302,7 @@
                                         <div class="col-sm-3 col-xs-6" id="totalPastDueAmountAPCP">
                                             <div class="description-block">
                                                 <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> 18%</span>
-                                                <h5 class="description-header"><%out.print(currency.format(apcpRequestDAO.getYearlyTotalPastDueAmount(provincialRequests)));%></h5>
+                                                <h5 class="description-header"><%out.print(currency.format(apcpRequestDAO.getYearlyTotalPastDueAmount(provincialRequests, year)));%></h5>
                                                 <span class="description-text">TOTAL PAST DUE (<%out.print(year);%>)</span>
                                             </div>
                                             <!-- /.description-block -->
@@ -350,7 +313,7 @@
                                         <div class="col-sm-4 col-xs-6" id="cumulativeReleasedAmountAPCP">
                                             <div class="description-block border-right">
                                                 <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span>
-                                                <h5 class="description-header"><%out.print(currency.format(apcpRequestDAO.getSumOfAccumulatedReleasesByRequestId(provincialRequests)));%></h5>
+                                                <h5 class="description-header"><%out.print(currency.format(apcpRequestDAO.getSumOfAccumulatedReleasesByRequest(provincialRequests)));%></h5>
                                                 <span class="description-text">CUMULATIVE RELEASED AMOUNT</span>
                                             </div>
                                             <!-- /.description-block -->
@@ -401,33 +364,33 @@
 
                                             <div class="progress-group">
                                                 <span class="progress-text">ARBOs Served</span>
-                                                <span class="progress-number"><b>160</b>/200</span>
+                                                <span class="progress-number"><b><%out.print(capdevDAO.getDistinctARBOCountWithImplemented(implementedPlans,year));%></b>/<%out.print(capdevDAO.getDistinctARBOCountTarget(allPlans,year));%></span>
 
                                                 <div class="progress sm">
-                                                    <div class="progress-bar progress-bar-aqua" style="width: 80%"></div>
+                                                    <div class="progress-bar progress-bar-aqua" style="width: <%out.print(capdevDAO.getPercentage(capdevDAO.getDistinctARBOCountWithImplemented(implementedPlans,year),capdevDAO.getDistinctARBOCountTarget(allPlans,year)) + "%");%>"></div>
                                                 </div>
                                             </div>
 
                                             <div class="progress-group">
                                                 <span class="progress-text">ARBs Served</span>
-                                                <span class="progress-number"><b>310</b>/400</span>
+                                                <span class="progress-number"><b><%out.print(capdevDAO.getDistinctParticipantCountWithImplemented(implementedPlans, year));%></b>/<%out.print(capdevDAO.getDistinctParticipantCountTarget(allPlans,year));%></span>
 
                                                 <div class="progress sm">
-                                                    <div class="progress-bar progress-bar-red" style="width: 80%"></div>
+                                                    <div class="progress-bar progress-bar-red" style="width: <%out.print(capdevDAO.getPercentage(capdevDAO.getDistinctParticipantCountWithImplemented(implementedPlans, year),capdevDAO.getDistinctParticipantCountTarget(allPlans,year)) + "%");%>"></div>
                                                 </div>
                                             </div>
 
                                             <div class="progress-group">
                                                 <span class="progress-text">Activities Implemented</span>
-                                                <span class="progress-number"><b>480</b>/800</span>
+                                                <span class="progress-number"><b><%out.print(capdevDAO.getYearlyImplementedCount(implementedPlans, year));%></b>/<%out.print(capdevDAO.getYearlyPlanCount(allPlans,year));%></span>
 
                                                 <div class="progress sm">
-                                                    <div class="progress-bar progress-bar-green" style="width: 80%"></div>
+                                                    <div class="progress-bar progress-bar-green" style="width: <%out.print(capdevDAO.getPercentage(capdevDAO.getYearlyImplementedCount(implementedPlans, year),capdevDAO.getYearlyPlanCount(allPlans,year)) + "%");%>"></div>
                                                 </div>
                                             </div>
 
                                             <div class="progress-group">
-                                                <span class="progress-text">APCP Budget</span>
+                                                <span class="progress-text">Budget</span>
                                                 <span class="progress-number"><b>250</b>/500</span>
 
                                                 <div class="progress sm">
@@ -443,10 +406,10 @@
                                     <div class="row">
                                         <center>
                                             <%
-                                                        for(APCPRequest req : allRequestStatus){ // THIS IS A STATUS
-                                                        if(req.getRequestStatus() >= 0 && req.getRequestStatus() <= 4){
+                                                        for(CAPDEVPlan plan : allPlanStatus){ // THIS IS A STATUS
+                                                        if(plan.getPlanStatus() == 1 || plan.getPlanStatus() == 2 || plan.getPlanStatus() == 4){
                                             %>
-                                            <button class="btn btn-primary"><%out.print(req.getRequestStatusDesc());%> : <%out.print(apcpRequestDAO.getOnTrackRequestsPerStatus(provincialRequests,req.getRequestStatus()));%> | <strong><%out.print(apcpRequestDAO.getDelayedRequestsPerStatus(provincialRequests,req.getRequestStatus()));%></strong>  </button>
+                                            <button class="btn btn-primary" id="CAPDEVOnTrackDelayed<%out.print(plan.getPlanStatus());%>"><%out.print(plan.getPlanStatusDesc());%> : <%out.print(capdevDAO.getOnTrackPlansPerStatus(allPlans,plan.getPlanStatus()));%> | <strong><%out.print(capdevDAO.getDelayedPlansPerStatus(allPlans,plan.getPlanStatus()));%></strong>  </button>
                                             <%}%>
                                             <%}%>
                                             <div class="row">
@@ -458,7 +421,7 @@
                                 <!-- ./box-body -->
                                 <div class="box-footer">
                                     <div class="row">
-                                        <div class="col-sm-3 col-xs-6">
+                                        <div class="col-sm-3 col-xs-6" id="totalARBOsCAPDEV">
                                             <div class="description-block border-right">
                                                 <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span>
                                                 <h5 class="description-header"><%out.print(capdevDAO.getDistinctARBOCountWithImplemented(implementedPlans,year));%></h5>
@@ -467,7 +430,7 @@
                                             <!-- /.description-block -->
                                         </div>
                                         <!-- /.col -->
-                                        <div class="col-sm-3 col-xs-6">
+                                        <div class="col-sm-3 col-xs-6" id="totalARBsCAPDEV">
                                             <div class="description-block border-right">
                                                 <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
                                                 <h5 class="description-header"><%out.print(capdevDAO.getDistinctParticipantCountWithImplemented(implementedPlans, year));%></h5>
@@ -476,11 +439,11 @@
                                             <!-- /.description-block -->
                                         </div>
                                         <!-- /.col -->
-                                        <div class="col-sm-3 col-xs-6">
+                                        <div class="col-sm-3 col-xs-6" id="totalImplementedPlans">
                                             <div class="description-block border-right">
                                                 <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 20%</span>
-                                                <h5 class="description-header"><%out.print(implementedPlans.size());%></h5>
-                                                <span class="description-text">TOTAL ACTIVITIES IMPLEMENTED</span>
+                                                <h5 class="description-header"><%out.print(capdevDAO.getYearlyImplementedCount(implementedPlans, year));%></h5>
+                                                <span class="description-text">TOTAL PLANS IMPLEMENTED</span>
                                             </div>
                                             <!-- /.description-block -->
                                         </div>
@@ -495,10 +458,10 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3" id="totalImplementedBudget">
                                             <div class="description-block border-right">
                                                 <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                                                <h5 class="description-header"><%out.print(currency.format(capdevDAO.getCumulativeBudgetSpent(allPlans)));%></h5>
+                                                <h5 class="description-header"><%out.print(currency.format(capdevDAO.getYearlyImplementedBudget(implementedPlans, year)));%></h5>
                                                 <span class="description-text">IMPLEMENTED ACTIVITY BUDGET (<%out.print(year);%>)</span>
                                             </div>
                                         </div>
@@ -548,6 +511,113 @@
         <%@include file="jspf/footer.jspf" %>
         <script type="text/javascript">
 
+            $(document).ready(function () {
+
+                var ctxAPCP = document.getElementById('apcpChart');
+                var APCPChart;
+            <%
+               Chart chart = new Chart();
+               String json = "";
+               json = chart.getStackedBarChartAPCPOnTrackDelayedByStatus(arboListProvince,0,3, "FOR CONDUIT APPROVAL"); // inital chart
+            %>
+
+                // INITIAL CHART VIEW!!!
+                APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+
+
+                $('#totalARBOsAPCP').on('click', function () {
+                    APCPChart.destroy();
+            <%
+                        json = chart.getLineChartAPCPTotalARBOs(releasedRequests, "ARBOs SERVED");
+            %>
+                    APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+                });
+
+                $('#totalARBsAPCP').on('click', function () {
+                    APCPChart.destroy();
+            <%
+                        json = chart.getLineChartAPCPTotalARBs(releasedRequests, "ARBs SERVED");
+            %>
+                    APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+                });
+
+                $('#totalReleasedAmountAPCP').on('click', function () {
+                    APCPChart.destroy();
+            <%
+                        json = chart.getLineChartTotalReleasedAmount(releasedRequests, "TOTAL RELEASED AMOUNT");
+            %>
+                    APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+                });
+
+                $('#totalPastDueAmountAPCP').on('click', function () {
+                    APCPChart.destroy();
+            <%
+                        json = chart.getLineChartTotalPastDueAmount(provincialRequests, "TOTAL PAST DUE AMOUNT");
+            %>
+                    APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+                });
+
+            <%--$('#cumulativeReleasedAmountAPCP').on('click', function () {
+                APCPChart.destroy();
+        <%
+                    json = chart.getLineChart();
+        %>
+                APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+            });
+                
+            $('#cumulativePastDueAmountAPCP').on('click', function () {
+                APCPChart.destroy();
+        <%
+                    json = chart.getLineChart();
+        %>
+                APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+            });--%>
+
+
+                $('#APCPOnTrackDelayed0').on('click', function () {
+                    APCPChart.destroy();
+            <%
+                        json = chart.getStackedBarChartAPCPOnTrackDelayedByStatus(arboListProvince, 0, 3, "FOR CONDUIT APPROVAL");
+            %>
+                    APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+                });
+
+                $('#APCPOnTrackDelayed1').on('click', function () {
+                    APCPChart.destroy();
+            <%
+                        json = chart.getStackedBarChartAPCPOnTrackDelayedByStatus(arboListProvince, 1, 3, "REQUESTED");
+            %>
+                    APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+                });
+
+                $('#APCPOnTrackDelayed2').on('click', function () {
+                    APCPChart.destroy();
+            <%
+                        json = chart.getStackedBarChartAPCPOnTrackDelayedByStatus(arboListProvince, 2, 3, "CLEARED");
+            %>
+                    APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+                });
+
+                $('#APCPOnTrackDelayed3').on('click', function () {
+                    APCPChart.destroy();
+            <%
+                        json = chart.getStackedBarChartAPCPOnTrackDelayedByStatus(arboListProvince, 3, 3, "ENDORSED");
+            %>
+                    APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+                });
+
+                $('#APCPOnTrackDelayed4').on('click', function () {
+                    APCPChart.destroy();
+            <%
+                        json = chart.getStackedBarChartAPCPOnTrackDelayedByStatus(arboListProvince, 4, 3, "APPROVED");
+            %>
+                    APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+                });
+
+
+
+            });
+
             $(function () {
                 $('#dr-totalYearReleaseReport').daterangepicker(
                         {
@@ -588,18 +658,102 @@
 
             });
 
+
+        </script>
+
+        <script type="text/javascript">
+
             $(document).ready(function () {
-                var ctxAPCP = document.getElementById('apcpChart');
+
+                var ctxCAPDEV = document.getElementById('capdevChart');
+                var CAPDEVChart;
             <%
-               Chart chart = new Chart();
-               String total = "";
+               Chart chart2 = new Chart();
+               String json2 = "";
+               json2 = chart2.getStackedBarChartCAPDEVOnTrackDelayedByStatus(arboListProvince,1,3, "PENDING"); // inital chart
             %>
 
-                $('#totalARBOsAPCP').on('click', function({
-                chart.destroy();
-                json = chart.getLine
-                        ));
+                // INITIAL CHART VIEW!!!
+                CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json2);%>);
+
+
+                $('#totalARBOsCAPDEV').on('click', function () {
+                    CAPDEVChart.destroy();
+            <%
+                        json2 = chart.getLineChartCAPDEVTotalARBOs(allPlans, "ARBOs SERVED");
+            %>
+                    CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json2);%>);
+                });
+
+                $('#totalARBsCAPDEV').on('click', function () {
+                    CAPDEVChart.destroy();
+            <%
+                        json2 = chart.getLineChartCAPDEVTotalARBs(allPlans, "ARBs SERVED");
+            %>
+                    CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json2);%>);
+                });
+
+                $('#totalReleasedAmountAPCP').on('click', function () {
+                    CAPDEVChart.destroy();
+            <%
+                        json2 = chart.getLineChartTotalReleasedAmount(releasedRequests, "TOTAL RELEASED AMOUNT");
+            %>
+                    CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json);%>);
+                });
+
+                $('#totalPastDueAmountAPCP').on('click', function () {
+                    CAPDEVChart.destroy();
+            <%
+                        json2 = chart.getLineChartTotalPastDueAmount(provincialRequests, "TOTAL PAST DUE AMOUNT");
+            %>
+                    CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json2);%>);
+                });
+
+            <%--$('#cumulativeReleasedAmountAPCP').on('click', function () {
+                APCPChart.destroy();
+        <%
+                    json = chart.getLineChart();
+        %>
+                APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
             });
+                
+            $('#cumulativePastDueAmountAPCP').on('click', function () {
+                APCPChart.destroy();
+        <%
+                    json = chart.getLineChart();
+        %>
+                APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
+            });--%>
+
+
+                $('#CAPDEVOnTrackDelayed1').on('click', function () {
+                    CAPDEVChart.destroy();
+            <%
+                        json2 = chart.getStackedBarChartCAPDEVOnTrackDelayedByStatus(arboListProvince, 1, 3, "PENDING");
+            %>
+                    CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json2);%>);
+                });
+
+                $('#CAPDEVOnTrackDelayed2').on('click', function () {
+                    CAPDEVChart.destroy();
+            <%
+                        json2 = chart.getStackedBarChartCAPDEVOnTrackDelayedByStatus(arboListProvince, 2, 3, "APPROVED");
+            %>
+                    CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json2);%>);
+                });
+
+                $('#CAPDEVOnTrackDelayed4').on('click', function () {
+                    CAPDEVChart.destroy();
+            <%
+                        json2 = chart.getStackedBarChartCAPDEVOnTrackDelayedByStatus(arboListProvince, 4, 3, "ASSIGNED");
+            %>
+                    CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json2);%>);
+                });
+            });
+
+
+
+
         </script>
     </body>
 </html>

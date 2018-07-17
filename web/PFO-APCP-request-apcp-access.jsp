@@ -74,43 +74,7 @@
                         <!-- /.box-header -->
                         <form method="post" id="requestConduitForm">
                             <div class="box-body">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="">Name of ARBO</label>
-                                            <input type="text" class="form-control" value="<%out.print(arbo.getArboName());%>"disabled >
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <!-- /.form-group -->
-                                        <div class="form-group">
-                                            <label for="Type">ARBO Type</label>
-                                            <input type="text" class="form-control" id="Type" value="<%out.print(arbo.getArboTypeDesc());%>">
-                                        </div>
-                                        <!-- /.form-group -->
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>ARBO Members</label>
-
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
-                                                <div class="input-group-btn">
-                                                    <button type="button" class="btn btn-info">View</button>
-                                                </div>
-                                            </div>
-                                            <!-- /.input group -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <label>Address</label>
-                                            <input type="text" class="form-control" id="address" value="<%out.print(arbo.getFullAddress());%>" disabled>
-                                        </div>
-                                    </div>
-                                </div>
+                                <%@include file="jspf/arbo-information.jspf" %>
                                 <!-- /.row -->
                                 <div class="box-header with-border">
                                     <h4 class="box-title"><strong>Conduit Qualification Checklist</strong></h4>
