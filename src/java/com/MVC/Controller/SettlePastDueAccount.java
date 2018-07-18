@@ -53,15 +53,15 @@ public class SettlePastDueAccount extends BaseServlet {
         if (request.getParameter("paymentMode").equals("full")) {
             pda.setPastDueAmount(oldPDA.getPastDueAmount());
         } else {
-            String[] vals = request.getParameter("amount").split(",");
-            StringBuilder sb = new StringBuilder();
-            for (String val : vals) {
-                sb.append(val);
-            }
+//            String[] vals = request.getParameter("amount").split(",");
+//            StringBuilder sb = new StringBuilder();
+//            for (String val : vals) {
+//                sb.append(val);
+//            }
+//
+//            String finAmount = sb.toString();
 
-            String finAmount = sb.toString();
-
-            pda.setPastDueAmount(Double.parseDouble(finAmount));
+            pda.setPastDueAmount(Double.parseDouble(request.getParameter("amount")));
         }
 
         if (dao.settlePastDueAccount(pda)) {

@@ -6,6 +6,7 @@
 package com.MVC.Model;
 
 import com.MVC.DAO.APCPRequestDAO;
+import com.MVC.DAO.CAPDEVDAO;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,6 +68,12 @@ public class APCPRequest {
 
     public double getTotalReleaseOSBalance() {
         double value = 0;
+        
+        APCPRequestDAO dao = new APCPRequestDAO();
+        
+        this.releases = dao.getAllAPCPReleasesByRequest(this.requestID);
+        this.arboRepayments = dao.getAllARBORepaymentsByRequest(this.requestID);
+        
         for (APCPRelease r : this.releases) {
             value += r.getOSBalance();
         }
@@ -332,6 +339,9 @@ public class APCPRequest {
 
     public double getTotalReleasedAmountPerRequest() {
         double val = 0;
+        APCPRequestDAO dao = new APCPRequestDAO();
+        this.releases = dao.getAllAPCPReleasesByRequest(this.requestID);
+        System.out.println("RELEASES:"+this.releases.size());
         for (APCPRelease release : this.releases) {
             val += release.getReleaseAmount();
         }
@@ -481,7 +491,10 @@ public class APCPRequest {
     }
 
     public boolean checkARBOHadAPCPOrientation() {
+        CAPDEVDAO dao = new CAPDEVDAO();
+        this.plans = dao.getAllCAPDEVPlanByRequest(this.requestID);
         for (CAPDEVPlan plan : this.plans) {
+            plan.setActivities(dao.getCAPDEVPlanActivities(plan.getPlanID()));
             for (CAPDEVActivity act : plan.getActivities()) {
                 if (plan.getPlanStatus() == 5 && act.getActivityType() == 2) { // IMPLEMENTED and APCP ORIENTATION
                     return true;

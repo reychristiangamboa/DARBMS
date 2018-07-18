@@ -35,6 +35,11 @@
                 CAPDEVDAO capdevDAO99 = new CAPDEVDAO();
                 UserDAO uDAO99 = new UserDAO();
                 
+                ARBODAO arboDAO = new ARBODAO();
+                APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+                ARBDAO arbDAO = new ARBDAO();
+                UserDAO userDAO = new UserDAO();
+                
                 ArrayList<CAPDEVActivity> activities = capdevDAO99.getCAPDEVActivities();
                 APCPRequest r = apcpRequestDAO99.getRequestByID((Integer)request.getAttribute("requestID"));
                 
@@ -47,7 +52,7 @@
         int reqID = (Integer) request.getAttribute("requestID");
         APCPRequest req = apcpRequestDAO99.getRequestByID(reqID);
         ARBO arbo = arboDAO99.getARBOByID(req.getArboID());
-        UserDAO userDAO = new UserDAO();
+        
             %>                                        
             <% User u1 = new User(); %>
             <% User u2 = new User(); %>
@@ -218,6 +223,7 @@
         <%@include file="jspf/footer.jspf" %>
         <script type="text/javascript">
             $(document).ready(function () {
+                alert("WEW!");
                 var arboInterestRate = <%out.print(r.getLoanReason().getLoanTerm().getArboInterestRate());%>
                 alert(arboInterestRate);
                 $('#releaseAmount').on('input', function () {
@@ -236,6 +242,8 @@
 
             function chg() {
                 var arbID = document.getElementById('arbRepaymentSelect').value;
+                
+                alert(arbID);
 
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {

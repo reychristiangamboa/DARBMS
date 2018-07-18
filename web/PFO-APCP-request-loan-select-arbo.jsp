@@ -57,6 +57,7 @@
 
                                             <tbody>
                                                 <%for (ARBO arbo : arboListProvince) {%>
+                                                <%arbo.setArbList(arbDAO.getAllARBsARBO(arbo.getArboID()));%>
                                                 <%if (arbo.getQualifiedSince() != null) {%>
                                                 <tr>
                                                     <td><a href="SelectARBORequest?id=<%out.print(arbo.getArboID());%>"> <%out.print(arbo.getArboName());%></a></td>

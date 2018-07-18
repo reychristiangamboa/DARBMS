@@ -105,7 +105,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <%@include file="jspf/create-capdev.jspf" %>
                                     </div>
                                 </div>
@@ -123,7 +123,7 @@
         <script type="text/javascript">
 
             $(document).ready(function () {
-                
+
                 var max_fields = 9; //maximum input boxes allowed
                 var wrapper = $('.input_fields_wrap'); //Fields wrapper
                 var x = 0; //initlal text box count
@@ -132,7 +132,7 @@
                     var documentID = parseInt($(this).attr('data-documentID'));
                     var documentDesc = $(this).attr('data-documentDesc');
                     var markup = "";
-                    
+
                     if (documentID === 2) {
                         markup = '<div class="row"><div class="col-xs-4"><div class="form-group"><label for="Category">Category</label><input type="hidden" name="category" value="' + documentID + '"><input type="text" class="form-control" value="' + documentDesc + '" disabled/></div></div><div class="col-xs-6"><div class="form-group"><label for="Activity">Activity</label><select name="activities[]" class="form-control" id="Activity" style="width:100%;"><%for(CAPDEVActivity act : activity2){%><option value="<%out.print(act.getActivityType());%>"><%out.print(act.getActivityName());%></option><%}%></select></div></div><div class="col-xs-2"><button type="button" class="delete-row-activity btn btn-danger"><i class="fa fa-close"></i></button></div></div>';
                     } else if (documentID === 3) {
@@ -164,6 +164,35 @@
                     x--;
                 });
 
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                $.ajax({
+                    url: 'ARBOPlans?id=<%out.print(arbo.getArboID());%>',
+                    dataType: "json",
+                    success: function (response) {
+                        $('#calendar').fullCalendar({
+                            header: {
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'month,agendaWeek,agendaDay'
+                            },
+                            editable: true,
+                            axisFormat: 'H:mmtt',
+                            slotMinutes: 10,
+                            firstHour: 8,
+                            minTime: 8,
+                            maxTime: 22,
+                            dayClick: function(date,jsEvent,view){
+                                document.getElementById('planDate').value = date.format();
+                                //$(this).css('background-color','red');
+                            },
+                            events: response
+                        });
+                    }
+                });
             });
         </script>
 

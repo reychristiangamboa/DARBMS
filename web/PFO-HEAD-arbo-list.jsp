@@ -36,7 +36,7 @@
                                 <div class="box-header with-border">
                                     <h3 class="box-title">Agrarian Reform Beneficiary Organizations (ARBO)</h3>
                                     <div class="btn-group pull-right">
-                                        <a href="provincial-field-officer-add-arbo.jsp" class="btn btn-primary" ><i class="fa fa-user-plus "> </i> Add ARBO </a>                                                                                   
+                                        <a href="PFO-HEAD-add-arbo.jsp" class="btn btn-primary" ><i class="fa fa-user-plus "> </i> Add ARBO </a>                                                                                   
                                     </div>                         
                                 </div>
                                 <!-- /.box-header -->
@@ -44,18 +44,21 @@
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ARBO Name</th>
+                                                <th>ARBO</th>
                                                 <th>Address</th>
                                                 <th>No. of Members</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            <%for(ARBO arbo : arboListProvince){%>
+                                            <%
+                                                for(ARBO arbo : arboListProvince){
+                                                    arbo.setArbList(arbDAO.getAllARBsARBO(arbo.getArboID()));
+                                            %>
                                             <tr>
                                                 <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%=arbo.getFullAddress()%></td>
-                                                <td><%=arboDAO.getARBCount(arbo.getArboID())%></td>
+                                                <td><%=arbo.getArbList().size()%></td>
                                             </tr>
                                             <%}%>
                                         </tbody>

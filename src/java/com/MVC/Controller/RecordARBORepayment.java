@@ -34,51 +34,47 @@ public class RecordARBORepayment extends BaseServlet {
         APCPRequest req = dao.getRequestByID(Integer.parseInt(request.getParameter("requestID")));
 
         double limit = 0;
-        double finalLimit = 0;
 
+        req.setArboRepayments(dao.getAllARBORepaymentsByRequest(req.getRequestID()));
         for (Repayment rep : req.getArboRepayments()) {
             limit += rep.getAmount();
         }
 
-        String[] vals = request.getParameter("arboRepaymentAmount").split(",");
-        StringBuilder sb = new StringBuilder();
-        for (String val : vals) {
-            sb.append(val);
-        }
+//        String[] vals = request.getParameter("arboRepaymentAmount").split(",");
+//        StringBuilder sb = new StringBuilder();
+//        for (String val : vals) {
+//            sb.append(val);
+//        }
+//
+//        String finAmount = sb.toString();
+        double finalVal = Double.parseDouble(request.getParameter("arboRepaymentAmount")) + limit;
 
-        String finAmount = sb.toString();
-
-        double finalVal = Double.parseDouble(finAmount) * arbIDs.length;
-
-        finalLimit = req.getLoanAmount() - limit;
-
-        if (finalVal > finalLimit) {
-            request.setAttribute("errMessage", "REPAYMENT amount (PHP " + finalVal + ") exceeds REQUEST amount (PHP " + finalLimit + "). Try again.");
+        if (finalVal > req.getTotalReleaseOSBalance()) {
+            request.setAttribute("errMessage", "REPAYMENT amount (PHP " + limit + ") exceeds O/S Balance amount (PHP " + req.getTotalReleaseOSBalance() + "). Try again.");
             request.setAttribute("requestID", req.getRequestID());
             request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
         } else {
-            for (String arbID : arbIDs) {
-                Repayment r = new Repayment();
 
-                r.setArbID(Integer.parseInt(arbID));
-                r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
+            Repayment r = new Repayment();
 
-                r.setAmount(Double.parseDouble(finAmount));
+            
+            r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
 
-                java.sql.Date repaymentDate = null;
+            r.setAmount(Double.parseDouble(request.getParameter("arboRepaymentAmount")));
 
-                try {
-                    java.util.Date parsedRepaymentDate = sdf.parse(request.getParameter("arboRepaymentDate"));
-                    repaymentDate = new java.sql.Date(parsedRepaymentDate.getTime());
-                } catch (ParseException ex) {
-                    Logger.getLogger(RecordARBORepayment.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            java.sql.Date repaymentDate = null;
 
-                r.setDateRepayment(repaymentDate);
-                r.setRecordedBy((Integer) session.getAttribute("userID"));
-
-                dao.addARBORepayment(r);
+            try {
+                java.util.Date parsedRepaymentDate = sdf.parse(request.getParameter("arboRepaymentDate"));
+                repaymentDate = new java.sql.Date(parsedRepaymentDate.getTime());
+            } catch (ParseException ex) {
+                Logger.getLogger(RecordARBORepayment.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+            r.setDateRepayment(repaymentDate);
+            r.setRecordedBy((Integer) session.getAttribute("userID"));
+
+            dao.addARBORepayment(r);
 
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
             request.setAttribute("success", "ARBO Repayment successfully recorded!");

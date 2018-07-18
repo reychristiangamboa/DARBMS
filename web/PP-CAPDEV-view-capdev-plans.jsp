@@ -103,6 +103,7 @@
 
                                             <%
                                                 for(CAPDEVPlan p : assignedPlans){
+                                                    p.setActivities(capdevDAO.getCAPDEVPlanActivities(p.getPlanID()));
                                                     APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>

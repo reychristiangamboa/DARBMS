@@ -77,27 +77,30 @@
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="info-box">
+                                <%if (apcpBudget.getBudget() <= 100000){%>
+                                <span class="info-box-icon bg-red"><i class="fa fa-money"></i></span>
+                                    <%}else{%>
                                 <span class="info-box-icon bg-green"><i class="fa fa-money"></i></span>
-
+                                    <%}%>
                                 <div class="info-box-content">
                                     <span class="info-box-text">APCP BUDGET</span>
                                     <span class="info-box-number"><%out.print(currency.format(apcpBudget.getBudget()));%></span>
                                 </div>
-                                <!-- /.info-box-content -->
                             </div>
                             <!-- /.info-box -->
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="info-box">
-                                <span class="info-box-icon bg-green"><i class="fa fa-money"></i></span>
-
+                                <%if (capdevBudget.getBudget() <= 100000){%>
+                                <span class="info-box-icon bg-red"><i class="fa fa-database"></i></span>
+                                    <%}else{%>
+                                <span class="info-box-icon bg-green"><i class="fa fa-database"></i></span>
+                                    <%}%>
                                 <div class="info-box-content">
                                     <span class="info-box-text">CAPDEV BUDGET</span>
                                     <span class="info-box-number"><%out.print(currency.format(capdevBudget.getBudget()));%></span>
                                 </div>
-                                <!-- /.info-box-content -->
                             </div>
-                            <!-- /.info-box -->
                         </div>
                         <div class="col-md-2 col-sm-6 col-xs-12">
                         </div>
@@ -194,7 +197,7 @@
                         <div class="col-md-12">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Agrarian Production Credit Program (APCP)</h3>
+                                    <h3 class="box-title"><a href="view-apcp-status.jsp">Agrarian Production Credit Program (APCP)</a></h3>
 
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -246,10 +249,10 @@
 
                                             <div class="progress-group">
                                                 <span class="progress-text">Budget Allocated</span>
-                                                <span class="progress-number">250/<strong><%out.print(apcpBudget.getBudget());%></strong></span>
+                                                <span class="progress-number"><%out.print(currency.format(apcpRequestDAO.getYearlyBudgetAllocated(provincialRequests, year)));%>/<strong><%out.print(currency.format(apcpBudget.getBudget()));%></strong></span>
 
                                                 <div class="progress sm">
-                                                    <div class="progress-bar progress-bar-yellow" style="width: 80%"></div>
+                                                    <div class="progress-bar progress-bar-yellow" style="width: <%out.print(apcpRequestDAO.getPercentage(apcpRequestDAO.getYearlyBudgetAllocated(provincialRequests, year),apcpBudget.getBudget()) + "%");%>"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -261,11 +264,58 @@
                                                         for(APCPRequest req : allRequestStatus){ // THIS IS A STATUS
                                                         if(req.getRequestStatus() >= 0 && req.getRequestStatus() <= 4){
                                             %>
-                                            <button class="btn btn-primary" id="APCPOnTrackDelayed<%out.print(req.getRequestStatus());%>"><%out.print(req.getRequestStatusDesc());%> : <%out.print(apcpRequestDAO.getOnTrackRequestsPerStatus(provincialRequests,req.getRequestStatus()));%> | <strong><%out.print(apcpRequestDAO.getDelayedRequestsPerStatus(provincialRequests,req.getRequestStatus()));%></strong></button>
+                                            <div class="btn-group">
+                                                <button class="btn btn-default" id="APCPOnTrackDelayed<%out.print(req.getRequestStatus());%>"><%out.print(req.getRequestStatusDesc());%></button>
+                                                <button class="btn btn-success" id="APCPOnTrackDelayed<%out.print(req.getRequestStatus());%>" data-toggle="modal" data-target="#modal-default"><%out.print(apcpRequestDAO.getOnTrackRequestsPerStatus(provincialRequests,req.getRequestStatus()));%> </button>
+                                                <button class="btn btn-danger" id="APCPOnTrackDelayed<%out.print(req.getRequestStatus());%>" data-toggle="modal" data-target="#modal-info"><strong><%out.print(apcpRequestDAO.getDelayedRequestsPerStatus(provincialRequests,req.getRequestStatus()));%></strong></button>
+                                            </div>
+                                            &nbsp;
+
+                                            <div class="modal modal-primary fade" id="modal-primary">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title">Primary Modal</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>One fine body&hellip;</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-outline">Save changes</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+
+                                            <div class="modal modal-primary fade" id="modal-info">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title">Primary Modal</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>One fine body&hellip;</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-outline">Save changes</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
                                             <%}%>
                                             <%}%>
                                             <div class="row">
-                                                <h6>Status: On-track | <strong>Delayed</strong></h6>
+                                                <h6>Status: <strong class="bg-green">On-track</strong> | <strong class="bg-red">Delayed</strong></h6>
                                             </div>
                                         </center>
                                     </div>
@@ -343,7 +393,7 @@
                         <div class="col-md-12">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Capacity Development (CAPDEV)</h3>
+                                    <h3 class="box-title"><a href="view-capdev-status.jsp">Capacity Development (CAPDEV)</a></h3>
 
                                     <div class="box-tools pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -409,11 +459,57 @@
                                                         for(CAPDEVPlan plan : allPlanStatus){ // THIS IS A STATUS
                                                         if(plan.getPlanStatus() == 1 || plan.getPlanStatus() == 2 || plan.getPlanStatus() == 4){
                                             %>
-                                            <button class="btn btn-primary" id="CAPDEVOnTrackDelayed<%out.print(plan.getPlanStatus());%>"><%out.print(plan.getPlanStatusDesc());%> : <%out.print(capdevDAO.getOnTrackPlansPerStatus(allPlans,plan.getPlanStatus()));%> | <strong><%out.print(capdevDAO.getDelayedPlansPerStatus(allPlans,plan.getPlanStatus()));%></strong>  </button>
+
+                                            <div class="btn-group">
+                                                <button class="btn btn-default" id="CAPDEVOnTrackDelayed<%out.print(plan.getPlanStatus());%>"><%out.print(plan.getPlanStatusDesc());%></button>
+                                                <button class="btn btn-success" id="CAPDEVOnTrackDelayed<%out.print(plan.getPlanStatus());%>" data-toggle="modal" data-target="#modal-default"><%out.print(capdevDAO.getOnTrackPlansPerStatus(allPlans,plan.getPlanStatus()));%> </button>
+                                                <button class="btn btn-danger" id="CAPDEVOnTrackDelayed<%out.print(plan.getPlanStatus());%>" data-toggle="modal" data-target="#modal-info"><strong><%out.print(capdevDAO.getDelayedPlansPerStatus(allPlans,plan.getPlanStatus()));%></strong>  </button>
+                                            </div>
+                                            &nbsp;
+                                            <div class="modal fade" id="modal-default">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title">Default Modal</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>One fine body&hellip;</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <div class="modal fade" id="modal-info">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span></button>
+                                                            <h4 class="modal-title">Default Modal</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>One fine body&hellip;</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
                                             <%}%>
                                             <%}%>
                                             <div class="row">
-                                                <h6>Status: On-track | <strong>Delayed</strong></h6>
+                                                <h6>Status: <strong class="bg-green">On-track</strong> | <strong class="bg-red">Delayed</strong></h6>
                                             </div>
                                         </center>
                                     </div>
@@ -680,7 +776,7 @@
                 $('#totalARBOsCAPDEV').on('click', function () {
                     CAPDEVChart.destroy();
             <%
-                        json2 = chart.getLineChartCAPDEVTotalARBOs(allPlans, "ARBOs SERVED");
+                        json2 = chart.getLineChartCAPDEVTotalARBOs(implementedPlans, "ARBOs SERVED");
             %>
                     CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json2);%>);
                 });
@@ -688,23 +784,23 @@
                 $('#totalARBsCAPDEV').on('click', function () {
                     CAPDEVChart.destroy();
             <%
-                        json2 = chart.getLineChartCAPDEVTotalARBs(allPlans, "ARBs SERVED");
+                        json2 = chart.getLineChartCAPDEVTotalARBs(implementedPlans, "ARBs SERVED");
             %>
                     CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json2);%>);
                 });
 
-                $('#totalReleasedAmountAPCP').on('click', function () {
+                $('#totalImplementedPlans').on('click', function () {
                     CAPDEVChart.destroy();
             <%
-                        json2 = chart.getLineChartTotalReleasedAmount(releasedRequests, "TOTAL RELEASED AMOUNT");
+                        json2 = chart.getLineChartCAPDEVTotalImplementedPlans(implementedPlans, "TOTAL PLANS IMPLEMENTED");
             %>
-                    CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json);%>);
+                    CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json2);%>);
                 });
 
-                $('#totalPastDueAmountAPCP').on('click', function () {
+                $('#totalImplementedBudget').on('click', function () {
                     CAPDEVChart.destroy();
             <%
-                        json2 = chart.getLineChartTotalPastDueAmount(provincialRequests, "TOTAL PAST DUE AMOUNT");
+                        json2 = chart.getLineChartCAPDEVTotalImplementedBudget(implementedPlans, "IMPLEMENTED ACTIVITY BUDGET");
             %>
                     CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json2);%>);
                 });

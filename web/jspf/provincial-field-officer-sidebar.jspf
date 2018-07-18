@@ -100,7 +100,7 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="provincial-field-officer-arbo-list.jsp"><i class="fa fa-dot-circle-o"></i> View All</a></li>
+                    <li><a href="PFO-HEAD-arbo-list.jsp"><i class="fa fa-dot-circle-o"></i> View All</a></li>
                     <li><a href="PFO-HEAD-add-arbo.jsp"><i class="fa fa-dot-circle-o"></i> Create ARBO</a></li>
                 </ul>
             </li>

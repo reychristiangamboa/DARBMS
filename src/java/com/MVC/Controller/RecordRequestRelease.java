@@ -39,15 +39,17 @@ public class RecordRequestRelease extends BaseServlet {
 
         r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         
-        String[] vals = request.getParameter("releaseAmount").split(",");
-        StringBuilder sb = new StringBuilder();
-        for(String val : vals){
-            sb.append(val);
-        }
-        
-        String finAmount = sb.toString();
-        
-        r.setReleaseAmount(Double.parseDouble(finAmount));
+//        String[] vals = request.getParameter("releaseAmount").split(",");
+//        StringBuilder sb = new StringBuilder();
+//        for(String val : vals){
+//            sb.append(val);
+//        }
+//        
+//        String finAmount = sb.toString();
+//        
+//        r.setReleaseAmount(Double.parseDouble(finAmount));
+
+        r.setReleaseAmount(Double.parseDouble(request.getParameter("releaseAmount")));
 
         java.sql.Date releaseDate = null;
 
@@ -57,9 +59,11 @@ public class RecordRequestRelease extends BaseServlet {
         } catch (ParseException ex) {
             Logger.getLogger(AddARB.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        double OSBalance = Double.parseDouble(request.getParameter("releaseAmount")) * req.getLoanReason().getLoanTerm().getArboInterestRate();
 
         r.setReleaseDate(releaseDate);
-        r.setOSBalance(Double.parseDouble(request.getParameter("releaseOSBalance")));
+        r.setOSBalance(OSBalance);
         r.setReleasedBy((Integer) session.getAttribute("userID"));
 
         if (!dao.requestHasRelease(req)) {

@@ -105,8 +105,8 @@ public class ARBODAO {
                 arbo.setProvOfficeCodeDesc(rs.getString("provOfficeDesc"));
                 arbo.setQualifiedSince(rs.getDate("qualifiedSince"));
                 arbo.setDateOperational(rs.getDate("dateOperational"));
-                arbo.setArbList(aDAO.getAllARBsARBO(rs.getInt("arboID")));
-                arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
+//                arbo.setArbList(aDAO.getAllARBsARBO(rs.getInt("arboID")));
+//                arbo.setRequestList(rDAO.getAllARBORequests(rs.getInt("arboID")));
                 arboList.add(arbo);
             }
             rs.close();

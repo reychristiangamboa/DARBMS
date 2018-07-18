@@ -17,6 +17,10 @@ ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.
                 <div class="box-body">
 
                     <div class="row">
+                        <div id="calendar"></div>
+                    </div>
+
+                    <div class="row">
                         <div class="col-xs-4">
                             <label>CAPDEV Proposal Document Tracking No.</label>
                             <input type="text" name="dtn" class="form-control" placeholder="DTN" required/>
@@ -29,7 +33,7 @@ ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.
 
                         <div class="col-xs-3 pull-right">
                             <label for="">Plan Date</label>
-                            <input type="date" name="planDate" class="form-control" required/>
+                            <input type="date" name="planDate" id="planDate" class="form-control" required/>
                         </div>
                     </div>
 

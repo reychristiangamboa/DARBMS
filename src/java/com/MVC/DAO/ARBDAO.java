@@ -29,6 +29,9 @@ import java.util.logging.Logger;
 public class ARBDAO {
 
     public ARB getARBByID(int arbID) {
+        
+        APCPRequestDAO dao = new APCPRequestDAO();
+        
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ARB arb = new ARB();
@@ -73,6 +76,10 @@ public class ARBDAO {
                 arb.setArbStatus(rs.getInt("arbStatus"));
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
                 arb.setClusterID(rs.getInt("clusterID"));
+                
+                //arb.setRepayments(dao.getArbRepaymentsByARB(rs.getInt("arbID")));
+                //arb.setDisbursements(dao.getAllDisbursementsByARB(rs.getInt("arbID")));
+                
                 //arb.setNonARB(rs.getBoolean("nonARB"));
             } else {
                 return null;
@@ -120,6 +127,9 @@ public class ARBDAO {
     }
 
     public ArrayList<ARB> getAllARBs() {
+        
+        APCPRequestDAO dao = new APCPRequestDAO();
+        
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<ARB> arbList = new ArrayList();
@@ -165,6 +175,10 @@ public class ARBDAO {
                 arb.setArbStatus(rs.getInt("arbStatus"));
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
                 arb.setClusterID(rs.getInt("clusterID"));
+                
+                //arb.setRepayments(dao.getArbRepaymentsByARB(rs.getInt("arbID")));
+                //arb.setDisbursements(dao.getAllDisbursementsByARB(rs.getInt("arbID")));
+                
                 //arb.setNonARB(rs.getBoolean("nonARB"));
                 arbList.add(arb);
             }

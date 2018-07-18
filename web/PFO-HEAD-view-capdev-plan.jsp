@@ -17,12 +17,15 @@
             <%@include file="jspf/provincial-field-officer-sidebar.jspf" %>
 
             <%
+                
                 APCPRequest r = apcpRequestDAO.getRequestByID((Integer) request.getAttribute("requestID"));
-                CAPDEVPlan p = capdevDAO.getCAPDEVPlan((Integer) request.getAttribute("planID"));
+                CAPDEVPlan plan = capdevDAO.getCAPDEVPlan((Integer) request.getAttribute("planID"));
+                plan.setActivities(capdevDAO.getCAPDEVPlanActivities(plan.getPlanID()));
+                
                 ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                 ArrayList<ARB> arbList = arbDAO.getAllARBsARBO(r.getArboID());
                 
-                User pointPerson = uDAO.searchUser(p.getAssignedTo());
+                User pointPerson = uDAO.searchUser(plan.getAssignedTo());
             %>
 
             <!-- Content Wrapper. Contains page content -->
@@ -71,7 +74,7 @@
                                             </div>
                                             <div class="col-xs-4">
                                                 <label for="">Budget</label>
-                                                <input type="text" class="form-control" value="<%out.print(p.getBudget());%>" disabled />
+                                                <input type="text" class="form-control" value="<%out.print(plan.getBudget());%>" disabled />
                                             </div>
                                         </div>
 
@@ -88,7 +91,10 @@
                                                     </thead>
 
                                                     <tbody>
-                                                        <%for (CAPDEVActivity activity : p.getActivities()) {%>
+                                                        <%
+                                                            
+                                                            for (CAPDEVActivity activity : plan.getActivities()) {
+                                                        %>
                                                         <tr>
                                                             <td><%out.print(activity.getActivityName());%></td>
                                                             <td><a href="#" data-toggle="modal" data-target="#participantsModal<%out.print(activity.getActivityID());%>"><%out.print(activity.getArbList().size());%></a></td>
@@ -103,7 +109,7 @@
                                                         </tr>
                                                     </tfoot>
                                                 </table>
-                                                <%for (CAPDEVActivity activity : p.getActivities()) {%>
+                                                <%for (CAPDEVActivity activity : plan.getActivities()) {%>
                                                 <div class="modal fade" id="participantsModal<%out.print(activity.getActivityID());%>">
                                                     <div class="modal-dialog modal-md">
                                                         <div class="modal-content">
@@ -124,7 +130,10 @@
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
-                                                                                <%for(ARB arb : activity.getArbList()){%>
+                                                                                <%
+                                                                                    activity.setArbList(capdevDAO.getCAPDEVPlanActivityParticipants(activity.getActivityID()));
+                                                                                    for(ARB arb : activity.getArbList()){
+                                                                                %>
                                                                                 <tr>
                                                                                     <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
                                                                                 </tr>

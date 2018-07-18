@@ -19,7 +19,7 @@
                 int planID = (Integer) request.getAttribute("planID");
                 CAPDEVPlan plan = capdevDAO.getCAPDEVPlan(planID);
                 APCPRequest req = apcpRequestDAO.getRequestByID(requestID);
-                
+                req.setRecipients(apcpRequestDAO.getAllAPCPRecipientsByRequest(requestID));
                 UserDAO userDAO = new UserDAO();
             %> 
             <% User u1 = new User(); %>
@@ -86,7 +86,11 @@
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                            <%for(CAPDEVActivity act : plan.getActivities()){%>
+                                                                            <%
+                                                                                plan.setActivities(capdevDAO.getCAPDEVPlanActivities(plan.getPlanID()));
+                                                                                for(CAPDEVActivity act : plan.getActivities()){
+                                                                                    act.setArbList(capdevDAO.getCAPDEVPlanActivityParticipants(act.getActivityID()));
+                                                                            %>
                                                                             <tr>
                                                                                 <td><%out.print(act.getActivityCategoryDesc());%></td>
                                                                                 <td><%out.print(act.getActivityName());%></td>
@@ -105,6 +109,7 @@
                                                             </div>
 
                                                             <%for(CAPDEVActivity act : plan.getActivities()){%>
+                                                            
                                                             <div class="modal fade" id="activityModal<%out.print(act.getActivityID());%>">
                                                                 <div class="modal-dialog">
                                                                     <div class="modal-content">
@@ -125,6 +130,7 @@
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
+
                                                                                     <%for(ARB arb : req.getRecipients()){%>
                                                                                     <%if(act.getActivityCategory() == 2 || act.getActivityCategory() == 3){ // APCP ACTIVITY: COMATs ONLY %>
                                                                                     <tr>

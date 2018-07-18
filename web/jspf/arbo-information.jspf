@@ -1,3 +1,6 @@
+<%
+arbo.setArbList(arbDAO.getAllARBsARBO(arbo.getArboID()));
+%>
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
@@ -19,7 +22,7 @@
             <div class="input-group">
                 <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="status" id="status" value="<%=arbo.getArbList().size()%>"disabled>
                 <div class="input-group-btn">
-                    <button type="button" class="btn btn-info">View</button>
+                    <button type="button" data-toggle="modal" data-target="#members" class="btn btn-info">View</button>
                 </div>
             </div>
         </div>
@@ -40,4 +43,57 @@
             <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="status" id="status" value="<%=arbo.getArboStatusDesc()%>" disabled>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="members">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Agrarian Reform Beneficiaries</h4>
+            </div>
+
+
+            <div class="modal-body" id="modalBody">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table id="arbTable" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Address</th>
+                                    <th>Crops</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <%
+                                    for (ARB arb : arbo.getArbList()) {
+                                %>
+                                <tr>
+                                    <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFullName());%></a></td>
+                                    <td><%out.print(arb.getFullAddress());%></td>
+                                    <td><%out.print(arb.printAllCrops());%></td>
+                                </tr>
+                                <%}%>
+                            </tbody>
+
+                            <tfoot>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Address</th>
+                                    <th>Crops</th>
+                                </tr>
+                            </tfoot>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--                                            /.modal-content -->
+    </div>
+    <!--                                        /.modal-dialog -->
 </div>

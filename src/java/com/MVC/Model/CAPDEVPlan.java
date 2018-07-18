@@ -5,6 +5,7 @@
  */
 package com.MVC.Model;
 
+import com.MVC.DAO.CAPDEVDAO;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * @author Rey Christian
  */
 public class CAPDEVPlan {
-    
+
     private int planID;
     private int requestID;
     private int pastDueAccountID;
@@ -34,11 +35,12 @@ public class CAPDEVPlan {
     private int active;
     private int capdevAssignmentID;
     private int clusterID;
-    
+
     private ArrayList<CAPDEVActivity> activities = new ArrayList();
-    
 
     public int getPlanID() {
+        
+
         return planID;
     }
 
@@ -85,7 +87,7 @@ public class CAPDEVPlan {
     public void setBudget(Double budget) {
         this.budget = budget;
     }
-    
+
     public int getPostponeReason() {
         return postponeReason;
     }
@@ -117,7 +119,7 @@ public class CAPDEVPlan {
     public void setImplementedDate(Date implementedDate) {
         this.implementedDate = implementedDate;
     }
-    
+
     public int getCreatedBy() {
         return createdBy;
     }
@@ -133,8 +135,7 @@ public class CAPDEVPlan {
     public void setApprovedBy(int approvedBy) {
         this.approvedBy = approvedBy;
     }
-    
-    
+
     public int getPlanStatus() {
         return planStatus;
     }
@@ -174,7 +175,7 @@ public class CAPDEVPlan {
     public void setActive(int active) {
         this.active = active;
     }
-    
+
     public ArrayList<CAPDEVActivity> getActivities() {
         return activities;
     }
@@ -206,51 +207,51 @@ public class CAPDEVPlan {
     public void setCapdevAssignmentID(int capdevAssignmentID) {
         this.capdevAssignmentID = capdevAssignmentID;
     }
-    
-    public ArrayList<Integer> getAllAttenededParticipants(){
-        
+
+    public ArrayList<Integer> getAllAttenededParticipants() {
+
         ArrayList<Integer> filtered = new ArrayList();
-        
-        for(CAPDEVActivity act : this.activities){
-            for(ARB arb : act.getArbList()){
-                if(arb.getIsPresent() > 0){
-                    if(!filtered.contains(arb.getArbID())){
+
+        for (CAPDEVActivity act : this.activities) {
+            for (ARB arb : act.getArbList()) {
+                if (arb.getIsPresent() > 0) {
+                    if (!filtered.contains(arb.getArbID())) {
                         filtered.add(arb.getArbID());
                     }
                 }
             }
         }
-        
+
         return filtered;
     }
-    
-    public boolean checkAllActivitiesHaveParticipants(){
-        for(CAPDEVActivity act : this.activities){
-            if(act.getArbList().isEmpty()){
+
+    public boolean checkAllActivitiesHaveParticipants() {
+        for (CAPDEVActivity act : this.activities) {
+            if (act.getArbList().isEmpty()) {
                 return false;
             }
         }
         return true;
     }
-    
-    public boolean assessmentsAreComplete(){
-        for(CAPDEVActivity act : this.activities){
-            if(act.getActive() == 0){ // 1 activity is still left unassessed
+
+    public boolean assessmentsAreComplete() {
+        for (CAPDEVActivity act : this.activities) {
+            if (act.getActive() == 0) { // 1 activity is still left unassessed
                 return false;
             }
         }
         return true;
     }
-    
-    public boolean hasPreReleaseOrientation(){
-        for(CAPDEVActivity act : this.activities){
-            if(act.getActivityType() == 3){
+
+    public boolean hasPreReleaseOrientation() {
+        CAPDEVDAO dao = new CAPDEVDAO();
+        this.activities = dao.getCAPDEVPlanActivities(this.planID);
+        for (CAPDEVActivity act : this.activities) {
+            if (act.getActivityType() == 3) {
                 return true;
             }
         }
         return false;
     }
-    
+
 }
-
-

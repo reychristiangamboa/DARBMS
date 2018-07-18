@@ -64,7 +64,7 @@ public class CAPDEVDAO {
                 cp.setRecommendation(rs.getString("recommendation"));
                 cp.setActive(rs.getInt("active"));
                 cp.setCapdevAssignmentID(rs.getInt("id"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
+//                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
 
                 if (cp.getPostponeReason() > 0) {
                     cp.setPostponeReasonDesc(getPostponeReasonDesc(cp.getPostponeReason()));
@@ -124,7 +124,7 @@ public class CAPDEVDAO {
                 cp.setActive(rs.getInt("active"));
                 cp.setClusterID(rs.getInt("clusterID"));
                 cp.setCapdevAssignmentID(rs.getInt("id"));
-                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
+//                cp.setActivities(getCAPDEVPlanActivities(rs.getInt("planID")));
 
                 if (cp.getPostponeReason() > 0) {
                     cp.setPostponeReasonDesc(getPostponeReasonDesc(cp.getPostponeReason()));
@@ -805,7 +805,7 @@ public class CAPDEVDAO {
                 ca.setTechnicalAssistant(rs.getString("technicalAssistant"));
                 ca.setActive(rs.getInt("active"));
                 ca.setIsPresent(rs.getInt("isPresent"));
-                ca.setArbList(getCAPDEVPlanActivityParticipants(rs.getInt("activityID")));
+                //ca.setArbList(getCAPDEVPlanActivityParticipants(rs.getInt("activityID")));
                 caList.add(ca);
             }
             con.commit();
@@ -867,7 +867,9 @@ public class CAPDEVDAO {
 
         try {
             con.setAutoCommit(false);
-            String query = "SELECT * FROM capdev_participants p JOIN capdev_activities a ON p.activityID=a.activityID WHERE p.activityID=?";
+            String query = "SELECT * FROM capdev_participants p "
+                    + "JOIN capdev_activities a ON p.activityID=a.activityID "
+                    + "WHERE p.activityID=?";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, activityID);
             ResultSet rs = p.executeQuery();
@@ -1610,21 +1612,19 @@ public class CAPDEVDAO {
     }
 
     public int getDistinctParticipantCountWithImplemented(ArrayList<CAPDEVPlan> planList, int year) {
+
         
         ArrayList<Integer> filtered = new ArrayList();
         Calendar cal = Calendar.getInstance();
 
         for (CAPDEVPlan c : planList) {
-
-            if (c.getPlanStatus() == 5) {
-                cal.setTime(c.getImplementedDate());
-                if (cal.get(Calendar.YEAR) == year) {
-
-                    for (CAPDEVActivity act : c.getActivities()) {
-                        for (ARB arb : act.getArbList()) {
-                            if (!filtered.contains(arb.getArbID())) {
-                                filtered.add(arb.getArbID());
-                            }
+            cal.setTime(c.getImplementedDate());
+            if (cal.get(Calendar.YEAR) == year) {
+                c.setActivities(getCAPDEVPlanActivities(c.getPlanID()));
+                for (CAPDEVActivity act : c.getActivities()) {
+                    for (ARB arb : act.getArbList()) {
+                        if (!filtered.contains(arb.getArbID())) {
+                            filtered.add(arb.getArbID());
                         }
                     }
                 }
@@ -1638,6 +1638,7 @@ public class CAPDEVDAO {
 
         APCPRequestDAO requestDAO = new APCPRequestDAO();
         ARBODAO arboDAO = new ARBODAO();
+        ARBDAO arbDAO = new ARBDAO();
         ArrayList<Integer> filtered = new ArrayList();
         Calendar cal = Calendar.getInstance();
 
@@ -1648,6 +1649,7 @@ public class CAPDEVDAO {
                 if (cal.get(Calendar.YEAR) == year) {
                     APCPRequest request = requestDAO.getRequestByID(c.getRequestID());
                     ARBO arbo = arboDAO.getARBOByID(request.getArboID());
+                    arbo.setArbList(arbDAO.getAllARBsARBO(arbo.getArboID()));
                     for (ARB arb : arbo.getArbList()) {
                         if (!filtered.contains(arb.getArbID())) {
                             filtered.add(arb.getArbID());

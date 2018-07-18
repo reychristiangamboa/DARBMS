@@ -10,7 +10,7 @@
     <head>
         <%@include file="jspf/header.jspf"%>
     </head>
-    <body>
+    <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
             <%@include file="jspf/field-officer-navbar.jspf"%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>

@@ -6,6 +6,8 @@
 package com.MVC.Model;
 
 import java.sql.Date;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -104,5 +106,45 @@ public class PastDueAccount {
         this.active = active;
     }
     
+    public int getDaysUnsettled(){
+        Calendar settled = Calendar.getInstance();
+        
+        Calendar recorded = Calendar.getInstance();
+        recorded.setTime(this.dateRecorded);
+        
+        Calendar today = Calendar.getInstance();
+        long days = 0;
+        if(this.dateSettled != null){
+            settled.setTime(this.dateSettled);
+            days = daysBetween (recorded,settled);
+        } else {
+            days = daysBetween (recorded,settled);
+        }
+         
+        
+        return (int)days;
+    }
+    
+    public static long daysBetween(Calendar startDate, Calendar endDate) {
+        long end = endDate.getTimeInMillis();
+        long start = startDate.getTimeInMillis();
+
+        return TimeUnit.MILLISECONDS.toDays(Math.abs(end - start));
+    }
+    
+    public String getCreditStanding(int daysDiff){
+        String color = ""; 
+        if(daysDiff >= 0 && daysDiff <= 30){
+            color = "green";
+        } else if (daysDiff >= 31 && daysDiff <= 60){
+            color = "yellow";
+        } else if (daysDiff >= 61 && daysDiff <= 89) {
+            color = "orange";
+        } else if (daysDiff >= 90){
+            color = "red";
+        }
+        
+        return color;
+    }
     
 }

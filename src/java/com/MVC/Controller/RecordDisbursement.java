@@ -50,7 +50,7 @@ public class RecordDisbursement extends BaseServlet {
         
         double OSBalance = Double.parseDouble(request.getParameter("disbursementAmount")) * req.getLoanReason().getLoanTerm().getArbInterestRate();
 
-        finalLimit = req.getTotalReleasedAmount() - limit;
+        finalLimit = req.getTotalReleasedAmountPerRequest() - limit;
 
 //        String[] vals = request.getParameter("disbursementAmount").split(",");
 //        StringBuilder sb = new StringBuilder();
@@ -66,9 +66,8 @@ public class RecordDisbursement extends BaseServlet {
 
         if (finalVal > finalLimit) {
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-            request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
             request.setAttribute("errMessage", "Disbursement amount (Php " + finalVal + ") exceeds Release amount (Php " + finalLimit + "). Try again.");
-            request.getRequestDispatcher("monitor-disbursement.jsp").forward(request, response);
+            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
         } else {
             for (String arbID : arbIDs) {
                 Disbursement d = new Disbursement();
@@ -97,7 +96,7 @@ public class RecordDisbursement extends BaseServlet {
 
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
             request.setAttribute("success", "Disbursement successfully recorded!");
-            request.getRequestDispatcher("monitor-disbursement.jsp").forward(request, response);
+            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
 
         }
 

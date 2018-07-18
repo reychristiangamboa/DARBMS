@@ -37,7 +37,7 @@
     <body class="hold-transition login-page">
         <div class="login-box">
             <div class="login-logo">
-                <a href="../../index2.html"><b>DAR</b>BMS</a>
+                <a href="../../index2.html"><img src="img/DAR-logo.jpg" height="175" width="175"><br>Beneficiary Management System</a>
             </div>
             <!-- /.login-logo -->
             <div class="login-box-body">
@@ -65,11 +65,9 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-8">
-                            <a href="#">I forgot my password</a>
-                        </div>
+                       
                         <div class="col-xs-4 pull-right">
-                            <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                            <button type="submit" class="btn btn-success btn-block btn-flat">Sign In</button>
                         </div>
                         <!-- /.col -->
                     </div>

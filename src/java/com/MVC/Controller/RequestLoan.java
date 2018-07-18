@@ -128,7 +128,6 @@ public class RequestLoan extends BaseServlet {
         } else {
             r.setArboID(Integer.parseInt(request.getParameter("arboID")));
             r.setApcpType(Integer.parseInt(request.getParameter("apcpType")));
-            r.setCropProdID(Integer.parseInt(request.getParameter("cropProd")));
             r.setLoanAmount(Double.parseDouble(finLoan));
             r.setHectares(Double.parseDouble(request.getParameter("landArea")));
             r.setRemarks(request.getParameter("remarks"));

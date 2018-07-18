@@ -110,11 +110,11 @@
                                 </div>
                                         
                                 <%
-                                if (req.getRequestStatus() == 1){%>
+                                if (req.getRequestStatus() == 1 && (Integer)session.getAttribute("userType") == 6){%>
                                 <%@include file="jspf/clear-apcp-application.jspf" %>
-                                <%}else if(req.getRequestStatus() == 2){%>
+                                <%}else if(req.getRequestStatus() == 2 && (Integer)session.getAttribute("userType") == 6){%>
                                 <%@include file="jspf/endorse-apcp-application.jspf" %>
-                                <%}else if(req.getRequestStatus() == 3){%>
+                                <%}else if(req.getRequestStatus() == 3 && (Integer)session.getAttribute("userType") == 6){%>
                                 <%@include file="jspf/approve-apcp-application.jspf" %>
                                 <%}
                                 %>

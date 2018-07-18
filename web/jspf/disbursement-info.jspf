@@ -19,7 +19,8 @@
 
         <tbody>
             <%
-                for(Disbursement d : r.getDisbursements()){
+                req.setDisbursements(apcpRequestDAO99.getAllDisbursementsByRequest(req.getRequestID()));
+                for(Disbursement d : req.getDisbursements()){
                     ARB arb = arbDAO99.getARBByID(d.getArbID());
             %>
             <tr>

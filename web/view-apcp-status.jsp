@@ -667,6 +667,7 @@
                                             <%
                                                 for(APCPRequest r : releasedRequests){
                                                     ARBO arbo = arboDAO.getARBOByID(r.getArboID());
+                                                    r.setReleases(apcpRequestDAO.getAllAPCPReleasesByRequest(r.getRequestID()));
                                             %>
 
                                             <tr>
@@ -674,6 +675,8 @@
                                                 <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}else if(userType == 2){%>
                                                 <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else if (userType == 7){%>
+                                                <td><a href="CreateCAPDEVProposal?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
                                                     <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>

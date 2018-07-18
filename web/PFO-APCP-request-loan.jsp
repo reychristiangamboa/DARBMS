@@ -167,6 +167,17 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-3">
+                                         <div class="form-group">
+                                             <label>Crop Production Request</label>
+                                             <select name="cropProd" id="selectCropProd" class="form-control" disabled>
+                                                 <%for(APCPRequest cropProd : cropProds){%>
+                                                 <option value="<%out.print(cropProd.getRequestID());%>"><%out.print(cropProd.getRequestID());%></option>
+                                                 <%}%>
+                                             </select>
+                                         </div>
+                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -190,7 +201,7 @@
                                         <div class="form-group">
                                             <label>Loan Reason</label>
                                             <select class="form-control select2" name="loanReason" id="loanReason" style="width: 100%;">
-                                                <%for(LoanReason r : refLoanReasons){%>
+                                                <%for(LoanReason r : refLoanReasonsCropProduction){%>
                                                 <option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option>
                                                 <%}%>
                                             </select>
@@ -351,13 +362,14 @@
         <script type="text/javascript">
             $(document).ready(function () {
 
-                var cropProdMarkup = '<div class="col-md-3 id="cropProduction"><div class="form-group"><label>Crop Production Request</label><select name="cropProd" class="form-control"><%for(APCPRequest cropProd : cropProds){%><option value="<%out.print(cropProd.getRequestID());%>"><%out.print(cropProd.getRequestID());%></option><%}%></select></div></div>';
+                var cropProdMarkup = '';
                 $('#apcpType').on('change', function () {
                     if ($('#apcpType').val() == 1) {
-                        $('#apcpTypeWrapper').remove('#cropProduction');
+                        
+                        $('#selectCropProd').prop('disabled',true);
                         $('#loanReason').html('<%for(LoanReason r : refLoanReasonsCropProduction){%><option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option><%}%>');
                                     } else {
-                                        $('#apcpTypeWrapper').append(cropProdMarkup);
+                                        $('#selectCropProd').prop('disabled',false);
                                         $('#loanReason').html('<%for(LoanReason r : refLoanReasonsLivelihoodProgram){%><option value="<%out.print(r.getLoanReason());%>"><%out.print(r.getLoanReasonDesc());%></option><%}%>');
                                                     }
 

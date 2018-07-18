@@ -5,7 +5,10 @@
  */
 package com.MVC.Controller;
 
+import com.MVC.DAO.ARBODAO;
 import com.MVC.DAO.CAPDEVDAO;
+import com.MVC.Model.APCPRequest;
+import com.MVC.Model.ARBO;
 import com.MVC.Model.CAPDEVActivity;
 import com.MVC.Model.CAPDEVPlan;
 import com.MVC.Model.CalendarEvent;
@@ -25,52 +28,60 @@ import javax.servlet.http.HttpSession;
  *
  * @author Rey Christian
  */
-public class AssignedPlans extends HttpServlet {
+public class ARBOPlans extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        
+
         HttpSession session = request.getSession();
-        
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        
-        final String RED = "#d9534f";
-        final String GREEN = "#5cb85c";
-        
-        List l = new ArrayList();
-        
-        CAPDEVDAO capdevDAO = new CAPDEVDAO();
-        ArrayList<CAPDEVPlan> assignedPlans = capdevDAO.getAssignedRequestCAPDEVPlans((Integer)session.getAttribute("userID"));
-        System.out.println(assignedPlans.size());
-        
-        String id = "";
-        
-        for(CAPDEVPlan plan : assignedPlans){
-            plan.setActivities(capdevDAO.getCAPDEVPlanActivities(plan.getPlanID()));
-            for(CAPDEVActivity activity : plan.getActivities()){
-                
-                id = plan.getPlanID() + "" + activity.getActivityID();
-                
-                CalendarEvent e = new CalendarEvent();
-                
-                e.setId(activity.getActivityID());
-                
-                e.setTitle(plan.getPlanDTN() + ": " + activity.getActivityName());
-                e.setDescription(activity.getActivityDesc());
-                
-                e.setStart(f.format(plan.getPlanDate()));
-                e.setColor(GREEN);
-                
-                l.add(e);
+
+        int arboID = Integer.parseInt(request.getParameter("id"));
+        ARBODAO dao = new ARBODAO();
+        ARBO arbo = dao.getARBOByID(arboID);
+
+        ArrayList<CAPDEVPlan> arboPlans = new ArrayList();
+
+        for (APCPRequest req : arbo.getRequestList()) {
+            for (CAPDEVPlan plan : req.getPlans()) {
+                arboPlans.add(plan);
             }
         }
-        
+
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+
+        final String RED = "#d9534f";
+        final String GREEN = "#5cb85c";
+
+        List l = new ArrayList();
+
+        String id = "";
+
+        for (CAPDEVPlan plan : arboPlans) {
+            if (plan.getPlanStatus() == 1 || plan.getPlanStatus() == 2 || plan.getPlanStatus() == 4) {
+                for (CAPDEVActivity activity : plan.getActivities()) {
+
+                    id = plan.getPlanID() + "" + activity.getActivityID();
+
+                    CalendarEvent e = new CalendarEvent();
+
+                    e.setId(activity.getActivityID());
+
+                    e.setTitle(plan.getPlanDTN() + ": " + activity.getActivityName());
+                    e.setDescription(activity.getActivityDesc());
+
+                    e.setStart(f.format(plan.getPlanDate()));
+                    e.setColor(GREEN);
+
+                    l.add(e);
+                }
+            }
+
+        }
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         System.out.println(new Gson().toJson(l));
         out.write(new Gson().toJson(l));
     }
-
-    
 
 }

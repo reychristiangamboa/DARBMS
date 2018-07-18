@@ -128,6 +128,7 @@
                                         <tbody>
                                             <%
                                                 for(APCPRequest r : releasedRequests){
+                                                r.setReleases(apcpRequestDAO.getAllAPCPReleasesByRequest(r.getRequestID()));
                                                 ARBO arbo = arboDAO.getARBOByID(r.getArboID());
                                             %>
                                             <tr>

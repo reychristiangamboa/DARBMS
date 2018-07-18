@@ -91,19 +91,19 @@ public class APCPRequestDAO {
                 r.setIsNewAccessingRequest(rs.getInt("isNewAccessingRequest"));
                 r.setCropProdID(rs.getInt("cropProdID"));
                 r.setDateCompleted(rs.getDate("dateCompleted"));
-                r.setApcpDocument(getAllAPCPDocumentsByRequest(rs.getInt("requestID")));
-                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
 
-                r.setPlans(dao.getAllCAPDEVPlanByRequest(rs.getInt("requestID")));
-
-                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
-
-                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
-                r.setDisbursements(getAllDisbursementsByRequest(rs.getInt("requestID")));
-                r.setArboRepayments(getAllARBORepaymentsByRequest(rs.getInt("requestID")));
-                r.setArbRepayments(getAllARBRepaymentsByRequest(rs.getInt("requestID")));
-
+//                r.setApcpDocument(getAllAPCPDocumentsByRequest(rs.getInt("requestID")));
+//                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
+//
+//                r.setPlans(dao.getAllCAPDEVPlanByRequest(rs.getInt("requestID")));
+//
+//                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
+//                r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
+//
+//                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
+//                r.setDisbursements(getAllDisbursementsByRequest(rs.getInt("requestID")));
+//                r.setArboRepayments(getAllARBORepaymentsByRequest(rs.getInt("requestID")));
+//                r.setArbRepayments(getAllARBRepaymentsByRequest(rs.getInt("requestID")));
                 apcpRequest.add(r);
             }
             rs.close();
@@ -171,14 +171,14 @@ public class APCPRequestDAO {
                 r.setLoanTrackingNo(rs.getInt("loanTrackingNo"));
                 r.setDateCompleted(rs.getDate("dateCompleted"));
                 r.setIsNewAccessingRequest(rs.getInt("isNewAccessingRequest"));
-                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
-                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
-                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
-                r.setPlans(dao.getAllCAPDEVPlanByRequest(rs.getInt("requestID")));
-                r.setDisbursements(getAllDisbursementsByRequest(rs.getInt("requestID")));
-                r.setArboRepayments(getAllARBORepaymentsByRequest(rs.getInt("requestID")));
-                r.setArbRepayments(getAllARBRepaymentsByRequest(rs.getInt("requestID")));
+//                r.setPastDueAccounts(getAllPastDueAccountsByRequest(rs.getInt("requestID")));
+//                r.setUnsettledPastDueAccounts(getAllUnsettledPastDueAccountsByRequest(rs.getInt("requestID")));
+//                r.setReleases(getAllAPCPReleasesByRequest(rs.getInt("requestID")));
+//                r.setRecipients(getAllAPCPRecipientsByRequest(rs.getInt("requestID")));
+//                r.setPlans(dao.getAllCAPDEVPlanByRequest(rs.getInt("requestID")));
+//                r.setDisbursements(getAllDisbursementsByRequest(rs.getInt("requestID")));
+//                r.setArboRepayments(getAllARBORepaymentsByRequest(rs.getInt("requestID")));
+//                r.setArbRepayments(getAllARBRepaymentsByRequest(rs.getInt("requestID")));
             }
             rs.close();
             pstmt.close();
@@ -753,6 +753,7 @@ public class APCPRequestDAO {
                 p.setRequestID(rs.getInt(("requestID")));
                 p.setPastDueAmount(rs.getDouble("pastDueAmount"));
                 p.setDateSettled(rs.getDate("dateSettled"));
+                p.setDateRecorded(rs.getDate("dateRecorded"));
                 p.setReasonPastDue(rs.getInt("reasonPastDue"));
                 p.setReasonPastDueDesc(rs.getString("reasonPastDueDesc"));
                 p.setOtherReason(rs.getString("otherReason"));
@@ -923,6 +924,7 @@ public class APCPRequestDAO {
                 p.setRequestID(rs.getInt(("requestID")));
                 p.setPastDueAmount(rs.getDouble("pastDueAmount"));
                 p.setDateSettled(rs.getDate("dateSettled"));
+                p.setDateRecorded(rs.getDate("dateRecorded"));
                 p.setReasonPastDue(rs.getInt("reasonPastDue"));
                 p.setReasonPastDueDesc(rs.getString("reasonPastDueDesc"));
                 p.setOtherReason(rs.getString("otherReason"));
@@ -1818,14 +1820,14 @@ public class APCPRequestDAO {
         Calendar cal = Calendar.getInstance();
 
         for (APCPRequest req : apcpRequestList) {
-            if (req.getReleases().size() > 0) { // IF MAYROON
-                for (APCPRelease rel : req.getReleases()) {
-                    cal.setTime(rel.getReleaseDate());
-                    if (cal.get(Calendar.YEAR) == year) {
-                        sum += rel.getReleaseAmount();
-                    }
+
+            for (APCPRelease rel : getAllAPCPReleasesByRequest(req.getRequestID())) {
+                cal.setTime(rel.getReleaseDate());
+                if (cal.get(Calendar.YEAR) == year) {
+                    sum += rel.getReleaseAmount();
                 }
             }
+
         }
 
         return sum;
@@ -1833,9 +1835,10 @@ public class APCPRequestDAO {
 
     public double getSumOfAccumulatedReleasesByRequest(ArrayList<APCPRequest> apcpRequestList) {
         double sum = 0;
+
         for (APCPRequest req : apcpRequestList) {
             if (req.getRequestStatus() == 5) {
-                for (APCPRelease r : req.getReleases()) {
+                for (APCPRelease r : getAllAPCPReleasesByRequest(req.getRequestID())) {
                     sum += r.getReleaseAmount();
                 }
             }
@@ -1875,6 +1878,21 @@ public class APCPRequestDAO {
                 if (cal.get(Calendar.YEAR) == year) {
                     sum += req.getLoanAmount();
                 }
+            } else if (req.getRequestStatus() == 2) {
+                cal.setTime(req.getDateCleared());
+                if (cal.get(Calendar.YEAR) == year) {
+                    sum += req.getLoanAmount();
+                }
+            } else if (req.getRequestStatus() == 3) {
+                cal.setTime(req.getDateEndorsed());
+                if (cal.get(Calendar.YEAR) == year) {
+                    sum += req.getLoanAmount();
+                }
+            } else if (req.getRequestStatus() == 4) {
+                cal.setTime(req.getDateApproved());
+                if (cal.get(Calendar.YEAR) == year) {
+                    sum += req.getLoanAmount();
+                }
             }
         }
 
@@ -1884,8 +1902,8 @@ public class APCPRequestDAO {
     public double getTotalPastDueAmount(ArrayList<APCPRequest> requestList) {
         double sum = 0;
         for (APCPRequest req : requestList) {
-            if (req.getUnsettledPastDueAccounts().size() > 0) { // IF MAYROON
-                for (PastDueAccount pda : req.getUnsettledPastDueAccounts()) {
+            if (getAllUnsettledPastDueAccountsByRequest(req.getRequestID()).size() > 0) { // IF MAYROON
+                for (PastDueAccount pda : getAllUnsettledPastDueAccountsByRequest(req.getRequestID())) {
                     sum += pda.getPastDueAmount();
                 }
             }
@@ -1900,8 +1918,8 @@ public class APCPRequestDAO {
         Calendar cal = Calendar.getInstance();
 
         for (APCPRequest req : apcpRequestList) {
-            if (req.getUnsettledPastDueAccounts().size() > 0) { // IF MAYROON
-                for (PastDueAccount pda : req.getUnsettledPastDueAccounts()) {
+            if (getAllUnsettledPastDueAccountsByRequest(req.getRequestID()).size() > 0) { // IF MAYROON
+                for (PastDueAccount pda : getAllUnsettledPastDueAccountsByRequest(req.getRequestID())) {
                     cal.setTime(pda.getDateRecorded());
                     if (cal.get(Calendar.YEAR) == year) { // IF SAME YEAR
                         sum += pda.getPastDueAmount();
@@ -1930,7 +1948,6 @@ public class APCPRequestDAO {
             while (rs.next()) {
                 Repayment r = new Repayment();
                 r.setAmount(rs.getInt("amount"));
-                r.setArbID(rs.getInt("arbID"));
                 r.setRepaymentID(rs.getInt("repaymentID"));
                 r.setRecordedBy(rs.getInt("recordedBy"));
                 r.setRequestID(rs.getInt("requestID"));
@@ -2008,11 +2025,12 @@ public class APCPRequestDAO {
     }
 
     public int getDistinctARBOCountWithReleased(ArrayList<APCPRequest> requestList, int year) {
+        
         Calendar cal = Calendar.getInstance();
         ArrayList<Integer> filtered = new ArrayList();
         for (APCPRequest req : requestList) {
             if (req.getRequestStatus() == 5) { // RELEASED
-                for (APCPRelease rel : req.getReleases()) {
+                for (APCPRelease rel : getAllAPCPReleasesByRequest(req.getRequestID())) {
                     cal.setTime(rel.getReleaseDate());
                     if (cal.get(Calendar.YEAR) == year) {
                         if (!filtered.contains(req.getArboID())) { // CHECKS if filtered CONTAINS arboID
@@ -2020,10 +2038,8 @@ public class APCPRequestDAO {
                         }
                     }
                 }
-
             }
         }
-
         return filtered.size();
     }
 
@@ -2051,14 +2067,12 @@ public class APCPRequestDAO {
         ArrayList<Integer> filtered = new ArrayList();
         for (APCPRequest req : requestList) {
             if (req.getRequestStatus() == 5) {
-                for (Disbursement d : req.getDisbursements()) {
+                for (Disbursement d : getAllDisbursementsByRequest(req.getRequestID())) {
                     cal.setTime(d.getDateDisbursed());
                     if (cal.get(Calendar.YEAR) == year) {
-
                         if (!filtered.contains(d.getArbID())) { // CHECKS if filtered CONTAINS arbID
                             filtered.add(d.getArbID());
                         }
-
                     }
                 }
 
@@ -2070,12 +2084,13 @@ public class APCPRequestDAO {
 
     public int getDistinctRecipientCountTarget(ArrayList<APCPRequest> requestList, int year) {
         Calendar cal = Calendar.getInstance();
+        
         ArrayList<Integer> filtered = new ArrayList();
         for (APCPRequest req : requestList) {
             if (req.getRequestStatus() == 5 || req.getRequestStatus() == 4 || req.getRequestStatus() == 6) {
                 cal.setTime(req.getDateApproved());
                 if (cal.get(Calendar.YEAR) == year) {
-                    for (ARB arb : req.getRecipients()) {
+                    for (ARB arb : getAllAPCPRecipientsByRequest(req.getRequestID())) {
                         if (!filtered.contains(arb.getArbID())) { // CHECKS if filtered CONTAINS arbID
                             filtered.add(arb.getArbID());
                         }

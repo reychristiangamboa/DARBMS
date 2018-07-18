@@ -81,14 +81,22 @@
                                     <div class="box-body">             
 
                                         <div class="row">
-                                            <div class="col-xs-6">
+                                            
+                                            <div class="col-xs-1">
+                                                <div class="form-group">
+                                                    <label for="">ARBO ID</label>
+                                                    <input type="text" class="form-control" name="arboID" />
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-xs-4">
                                                 <div class="form-group">
                                                     <label for="">Name of ARBO</label>
                                                     <input type="text" name="arboName" class="form-control" id='' placeholder="">
                                                     <input type="hidden" name="provOfficeCode" value="<%out.print((Integer) session.getAttribute("provOfficeCode"));%>">
                                                 </div>
                                             </div>
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-4">
                                                 <div class="form-group">
                                                     <label for="">Type</label>
                                                     <select name="arboType" id="" class="form-control">

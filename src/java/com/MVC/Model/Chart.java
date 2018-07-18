@@ -483,68 +483,6 @@ public class Chart {
         return new PieChart(data).toJson();
     }
 
-    public String getPieChartPastDue(ArrayList<APCPRequest> unsettledProvincialRequests) {
-        CAPDEVDAO dao = new CAPDEVDAO();
-        APCPRequestDAO dao2 = new APCPRequestDAO();
-        ArrayList<PastDueAccount> reasons = dao.getAllPastDueReasons();
-        ArrayList<String> stringLabels = new ArrayList();
-        PieData data = new PieData();
-        PieDataset datasetReasons = new PieDataset();
-
-        for (PastDueAccount reason : reasons) {
-            int count = 0;
-            stringLabels.add(reason.getReasonPastDueDesc());
-            for (APCPRequest r : unsettledProvincialRequests) {
-                ArrayList<PastDueAccount> unsettled = r.getUnsettledPastDueAccounts();
-                for (PastDueAccount pda : unsettled) {
-                    if (pda.getReasonPastDue() == reason.getReasonPastDue()) {
-                        count++;
-                    }
-                }
-            }
-            datasetReasons.addData(count);
-            datasetReasons.addBackgroundColor(Color.random());
-            datasetReasons.setBorderWidth(2);
-        }
-
-        data.addDataset(datasetReasons);
-        for (String l : stringLabels) {
-            data.addLabel(l);
-        }
-
-        return new PieChart(data).toJson();
-    }
-
-    public String getPieChartDisbursement(ArrayList<ARB> arbList) {
-
-        APCPRequestDAO dao2 = new APCPRequestDAO();
-        ArrayList<String> stringLabels = new ArrayList();
-        PieData data = new PieData();
-        PieDataset datasetDisbursements = new PieDataset();
-
-        for (ARB arb : arbList) {
-            double amount = 0;
-            stringLabels.add(arb.getFLName());
-            ArrayList<Disbursement> disbursements = dao2.getAllDisbursementsByARB(arb.getArbID());
-
-            for (Disbursement d : disbursements) {
-                amount += d.getDisbursedAmount();
-            }
-
-            datasetDisbursements.addData(amount);
-            datasetDisbursements.addBackgroundColor(Color.random());
-            datasetDisbursements.setBorderWidth(2);
-
-        }
-
-        data.addDataset(datasetDisbursements);
-        for (String l : stringLabels) {
-            data.addLabel(l);
-        }
-
-        return new PieChart(data).toJson();
-    }
-
     public String getBarChartEducation(ArrayList<ARB> arbEducChart) {
         int noGrade = 0;
         int primary = 0;
@@ -2374,6 +2312,8 @@ public class Chart {
         labels.add("Q3");
         labels.add("Q4");
 
+        APCPRequestDAO dao = new APCPRequestDAO();
+
         LineDataset currentYear = new LineDataset();
         currentYear.setLabel(String.valueOf(current.get(Calendar.YEAR)));
         currentYear.addPointBackgroundColor(Color.GREEN);
@@ -2396,7 +2336,7 @@ public class Chart {
 
         for (String label : labels) {
             for (APCPRequest req : requestList) {
-                for (APCPRelease rel : req.getReleases()) {
+                for (APCPRelease rel : dao.getAllAPCPReleasesByRequest(req.getRequestID())) {
                     releaseDate.setTime(rel.getReleaseDate());
                     if (label.equalsIgnoreCase("Q1")) {
                         if (releaseDate.get(Calendar.MONTH) == 0 || releaseDate.get(Calendar.MONTH) == 1 || releaseDate.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
@@ -2509,12 +2449,14 @@ public class Chart {
         int currentCount = 0;
         int lastCount = 0;
 
+        APCPRequestDAO dao = new APCPRequestDAO();
+
         ArrayList<Integer> currentARBs = new ArrayList();
         ArrayList<Integer> lastARBs = new ArrayList();
 
         for (String label : labels) {
             for (APCPRequest req : requestList) {
-                for (Disbursement d : req.getDisbursements()) {
+                for (Disbursement d : dao.getAllDisbursementsByRequest(req.getRequestID())) {
                     disbursementDate.setTime(d.getDateDisbursed());
                     if (label.equalsIgnoreCase("Q1")) {
                         if (disbursementDate.get(Calendar.MONTH) == 0 || disbursementDate.get(Calendar.MONTH) == 1 || disbursementDate.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
@@ -2627,12 +2569,14 @@ public class Chart {
         double currentSum = 0;
         double lastSum = 0;
 
+        APCPRequestDAO dao = new APCPRequestDAO();
+
         ArrayList<Integer> currentARBOs = new ArrayList();
         ArrayList<Integer> lastARBOs = new ArrayList();
 
         for (String label : labels) {
             for (APCPRequest req : requestList) {
-                for (APCPRelease rel : req.getReleases()) {
+                for (APCPRelease rel : dao.getAllAPCPReleasesByRequest(req.getRequestID())) {
                     releaseDate.setTime(rel.getReleaseDate());
                     if (label.equalsIgnoreCase("Q1")) {
                         if (releaseDate.get(Calendar.MONTH) == 0 || releaseDate.get(Calendar.MONTH) == 1 || releaseDate.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
@@ -2721,11 +2665,14 @@ public class Chart {
         double currentSum = 0;
         double lastSum = 0;
 
+        APCPRequestDAO dao = new APCPRequestDAO();
+
         ArrayList<Integer> currentARBOs = new ArrayList();
         ArrayList<Integer> lastARBOs = new ArrayList();
 
         for (String label : labels) {
             for (APCPRequest req : requestList) {
+                req.setUnsettledPastDueAccounts(dao.getAllUnsettledPastDueAccountsByRequest(req.getRequestID()));
                 if (!req.getUnsettledPastDueAccounts().isEmpty()) {
                     for (PastDueAccount pda : req.getUnsettledPastDueAccounts()) {
                         dateRecorded.setTime(pda.getDateRecorded());
@@ -3047,10 +2994,13 @@ public class Chart {
         ArrayList<Integer> currentARBs = new ArrayList();
         ArrayList<Integer> lastARBs = new ArrayList();
 
+        CAPDEVDAO dao = new CAPDEVDAO();
+
         for (String label : labels) {
             for (CAPDEVPlan plan : planList) {
 
                 implementedDate.setTime(plan.getImplementedDate());
+                plan.setActivities(dao.getCAPDEVPlanActivities(plan.getPlanID()));
 
                 if (label.equalsIgnoreCase("Q1")) {
                     if (implementedDate.get(Calendar.MONTH) == 0 || implementedDate.get(Calendar.MONTH) == 1 || implementedDate.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
@@ -3135,5 +3085,459 @@ public class Chart {
 
     }
 
+    public String getLineChartCAPDEVTotalImplementedPlans(ArrayList<CAPDEVPlan> planList, String titleStr) {
+
+        ArrayList<String> labels = new ArrayList();
+        LineOptions options = new LineOptions();
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText(titleStr);
+
+        options.setTitle(title);
+
+        Calendar current = Calendar.getInstance();
+
+        Calendar last = Calendar.getInstance();
+        last.add(Calendar.YEAR, -1);
+
+        labels.add("Q1");
+        labels.add("Q2");
+        labels.add("Q3");
+        labels.add("Q4");
+
+        LineDataset currentYear = new LineDataset();
+        currentYear.setLabel(String.valueOf(current.get(Calendar.YEAR)));
+        currentYear.addPointBackgroundColor(Color.GREEN);
+        currentYear.setBorderColor(Color.GREEN);
+        currentYear.setBackgroundColor(Color.TRANSPARENT);
+
+        LineDataset lastYear = new LineDataset();
+        lastYear.setLabel(String.valueOf(last.get(Calendar.YEAR)));
+        lastYear.addPointBackgroundColor(Color.LIGHT_BLUE);
+        lastYear.setBorderColor(Color.LIGHT_BLUE);
+        lastYear.setBackgroundColor(Color.TRANSPARENT);
+
+        Calendar implementedDate = Calendar.getInstance();
+
+        int currentCount = 0;
+        int lastCount = 0;
+
+        ArrayList<Integer> currentPlans = new ArrayList();
+        ArrayList<Integer> lastPlans = new ArrayList();
+
+        for (String label : labels) {
+            for (CAPDEVPlan plan : planList) {
+                implementedDate.setTime(plan.getImplementedDate());
+                if (label.equalsIgnoreCase("Q1")) {
+                    if (implementedDate.get(Calendar.MONTH) == 0 || implementedDate.get(Calendar.MONTH) == 1 || implementedDate.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
+                        if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                            if (!currentPlans.contains(plan.getPlanID())) { // IF NOT YET ON THE LIST, ADD
+                                currentPlans.add(plan.getPlanID()); // ADDS THE ARBO ID
+                                currentCount++; // ADDS THE COUNT FOR Q1
+                            }
+                        } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                            if (!lastPlans.contains(plan.getPlanID())) {
+                                lastPlans.add(plan.getPlanID());
+                                lastCount++;
+                            }
+                        }
+                    }
+                } else if (label.equalsIgnoreCase("Q2")) {
+                    if (implementedDate.get(Calendar.MONTH) == 3 || implementedDate.get(Calendar.MONTH) == 4 || implementedDate.get(Calendar.MONTH) == 5) { // FIRST, CHECK IF Q1
+                        if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                            if (!currentPlans.contains(plan.getPlanID())) { // IF NOT YET ON THE LIST, ADD
+                                currentPlans.add(plan.getPlanID()); // ADDS THE ARBO ID
+                                currentCount++; // ADDS THE COUNT FOR Q1
+                            }
+                        } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                            if (!lastPlans.contains(plan.getPlanID())) {
+                                lastPlans.add(plan.getPlanID());
+                                lastCount++;
+                            }
+                        }
+                    }
+                } else if (label.equalsIgnoreCase("Q3")) {
+                    if (implementedDate.get(Calendar.MONTH) == 6 || implementedDate.get(Calendar.MONTH) == 7 || implementedDate.get(Calendar.MONTH) == 8) { // FIRST, CHECK IF Q1
+
+                        if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                            if (!currentPlans.contains(plan.getPlanID())) { // IF NOT YET ON THE LIST, ADD
+                                currentPlans.add(plan.getPlanID()); // ADDS THE ARBO ID
+                                currentCount++; // ADDS THE COUNT FOR Q1
+                            }
+                        } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                            if (!lastPlans.contains(plan.getPlanID())) {
+                                lastPlans.add(plan.getPlanID());
+                                lastCount++;
+                            }
+                        }
+                    }
+                } else if (label.equalsIgnoreCase("Q4")) {
+                    if (implementedDate.get(Calendar.MONTH) == 9 || implementedDate.get(Calendar.MONTH) == 10 || implementedDate.get(Calendar.MONTH) == 11) { // FIRST, CHECK IF Q1
+
+                        if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                            if (!currentPlans.contains(plan.getPlanID())) { // IF NOT YET ON THE LIST, ADD
+                                currentPlans.add(plan.getPlanID()); // ADDS THE ARBO ID
+                                currentCount++; // ADDS THE COUNT FOR Q1
+                            }
+                        } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                            if (!lastPlans.contains(plan.getPlanID())) {
+                                lastPlans.add(plan.getPlanID());
+                                lastCount++;
+                            }
+                        }
+                    }
+                }
+
+            }
+            currentYear.addData(currentCount);
+            lastYear.addData(lastCount);
+        }
+
+        LineData data = new LineData();
+        ArrayList<LineDataset> datasets = new ArrayList();
+        datasets.add(lastYear);
+        datasets.add(currentYear);
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new LineChart(data, options).toJson();
+
+    }
+
+    public String getLineChartCAPDEVTotalImplementedBudget(ArrayList<CAPDEVPlan> planList, String titleStr) {
+
+        ArrayList<String> labels = new ArrayList();
+        LineOptions options = new LineOptions();
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText(titleStr);
+
+        options.setTitle(title);
+
+        Calendar current = Calendar.getInstance();
+
+        Calendar last = Calendar.getInstance();
+        last.add(Calendar.YEAR, -1);
+
+        labels.add("Q1");
+        labels.add("Q2");
+        labels.add("Q3");
+        labels.add("Q4");
+
+        LineDataset currentYear = new LineDataset();
+        currentYear.setLabel(String.valueOf(current.get(Calendar.YEAR)));
+        currentYear.addPointBackgroundColor(Color.GREEN);
+        currentYear.setBorderColor(Color.GREEN);
+        currentYear.setBackgroundColor(Color.TRANSPARENT);
+
+        LineDataset lastYear = new LineDataset();
+        lastYear.setLabel(String.valueOf(last.get(Calendar.YEAR)));
+        lastYear.addPointBackgroundColor(Color.LIGHT_BLUE);
+        lastYear.setBorderColor(Color.LIGHT_BLUE);
+        lastYear.setBackgroundColor(Color.TRANSPARENT);
+
+        Calendar implementedDate = Calendar.getInstance();
+
+        double currentSum = 0;
+        double lastSum = 0;
+
+        ArrayList<Integer> currentPlans = new ArrayList();
+        ArrayList<Integer> lastPlans = new ArrayList();
+
+        for (String label : labels) {
+            for (CAPDEVPlan plan : planList) {
+                implementedDate.setTime(plan.getImplementedDate());
+                if (label.equalsIgnoreCase("Q1")) {
+                    if (implementedDate.get(Calendar.MONTH) == 0 || implementedDate.get(Calendar.MONTH) == 1 || implementedDate.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
+                        if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                            if (!currentPlans.contains(plan.getPlanID())) { // IF NOT YET ON THE LIST, ADD
+                                currentSum += plan.getBudget();
+                            }
+                        } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                            if (!lastPlans.contains(plan.getPlanID())) {
+                                lastSum += plan.getBudget();
+                            }
+                        }
+                    }
+                } else if (label.equalsIgnoreCase("Q2")) {
+                    if (implementedDate.get(Calendar.MONTH) == 3 || implementedDate.get(Calendar.MONTH) == 4 || implementedDate.get(Calendar.MONTH) == 5) { // FIRST, CHECK IF Q1
+                        if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                            if (!currentPlans.contains(plan.getPlanID())) { // IF NOT YET ON THE LIST, ADD
+                                currentSum += plan.getBudget();
+                            }
+                        } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                            if (!lastPlans.contains(plan.getPlanID())) {
+                                lastSum += plan.getBudget();
+                            }
+                        }
+                    }
+                } else if (label.equalsIgnoreCase("Q3")) {
+                    if (implementedDate.get(Calendar.MONTH) == 6 || implementedDate.get(Calendar.MONTH) == 7 || implementedDate.get(Calendar.MONTH) == 8) { // FIRST, CHECK IF Q1
+
+                        if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                            if (!currentPlans.contains(plan.getPlanID())) { // IF NOT YET ON THE LIST, ADD
+                                currentSum += plan.getBudget();
+                            }
+                        } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                            if (!lastPlans.contains(plan.getPlanID())) {
+                                lastSum += plan.getBudget();
+                            }
+                        }
+                    }
+                } else if (label.equalsIgnoreCase("Q4")) {
+                    if (implementedDate.get(Calendar.MONTH) == 9 || implementedDate.get(Calendar.MONTH) == 10 || implementedDate.get(Calendar.MONTH) == 11) { // FIRST, CHECK IF Q1
+
+                        if (implementedDate.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                            if (!currentPlans.contains(plan.getPlanID())) { // IF NOT YET ON THE LIST, ADD
+                                currentSum += plan.getBudget();
+                            }
+                        } else if (implementedDate.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                            if (!lastPlans.contains(plan.getPlanID())) {
+                                lastSum += plan.getBudget();
+                            }
+                        }
+                    }
+                }
+
+            }
+            currentYear.addData(currentSum);
+            lastYear.addData(lastSum);
+        }
+
+        LineData data = new LineData();
+        ArrayList<LineDataset> datasets = new ArrayList();
+        datasets.add(lastYear);
+        datasets.add(currentYear);
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new LineChart(data, options).toJson();
+
+    }
+
+    //</editor-fold>
+    //<editor-fold desc="ARBO PROFILE">
+    public String getPieChartDisbursement(ArrayList<ARB> arbList) {
+
+        APCPRequestDAO dao2 = new APCPRequestDAO();
+        ArrayList<String> stringLabels = new ArrayList();
+        PieData data = new PieData();
+        PieDataset datasetDisbursements = new PieDataset();
+
+        for (ARB arb : arbList) {
+            double amount = 0;
+            stringLabels.add(arb.getFLName());
+            ArrayList<Disbursement> disbursements = dao2.getAllDisbursementsByARB(arb.getArbID());
+
+            for (Disbursement d : disbursements) {
+                amount += d.getDisbursedAmount();
+            }
+
+            datasetDisbursements.addData(amount);
+            datasetDisbursements.addBackgroundColor(Color.random());
+            datasetDisbursements.setBorderWidth(2);
+
+        }
+
+        data.addDataset(datasetDisbursements);
+        for (String l : stringLabels) {
+            data.addLabel(l);
+        }
+
+        return new PieChart(data).toJson();
+    }
+
+    public String getPieChartRepayment(ArrayList<ARB> arbList) {
+
+        APCPRequestDAO dao2 = new APCPRequestDAO();
+        ArrayList<String> stringLabels = new ArrayList();
+        PieData data = new PieData();
+        PieDataset datasetRepayments = new PieDataset();
+
+        for (ARB arb : arbList) {
+            double amount = 0;
+            stringLabels.add(arb.getFLName());
+            ArrayList<Repayment> repayments = dao2.getArbRepaymentsByARB(arb.getArbID());
+
+            for (Repayment r : repayments) {
+                amount += r.getAmount();
+            }
+
+            datasetRepayments.addData(amount);
+            datasetRepayments.addBackgroundColor(Color.random());
+            datasetRepayments.setBorderWidth(2);
+
+        }
+
+        data.addDataset(datasetRepayments);
+        for (String l : stringLabels) {
+            data.addLabel(l);
+        }
+
+        return new PieChart(data).toJson();
+    }
+
+    public String getPieChartOSBalance(ArrayList<ARB> arbList) {
+
+        APCPRequest req = new APCPRequest();
+        ArrayList<String> stringLabels = new ArrayList();
+        PieData data = new PieData();
+        PieDataset datasetRepayments = new PieDataset();
+
+        for (ARB arb : arbList) {
+
+            double amount = 0;
+            stringLabels.add(arb.getFLName());
+
+            amount += req.getTotalARBOSBalance(arb.getArbID());
+
+            datasetRepayments.addData(amount);
+            datasetRepayments.addBackgroundColor(Color.random());
+            datasetRepayments.setBorderWidth(2);
+
+        }
+
+        data.addDataset(datasetRepayments);
+        for (String l : stringLabels) {
+            data.addLabel(l);
+        }
+
+        return new PieChart(data).toJson();
+    }
+
+    public String getLineChartPastDue(ArrayList<APCPRequest> requestList, String titleStr) {
+        ArrayList<String> labels = new ArrayList();
+        LineOptions options = new LineOptions();
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText(titleStr);
+
+        options.setTitle(title);
+
+        Calendar current = Calendar.getInstance();
+
+        Calendar last = Calendar.getInstance();
+        last.add(Calendar.YEAR, -1);
+
+        labels.add("Q1");
+        labels.add("Q2");
+        labels.add("Q3");
+        labels.add("Q4");
+
+        LineDataset currentYear = new LineDataset();
+        currentYear.setLabel(String.valueOf(current.get(Calendar.YEAR)));
+        currentYear.addPointBackgroundColor(Color.GREEN);
+        currentYear.setBorderColor(Color.GREEN);
+        currentYear.setBackgroundColor(Color.TRANSPARENT);
+
+        LineDataset lastYear = new LineDataset();
+        lastYear.setLabel(String.valueOf(last.get(Calendar.YEAR)));
+        lastYear.addPointBackgroundColor(Color.LIGHT_BLUE);
+        lastYear.setBorderColor(Color.LIGHT_BLUE);
+        lastYear.setBackgroundColor(Color.TRANSPARENT);
+
+        Calendar dateRecorded = Calendar.getInstance();
+
+        ArrayList<Integer> currentARBOs = new ArrayList();
+        ArrayList<Integer> lastARBOs = new ArrayList();
+
+        APCPRequestDAO dao = new APCPRequestDAO();
+
+        double currentSum = 0;
+        double lastSum = 0;
+
+        for (String label : labels) {
+
+            for (APCPRequest req : requestList) {
+                req.setPastDueAccounts(dao.getAllPastDueAccountsByRequest(req.getRequestID()));
+                for (PastDueAccount pda : req.getPastDueAccounts()) {
+
+                    dateRecorded.setTime(pda.getDateRecorded());
+
+                    if (label.equalsIgnoreCase("Q1")) {
+                        if (dateRecorded.get(Calendar.MONTH) == 0 || dateRecorded.get(Calendar.MONTH) == 1 || dateRecorded.get(Calendar.MONTH) == 2) { // FIRST, CHECK IF Q1
+                            if (dateRecorded.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                currentSum += pda.getPastDueAmount();
+                            } else if (dateRecorded.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                lastSum += pda.getPastDueAmount();
+                            }
+                        }
+                    } else if (label.equalsIgnoreCase("Q2")) {
+                        if (dateRecorded.get(Calendar.MONTH) == 3 || dateRecorded.get(Calendar.MONTH) == 4 || dateRecorded.get(Calendar.MONTH) == 5) { // FIRST, CHECK IF Q2
+                            if (dateRecorded.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                currentSum += pda.getPastDueAmount();
+                            } else if (dateRecorded.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                lastSum += pda.getPastDueAmount();
+                            }
+                        }
+                    } else if (label.equalsIgnoreCase("Q3")) {
+                        if (dateRecorded.get(Calendar.MONTH) == 6 || dateRecorded.get(Calendar.MONTH) == 7 || dateRecorded.get(Calendar.MONTH) == 8) { // FIRST, CHECK IF Q3
+                            if (dateRecorded.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                currentSum += pda.getPastDueAmount();
+                            } else if (dateRecorded.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                lastSum += pda.getPastDueAmount();
+                            }
+                        }
+                    } else if (label.equalsIgnoreCase("Q4")) {
+                        if (dateRecorded.get(Calendar.MONTH) == 9 || dateRecorded.get(Calendar.MONTH) == 10 || dateRecorded.get(Calendar.MONTH) == 11) { // FIRST, CHECK IF Q4
+                            if (dateRecorded.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // IF SAME YEAR
+                                currentSum += pda.getPastDueAmount();
+                            } else if (dateRecorded.get(Calendar.YEAR) == last.get(Calendar.YEAR)) {
+                                lastSum += pda.getPastDueAmount();
+                            }
+                        }
+                    }
+
+                }
+            }
+            currentYear.addData(currentSum);
+            lastYear.addData(lastSum);
+        }
+
+        LineData data = new LineData();
+        ArrayList<LineDataset> datasets = new ArrayList();
+        datasets.add(lastYear);
+        datasets.add(currentYear);
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new LineChart(data, options).toJson();
+
+    }
+
+    public String getPieChartPastDue(ArrayList<APCPRequest> unsettledProvincialRequests) {
+        CAPDEVDAO dao = new CAPDEVDAO();
+        APCPRequestDAO dao2 = new APCPRequestDAO();
+        ArrayList<PastDueAccount> reasons = dao.getAllPastDueReasons();
+        ArrayList<String> stringLabels = new ArrayList();
+        PieData data = new PieData();
+        PieDataset datasetReasons = new PieDataset();
+
+        for (PastDueAccount reason : reasons) {
+            int count = 0;
+            stringLabels.add(reason.getReasonPastDueDesc());
+            for (APCPRequest r : unsettledProvincialRequests) {
+                ArrayList<PastDueAccount> unsettled = r.getUnsettledPastDueAccounts();
+                for (PastDueAccount pda : unsettled) {
+                    if (pda.getReasonPastDue() == reason.getReasonPastDue()) {
+                        count++;
+                    }
+                }
+            }
+            datasetReasons.addData(count);
+            datasetReasons.addBackgroundColor(Color.random());
+            datasetReasons.setBorderWidth(2);
+        }
+
+        data.addDataset(datasetReasons);
+        for (String l : stringLabels) {
+            data.addLabel(l);
+        }
+
+        return new PieChart(data).toJson();
+    }
     //</editor-fold>
 }

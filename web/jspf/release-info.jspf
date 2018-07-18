@@ -10,6 +10,7 @@
         <thead>
             <tr>
                 <th>Release Amount</th>
+                <th>O/S Balance</th>
                 <th>Release Date</th>
                 <th>Released By</th>
             </tr>
@@ -17,12 +18,14 @@
 
         <tbody>
             <%
+                req.setReleases(apcpRequestDAO.getAllAPCPReleasesByRequest(req.getRequestID()));
                 for (APCPRelease release : req.getReleases()) {
                     User u = new User();
                     u = uDAO99.searchUser(release.getReleasedBy());
             %>
             <tr>
                 <td><%out.print(currency.format(release.getReleaseAmount()));%></td>
+                <td><%out.print(currency.format(release.getOSBalance()));%></td>
                 <td><%out.print(release.getReleaseDate());%></td>
                 <td><%out.print(u.getFullName());%></td>
             </tr>
@@ -32,6 +35,7 @@
         <tfoot>
             <tr>
                 <th>Release Amount</th>
+                <th>O/S Balance</th>
                 <th>Release Date</th>
                 <th>Released By</th>
             </tr>

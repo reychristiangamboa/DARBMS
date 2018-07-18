@@ -1,5 +1,4 @@
 
-
 <div class="row" style="margin-top: 10px">
     <div class="col-xs-4">
         <div class="form-group">
@@ -40,7 +39,7 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Loan Term</label>
-            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getLoanTermDuration()%> Months" disabled></div>
+            <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getLoanReason().getLoanTerm().getLoanTermDesc()%>" disabled></div>
     </div>
 </div>
 <div class="row">
@@ -59,7 +58,7 @@
 <div class="col-md-4">
     <div class="form-group">
         <label>Loan Duration</label>
-        <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getLoanTermDuration()%>" disabled></div>
+        <input style="background:none;border-top: transparent; border-left: transparent; border-right: transparent;" type="text" class="form-control" name="ltn" id="ltn" placeholder="" value="<%=req.getLoanTermDuration()%> months" disabled></div>
 </div>
 </div>
 <div class="row">
@@ -74,7 +73,10 @@
                 </tr>
             </thead>
             <tbody>
-                <%for(ARB arb : req.getRecipients()){%>
+                <%
+                    req.setRecipients(apcpRequestDAO.getAllAPCPRecipientsByRequest(req.getRequestID()));
+                    for(ARB arb : req.getRecipients()){
+                %>
                 <tr>
                     <td><%out.print(arb.getFLName());%></td>
                     <td><%out.print(f.format(arb.getMemberSince()));%></td>

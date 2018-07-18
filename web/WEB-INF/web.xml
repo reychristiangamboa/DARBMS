@@ -440,6 +440,10 @@
         <servlet-name>SendMessage</servlet-name>
         <servlet-class>com.MVC.Controller.SendMessage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ARBOPlans</servlet-name>
+        <servlet-class>com.MVC.Controller.ARBOPlans</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -871,6 +875,10 @@
     <servlet-mapping>
         <servlet-name>SendMessage</servlet-name>
         <url-pattern>/SendMessage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ARBOPlans</servlet-name>
+        <url-pattern>/ARBOPlans</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

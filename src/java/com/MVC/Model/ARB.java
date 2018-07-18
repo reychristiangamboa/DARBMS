@@ -5,6 +5,7 @@
  */
 package com.MVC.Model;
 
+import com.MVC.DAO.APCPRequestDAO;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,6 +50,7 @@ public class ARB {
     private boolean nonARB;
     private ArrayList<CAPDEVActivity> activities = new ArrayList();
     private ArrayList<Repayment> repayments = new ArrayList();
+    private ArrayList<Disbursement> disbursements = new ArrayList();
 
     public ARB() {
     }
@@ -343,6 +345,34 @@ public class ARB {
 
     public void setRepayments(ArrayList<Repayment> repayments) {
         this.repayments = repayments;
+    }
+
+    public ArrayList<Disbursement> getDisbursements() {
+        return disbursements;
+    }
+
+    public void setDisbursements(ArrayList<Disbursement> disbursements) {
+        this.disbursements = disbursements;
+    }
+    
+    public double getTotalDisbursementAmount(){
+        APCPRequestDAO dao = new APCPRequestDAO();
+        this.disbursements = dao.getAllDisbursementsByARB(this.arbID);
+        double total = 0;
+        for(Disbursement d : this.disbursements){
+            total += d.getDisbursedAmount();
+        }
+        return total;
+    }
+    
+    public double getTotalRepaymentsAmount(){
+        APCPRequestDAO dao = new APCPRequestDAO();
+        this.repayments = dao.getArbRepaymentsByARB(this.arbID);
+        double total = 0;
+        for(Repayment r : this.repayments){
+            total += r.getAmount();
+        }
+        return total;
     }
     
     public int getAge(){

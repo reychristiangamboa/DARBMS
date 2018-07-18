@@ -11,6 +11,7 @@
 
         <tbody>
             <%
+                r.setArboRepayments(apcpRequestDAO.getAllARBORepaymentsByRequest(r.getRequestID()));
                 for (Repayment repayment : r.getArboRepayments()) {
                     User u = new User();
                     u = uDAO99.searchUser(repayment.getRecordedBy());
