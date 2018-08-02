@@ -17,24 +17,26 @@ public class Province {
     private String provDesc;
     private int regCode;
     private String regDesc;
-    private ProvincialBudget provincialAPCPBudget;
-    private ProvincialBudget provincialCAPDEVBudget;
+    private ArrayList<ProvincialBudget> provincialAPCPBudget;
+    private ArrayList<ProvincialBudget> provincialCAPDEVBudget;
 
-    public ProvincialBudget getProvincialAPCPBudget() {
+    public ArrayList<ProvincialBudget> getProvincialAPCPBudget() {
         return provincialAPCPBudget;
     }
 
-    public void setProvincialAPCPBudget(ProvincialBudget provincialAPCPBudget) {
+    public void setProvincialAPCPBudget(ArrayList<ProvincialBudget> provincialAPCPBudget) {
         this.provincialAPCPBudget = provincialAPCPBudget;
     }
 
-    public ProvincialBudget getProvincialCAPDEVBudget() {
+    public ArrayList<ProvincialBudget> getProvincialCAPDEVBudget() {
         return provincialCAPDEVBudget;
     }
 
-    public void setProvincialCAPDEVBudget(ProvincialBudget provincialCAPDEVBudget) {
+    public void setProvincialCAPDEVBudget(ArrayList<ProvincialBudget> provincialCAPDEVBudget) {
         this.provincialCAPDEVBudget = provincialCAPDEVBudget;
     }
+
+    
     
     
 

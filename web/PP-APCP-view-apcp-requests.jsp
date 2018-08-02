@@ -40,11 +40,14 @@
                         <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
                 </section>
-
-                <!-- Main content -->
-
-                <!-- Main content -->
+                    
                 <section class="content">
+                    
+                    <%if(issueDAO.retrieveUnresolvedIssues((Integer)session.getAttribute("userType"),(Integer)session.getAttribute("provOfficeCode")).size() > 0){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> You have <a href="view-issues.jsp">ISSUES</a> pending. Please resolve them immediately.</h4>
+                    </div>
 
                     <div class="row">
                         <div class="col-xs-12">

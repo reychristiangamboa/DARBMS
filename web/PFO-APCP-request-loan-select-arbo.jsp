@@ -35,6 +35,20 @@
 
                 <!-- Main content -->
                 <section class="content">
+                    
+                    <%if(request.getAttribute("success") != null){%>
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
+                    </div>
+                    <%}else if(request.getAttribute("errMessage") != null){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
+                    </div>
+
+                    <%}%>
+                    
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box">
@@ -45,7 +59,7 @@
                                 <div class="box-body">
                                         <p><i>Note: If ARBO name is not in the list, ARBO must registered as a qualified conduit first - <a href="">Click here</a></i></p>
 
-                                        <table id="example3" class="table table-bordered table-striped">
+                                        <table class="table table-bordered table-striped modTable">
                                             <thead>
 
                                                 <tr>

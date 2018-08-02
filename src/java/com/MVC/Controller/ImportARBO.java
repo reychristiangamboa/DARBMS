@@ -11,6 +11,7 @@ import com.MVC.Model.ARBO;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.servlet.ServletException;
@@ -48,43 +49,28 @@ public class ImportARBO extends BaseServlet {
 
                 cellStoreArrayList = (ArrayList) dataHolder.get(i);
                 ARBO arbo = new ARBO();
-                arbo.setArboName(cellStoreArrayList.get(0).toString()); // GET ARBO NAME
+                arbo.setArboName(cellStoreArrayList.get(1).toString()); // GET ARBO NAME
+                arbo.setArboType(1);
 
-                int arboType = arboDAO.getARBOType(cellStoreArrayList.get(1).toString());
-                arbo.setArboType(arboType);
-
-                int regCode = addressDAO.getRegCode(cellStoreArrayList.get(4).toString()); // GET REGION, TURN INTO INT
+                int regCode = addressDAO.getRegCode(cellStoreArrayList.get(5).toString()); // GET REGION, TURN INTO INT
                 arbo.setArboRegion(regCode);
-                int provCode = addressDAO.getProvCode(cellStoreArrayList.get(3).toString(), regCode); // GET PROVINCE, TURN INTO INT
+                int provCode = addressDAO.getProvCode(cellStoreArrayList.get(4).toString(), regCode); // GET PROVINCE, TURN INTO INT
                 arbo.setArboProvince(provCode);
-                int cityMunCode = addressDAO.getCityMunCode(cellStoreArrayList.get(2).toString(), provCode, regCode); // GET CITY, TURN INTO INT
+                int cityMunCode = addressDAO.getCityMunCode(cellStoreArrayList.get(3).toString(), provCode, regCode); // GET CITY, TURN INTO INT
                 arbo.setArboCityMun(cityMunCode);
-
-                if (cellStoreArrayList.get(5).toString().equalsIgnoreCase("No")) {
-                    arbo.setAPCPQualified(0);
-                } else if (cellStoreArrayList.get(5).toString().equalsIgnoreCase("Yes")) {
-                    arbo.setAPCPQualified(1);
-                }
-
-                String id = String.valueOf(provCode);
-                int size = arboDAO.getAllARBOsByProvince(provCode).size();
-                int counter = size + 1;
-
-                if (size <= 9) {
-                    id += "00" + counter;
-                } else if (size >= 10) {
-                    id += "0" + counter;
-                } else if (size >= 100) {
-                    id += counter;
-                }
-
-                int finalID = Integer.parseInt(id);
+                
+                double id = Double.parseDouble(cellStoreArrayList.get(0).toString());
+                int finalID = (int)id;
 
                 arbo.setArboID(finalID);
 
                 arbo.setProvOfficeCode((Integer) session.getAttribute("provOfficeCode"));
+                
+                Long l = System.currentTimeMillis();
+                Date d = new Date(l);
+                arbo.setDateOperational(d);
 
-                arboDAO.addARBO(arbo);
+                arboDAO.importARBO(arbo);
                 arboList.add(arbo);
             }
             

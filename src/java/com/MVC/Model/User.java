@@ -5,6 +5,8 @@
  */
 package com.MVC.Model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Rey Christian
@@ -23,6 +25,8 @@ public class User {
     private String provOfficeDesc;
     private int regOfficeCode;
     private String regDesc;
+    private ArrayList<Message> messages;
+    private ArrayList<Issue> issues;
 
     public int getUserID() {
         return userID;
@@ -127,5 +131,24 @@ public class User {
     public void setRegDesc(String regDesc) {
         this.regDesc = regDesc;
     }
+
+    public ArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(ArrayList<Message> messages) {
+        this.messages = messages;
+    }
+
+    public ArrayList<Issue> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(ArrayList<Issue> issues) {
+        this.issues = issues;
+    }
+    
+    
+
     
 }

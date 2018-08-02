@@ -31,6 +31,8 @@ public class VerifyDocuments extends BaseServlet {
             }
         }
         
+        dao.setDateCompleted(Integer.parseInt(request.getParameter("requestID")));
+        
         int requestID = Integer.parseInt(request.getParameter("requestID"));
         
         request.setAttribute("requestID", requestID);

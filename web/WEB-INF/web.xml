@@ -225,10 +225,6 @@
         <servlet-class>com.MVC.Controller.ImportRelease</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ImportRepayment</servlet-name>
-        <servlet-class>com.MVC.Controller.ImportRepayment</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ImportDisbursement</servlet-name>
         <servlet-class>com.MVC.Controller.ImportDisbursement</servlet-class>
     </servlet>
@@ -443,6 +439,58 @@
     <servlet>
         <servlet-name>ARBOPlans</servlet-name>
         <servlet-class>com.MVC.Controller.ARBOPlans</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ApproveProvincialBudget</servlet-name>
+        <servlet-class>com.MVC.Controller.ApproveProvincialBudget</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DisapproveProvincialBudget</servlet-name>
+        <servlet-class>com.MVC.Controller.DisapproveProvincialBudget</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ImportARBORepayment</servlet-name>
+        <servlet-class>com.MVC.Controller.ImportARBORepayment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ImportARBRepayment</servlet-name>
+        <servlet-class>com.MVC.Controller.ImportARBRepayment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RemoveParticipants</servlet-name>
+        <servlet-class>com.MVC.Controller.RemoveParticipants</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RemoveRecipients</servlet-name>
+        <servlet-class>com.MVC.Controller.RemoveRecipients</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResolveIssue</servlet-name>
+        <servlet-class>com.MVC.Controller.ResolveIssue</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReviseAttendance</servlet-name>
+        <servlet-class>com.MVC.Controller.ReviseAttendance</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResubmitDocuments</servlet-name>
+        <servlet-class>com.MVC.Controller.ResubmitDocuments</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FilterRFODashboard</servlet-name>
+        <servlet-class>com.MVC.Controller.FilterRFODashboard</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FilterDashboard</servlet-name>
+        <servlet-class>com.MVC.Controller.FilterDashboard</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FilterCAPDEVDashboard</servlet-name>
+        <servlet-class>com.MVC.Controller.FilterCAPDEVDashboard</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FilterARBODashboard</servlet-name>
+        <servlet-class>com.MVC.Controller.FilterARBODashboard</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -669,10 +717,6 @@
         <url-pattern>/ImportRelease</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ImportRepayment</servlet-name>
-        <url-pattern>/ImportRepayment</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>ImportDisbursement</servlet-name>
         <url-pattern>/ImportDisbursement</url-pattern>
     </servlet-mapping>
@@ -879,6 +923,54 @@
     <servlet-mapping>
         <servlet-name>ARBOPlans</servlet-name>
         <url-pattern>/ARBOPlans</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ApproveProvincialBudget</servlet-name>
+        <url-pattern>/ApproveProvincialBudget</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DisapproveProvincialBudget</servlet-name>
+        <url-pattern>/DisapproveProvincialBudget</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportARBORepayment</servlet-name>
+        <url-pattern>/ImportARBORepayment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImportARBRepayment</servlet-name>
+        <url-pattern>/ImportARBRepayment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveParticipants</servlet-name>
+        <url-pattern>/RemoveParticipants</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveRecipients</servlet-name>
+        <url-pattern>/RemoveRecipients</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResolveIssue</servlet-name>
+        <url-pattern>/ResolveIssue</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReviseAttendance</servlet-name>
+        <url-pattern>/ReviseAttendance</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResubmitDocuments</servlet-name>
+        <url-pattern>/ResubmitDocuments</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterDashboard</servlet-name>
+        <url-pattern>/FilterDashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterCAPDEVDashboard</servlet-name>
+        <url-pattern>/FilterCAPDEVDashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterARBODashboard</servlet-name>
+        <url-pattern>/FilterARBODashboard</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -2,6 +2,7 @@
 <%@page import="java.sql.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.ParseException;"%>
+<%@page import="java.text.DecimalFormat;"%>
 <%@page import="java.util.logging.Level;"%>
 <%@page import="java.util.logging.Logger;"%>
 <%@page import="java.text.NumberFormat"%>
@@ -28,10 +29,8 @@
 <!-- AdminLTE Skins. Choose a skin from the css/skins
      folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
-<!-- Morris chart -->
-<link rel="stylesheet" href="bower_components/morris.js/morris.css">
-<!-- jvectormap -->
-<link rel="stylesheet" href="bower_components/jvectormap/jquery-jvectormap.css">
+
+
 <!-- Date Picker -->
 <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 <!-- Daterange picker -->
@@ -65,5 +64,8 @@
     Calendar cal = Calendar.getInstance();
     cal.setTime(currDate);
     int year = cal.get(Calendar.YEAR);
+    int lastYear = year - 1;
+    
+    DecimalFormat df = new DecimalFormat("#.00");
 
 %>

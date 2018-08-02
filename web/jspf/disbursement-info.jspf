@@ -3,7 +3,7 @@
         <div class="col-xs-3">
             <div class="form-group">
                 <label for="">Loan Amount</label>
-                <input type="text" class="form-control" id="" placeholder="" value="<%=currency.format(r.getLoanAmount())%>" disabled>
+                <input type="text" class="form-control" id="" placeholder="" value="<%=currency.format(r.getTotalReleasedAmountPerRequest())%>" disabled>
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
                 <td><a target="_blank" re="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
                 <td><%out.print(currency.format(d.getDisbursedAmount()));%></td>
                 <td><%out.print(currency.format(d.getOSBalance()));%></td>
-                <td><%out.print(f.format(d.getDateDisbursed()));%></td>
+                <td><%out.print(d.getDateDisbursed());%></td>
 
             </tr>
             <%}%>
@@ -74,17 +74,23 @@
                                         <th>Crops</th>
                                     </tr>
                                 </thead>
+                                
+                                <%
+                                    r.setRecipients(apcpRequestDAO.getAllAPCPRecipientsByRequest(r.getRequestID()));
+                                %>
 
                                 <tbody>
-                                    <%for(ARB arb : arbo.getArbList()){%>
+                                    <%for(ARB arb : r.getRecipients()){%>
+                                    <%if(capdevDAO99.hasAttendedMandatoryActivities(arb.getArbID(),r.getRequestID())){%>
                                     <tr>
                                         <td>
                                             <input type="checkbox" name="arbID" value="<%=arb.getArbID()%>"/>
                                         </td>
-                                        <td><%out.print(arb.getFLName());%></td>
+                                        <td><a target="_blank" re="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
                                         <td><%out.print(arb.getFullAddress());%></td>
                                         <td><%out.print(arb.printAllCrops());%></td>
                                     </tr>
+                                    <%}%>
                                     <%}%>
                                 </tbody>
 
@@ -100,7 +106,7 @@
                                     <div class="input-group-addon">
                                         <i>&#8369;</i>
                                     </div>
-                                    <input type="text" id="disbursementAmount" class="form-control numberOnly" name="disbursementAmount" autocomplete="off" required>
+                                    <input type="text" id="disbursementAmount" class="form-control" name="disbursementAmount" autocomplete="off" required>
                                 </div>
                             </div>
                         </div>

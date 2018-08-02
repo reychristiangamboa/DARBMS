@@ -18,44 +18,62 @@
 
 
 <%
+                CropDAO cropDAO = new CropDAO();
+                AddressDAO addressDAO = new AddressDAO();
+                ARBODAO arboDAO = new ARBODAO();
+                ARBDAO arbDAO = new ARBDAO();
+                APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+                CAPDEVDAO capdevDAO = new CAPDEVDAO();
+                UserDAO uDAO = new UserDAO();
+                
+                ArrayList<Province> provOffices = addressDAO.getAllProvOfficesRegion((Integer)session.getAttribute("regOfficeCode"));
+                ArrayList<Province> provOffices2 = new ArrayList();
+                
+                ArrayList<APCPRequest> allRequestStatus = apcpRequestDAO.getAllRequestStatus();
+                ArrayList<CAPDEVPlan> allPlanStatus = capdevDAO.getAllPlanStatus();
 
-    UserDAO uDAO = new UserDAO();
-    ARBDAO arbDAO = new ARBDAO();
-    ARBODAO arboDAO = new ARBODAO();
-    CAPDEVDAO capdevDAO = new CAPDEVDAO();
-    AddressDAO addressDAO = new AddressDAO();
-    CropDAO cropDAO = new CropDAO();
-    APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
-    
-    ArrayList<APCPRequest> allRequestStatus = apcpRequestDAO.getAllRequestStatus();
+                ArrayList<EducationLevel> educationLevel = arbDAO.getAllEducationLevel();
+                ArrayList<RelationshipType> relationshipType = arbDAO.getAllRelationshipType();
+                ArrayList<Crop> allCrops = cropDAO.getAllCrops();
+                ArrayList<Region> regionList = addressDAO.getAllRegions();
+                ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
+                
+                ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
 
-    ArrayList<Region> regionList = addressDAO.getAllRegions();
-    //ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRequestedRequestsRegion((Integer) session.getAttribute("regOfficeCode"));
+                ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(arbListProvince);
+                ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListProvince);
 
-    ArrayList<ARBO> arboListRegion = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
+                ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllRegionalRequests((Integer) session.getAttribute("regOfficeCode"));
+                ArrayList<APCPRequest> newAccessingRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,0);
+                ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,1);
+                ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,2);
+                ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,3);
+                ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,4);
+                ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,5);
+                ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,6);
 
-    ArrayList<ARB> arbListRegion = arbDAO.getAllRegionalARBs((Integer) session.getAttribute("regOfficeCode"));
+                ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getYearlyPastDueAccountsByRequestList(provincialRequests,year);
+                ArrayList<PastDueAccount> unsettledPDAByRequestList = apcpRequestDAO.getYearlyUnsettledPastDueAccountsByRequestList(provincialRequests,year);
 
-    ArrayList<Province> perProvinceList = addressDAO.getAllProvOfficesRegion((Integer) session.getAttribute("regOfficeCode"));
+                ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
+                ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
 
-    ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(arbListRegion);
-    ArrayList<Crop> cropHistory = cropDAO.getCropHistory(arbListRegion);
-    ArrayList<APCPRequest> regionalRequests = apcpRequestDAO.getAllRegionalRequests((Integer) session.getAttribute("regOfficeCode"));
-    ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
-    ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(2, (Integer) session.getAttribute("regOfficeCode"));
-    ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
-    ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(4, (Integer) session.getAttribute("regOfficeCode"));
-    ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(5, (Integer) session.getAttribute("regOfficeCode"));
-    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(6, (Integer) session.getAttribute("regOfficeCode"));
-
-    ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
-    ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(regionalRequests);
-
-    ArrayList<CAPDEVPlan> allPlans = capdevDAO.getAllRegionalCAPDEVPlan((Integer) session.getAttribute("regOfficeCode"));
-    ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
-    ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(2, (Integer) session.getAttribute("regOfficeCode"));
-    ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
-    ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(5, (Integer) session.getAttribute("regOfficeCode"));
+                ArrayList<CAPDEVPlan> allPlans = capdevDAO.getAllRegionalCAPDEVPlan((Integer) session.getAttribute("regOfficeCode"));
+                ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getFilteredByStatus(allPlans,1);
+                ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getFilteredByStatus(allPlans,2);
+                ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getFilteredByStatus(allPlans,3);
+                ArrayList<CAPDEVPlan> assignedPlans = capdevDAO.getFilteredByStatus(allPlans,4);
+                ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getFilteredByStatus(allPlans,5);
+                ArrayList<CAPDEVPlan> postponedPlans = capdevDAO.getFilteredByStatus(allPlans,6);
+                
+                //ArrayList<ProvincialBudget> apcpBudget = addressDAO.getAPCPBudgetByProvOffice((Integer)session.getAttribute("provOfficeCode"));
+                //ArrayList<ProvincialBudget> capdevBudget = addressDAO.getCAPDEVBudgetByProvOffice((Integer)session.getAttribute("provOfficeCode"));
+                
+                double currentAPCPBudget = addressDAO.getCurrentAPCPBudgetRegion(releasedRequests,provOffices,year);
+                double currentCAPDEVBudget = addressDAO.getCurrentCAPDEVBudgetRegion(implementedPlans,provOffices,year);
+                
+                double sumAPCPBudget = addressDAO.getSumAPCPBudgetRegion(provOffices);
+                double sumCAPDEVBudget = addressDAO.getSumCAPDEVBudgetRegion(provOffices);
 
     
 %>
@@ -89,34 +107,47 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
             <li>
-                <a href="regional-field-officer-home.jsp">
+                <a href="RFO-home.jsp">
                     <i class="fa fa-dashboard"></i> <span> Dashboard</span>
                 </a>
             </li>
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-users"></i> <span>APCP / CAPDEV</span>
+                    <i class="fa fa-credit-card"></i> <span>APCP</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="view-capdev-status.jsp"><i class="fa fa-edit"></i>View CAPDEV Proposals</a></li>
-                    <li><a href="view-apcp-status.jsp"><i class="fa fa-edit"></i> View APCP Status</a></li>
+                    <li><a href="view-apcp-status.jsp"><i class="fa fa-dot-circle-o"></i> View APCP Status</a></li>
                 </ul>
             </li>
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-users"></i> <span> LINKSFARM</span>
+                    <i class="fa fa-industry"></i> <span>CAPDEV</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="view-linksfarm-capdev-status.jsp"><i class="fa fa-edit"></i>View CAPDEV Proposals</a></li>
+                    <li><a href="view-capdev-status.jsp"><i class="fa fa-dot-circle-o"></i> View CAPDEV Status</a></li>
+
                 </ul>
             </li>
-            
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-clipboard"></i> <span>Reports</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="arb-dashboard.jsp"><i class="fa fa-dot-circle-o"></i> ARB</a></li>
+                    <li><a href="arbo-dashboard.jsp"><i class="fa fa-dot-circle-o"></i> ARBO</a></li>
+                    <li><a href="apcp-dashboard.jsp"><i class="fa fa-dot-circle-o"></i> APCP</a></li>
+                    <li><a href="capdev-dashboard.jsp"><i class="fa fa-dot-circle-o"></i> CAPDEV</a></li>
+                </ul>
+            </li>
             <li>
                 <a href="edit-profile.jsp">
                     <i class="fa fa-edit"></i> <span> Edit Profile</span>
@@ -124,5 +155,4 @@
             </li>
         </ul>
     </section>
-    <!-- /.sidebar -->
 </aside>

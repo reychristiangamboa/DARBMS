@@ -14,6 +14,9 @@
     CAPDEVDAO capdevDAO = new CAPDEVDAO();
     UserDAO uDAO = new UserDAO();
     APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+    
+    ArrayList<APCPRequest> allRequestStatus = apcpRequestDAO.getAllRequestStatus();
+    ArrayList<CAPDEVPlan> allPlanStatus = capdevDAO.getAllPlanStatus();
 
     ArrayList<ARBO> arboList = arboDAO.getAllARBOs();
     ArrayList<ARB> allArbsList = arbDAO.getAllARBsOfARBOs(arboList);
@@ -21,27 +24,37 @@
     ArrayList<Crop> crops = cropDAO.getAllCropsByARBList(allArbsList);
     ArrayList<Crop> cropHistory = cropDAO.getCropHistory(allArbsList);
 
-    ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllRequestsByStatus(5);
-    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllRequestsByStatus(6);
-    ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllRequestsByStatus(4);
-    ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllRequestsByStatus(3);
-    ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllRequestsByStatus(2);
-    ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllRequestsByStatus(1);
     ArrayList<APCPRequest> allRequests = apcpRequestDAO.getAllRequests();
+    ArrayList<APCPRequest> newAccessingRequests = apcpRequestDAO.getFilteredByStatus(allRequests,0);
+    ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,1);
+    ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,2);
+    ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,3);
+    ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,4);
+    ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,5);
+    ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getFilteredByStatus(allRequests,6);
+    
 
     ArrayList<Region> perRegionList = addressDAO.getAllRegions();
     ArrayList<Province> provOfficeList = addressDAO.getAllProvOffices();
+    ArrayList<Province> provOfficeList2 = new ArrayList();
 
     ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
     ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(allRequests);
+    ArrayList<PastDueAccount> unsettledPDAByRequestList = apcpRequestDAO.getYearlyUnsettledPastDueAccountsByRequestList(allRequests,year);
 
     ArrayList<CAPDEVPlan> allPlans = capdevDAO.getAllCAPDEVPlan();
-    ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllCAPDEVPlanByStatus(1);
-    ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllCAPDEVPlanByStatus(2);
-    ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllCAPDEVPlanByStatus(3);
-    ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllCAPDEVPlanByStatus(5);
-    ArrayList<APCPRequest> newAccessingRequests = apcpRequestDAO.getAllRequestsByStatus(6);
-
+    ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getFilteredByStatus(allPlans,1);
+    ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getFilteredByStatus(allPlans,2);
+    ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getFilteredByStatus(allPlans,3);
+    ArrayList<CAPDEVPlan> assignedPlans = capdevDAO.getFilteredByStatus(allPlans,4);
+    ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getFilteredByStatus(allPlans,5);
+    ArrayList<CAPDEVPlan> postponedPlans = capdevDAO.getFilteredByStatus(allPlans,6);
+    
+    double currentAPCPBudget = addressDAO.getCurrentSumAPCPBudget(releasedRequests,year);
+    double currentCAPDEVBudget = addressDAO.getCurrentSumCAPDEVBudget(implementedPlans,year);
+                
+    double sumAPCPBudget = addressDAO.getSumAPCPBudget();
+    double sumCAPDEVBudget = addressDAO.getSumCAPDEVBudget();
     
 
 %>
@@ -74,46 +87,35 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-dashboard"></i> <span>Dashboards</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="central-home.jsp"><i class="fa fa-dot-circle-o"></i>  Home Dashboard</a></li>
-                    <li><a href="arb-dashboard.jsp"><i class="fa fa-dot-circle-o"></i>  ARB Dashboard</a></li>
-                    <li><a href="arbo-dashboard.jsp"><i class="fa fa-dot-circle-o"></i>  ARBO Dashboard</a></li>
-                    <li><a href="apcp-dashboard.jsp"><i class="fa fa-dot-circle-o"></i>  APCP Dashboard</a></li>
-                    <li><a href="capdev-dashboard.jsp"><i class="fa fa-dot-circle-o"></i>  CAPDEV Dashboard</a></li>
-                </ul>
-            </li>
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-users"></i> <span>ARBOs</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="central-view-new-requesting-arbo.jsp"><i class="fa fa-dot-circle-o"></i>  View New Requesting ARBOs</a></li>
-                </ul>
-            </li>
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-users"></i> <span> LINKSFARM</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li><a href="view-linksfarm-capdev-status.jsp"><i class="fa fa-edit"></i>View CAPDEV Proposals</a></li>
-                    <li><a href="provincial-field-officer-linksfarm-select-project-sites.jsp"><i class="fa fa-edit"></i>View Project Sites</a></li>
-                </ul>
-            </li>
             <li>
-                <a href="central-manage-capdev-activities.jsp">
+                <a href="CO-home.jsp">
+                    <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="CO-requested-budgets.jsp">
+                    <i class="fa fa-money"></i> <span>Budget Requests</span>
+                </a>
+            </li>
+
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-clipboard"></i> <span>Reports</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="arb-dashboard.jsp"><i class="fa fa-dot-circle-o"></i> ARB</a></li>
+                    <li><a href="arbo-dashboard.jsp"><i class="fa fa-dot-circle-o"></i> ARBO</a></li>
+                    <li><a href="apcp-dashboard.jsp"><i class="fa fa-dot-circle-o"></i> APCP</a></li>
+                    <li><a href="capdev-dashboard.jsp"><i class="fa fa-dot-circle-o"></i> CAPDEV</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="CO-manage-capdev-activities.jsp">
                     <i class="fa fa-edit"></i> <span> Manage CAPDEV Activities</span>
                 </a>
             </li>

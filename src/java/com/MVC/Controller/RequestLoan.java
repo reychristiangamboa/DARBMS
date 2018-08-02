@@ -6,13 +6,24 @@
 package com.MVC.Controller;
 
 import com.MVC.DAO.APCPRequestDAO;
+import com.MVC.DAO.ARBDAO;
+import com.MVC.DAO.CropDAO;
+import com.MVC.DAO.IssueDAO;
+import com.MVC.DAO.MessageDAO;
+import com.MVC.DAO.UserDAO;
 import com.MVC.Model.APCPDocument;
 import com.MVC.Model.APCPRequest;
+import com.MVC.Model.ARB;
+import com.MVC.Model.Crop;
+import com.MVC.Model.Issue;
+import com.MVC.Model.LoanReason;
+import com.MVC.Model.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -32,6 +43,10 @@ public class RequestLoan extends BaseServlet {
 
         HttpSession session = request.getSession();
         APCPRequestDAO dao = new APCPRequestDAO();
+        IssueDAO issueDAO = new IssueDAO();
+        MessageDAO messageDAO = new MessageDAO();
+        UserDAO userDAO = new UserDAO();
+        
         APCPRequest r = new APCPRequest();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Long l = System.currentTimeMillis();
@@ -51,7 +66,6 @@ public class RequestLoan extends BaseServlet {
         String[] dateSubmittedStr = request.getParameterValues("dateSubmitted");
         String[] documentNameStr = request.getParameterValues("documentName");
         String[] arbIDsStr = request.getParameterValues("arbID");
-        //ArrayList<APCPDocument> documentList = new ArrayList();
 
         r.setRequestStatus(1); // REQUESTED
         for (String str : dateSubmittedStr) {
@@ -59,26 +73,40 @@ public class RequestLoan extends BaseServlet {
                 r.setRequestStatus(8); // INCOMPLETE
             }
         }
-        
-        if(r.getRequestStatus() == 1){
+
+        if (r.getRequestStatus() == 1) {
             r.setDateCompleted(d);
+            
+            Message m = new Message();
+            m.setBody("[RE:APCP ORIENTATION] A new APCP Request has been REQUESTED! Please schedule an APCP Orientation immediately.");
+            m.setSentBy((Integer)session.getAttribute("userID"));
+            int messageID = messageDAO.addMessage(m);
+            
+            ArrayList<Integer> userIDs = userDAO.retrieveProvincialUserIDsByUserType(7, (Integer)session.getAttribute("provOfficeCode")); // PFO-CAPDEV
+            
+            for(int userID : userIDs){
+                if(messageDAO.sendMessage(messageID, userID)){
+                    System.out.println("Message sent!");
+                }
+            }
+            
         }
-        
-        if (request.getParameter("cropProd") != null) {
-            APCPRequest cropProdRequest = dao.getRequestByID(Integer.parseInt("cropProd"));
+
+        if (Integer.parseInt(request.getParameter("apcpType")) == 2) { // LIVELIHOOD PROGRAM
+            APCPRequest cropProdRequest = dao.getRequestByID(Integer.parseInt(request.getParameter("cropProd")));
             maxAmount = cropProdRequest.getLoanAmount() * .10;
 
             //<editor-fold desc="IF-ELSE loanAmount is less than maxAmount">
             if (loanAmount < maxAmount) { // loanAmount doesn't exceed maxAmount (10% of crop prod amount)
                 r.setArboID(Integer.parseInt(request.getParameter("arboID")));
                 r.setApcpType(Integer.parseInt(request.getParameter("apcpType")));
-                r.setCropProdID(Integer.parseInt(request.getParameter("cropProd")));
+                r.setCropProdID(cropProdRequest.getRequestID());
                 r.setLoanAmount(Double.parseDouble(finLoan));
                 r.setHectares(Double.parseDouble(request.getParameter("landArea")));
                 r.setRemarks(request.getParameter("remarks"));
                 r.setLoanTermDuration(Integer.parseInt(request.getParameter("loanTermDuration")));
 
-                int requestID = dao.requestAPCP(r, (Integer) session.getAttribute("userID"));
+                int requestID = dao.requestAPCPLivelihood(r, (Integer) session.getAttribute("userID"));
 
                 // INSERTS into apcp_loanReason table
                 dao.setAPCPLoanReason(requestID, Integer.parseInt(request.getParameter("loanReason")), Integer.parseInt(request.getParameter("loanTerm")), request.getParameter("otherReason"));
@@ -109,8 +137,6 @@ public class RequestLoan extends BaseServlet {
                     }
                 }
 
-                System.out.println(request.getParameter("arbListExcel"));
-
                 for (String arbID : arbIDsStr) {
                     System.out.println(arbID);
                     if (dao.addAPCPRecipient(requestID, Integer.parseInt(arbID))) {
@@ -119,13 +145,13 @@ public class RequestLoan extends BaseServlet {
                 }
 
                 request.setAttribute("success", "APCP requested!");
-                request.getRequestDispatcher("/PFO-APCP/provincial-field-officer-request-loan-select-arbo").forward(request, response);
+                request.getRequestDispatcher("PFO-APCP-request-loan-select-arbo.jsp").forward(request, response);
             } else {
                 request.setAttribute("arboID", Integer.parseInt(request.getParameter("arboID")));
                 request.setAttribute("errMessage", "Loan Amount (Php " + loanAmount + ") should not exceed Php " + maxAmount + ".");
             }
             //</editor-fold>
-        } else {
+        } else { // CROP PRODUCTION
             r.setArboID(Integer.parseInt(request.getParameter("arboID")));
             r.setApcpType(Integer.parseInt(request.getParameter("apcpType")));
             r.setLoanAmount(Double.parseDouble(finLoan));
@@ -133,7 +159,27 @@ public class RequestLoan extends BaseServlet {
             r.setRemarks(request.getParameter("remarks"));
             r.setLoanTermDuration(Integer.parseInt(request.getParameter("loanTermDuration")));
 
-            int requestID = dao.requestAPCPNewAccess(r, (Integer) session.getAttribute("userID"));
+            int requestID = 0;
+
+            if (checkMismatchRecipients(arbIDsStr, Integer.parseInt(request.getParameter("loanReason")))) {
+                requestID = dao.requestAPCPWithIssue(r, (Integer) session.getAttribute("userID"));
+                request.setAttribute("errMessage", "APCP pended! An issue has been raised to the PFO-HEAD.");
+                
+                Issue i = new Issue();
+                i.setIssueType(1); // CROP MISMATCH
+                i.setIssuedTo(3); // PFO-HEAD
+                i.setIssuedBy((Integer)session.getAttribute("userID"));
+                i.setProvOfficeCode((Integer)session.getAttribute("provOfficeCode"));
+                i.setRequestID(requestID);
+                
+                if(issueDAO.raiseIssue(i)){
+                    System.out.println("ISSUE RAISED!");
+                }
+                
+            } else {
+                requestID = dao.requestAPCPCropProd(r, (Integer) session.getAttribute("userID"));
+                request.setAttribute("success", "APCP requested!");
+            }
 
             // INSERTS into apcp_loanReason table
             dao.setAPCPLoanReason(requestID, Integer.parseInt(request.getParameter("loanReason")), Integer.parseInt(request.getParameter("loanTerm")), request.getParameter("otherReason"));
@@ -150,7 +196,7 @@ public class RequestLoan extends BaseServlet {
                         java.util.Date parsedDateSubmitted = sdf.parse(dateSubmittedStr[i]);
                         dateSubmitted = new java.sql.Date(parsedDateSubmitted.getTime());
                         doc.setDateSubmitted(dateSubmitted); // set dateSubmitted
-                        
+
                     }
                 } catch (ParseException ex) {
                     Logger.getLogger(RequestConduit.class.getName()).log(Level.SEVERE, null, ex);
@@ -166,15 +212,44 @@ public class RequestLoan extends BaseServlet {
             }
 
             for (String arbID : arbIDsStr) {
-                System.out.println(arbID);
                 if (dao.addAPCPRecipient(requestID, Integer.parseInt(arbID))) {
                     System.out.println("Recipient added!");
                 }
             }
 
-            request.setAttribute("success", "APCP requested!");
-            request.getRequestDispatcher("/PFO-APCP/provincial-field-officer-request-loan-select-arbo").forward(request, response);
+            
+            request.getRequestDispatcher("PFO-APCP-request-loan-select-arbo.jsp").forward(request, response);
         }
+
+    }
+
+    public boolean checkMismatchRecipients(String[] arbIDsStr, int loanReason) {
+
+        ARBDAO arbDAO = new ARBDAO();
+        APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
+        boolean found = false;
+
+        LoanReason r = new LoanReason();
+        r = apcpRequestDAO.getLoanReasonById(loanReason);
+
+        for (String arbIDStr : arbIDsStr) {
+            found = false;
+            ARB arb = arbDAO.getARBByID(Integer.parseInt(arbIDStr));
+            arb.setCurrentCrops(arbDAO.getAllARBCurrentCrops(arb.getArbID()));
+
+            for (Crop c : arb.getCurrentCrops()) {
+                if (r.getLoanReasonDesc().contains(c.getCropTypeDesc())) { // RETURNS TRUE IF LOAN REASON DOES NOT CONTAIN ARBs' CURRENT CROP
+                    found = true;
+                }
+            }
+            
+            if(!found){
+                return true;
+            }
+
+        }
+
+        return false;
 
     }
 

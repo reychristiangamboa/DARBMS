@@ -38,6 +38,7 @@
                 
                 ArrayList<RelationshipType> relationshipType = arbDAO.getAllRelationshipType();
                 
+                ArrayList<APCPRequest> allRequestStatus = apcpRequestDAO.getAllRequestStatus();
                 
 
                 ArrayList<Crop> allCrops = cropDAO.getAllCrops();
@@ -59,14 +60,17 @@
 
                 ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer) session.getAttribute("provOfficeCode"));
                 
+                ArrayList<APCPRequest> newAccessingRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(0, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(6, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> pendingRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(11, (Integer) session.getAttribute("provOfficeCode"));
 
-                ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(provincialRequests);
+                ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getYearlyPastDueAccountsByRequestList(provincialRequests,year);
+                ArrayList<PastDueAccount> unsettledPDAByRequestList = apcpRequestDAO.getYearlyUnsettledPastDueAccountsByRequestList(provincialRequests,year);
 
                 ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
                 ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
@@ -79,6 +83,8 @@
 
                 ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.getAttribute("provOfficeCode"));
     
+                double currentAPCPBudget = addressDAO.getCurrentAPCPBudgetProv(releasedRequests,(Integer)session.getAttribute("provOfficeCode"),year);
+                double sumAPCPBudget = addressDAO.getSumAPCPBudgetProv((Integer)session.getAttribute("provOfficeCode"));
 %>
 
 
@@ -112,7 +118,7 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
             <li>
-                <a href="#">
+                <a href="PFO-APCP-home.jsp">
                     <i class="fa fa-dashboard"></i> <span> Dashboard</span>
                 </a>
             </li>

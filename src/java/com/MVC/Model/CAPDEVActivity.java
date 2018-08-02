@@ -28,8 +28,17 @@ public class CAPDEVActivity {
     private String activityReportDTN;
     private int isPresent;
     private int active;
+    private Date activityDate;
     private ArrayList<ARB> arbList = new ArrayList();
 
+    public Date getActivityDate() {
+        return activityDate;
+    }
+
+    public void setActivityDate(Date activityDate) {
+        this.activityDate = activityDate;
+    }
+    
     public ArrayList<ARB> getArbList() {
         return arbList;
     }

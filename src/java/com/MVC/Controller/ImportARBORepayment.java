@@ -4,9 +4,8 @@
  * and open the template in the editor.
  */
 package com.MVC.Controller;
-
 import com.MVC.DAO.APCPRequestDAO;
-import com.MVC.DAO.ARBDAO;
+import com.MVC.Model.APCPRelease;
 import com.MVC.Model.APCPRequest;
 import com.MVC.Model.Repayment;
 import java.io.IOException;
@@ -32,115 +31,110 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  *
  * @author Rey Christian
  */
-public class ImportRepayment extends BaseServlet {
+public class ImportARBORepayment extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
         HttpSession session = request.getSession();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        APCPRequestDAO dao = new APCPRequestDAO();
-        ARBDAO arbDAO = new ARBDAO();
         ArrayList repaymentHolder = readExcelFile(request.getParameter("file"));
-        ArrayList store = new ArrayList();
-        
+        ArrayList cellStoreArrayList = new ArrayList();
+
+        APCPRequestDAO dao = new APCPRequestDAO();
         APCPRequest req = dao.getRequestByID(Integer.parseInt(request.getParameter("requestID")));
         
-        double amountLimit = req.getLoanAmount()-sumRepayments2(req.getRepayments());
-        
-        if(repaymentExceedLimit(req,repaymentHolder)){
-            request.setAttribute("errMessage", "REPAYMENT/S amount (Php " + sumRepayments(repaymentHolder) + ") exceeds REQUEST amount (Php " + amountLimit + "). Try again.");
+        if (repaymentsExceedLimit(req, repaymentHolder)) {
+            request.setAttribute("errMessage", "RELEASE/S amount (Php " + sumRepayments(repaymentHolder) + ") exceeds O/S Balance (Php " + req.getTotalReleaseOSBalance() + "). Try again.");
+            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
+            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
+        } else {
+            for (int i = 1; i < repaymentHolder.size(); i++) {
+                cellStoreArrayList = (ArrayList) repaymentHolder.get(i);
+
+                Repayment r = new Repayment();
+
+                r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
+                r.setAmount(Double.parseDouble(cellStoreArrayList.get(0).toString())); // REPAYMENT AMOUNT
+                
+                
+                java.sql.Date repaymentDate = null;
+                String excelDate = cellStoreArrayList.get(1).toString(); // REPAYMENT DATE  // Parsing of Excel Date to Java Date
+                
+                String[] dateArr = excelDate.split("-");
+
+                int val = getValOfMonth(dateArr[1]);
+                String finalDate = dateArr[2] + "-" + val + "-" + dateArr[0];
+                
+
+                try {
+                    java.util.Date parsedReleaseDate = sdf.parse(finalDate);
+                    repaymentDate = new java.sql.Date(parsedReleaseDate.getTime());
+                } catch (ParseException ex) {
+                    Logger.getLogger(ImportRelease.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                r.setDateRepayment(repaymentDate);
+                r.setRecordedBy((Integer) session.getAttribute("userID")); // RELEASED BY
+
+                
+
+                dao.addARBORepayment(r);
+
+            }
+
+            request.setAttribute("success", "ARBO Repayments successfully imported!");
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
             request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
         }
         
-        for(int i = 1; i < repaymentHolder.size(); i++){
-            store = (ArrayList)repaymentHolder.get(i);
-            
-            Repayment r = new Repayment();
-            
-            String lN = store.get(0).toString();
-            String fN = store.get(1).toString();
-            String mN = store.get(2).toString();
-            int arbID = arbDAO.getARBID(fN, mN, lN);
-
-            r.setArbID(arbID);
-            r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
-            r.setAmount(Double.parseDouble(store.get(3).toString()));
-            
-            java.sql.Date repaymentDate = null;
-            
-            String excelDate = store.get(4).toString(); // Parsing of Excel Date to Java Date
-            String[] dateArr = excelDate.split("-");
-
-            int val = getValOfMonth(dateArr[1]);
-            String finalDate = dateArr[2] + "-" + val + "-" + dateArr[0];
-
-            try {
-                java.util.Date parsedRepaymentDate = sdf.parse(finalDate);
-                repaymentDate = new java.sql.Date(parsedRepaymentDate.getTime());
-            } catch (ParseException ex) {
-                Logger.getLogger(RecordRepayment.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            r.setDateRepayment(repaymentDate);
-            r.setRecordedBy((Integer) session.getAttribute("userID"));
-
-            dao.addRepayment(r);
-        }
-        
-        
-        request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-        request.setAttribute("success", "Repayments successfully imported!");
-        request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
-        
     }
     
-    public static boolean repaymentExceedLimit(APCPRequest req, ArrayList repaymentHolder) {
+    public static boolean repaymentsExceedLimit(APCPRequest req, ArrayList repaymentHolder) {
         ArrayList store = new ArrayList();
         double limit = 0;
-        double sumCurrentRepayment = 0;
+        double sumARBORepayments = 0;
         double finalLimit = 0;
+        APCPRequestDAO dao = new APCPRequestDAO();
 
         for (int i = 1; i < repaymentHolder.size(); i++) {
             store = (ArrayList) repaymentHolder.get(i);
-            limit += Double.parseDouble(store.get(3).toString());
+            limit += Double.parseDouble(store.get(0).toString());
         }
 
-        for (Repayment rep : req.getRepayments()) {
-            sumCurrentRepayment += rep.getAmount();
+        req.setArboRepayments(dao.getAllARBORepaymentsByRequest(req.getRequestID()));
+        for (Repayment rep : req.getArboRepayments()) {
+            limit += rep.getAmount();
         }
         
-        finalLimit = req.getLoanAmount() - sumCurrentRepayment;
-
-        if (limit > finalLimit) {
+        if (limit > req.getTotalReleaseOSBalance()) {
             return true;
         }
 
         return false;
     }
-    
-    public static double sumRepayments(ArrayList repaymentHolder){
+
+    public static double sumRepayments(ArrayList repaymentHolder) {
         ArrayList store = new ArrayList();
         double limit = 0;
 
         for (int i = 1; i < repaymentHolder.size(); i++) {
             store = (ArrayList) repaymentHolder.get(i);
-            limit += Double.parseDouble(store.get(3).toString());
+            limit += Double.parseDouble(store.get(0).toString());
         }
 
         return limit;
     }
-    
-    public static double sumRepayments2(ArrayList<Repayment> repayments) {
-        double sumCurrentRepayments = 0;
-        for (Repayment rep : repayments) {
-            sumCurrentRepayments += rep.getAmount();
+
+    public static double sumRepayments2(ArrayList<APCPRelease> releaseHolder) {
+        double sumCurrentReleases = 0;
+        for (APCPRelease rel : releaseHolder) {
+            sumCurrentReleases += rel.getReleaseAmount();
         }
 
-        return sumCurrentRepayments;
+        return sumCurrentReleases;
     }
-    
+
     public static ArrayList readExcelFile(String file) {
         ArrayList cellArrayListHolder = new ArrayList();
         try {

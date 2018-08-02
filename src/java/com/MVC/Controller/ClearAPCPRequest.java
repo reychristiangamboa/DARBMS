@@ -6,10 +6,14 @@
 package com.MVC.Controller;
 
 import com.MVC.DAO.APCPRequestDAO;
+import com.MVC.DAO.MessageDAO;
+import com.MVC.DAO.UserDAO;
 import com.MVC.Model.APCPDocument;
 import com.MVC.Model.APCPRequest;
+import com.MVC.Model.Message;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +44,23 @@ public class ClearAPCPRequest extends BaseServlet {
 
         if (verifiedDocs && req.checkARBOHadAPCPOrientation()) {
             if (requestDAO.clearRequest(requestID, (Integer) session.getAttribute("userID"))) {
+
+                MessageDAO messageDAO = new MessageDAO();
+                UserDAO userDAO = new UserDAO();
+
+                Message m = new Message();
+                m.setBody("[RE:APCP REQUEST CLEARED] APCP Request #" + requestID + " is cleared for endorsement.");
+                m.setSentBy((Integer) session.getAttribute("userID"));
+                int messageID = messageDAO.addMessage(m);
+
+                ArrayList<Integer> userIDs = userDAO.retrieveProvincialUserIDsByUserType(6, (Integer) session.getAttribute("provOfficeCode")); // PFO-APCP
+
+                for (int userID : userIDs) {
+                    if (messageDAO.sendMessage(messageID, userID)) {
+                        System.out.println("Message sent!");
+                    }
+                }
+
                 request.setAttribute("success", "APCP Request cleared!");
                 request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
             } else {

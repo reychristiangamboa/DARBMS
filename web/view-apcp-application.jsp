@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="/jspf/header.jspf"%>
+        <%@include file="jspf/header.jspf"%>
 
         <style>
             .example-modal .modal {
@@ -57,7 +57,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong><i class="fa fa-money"></i> APCP Request for New Accessing Conduits</strong> 
+                        <strong><i class="fa fa-money"></i> APCP Request </strong> 
                         <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
 
@@ -72,6 +72,7 @@
                         <h4><i class="icon fa fa-ban"></i> <%out.print((String)request.getAttribute("errMessage"));%></h4>
                     </div>
                     <%}%>
+                    
                     <div class="box box-solid">
                         <div class="box-header with-border">
                             <h3 class="box-title">Collapsible Accordion</h3>
@@ -88,7 +89,7 @@
                                             </a>
                                         </h4>
                                     </div>
-                                    <div id="collapseTwo" class="panel-collapse collapse">
+                                    <div id="collapseTwo" class="panel-collapse collapse in">
                                         <div class="box-body">
                                             <%@include file="jspf/apcp-request-info.jspf" %>
                                         </div>
@@ -102,7 +103,7 @@
                                             </a>
                                         </h4>
                                     </div>
-                                    <div id="collapseThree" class="panel-collapse collapse">
+                                    <div id="collapseThree" class="panel-collapse collapse in">
                                         <div class="box-body">
                                             <%@include file="jspf/arbo-information.jspf" %>
                                         </div>
@@ -116,8 +117,9 @@
                                 <%@include file="jspf/endorse-apcp-application.jspf" %>
                                 <%}else if(req.getRequestStatus() == 3 && (Integer)session.getAttribute("userType") == 6){%>
                                 <%@include file="jspf/approve-apcp-application.jspf" %>
-                                <%}
-                                %>
+                                <%}else if(req.getRequestStatus() == 8 && (Integer)session.getAttribute("userType") == 6){%>
+                                <%@include file="jspf/incomplete-apcp-application.jspf" %>
+                                <%}%>
 
                                 <!-- /.box-body -->
                             </div>

@@ -46,10 +46,10 @@ public class RecordRequestRelease extends BaseServlet {
 //        }
 //        
 //        String finAmount = sb.toString();
-//        
-//        r.setReleaseAmount(Double.parseDouble(finAmount));
-
+        
         r.setReleaseAmount(Double.parseDouble(request.getParameter("releaseAmount")));
+
+//        r.setReleaseAmount(Double.parseDouble(request.getParameter("releaseAmount")));
 
         java.sql.Date releaseDate = null;
 
@@ -60,7 +60,7 @@ public class RecordRequestRelease extends BaseServlet {
             Logger.getLogger(AddARB.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        double OSBalance = Double.parseDouble(request.getParameter("releaseAmount")) * req.getLoanReason().getLoanTerm().getArboInterestRate();
+        double OSBalance = r.getReleaseAmount() * req.getLoanReason().getLoanTerm().getArboInterestRate();
 
         r.setReleaseDate(releaseDate);
         r.setOSBalance(OSBalance);
@@ -73,6 +73,7 @@ public class RecordRequestRelease extends BaseServlet {
         double limit = 0;
         double finalLimit = 0;
 
+        req.setReleases(dao.getAllAPCPReleasesByRequest(req.getRequestID()));
         for (APCPRelease release : req.getReleases()) {
             limit += release.getReleaseAmount();
         }
@@ -80,7 +81,7 @@ public class RecordRequestRelease extends BaseServlet {
         finalLimit = req.getLoanAmount() - limit;
 
         if (r.getReleaseAmount() > finalLimit) {
-            request.setAttribute("errMessage", "RELEASE amount (PHP "+r.getReleaseAmount()+") exceeds REQUEST amount (PHP "+finalLimit+". Try again.");
+            request.setAttribute("errMessage", "RELEASE amount (PHP "+r.getReleaseAmount()+") exceeds REQUEST amount (PHP "+finalLimit+"). Try again.");
             request.setAttribute("requestID", r.getRequestID());
             request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
         } else {

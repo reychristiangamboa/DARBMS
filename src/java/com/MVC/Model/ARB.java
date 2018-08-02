@@ -6,6 +6,7 @@
 package com.MVC.Model;
 
 import com.MVC.DAO.APCPRequestDAO;
+import com.MVC.DAO.ARBDAO;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -330,7 +331,7 @@ public class ARB {
     public void setNonARB(boolean nonARB) {
         this.nonARB = nonARB;
     }
-    
+
     public ArrayList<CAPDEVActivity> getActivities() {
         return activities;
     }
@@ -354,41 +355,69 @@ public class ARB {
     public void setDisbursements(ArrayList<Disbursement> disbursements) {
         this.disbursements = disbursements;
     }
-    
-    public double getTotalDisbursementAmount(){
+
+    public double getTotalDisbursementAmount() {
         APCPRequestDAO dao = new APCPRequestDAO();
         this.disbursements = dao.getAllDisbursementsByARB(this.arbID);
         double total = 0;
-        for(Disbursement d : this.disbursements){
+        for (Disbursement d : this.disbursements) {
             total += d.getDisbursedAmount();
         }
         return total;
     }
-    
-    public double getTotalRepaymentsAmount(){
+
+    public double getCurrentTotalDisbursementAmount() {
+        APCPRequestDAO dao = new APCPRequestDAO();
+        this.disbursements = dao.getAllDisbursementsByARB(this.arbID);
+        double total = 0;
+        Calendar cal = Calendar.getInstance();
+        Calendar current = Calendar.getInstance();
+        for (Disbursement d : this.disbursements) {
+            cal.setTime(d.getDateDisbursed());
+            if (cal.get(Calendar.YEAR) == current.get(Calendar.YEAR)) { // same YEAR
+                total += d.getDisbursedAmount();
+            }
+
+        }
+        return total;
+    }
+
+    public double getTotalRepaymentsAmount() {
         APCPRequestDAO dao = new APCPRequestDAO();
         this.repayments = dao.getArbRepaymentsByARB(this.arbID);
         double total = 0;
-        for(Repayment r : this.repayments){
+        for (Repayment r : this.repayments) {
             total += r.getAmount();
         }
         return total;
     }
-    
-    public int getAge(){
+
+    public int getAge() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(this.birthday);
-        
-        
+
         Calendar current = Calendar.getInstance();
         Long l = System.currentTimeMillis();
         Date d = new Date(l);
         current.setTime(d);
-        
+
         int age = current.get(Calendar.YEAR) - cal.get(Calendar.YEAR);
         return age;
     }
-    
+
+    public double getAverageDisbursements() {
+
+        APCPRequestDAO dao = new APCPRequestDAO();
+        double sum = 0;
+        this.disbursements = dao.getAllDisbursementsByARB(this.arbID);
+
+        for (Disbursement d : this.disbursements) {
+            sum += d.getDisbursedAmount();
+        }
+
+        return sum / this.disbursements.size();
+    }
+
     @Override
     public String toString() {
         return this.firstName + " "

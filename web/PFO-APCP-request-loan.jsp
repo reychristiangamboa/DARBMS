@@ -218,21 +218,26 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <label>Loan Recipients</label>
-                                        <table id="example3" class="table table-bordered table-striped">
+                                        <table class="table table-bordered table-striped modTable">
                                             <thead>
                                                 <tr>
                                                     <th>Action</th>
-                                                    <th>Full Name</th> 
-                                                    <th>Membership Date</th> 
+                                                    <th>ARB</th> 
+                                                    <th>Membership Date</th>
+                                                    <th>Crops</th>
                                                     <th>COMAT</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <%for(ARB arb : arbo.getArbList()){%>
+                                                <%
+                                                    for(ARB arb : arbo.getArbList()){
+                                                        arb.setCurrentCrops(arbDAO.getAllARBCurrentCrops(arb.getArbID()));
+                                                %>
                                                 <tr>
                                                     <td><input type="checkbox" name="arbID" value="<%out.print(arb.getArbID());%>"></td>
-                                                    <td><%out.print(arb.getFLName());%></td>
+                                                    <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
                                                     <td><%out.print(f.format(arb.getMemberSince()));%></td>
+                                                    <td><%out.print(arb.printAllCrops());%></td>
                                                     <%if(arb.getIsCOMAT() > 0){%>
                                                     <td>&checkmark;</td>
                                                     <%}else{%>
@@ -244,16 +249,13 @@
                                             <tfoot>
                                                 <tr>
                                                     <th>Action</th>
-                                                    <th>Full Name</th> 
-                                                    <th>Membership Date</th> 
+                                                    <th>ARB</th> 
+                                                    <th>Membership Date</th>
+                                                    <th>Crops</th>
                                                     <th>COMAT</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
-                                        <div class="form-group pull-right">
-                                            <input type="file" name="arbListExcel">
-                                            <p class="help-block">Upload Recipient List</p>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="box-header with-border">
@@ -312,7 +314,7 @@
                                     <div class="col-xs-12">
                                         <div class="form-group">
                                             <label for="">Remarks</label>
-                                            <textarea name="remarks" cols="20" rows="8" class="form-control"></textarea>
+                                            <textarea name="remarks" cols="3" rows="3" class="form-control"></textarea>
                                         </div>
                                     </div>
                                 </div>

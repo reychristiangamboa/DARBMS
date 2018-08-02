@@ -24,6 +24,7 @@ public class ReadMessages extends BaseServlet {
         HttpSession session = request.getSession();
         
         MessageDAO mDAO = new MessageDAO();
+        System.out.println("SESSION USER ID: " + (Integer)session.getAttribute("userID"));
         mDAO.readMyMessages((Integer) session.getAttribute("userID"));
         
         request.getRequestDispatcher("view-messages.jsp").forward(request, response);

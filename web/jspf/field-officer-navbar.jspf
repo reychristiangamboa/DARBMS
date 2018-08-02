@@ -2,6 +2,7 @@
     
     <%
     MessageDAO messageDAO = new MessageDAO();
+    IssueDAO issueDAO = new IssueDAO();
     %>
     
     <!-- Logo -->
@@ -22,6 +23,16 @@
             <ul class="nav navbar-nav">
                 <!-- Messages: style can be found in dropdown.less-->
 
+                <%if((Integer)session.getAttribute("userType") != 1 || (Integer)session.getAttribute("userType") != 4 || (Integer)session.getAttribute("userType") != 5){%>
+                <li>
+                    <a target="_blank" rel="noopener noreferrer" href="view-issues.jsp">
+                        <i class="fa fa-warning"></i>
+                        <%if(issueDAO.retrieveUnresolvedIssues((Integer)session.getAttribute("userType"),(Integer)session.getAttribute("provOfficeCode")).size() > 0){%>
+                        <span class="label label-danger"><%out.print(issueDAO.retrieveUnresolvedIssues((Integer)session.getAttribute("userType"),(Integer)session.getAttribute("provOfficeCode")).size());%></span>
+                        <%}%>
+                    </a>
+                </li>
+                <%}%>
                 <li>
                     <a target="_blank" rel="noopener noreferrer" href="ReadMessages">
                         <i class="fa fa-envelope-o"></i>

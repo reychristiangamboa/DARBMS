@@ -6,6 +6,8 @@
 package com.MVC.Controller;
 
 import com.MVC.DAO.APCPRequestDAO;
+import com.MVC.DAO.IssueDAO;
+import com.MVC.Model.Issue;
 import com.MVC.Model.PastDueAccount;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -34,6 +36,7 @@ public class RecordPastDueAccount extends BaseServlet {
         HttpSession session = request.getSession();
 
         APCPRequestDAO dao = new APCPRequestDAO();
+        IssueDAO issueDAO = new IssueDAO();
         PastDueAccount pda = new PastDueAccount();
 
         pda.setRequestID(Integer.parseInt(request.getParameter("requestID")));
@@ -63,15 +66,27 @@ public class RecordPastDueAccount extends BaseServlet {
 
         pda.setDateRecorded(recordedDate);
 
-        if (dao.addPastDueAccount(pda)) {
+        int pastDueAccountID = dao.addPastDueAccount(pda);
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-            request.setAttribute("success", "Past Due Account successfully recorded!");
+            
+            
+            request.setAttribute("errMessage", "APCP pended! An issue has been raised to the PFO-HEAD.");
+                
+                Issue i = new Issue();
+                i.setIssueType(4); // PAST DUE SCHEDULE CAPDEV
+                i.setIssuedTo(7); // PFO-CAPDEV
+                i.setIssuedBy((Integer)session.getAttribute("userID"));
+                i.setProvOfficeCode((Integer)session.getAttribute("provOfficeCode"));
+                i.setRequestID(Integer.parseInt(request.getParameter("requestID")));
+                i.setPastDueAccountID(pastDueAccountID);
+                
+                if(issueDAO.raiseIssue(i)){
+                    System.out.println("ISSUE RAISED!");
+                }
+            
+            
             request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
-        } else {
-            request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-            request.setAttribute("success", "Error in recording Past Due Account.");
-            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
-        }
+        
 
     }
 }

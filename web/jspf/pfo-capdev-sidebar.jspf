@@ -33,6 +33,8 @@
                 CAPDEVDAO capdevDAO = new CAPDEVDAO();
                 UserDAO uDAO = new UserDAO();
                 APCPRelease apcpRelease = new APCPRelease();
+                
+                ArrayList<CAPDEVPlan> allPlanStatus = capdevDAO.getAllPlanStatus();
 
                 ArrayList<EducationLevel> educationLevel = arbDAO.getAllEducationLevel();
                 
@@ -74,10 +76,15 @@
                 ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<CAPDEVPlan> assignedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(4, (Integer) session.getAttribute("provOfficeCode"));
                 ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
-
+                ArrayList<CAPDEVPlan> postponedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(6, (Integer) session.getAttribute("provOfficeCode"));
                 
-    
+                double currentCAPDEVBudget = addressDAO.getCurrentCAPDEVBudgetProv(implementedPlans,(Integer)session.getAttribute("provOfficeCode"),year);
+                double sumCAPDEVBudget = addressDAO.getSumCAPDEVBudgetProv((Integer)session.getAttribute("provOfficeCode"));
+                
+                ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.getAttribute("provOfficeCode"));
+
 %>
 
 
@@ -111,7 +118,7 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
             <li>
-                <a href="provincial-field-officer-home.jsp">
+                <a href="PFO-CAPDEV-home.jsp">
                     <i class="fa fa-dashboard"></i> <span> Dashboard</span>
                 </a>
             </li>

@@ -68,7 +68,7 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MAIN NAVIGATION</li>
             <li>
-                <a href="point-person-view-capdev-plans.jsp">
+                <a href="PP-CAPDEV-view-capdev-plans.jsp">
                     <i class="fa fa-edit"></i> <span> View CAPDEV Plans</span>
                 </a>
             </li>

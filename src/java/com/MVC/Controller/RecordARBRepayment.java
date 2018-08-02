@@ -30,7 +30,6 @@ public class RecordARBRepayment extends BaseServlet {
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String[] arbIDs = request.getParameterValues("arbIDs");
         APCPRequestDAO dao = new APCPRequestDAO();
         APCPRequest req = dao.getRequestByID(Integer.parseInt(request.getParameter("requestID")));
 
@@ -50,7 +49,7 @@ public class RecordARBRepayment extends BaseServlet {
         String finAmount = sb.toString();
 
         double arbRepaymentAmount = Double.parseDouble(finAmount);
-        double arbRepaymentOSBalance = Double.parseDouble(request.getParameter("arbRepaymentOSBalance"));
+        double arbRepaymentOSBalance = req.getTotalARBOSBalance(Integer.parseInt(request.getParameter("arbID")));
 
         finalLimit = req.getLoanAmount() - limit;
 
@@ -62,7 +61,7 @@ public class RecordARBRepayment extends BaseServlet {
 
             Repayment r = new Repayment();
 
-            r.setArbID(Integer.parseInt(request.getParameter("arbIDRepayment")));
+            r.setArbID(Integer.parseInt(request.getParameter("arbID")));
             r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
 
             r.setAmount(Double.parseDouble(finAmount));

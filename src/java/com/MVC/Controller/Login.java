@@ -5,7 +5,9 @@
  */
 package com.MVC.Controller;
 
+import com.MVC.DAO.IssueDAO;
 import com.MVC.DAO.LogDAO;
+import com.MVC.DAO.MessageDAO;
 import com.MVC.DAO.UserDAO;
 import com.MVC.Model.Log;
 import com.MVC.Model.User;
@@ -28,6 +30,8 @@ public class Login extends BaseServlet {
         HttpSession session = request.getSession();
 
         UserDAO uDAO = new UserDAO();
+        MessageDAO mDAO = new MessageDAO();
+        IssueDAO iDAO = new IssueDAO();
 
         User tempUser = new User();
         tempUser.setEmail(request.getParameter("email"));
@@ -51,7 +55,7 @@ public class Login extends BaseServlet {
                 session.setAttribute("regOfficeDesc", u.getRegDesc());
                 session.setAttribute("provOfficeCode", u.getProvOfficeCode());
                 session.setAttribute("provOfficeDesc", u.getProvOfficeDesc());
-
+                
                 if (u.getActive() == 1) {   //  ACTIVATED ACCOUNTS
                     System.out.println(u.getEmail());
                     LogDAO lDAO = new LogDAO();
@@ -65,15 +69,15 @@ public class Login extends BaseServlet {
                     } else if (u.getUserType() == 2) {   //  POINT PERSON APCP
                         request.getRequestDispatcher("PP-APCP-view-apcp-requests.jsp").forward(request, response);
                     } else if (u.getUserType() == 3) {   //  PROVINCIAL FIELD OFFICER
-                        request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
+                        request.getRequestDispatcher("PFO-HEAD-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 4) {   //  REGIONAL FIELD OFFICER
                         request.getRequestDispatcher("RFO-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 5) {   //  CENTRAL OFFICER
-                        request.getRequestDispatcher("apcp-dashboard.jsp").forward(request, response);
+                        request.getRequestDispatcher("CO-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 6) {   //  PFO-APCP
-                        request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
+                        request.getRequestDispatcher("PFO-APCP-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 7) {   //  PFO-CAPDEV
-                        request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
+                        request.getRequestDispatcher("PFO-CAPDEV-home.jsp").forward(request, response);
                     } else if (u.getUserType() == 8) {   //  POINT PERSON CAPDEV
                         request.getRequestDispatcher("PP-CAPDEV-view-capdev-plans.jsp").forward(request, response);
                     }

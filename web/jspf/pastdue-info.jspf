@@ -1,12 +1,12 @@
 <div class="box-body">
 
-    <table id="pastDueTable" class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped modTable">
         <thead>
             <tr>
                 <th>Amount</th>
                 <th>Reason Past Due</th>
                 <th>Other Reason</th>
-                <th>Date</th>
+                <th>Date Settled</th>
                 <th>Recorded By</th>
                 <th>Status</th>
             </tr>
@@ -33,9 +33,9 @@
                 <td><%out.print(u.getFullName());%></td>
 
                 <%if (p.getDateSettled() != null) {%>
-                <td><%out.print("Unsettled");%></td>
-                <%} else {%>
                 <td><%out.print("Settled");%></td>
+                <%} else {%>
+                <td><%out.print("Unsettled");%></td>
                 <%}%>
             </tr>
 

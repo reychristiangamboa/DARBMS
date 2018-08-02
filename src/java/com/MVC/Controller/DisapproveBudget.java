@@ -32,7 +32,7 @@ public class DisapproveBudget extends BaseServlet {
             addressDAO.disapproveCAPDEVBudget(id);
         }
         
-        request.setAttribute("success", "Budget approved successfully!");
+        request.setAttribute("success", "Budget disapproved successfully!");
         request.getRequestDispatcher("CO-requested-budgets.jsp").forward(request, response);
         
     }

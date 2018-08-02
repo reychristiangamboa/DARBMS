@@ -76,7 +76,7 @@
                                                         <div class="box-body">
                                                             <div class="row">
                                                                 <div class="col-xs-12">
-                                                                    <table class="table table-bordered table-striped">
+                                                                    <table class="table table-bordered table-striped modTable">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>Category</th>
@@ -121,7 +121,7 @@
                                                                         <div class="modal-body">
                                                                             <label>Participants</label>
 
-                                                                            <table class="table table-bordered table-striped">
+                                                                            <table class="table table-bordered table-striped modTable">
                                                                                 <thead>
                                                                                     <tr>
                                                                                         <th>Action</th>

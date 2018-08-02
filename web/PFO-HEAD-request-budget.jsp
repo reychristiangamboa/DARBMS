@@ -15,30 +15,33 @@
             <%@include file="jspf/field-officer-navbar.jspf"%>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf"%>
             <div class="content-wrapper">
-                <section class="section-header">
+                <section class="content-header">
                     <h1>
-                        <strong><i class="fa fa-money"></i> Request Budget to Central</strong> 
+
+                        <strong><i class="fa fa-money"></i> Request Budget</strong> 
                         <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
+
                     </h1>
+
                 </section>
                 <section class="content">
-                    
+
                     <%if(request.getAttribute("success") != null){%>
                     <div class="alert alert-success alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                         <h4><i class="icon fa fa-check"></i> <%out.print((String)request.getAttribute("success"));%></h4>
                     </div>
                     <%}%>
-                    
+
                     <form method='post'>
                         <div class="box box-default">
-                            <div class="box-header">
-                                <h1>Budget Request</h1>
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Provincial Budgets</h3>
                             </div>
                             <div class="box-body">
 
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-xs-3">
                                         <div class="form-group">
                                             <label>Budget Type</label>
                                             <select class="form-control" name="budgetType">
@@ -47,7 +50,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-xs-6">
+                                    <div class="col-xs-3">
                                         <div class="form-group">
                                             <label>Budget</label>
                                             <div class="input-group">
@@ -61,7 +64,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-xs-12">
+                                    <div class="col-xs-6">
                                         <div class="form-group">
                                             <label>Reason for Request</label>
                                             <textarea class="form-control" rows="2" name='reason'></textarea>
@@ -80,5 +83,6 @@
                 </section>
             </div>
         </div>
+        <%@include file="jspf/footer.jspf"%>
     </body>
 </html>

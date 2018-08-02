@@ -40,17 +40,17 @@ public class RecordARBORepayment extends BaseServlet {
             limit += rep.getAmount();
         }
 
-//        String[] vals = request.getParameter("arboRepaymentAmount").split(",");
-//        StringBuilder sb = new StringBuilder();
-//        for (String val : vals) {
-//            sb.append(val);
-//        }
-//
-//        String finAmount = sb.toString();
-        double finalVal = Double.parseDouble(request.getParameter("arboRepaymentAmount")) + limit;
+        String[] vals = request.getParameter("arboRepaymentAmount").split(",");
+        StringBuilder sb = new StringBuilder();
+        for (String val : vals) {
+            sb.append(val);
+        }
+
+        String finAmount = sb.toString();
+        double finalVal = Double.parseDouble(finAmount) + limit;
 
         if (finalVal > req.getTotalReleaseOSBalance()) {
-            request.setAttribute("errMessage", "REPAYMENT amount (PHP " + limit + ") exceeds O/S Balance amount (PHP " + req.getTotalReleaseOSBalance() + "). Try again.");
+            request.setAttribute("errMessage", "REPAYMENT amount (PHP " + finalVal + ") exceeds O/S Balance amount (PHP " + req.getTotalReleaseOSBalance() + "). Try again.");
             request.setAttribute("requestID", req.getRequestID());
             request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
         } else {
@@ -60,7 +60,7 @@ public class RecordARBORepayment extends BaseServlet {
             
             r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
 
-            r.setAmount(Double.parseDouble(request.getParameter("arboRepaymentAmount")));
+            r.setAmount(Double.parseDouble(finAmount));
 
             java.sql.Date repaymentDate = null;
 

@@ -74,7 +74,7 @@
                                             </div>
                                             <div class="col-xs-4">
                                                 <label for="">Budget</label>
-                                                <input type="text" class="form-control" value="<%out.print(plan.getBudget());%>" disabled />
+                                                <input type="text" class="form-control" value="<%out.print(currency.format(plan.getBudget()));%>" disabled />
                                             </div>
                                         </div>
 

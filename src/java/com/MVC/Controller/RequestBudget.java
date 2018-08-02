@@ -33,6 +33,7 @@ public class RequestBudget extends BaseServlet {
         provincialBudget.setReason(request.getParameter("reason"));
         provincialBudget.setRequestedBy((Integer)session.getAttribute("userID"));
         provincialBudget.setProvOfficeCode((Integer)session.getAttribute("provOfficeCode"));
+        provincialBudget.setRegCode((Integer)session.getAttribute("regOfficeCode"));
         
         if(budgetType == 1){
             addressDAO.requestAPCPBudget(provincialBudget);

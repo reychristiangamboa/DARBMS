@@ -58,15 +58,21 @@ public class ImportRelease extends BaseServlet {
                 APCPRelease r = new APCPRelease();
 
                 r.setRequestID(Integer.parseInt(request.getParameter("requestID")));
-                r.setReleaseAmount(Double.parseDouble(cellStoreArrayList.get(0).toString()));
+                r.setReleaseAmount(Double.parseDouble(cellStoreArrayList.get(0).toString())); // RELEASE AMOUNT
+                
+                double OSBalance = r.getReleaseAmount() * req.getLoanReason().getLoanTerm().getArboInterestRate();
+                
+                r.setOSBalance(OSBalance);
 
                 java.sql.Date releaseDate = null;
 
-                String excelDate = cellStoreArrayList.get(1).toString(); // Parsing of Excel Date to Java Date
+                String excelDate = cellStoreArrayList.get(1).toString(); // RELEASE DATE  // Parsing of Excel Date to Java Date
+                System.out.println("EXCEL Date: " + excelDate);
                 String[] dateArr = excelDate.split("-");
 
                 int val = getValOfMonth(dateArr[1]);
                 String finalDate = dateArr[2] + "-" + val + "-" + dateArr[0];
+                System.out.println("CONVERTED Date: " + finalDate);
 
                 try {
                     java.util.Date parsedReleaseDate = sdf.parse(finalDate);
@@ -76,7 +82,7 @@ public class ImportRelease extends BaseServlet {
                 }
 
                 r.setReleaseDate(releaseDate);
-                r.setReleasedBy((Integer) session.getAttribute("userID"));
+                r.setReleasedBy((Integer) session.getAttribute("userID")); // RELEASED BY
 
                 if (!dao.requestHasRelease(req)) {
                     dao.updateRequestStatus(req.getRequestID(), 5);

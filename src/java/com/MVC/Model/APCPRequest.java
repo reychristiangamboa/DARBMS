@@ -6,6 +6,7 @@
 package com.MVC.Model;
 
 import com.MVC.DAO.APCPRequestDAO;
+import com.MVC.DAO.ARBDAO;
 import com.MVC.DAO.CAPDEVDAO;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -68,12 +69,12 @@ public class APCPRequest {
 
     public double getTotalReleaseOSBalance() {
         double value = 0;
-        
+
         APCPRequestDAO dao = new APCPRequestDAO();
-        
+
         this.releases = dao.getAllAPCPReleasesByRequest(this.requestID);
         this.arboRepayments = dao.getAllARBORepaymentsByRequest(this.requestID);
-        
+
         for (APCPRelease r : this.releases) {
             value += r.getOSBalance();
         }
@@ -341,7 +342,6 @@ public class APCPRequest {
         double val = 0;
         APCPRequestDAO dao = new APCPRequestDAO();
         this.releases = dao.getAllAPCPReleasesByRequest(this.requestID);
-        System.out.println("RELEASES:"+this.releases.size());
         for (APCPRelease release : this.releases) {
             val += release.getReleaseAmount();
         }
@@ -515,6 +515,35 @@ public class APCPRequest {
     public int getDateDiff(Date date1) {
         long diffInMillies = System.currentTimeMillis() - date1.getTime();
         return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
+    public ArrayList<ARB> getMismatchRecipients() {
+        APCPRequestDAO dao = new APCPRequestDAO();
+        ARBDAO dao2 = new ARBDAO();
+        ArrayList<ARB> mismatch = new ArrayList();
+        boolean found = false;
+
+        this.recipients = dao.getAllAPCPRecipientsByRequest(this.requestID);
+
+        for (ARB arb : this.recipients) {
+
+            found = false;
+            arb.setCurrentCrops(dao2.getAllARBCurrentCrops(arb.getArbID()));
+
+            for (Crop c : arb.getCurrentCrops()) {
+                if (this.loanReason.getLoanReasonDesc().contains(c.getCropTypeDesc())) {
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                mismatch.add(arb);
+            }
+
+        }
+
+        return mismatch;
+
     }
 
 }

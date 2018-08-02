@@ -96,8 +96,6 @@ public class RequestConduit extends BaseServlet {
             }
         }
 
-        System.out.println(request.getParameter("arbListExcel"));
-
         for (String arbID : arbIDsStr) {
             System.out.println(arbID);
             if (dao.addAPCPRecipient(requestID, Integer.parseInt(arbID))) {

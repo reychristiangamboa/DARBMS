@@ -70,6 +70,42 @@ public class ARBODAO {
         }
         return success;
     }
+    
+    public boolean importARBO(ARBO arbo) {
+        boolean success = false;
+        PreparedStatement p = null;
+        Connection con = null;
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        con = myFactory.getConnection();
+        try {
+            con.setAutoCommit(false);
+            String query = "INSERT INTO `dar-bms`.`arbos` (`arboName`, `arboCityMun`, `arboProvince`, "
+                    + "`arboRegion`,`provOfficeCode`, `arboType`, `dateOperational`, `arboID`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+            p = con.prepareStatement(query);
+            p.setString(1, arbo.getArboName());
+            p.setInt(2, arbo.getArboCityMun());
+            p.setInt(3, arbo.getArboProvince());
+            p.setInt(4, arbo.getArboRegion());
+            p.setInt(5, arbo.getProvOfficeCode());
+            p.setInt(6, arbo.getArboType());
+            p.setDate(7, arbo.getDateOperational());
+            p.setInt(8, arbo.getArboID());
+
+            p.executeUpdate();
+            p.close();
+            con.commit();
+            con.close();
+            success = true;
+        } catch (Exception ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(ARBODAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return success;
+    }
 
     public ArrayList<ARBO> getAllARBOs() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();

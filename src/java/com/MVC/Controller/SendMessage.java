@@ -28,11 +28,11 @@ public class SendMessage extends BaseServlet {
         MessageDAO mDAO = new MessageDAO();
         Message message = new Message();
         
-        message.setSentTo(Integer.parseInt(request.getParameter("sendTo")));
         message.setSentBy((Integer)session.getAttribute("userID"));
         message.setBody(request.getParameter("message"));
+        int messageID = mDAO.addMessage(message);
         
-        if(mDAO.addMessage(message)){
+        if(mDAO.sendMessage(messageID, Integer.parseInt(request.getParameter("sendTo")))){
             request.setAttribute("success", "Message sent successfully!");
             request.getRequestDispatcher("view-messages.jsp").forward(request, response);
         }

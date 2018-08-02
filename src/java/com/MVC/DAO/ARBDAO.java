@@ -361,7 +361,7 @@ public class ARBDAO {
             con.setAutoCommit(false);
             String query = "INSERT INTO `dar-bms`.`arbs` (`arboID`, `isCOMAT`, `firstName`, `middleName`, "
                     + "`lastName`, `memberSince`,`arbUnitNumStreet`,`brgyCode`,`cityMunCode`,`provCode`,`regCode`, "
-                    + "`gender`, `educationLevel`, `landArea`,`TIN`,`arbID`, `nonARB`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                    + "`gender`, `educationLevel`, `landArea`,`TIN`,`arbID`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
             pstmt = con.prepareStatement(query);
             pstmt.setInt(1, arb.getArboID());
             pstmt.setInt(2, arb.getIsCOMAT());
@@ -379,7 +379,6 @@ public class ARBDAO {
             pstmt.setDouble(14, arb.getLandArea());
             pstmt.setInt(15, arb.getTIN());
             pstmt.setInt(16, arb.getArbID());
-            pstmt.setBoolean(17, arb.isNonARB());
             pstmt.executeUpdate();
 
             pstmt.close();
@@ -668,6 +667,7 @@ public class ARBDAO {
                 arb.setEducationLevel(rs.getInt("educationLevel"));
                 arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
                 arb.setLandArea(rs.getDouble("landArea"));
+                arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
                 arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
                 arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
                 arb.setArbStatus(rs.getInt("arbStatus"));

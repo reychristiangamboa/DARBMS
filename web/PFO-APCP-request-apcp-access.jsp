@@ -211,7 +211,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Action</th>
-                                                    <th>Full Name</th> 
+                                                    <th>ARB</th> 
                                                     <th>Membership Date</th> 
                                                     <th>COMAT</th> 
                                                 </tr>
@@ -220,7 +220,7 @@
                                                 <%for(ARB arb : arbo.getArbList()){%>
                                                 <tr>
                                                     <td><input type="checkbox" name="arbID" value="<%out.print(arb.getArbID());%>"></td>
-                                                    <td><%out.print(arb.getFLName());%></td>
+                                                    <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
                                                     <td><%out.print(f.format(arb.getMemberSince()));%></td>
                                                     <%if(arb.getIsCOMAT() > 0){%>
                                                     <td>&checkmark;</td>
@@ -233,15 +233,12 @@
                                             <tfoot>
                                                 <tr>
                                                     <th>Action</th>
-                                                    <th>Full Name</th> 
+                                                    <th>ARB</th> 
+                                                    <th>Membership Date</th>
                                                     <th>COMAT</th> 
                                                 </tr>
                                             </tfoot>
                                         </table>
-                                        <div class="form-group pull-right">
-                                            <input type="file" name="arbListExcel">
-                                            <p class="help-block">Upload Recipient List</p>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="box-header with-border">

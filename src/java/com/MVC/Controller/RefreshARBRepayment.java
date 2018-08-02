@@ -22,28 +22,20 @@ public class RefreshARBRepayment extends BaseServlet {
 
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        APCPRequestDAO dao = new APCPRequestDAO();
         
+        APCPRequestDAO dao = new APCPRequestDAO();
         int arbID = Integer.parseInt(request.getParameter("arbID"));
         APCPRequest apcp = dao.getRequestByID(Integer.parseInt(request.getParameter("requestID")));
         double osBalance = apcp.getTotalARBOSBalance(arbID);
+        
+        System.out.println("O/S BALANCE: "+osBalance);
 
         try (PrintWriter out = response.getWriter()) {
             
-            response.getWriter().write("<div class=\"col-xs-4\">\n" +
-"                            <div class=\"form-group\">\n" +
-"                                <label for=\"\">ARB</label>");
-            response.getWriter().write("<input type=\"text\" class=\"form-control\" name='arbIDRepayment' value='"+arbID+"' disabled/>");
-            
-            response.getWriter().write("</div>\n" +
-"                        </div>\n" +
-"                        <div class=\"col-xs-4\">\n" +
-"                            <div class=\"form-group\">\n" +
-"                                <label for=\"\">O/S Balance</label>");
-            
-            response.getWriter().write("<input type=\"text\" class=\"form-control\" name='arbRepaymentOSBalance' value='"+osBalance+"' disabled/>");
-            
-            response.getWriter().write("</div></div>");
+            response.getWriter().write("<div class='form-group'>");
+            response.getWriter().write("<label for=''>O/S Balance</label>");
+            response.getWriter().write("<input type='text' class='form-control numberOnly' name='arbRepaymentOSBalance' value='"+osBalance+"' disabled/>");
+            response.getWriter().write("</div>");
             
         }
     }

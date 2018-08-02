@@ -61,13 +61,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <%if((Integer)session.getAttribute("userType") == 5){%>
-                        <strong><i class="fa fa-dashboard"></i> Dashboard: Central</strong>
-                        <%}else if((Integer)session.getAttribute("userType") == 4){%>
-                        <strong><i class="fa fa-dashboard"></i> Dashboard: <%out.print((String)session.getAttribute("regOfficeDesc"));%></strong>
-                        <%}else if((Integer)session.getAttribute("userType") == 3){%>
-                        <strong><i class="fa fa-dashboard"></i> Dashboard: <%out.print((String)session.getAttribute("provOfficeDesc"));%></strong>
-                        <%}%>
+                        <i class="fa fa-money"></i> Capability Development (CAPDEV) Reports
                     </h1>
                 </section>
 
@@ -75,7 +69,12 @@
                 ARBODAO arboDAO = new ARBODAO();
                 AddressDAO addressDAO = new AddressDAO();
                 CAPDEVDAO capdevDAO = new CAPDEVDAO();
+                APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
                 UserDAO uDAO = new UserDAO();
+                
+                // current year
+            java.sql.Date startDate = java.sql.Date.valueOf( year+"-01-31" );
+            java.sql.Date endDate = java.sql.Date.valueOf( year+"-12-31" );
                 
                 int type = 1; // default type
                 
@@ -106,17 +105,25 @@
                     allPlans = capdevDAO.getAllProvincialCAPDEVPlan((Integer)session.getAttribute("provOfficeCode"));
                 }
                 
-                if(request.getAttribute("type") != null){ // filtered type
-                    type = (Integer)request.getAttribute("type");
-                }
+            if(request.getAttribute("type") != null){ // filtered type
+                type = (Integer)request.getAttribute("type");
+            }
                 
-                if(request.getAttribute("filtered") != null){ // filtered ARBOs
-                    allArboList = (ArrayList<ARBO>)request.getAttribute("filtered");
-                }
+            if(request.getAttribute("filtered") != null){ // filtered ARBOs
+                allArboList = (ArrayList<ARBO>)request.getAttribute("filtered");
+            }
                 
-                if(request.getAttribute("filteredPlans") != null){ // filtered requests
-                    allPlans = (ArrayList<APCPRequest>)request.getAttribute("filteredRequests");
-                }
+            if(request.getAttribute("filteredPlans") != null){ // filtered requests
+                allPlans = (ArrayList<CAPDEVPlan>)request.getAttribute("filteredPlans");
+            }
+            
+            if(request.getAttribute("startDate") != null){
+                startDate = java.sql.Date.valueOf((String)request.getAttribute("startDate"));
+            }
+            
+            if(request.getAttribute("endDate") != null){
+                endDate = java.sql.Date.valueOf((String)request.getAttribute("endDate"));
+            }
                 
                 %>
 
@@ -152,13 +159,11 @@
                                                 <label for="actName">Type</label>
                                                 <select name="type" id="type" class="form-control select2">
                                                     <option value="1">CAPDEV Plans</option>
-                                                    <option value="2">Approval Rate</option>
-                                                    <option value="3">APCP Amounts</option>
-                                                    <option value="4">Loan Type Availability</option>
+                                                    <option value="2">Activity Types</option>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-xs-4">
+                                        <div class="col-xs-3">
                                             <div class="form-group">
                                                 <label for="actName">Regions</label>
                                                 <select name="regions[]" id="regions" onchange="chg2()" class="form-control select2" multiple="multiple" disabled>
@@ -168,7 +173,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-xs-5">
+                                        <div class="col-xs-3">
                                             <div class="form-group">
                                                 <label for="actName">Provinces</label>
                                                 <select name="provinces[]" id="provinces" class="form-control select2" multiple="multiple" disabled>
@@ -176,9 +181,18 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-xs-3">
+                                            <label for="">Plan Date</label>
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                                <input type="hidden" name="start" id="start-totalYearReleaseReport">
+                                                <input type="hidden" name="end" id="end-totalYearReleaseReport">
+                                                <input type="text" class="form-control" id="dr-totalYearReleaseReport">
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row no-print">
-                                        <button type="submit" onclick="form.action = 'FilterAPCPDashboard'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i> Filter</button>
+                                        <button type="submit" onclick="form.action = 'FilterCAPDEVDashboard'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i> Filter</button>
                                     </div>
                                 </form>
                             </div>
@@ -201,12 +215,8 @@
                                             <div class="form-group">
                                                 <label for="actName">Type</label>
                                                 <select name="type" id="type" class="form-control select2">
-                                                    <option value="1">APCP Requests</option>
-                                                    <option value="2">Approval Rate</option>
-                                                    <option value="3">APCP Amounts</option>
-                                                    <option value="4">Loan Type Availability</option>
-                                                    <option value="5">Loan Reason</option>
-                                                    <option value="6">Past Due Reason</option>
+                                                    <option value="1">CAPDEV Plans</option>
+                                                    <option value="2">Activity Type</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -220,9 +230,40 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-xs-3">
+                                            <label for="">Plan Date</label>
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                                <input type="hidden" name="start" id="start-totalYearReleaseReport">
+                                                <input type="hidden" name="end" id="end-totalYearReleaseReport">
+                                                <input type="text" class="form-control" id="dr-totalYearReleaseReport">
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row no-print">
-                                        <button type="submit" onclick="form.action = 'FilterAPCPDashboard'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i> Filter</button>
+                                        <button type="submit" onclick="form.action = 'FilterCAPDEVDashboard'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i> Filter</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <%}else if((Integer)session.getAttribute("userType") == 3){%>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <form id="drillDownGenderForm">
+                                    
+                                    <div class="row no-print">
+                                        <div class="col-xs-3">
+                                            <label for="">Plan Date</label>
+                                            <div class="input-group">
+                                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                                <input type="hidden" name="start" id="start-totalYearReleaseReport">
+                                                <input type="hidden" name="end" id="end-totalYearReleaseReport">
+                                                <input type="text" class="form-control" id="dr-totalYearReleaseReport">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row no-print">
+                                        <button type="submit" onclick="form.action = 'FilterCAPDEVDashboard'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i> Filter</button>
                                     </div>
                                 </form>
                             </div>
@@ -231,73 +272,84 @@
                     </section>
 
                     <section class="invoice">
-                        <!-- title row -->
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <h2 class="page-header">
-                                    <i class="fa fa-money"></i> Capability Development (CAPDEV)
-                                </h2>
-                            </div>
-                            <!-- /.col -->
-                        </div>
                         <!-- info row -->
                         <div class="row invoice-info">
                             <div class="row">
-                                <div class="col-xs-9">
+                                <div class="col-xs-12">
                                     <div class="row">
-                                        <div class="col-xs-1"></div>
-                                        <div class="col-xs-10">
+                                        <div class="col-xs-12">
                                             <div class="box-body">
                                                 <canvas id="chartCanvas"></canvas>
                                                 <div class="row text-center">
                                                     <a class="btn btn-submit" data-toggle="modal" data-target="#modalPie">View More</a>
                                                 </div>
                                                 <div class="modal fade" id="modalPie">
-                                                    <div class="modal-dialog modal-lger">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span></button>
-                                                                <h4 class="modal-title">Agrarian Reform Beneficiaries</h4>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="row">
-                                                                    <div class="col-xs-12">
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                            </div>
+                                        <div class="modal-dialog modal-lg">
+                                            <%if(type == 1 || type == 2){ // APCP REQUESTS or APPROVAL RATE%>
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title">CAPDEV Plans</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <table class="table table-striped table-bordered export">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Plan DTN</th>
+                                                                        <th>ARBO</th>
+                                                                        <th>Plan Date</th>
+                                                                        <th>Status</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <%
+                                                                        for(CAPDEVPlan plan : allPlans){
+                                                                            APCPRequest req = apcpRequestDAO.getRequestByID(plan.getRequestID());
+                                                                            ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                                                    %>
+                                                                    <tr>
+                                                                        <td><%out.print(req.getRequestID());%></td>
+                                                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                                        <td><%out.print(plan.getPlanDate());%></td>
+                                                                        <td><%out.print(plan.getPlanStatusDesc());%></td>
+                                                                    </tr>
+                                                                    <%}%>
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th>Plan DTN</th>
+                                                                        <th>ARBO</th>
+                                                                        <th>Plan Date</th>
+                                                                        <th>Status</th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
                                                         </div>
-                                                        <!-- /.modal-content -->
                                                     </div>
-                                                    <!-- /.modal-dialog -->
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                                                 </div>
                                             </div>
+                                            <%}%>
                                         </div>
-                                        <div class="col-xs-1"></div>
+                                        <!-- /.modal-dialog -->
                                     </div>
-                                </div>
-                                <div class="col-xs-3">
-                                    <!--widgets here-->
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <hr>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                <!--table here-->
-                                </div>
-                            </div>
                         </div>
-                        <!-- /.row -->
-                        <!-- this row will not appear when printing -->
                         <div class="row no-print">
-                            <div class="col-xs-12">
-                                <a href="#" class="btn btn-default pull-right"><i class="fa fa-print"></i> Print</a>
-                            </div>
+                        <div class="col-xs-12">
+                            <button type="button" onclick="window.print()" class="btn btn-default pull-right"><i class="fa fa-print"></i> Print</button>
                         </div>
+                    </div>
                     </section>
 
 
@@ -386,13 +438,9 @@
                 String json = "";
                 
                 if(type == 1){ // PLANS
-                    json = chart.getStackedBarChartCAPDEVPlans(regions,provOffices,allArboList);
+                    json = chart.getStackedBarChartCAPDEVPlans(regions,provOffices,allArboList,startDate,endDate);
                 }else if(type == 2){ // APPROVAL RATE
-                    json = chart.getStackedBarChartApprovalRate(regions,provOffices,allArboList);
-                }else if(type == 3){ // APCP AMOUNTS
-                    json = chart.getBarChartAPCPAmounts(regions,provOffices,allArboList);
-                }else if(type == 4){ // LOAN TYPE AVAILMENT
-                    json = chart.getBarChartLoanType(regions,provOffices,allArboList);
+                    json = chart.getStackedBarChartActivityTypes(regions,provOffices,allArboList,startDate,endDate);
                 }
                 
             %>

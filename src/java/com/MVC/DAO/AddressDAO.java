@@ -6,7 +6,10 @@
 package com.MVC.DAO;
 
 import com.MVC.Database.DBConnectionFactory;
+import com.MVC.Model.APCPRelease;
+import com.MVC.Model.APCPRequest;
 import com.MVC.Model.Barangay;
+import com.MVC.Model.CAPDEVPlan;
 import com.MVC.Model.CityMun;
 import com.MVC.Model.Province;
 import com.MVC.Model.ProvincialBudget;
@@ -16,6 +19,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -552,14 +556,55 @@ public class AddressDAO {
         return id;
     }
 
-    public ArrayList<ProvincialBudget> getAllAPCPProvincialBudget() {
+    //<editor-fold desc="CENTRAL">
+    public ArrayList<ProvincialBudget> getAllAPCPBudget() {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
 
         ArrayList<ProvincialBudget> list = new ArrayList();
 
         try {
-            String query = "SELECT * FROM `dar-bms`.provincialAPCPBudget WHERE approvedBy IS NULL AND isDisapproved = 0";
+            String query = "SELECT * FROM `dar-bms`.APCPBudget "
+                    + "WHERE approvedBy IS NULL AND isDisapproved = 0";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ProvincialBudget p = new ProvincialBudget();
+                p.setId(rs.getInt("id"));
+                p.setRegCode(rs.getInt("regCode"));
+                p.setProvOfficeCode(rs.getInt("provOfficeCode"));
+                p.setBudget(rs.getDouble("budget"));
+                p.setRequestedBy(rs.getInt("requestedBy"));
+                p.setApprovedBy(rs.getInt("approvedBy"));
+                p.setReason(rs.getString("reason"));
+                p.setStartDate(rs.getDate("startDate"));
+                p.setEndDate(rs.getDate("endDate"));
+                p.setIsDisapproved(rs.getBoolean("isDisapproved"));
+                list.add(p);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public ArrayList<ProvincialBudget> getAllCAPDEVBudget() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        ArrayList<ProvincialBudget> list = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.CAPDEVBudget "
+                    + "WHERE approvedBy IS NULL AND isDisapproved = 0";
             PreparedStatement pstmt = con.prepareStatement(query);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -589,259 +634,12 @@ public class AddressDAO {
         return list;
     }
 
-    public ArrayList<ProvincialBudget> getAllCAPDEVProvincialBudget() {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        ArrayList<ProvincialBudget> list = new ArrayList();
-
-        try {
-            String query = "SELECT * FROM `dar-bms`.provincialCAPDEVBudget WHERE approvedBy IS NULL AND isDisapproved = 0";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                ProvincialBudget p = new ProvincialBudget();
-                p.setId(rs.getInt("id"));
-                p.setProvOfficeCode(rs.getInt("provOfficeCode"));
-                p.setBudget(rs.getDouble("budget"));
-                p.setRequestedBy(rs.getInt("requestedBy"));
-                p.setApprovedBy(rs.getInt("approvedBy"));
-                p.setReason(rs.getString("reason"));
-                p.setStartDate(rs.getDate("startDate"));
-                p.setEndDate(rs.getDate("endDate"));
-                p.setIsDisapproved(rs.getBoolean("isDisapproved"));
-                list.add(p);
-            }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
-    }
-
-    public ProvincialBudget getAPCPBudgetByProvOffice(int provOfficeCode) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        ProvincialBudget p = new ProvincialBudget();
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        String d = f.format(cal.getTime());
-
-        try {
-            String query = "SELECT * FROM `dar-bms`.provincialAPCPBudget "
-                    + "WHERE provOfficeCode = ? "
-                    + "AND '" + d + "' BETWEEN startDate AND endDate "
-                    + "AND approvedBy IS NOT NULL";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, provOfficeCode);
-
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                p.setId(rs.getInt("id"));
-                p.setProvOfficeCode(rs.getInt("provOfficeCode"));
-                p.setBudget(rs.getDouble("budget"));
-                p.setRequestedBy(rs.getInt("requestedBy"));
-                p.setApprovedBy(rs.getInt("approvedBy"));
-                p.setReason(rs.getString("reason"));
-                p.setStartDate(rs.getDate("startDate"));
-                p.setEndDate(rs.getDate("endDate"));
-                p.setIsDisapproved(rs.getBoolean("isDisapproved"));
-            }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return p;
-    } // CURRENT DATE
-
-    public ProvincialBudget getCAPDEVBudgetByProvOffice(int provOfficeCode) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        ProvincialBudget p = new ProvincialBudget();
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        String d = f.format(cal.getTime());
-
-        try {
-            String query = "SELECT * FROM `dar-bms`.provincialCAPDEVBudget "
-                    + "WHERE provOfficeCode = ? "
-                    + "AND '" + d + "' BETWEEN startDate AND endDate "
-                    + "AND approvedBy IS NOT NULL";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, provOfficeCode);
-
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                p.setId(rs.getInt("id"));
-                p.setProvOfficeCode(rs.getInt("provOfficeCode"));
-                p.setBudget(rs.getDouble("budget"));
-                p.setRequestedBy(rs.getInt("requestedBy"));
-                p.setApprovedBy(rs.getInt("approvedBy"));
-                p.setReason(rs.getString("reason"));
-                p.setStartDate(rs.getDate("startDate"));
-                p.setEndDate(rs.getDate("endDate"));
-                p.setIsDisapproved(rs.getBoolean("isDisapproved"));
-            }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return p;
-    } // CURRENT DATE
-
-    public double getSumAPCPBudgetByRegion(int regCode) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        ProvincialBudget p = new ProvincialBudget();
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        String d = f.format(cal.getTime());
-
-        double total = 0;
-
-        try {
-            String query = "SELECT SUM(pb.budget) AS sum FROM ref_provOffice p "
-                    + "JOIN provincialAPCPBudget pb ON p.provOfficeCode=pb.provOfficeCode "
-                    + "WHERE p.regCode=? "
-                    + "AND '" + d + "' BETWEEN pb.startDate AND pb.endDate "
-                    + "AND pb.approvedBy IS NOT NULL";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, regCode);
-
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                total = rs.getDouble("sum");
-            }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return total;
-    } // CURRENT DATE
-
-    public double getSumCAPDEVBudgetByRegion(int regCode) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        ProvincialBudget p = new ProvincialBudget();
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        String d = f.format(cal.getTime());
-
-        double total = 0;
-
-        try {
-            String query = "SELECT SUM(pb.budget) AS sum FROM ref_provOffice p "
-                    + "JOIN provincialCAPDEVBudget pb ON p.provOfficeCode=pb.provOfficeCode "
-                    + "WHERE p.regCode=? "
-                    + "AND '" + d + "' BETWEEN pb.startDate AND pb.endDate "
-                    + "AND pb.approvedBy IS NOT NULL";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, regCode);
-
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                total = rs.getDouble("sum");
-            }
-            rs.close();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return total;
-    } // CURRENT DATE
-
-    public void requestCAPDEVBudget(ProvincialBudget p) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            String query = "INSERT INTO `provincialCAPDEVBudget` (`provOfficeCode`,`budget`, `requestedBy`, `reason`) VALUES (?,?,?,?)";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, p.getProvOfficeCode());
-            pstmt.setDouble(2, p.getBudget());
-            pstmt.setInt(3, p.getRequestedBy());
-            pstmt.setString(4, p.getReason());
-            pstmt.executeUpdate();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void requestAPCPBudget(ProvincialBudget p) {
-        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
-        Connection con = myFactory.getConnection();
-
-        try {
-            String query = "INSERT INTO `provincialAPCPBudget` (`provOfficeCode`,`budget`, `requestedBy`, `reason`) VALUES (?,?,?,?)";
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, p.getProvOfficeCode());
-            pstmt.setDouble(2, p.getBudget());
-            pstmt.setInt(3, p.getRequestedBy());
-            pstmt.setString(4, p.getReason());
-            pstmt.executeUpdate();
-            pstmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            try {
-                con.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
     public void approveAPCPBudget(ProvincialBudget p) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
 
         try {
-            String query = "UPDATE `provincialAPCPBudget` SET `approvedBy`=?, `startDate`=?, `endDate`=? WHERE id=?";
+            String query = "UPDATE `APCPBudget` SET `approvedBy`=?, `startDate`=?, `endDate`=? WHERE id=?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, p.getApprovedBy());
             pstmt.setDate(2, p.getStartDate());
@@ -859,7 +657,7 @@ public class AddressDAO {
             Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void approveCAPDEVBudget(ProvincialBudget p) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
@@ -883,13 +681,719 @@ public class AddressDAO {
             Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    //</editor-fold>
+
+    //<editor-fold desc="REGIONAL">
+    public ArrayList<ProvincialBudget> getAllAPCPProvincialBudget(int regCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        ArrayList<ProvincialBudget> list = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.APCPBudget "
+                    + "WHERE approvedByRegional IS NULL AND regCode=? AND isDisapproved = 0";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, regCode);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ProvincialBudget p = new ProvincialBudget();
+                p.setId(rs.getInt("id"));
+                p.setProvOfficeCode(rs.getInt("provOfficeCode"));
+                p.setBudget(rs.getDouble("budget"));
+                p.setRequestedBy(rs.getInt("requestedBy"));
+                p.setApprovedByRegional(rs.getInt("approvedByRegional"));
+                p.setApprovedBy(rs.getInt("approvedBy"));
+                p.setReason(rs.getString("reason"));
+                p.setStartDate(rs.getDate("startDate"));
+                p.setEndDate(rs.getDate("endDate"));
+                p.setIsDisapproved(rs.getBoolean("isDisapproved"));
+                list.add(p);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public ArrayList<ProvincialBudget> getAllCAPDEVProvincialBudget(int regCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        ArrayList<ProvincialBudget> list = new ArrayList();
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.CAPDEVBudget "
+                    + "WHERE approvedByRegional IS NULL AND regCode = ? AND isDisapproved = 0";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, regCode);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ProvincialBudget p = new ProvincialBudget();
+                p.setId(rs.getInt("id"));
+                p.setProvOfficeCode(rs.getInt("provOfficeCode"));
+                p.setBudget(rs.getDouble("budget"));
+                p.setRequestedBy(rs.getInt("requestedBy"));
+                p.setApprovedBy(rs.getInt("approvedBy"));
+                p.setReason(rs.getString("reason"));
+                p.setStartDate(rs.getDate("startDate"));
+                p.setEndDate(rs.getDate("endDate"));
+                p.setIsDisapproved(rs.getBoolean("isDisapproved"));
+                list.add(p);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public ArrayList<ProvincialBudget> getAPCPBudgetByRegion(int regCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        ArrayList<ProvincialBudget> apcpBudget = new ArrayList();
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String d = f.format(cal.getTime());
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.APCPBudget "
+                    + "WHERE regCode = ? "
+                    + "AND '" + d + "' BETWEEN startDate AND endDate "
+                    + "AND approvedBy IS NOT NULL";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, regCode);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ProvincialBudget p = new ProvincialBudget();
+                p.setId(rs.getInt("id"));
+                p.setProvOfficeCode(rs.getInt("provOfficeCode"));
+                p.setBudget(rs.getDouble("budget"));
+                p.setRequestedBy(rs.getInt("requestedBy"));
+                p.setApprovedBy(rs.getInt("approvedBy"));
+                p.setReason(rs.getString("reason"));
+                p.setStartDate(rs.getDate("startDate"));
+                p.setEndDate(rs.getDate("endDate"));
+                p.setIsDisapproved(rs.getBoolean("isDisapproved"));
+                apcpBudget.add(p);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return apcpBudget;
+    } // CURRENT DATE
+
+    public double getCurrentAPCPBudgetReg(ArrayList<APCPRequest> requests, int regCode, int year) {
+
+        double provBudgetDbl = 0;
+
+        ArrayList<ProvincialBudget> provBudget = getAPCPBudgetByRegion(regCode);
+        for (ProvincialBudget p : provBudget) {
+            provBudgetDbl += p.getBudget();
+        }
+
+        APCPRequestDAO dao = new APCPRequestDAO();
+
+        double releaseVal = dao.getYearlySumOfReleasesByRequest(requests, year);
+
+        return provBudgetDbl - releaseVal;
+
+    }
+
+    public ArrayList<ProvincialBudget> getCAPDEVBudgetByRegion(int regCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        ArrayList<ProvincialBudget> capdevBudget = new ArrayList();
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String d = f.format(cal.getTime());
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.CAPDEVBudget "
+                    + "WHERE regCode = ? "
+                    + "AND '" + d + "' BETWEEN startDate AND endDate "
+                    + "AND approvedBy IS NOT NULL";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, regCode);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ProvincialBudget p = new ProvincialBudget();
+                p.setId(rs.getInt("id"));
+                p.setProvOfficeCode(rs.getInt("provOfficeCode"));
+                p.setBudget(rs.getDouble("budget"));
+                p.setRequestedBy(rs.getInt("requestedBy"));
+                p.setApprovedBy(rs.getInt("approvedBy"));
+                p.setReason(rs.getString("reason"));
+                p.setStartDate(rs.getDate("startDate"));
+                p.setEndDate(rs.getDate("endDate"));
+                p.setIsDisapproved(rs.getBoolean("isDisapproved"));
+                capdevBudget.add(p);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return capdevBudget;
+    } // CURRENT DATE
+
+    public double getCurrentCAPDEVBudgetReg(ArrayList<CAPDEVPlan> plans, int regCode, int year) {
+
+        double provBudgetDbl = 0;
+
+        ArrayList<ProvincialBudget> provBudget = getCAPDEVBudgetByRegion(regCode);
+        for (ProvincialBudget p : provBudget) {
+            provBudgetDbl += p.getBudget();
+        }
+
+        CAPDEVDAO dao = new CAPDEVDAO();
+
+        double implementedVal = dao.getYearlyImplementedBudget(plans, year);
+
+        return provBudgetDbl - implementedVal;
+
+    }
+
+    public void approveProvincialAPCPBudget(ProvincialBudget p) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            String query = "UPDATE `APCPBudget` SET `approvedByRegional`=?, `startDate`=?, `endDate`=? WHERE id=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, p.getApprovedByRegional());
+            pstmt.setDate(2, p.getStartDate());
+            pstmt.setDate(3, p.getEndDate());
+            pstmt.setInt(4, p.getId());
+            pstmt.executeUpdate();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void approveProvincialCAPDEVBudget(ProvincialBudget p) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            String query = "UPDATE `CAPDEVBudget` SET `approvedBy`=?, `startDate`=?, `endDate`=? WHERE id=?";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, p.getApprovedByRegional());
+            pstmt.setDate(2, p.getStartDate());
+            pstmt.setDate(3, p.getEndDate());
+            pstmt.setInt(4, p.getId());
+            pstmt.executeUpdate();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="PROVINCIAL">
+    public ArrayList<ProvincialBudget> getAPCPBudgetByProvOffice(int provOfficeCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        ArrayList<ProvincialBudget> apcpBudget = new ArrayList();
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String d = f.format(cal.getTime());
+        System.out.println(d);
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.APCPBudget "
+                    + "WHERE provOfficeCode = ? "
+                    + "AND '" + d + "' BETWEEN startDate AND endDate "
+                    + "AND approvedBy IS NOT NULL";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, provOfficeCode);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ProvincialBudget p = new ProvincialBudget();
+                p.setId(rs.getInt("id"));
+                p.setProvOfficeCode(rs.getInt("provOfficeCode"));
+                p.setBudget(rs.getDouble("budget"));
+                p.setRequestedBy(rs.getInt("requestedBy"));
+                p.setApprovedBy(rs.getInt("approvedBy"));
+                p.setReason(rs.getString("reason"));
+                p.setStartDate(rs.getDate("startDate"));
+                p.setEndDate(rs.getDate("endDate"));
+                p.setIsDisapproved(rs.getBoolean("isDisapproved"));
+                apcpBudget.add(p);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return apcpBudget;
+    } // CURRENT DATE
     
+    public double getSumAPCPBudgetProv(int provOfficeCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        ArrayList<ProvincialBudget> apcpBudget = new ArrayList();
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String d = f.format(cal.getTime());
+
+        try {
+            String query = "SELECT SUM(budget) FROM `dar-bms`.APCPBudget "
+                    + "WHERE '"+d+"' "
+                    + "BETWEEN startDate AND endDate "
+                    + "AND provOfficeCode=? "
+                    + "AND approvedBy IS NOT NULL";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, provOfficeCode);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("SUM(budget)");
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    } // CURRENT DATE
+    
+    public double getSumCAPDEVBudgetProv(int provOfficeCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        ArrayList<ProvincialBudget> apcpBudget = new ArrayList();
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String d = f.format(cal.getTime());
+
+        try {
+            String query = "SELECT SUM(budget) FROM `dar-bms`.CAPDEVBudget "
+                    + "WHERE '"+d+"' "
+                    + "BETWEEN startDate AND endDate "
+                    + "AND provOfficeCode=? "
+                    + "AND approvedBy IS NOT NULL";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, provOfficeCode);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("SUM(budget)");
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    } // CURRENT DATE
+
+    public double getCurrentAPCPBudgetProv(ArrayList<APCPRequest> requests, int provOfficeCode, int year) {
+
+        double provBudgetDbl = 0;
+
+        ArrayList<ProvincialBudget> provBudget = getAPCPBudgetByProvOffice(provOfficeCode);
+        for (ProvincialBudget p : provBudget) {
+            provBudgetDbl += p.getBudget();
+        }
+
+        APCPRequestDAO dao = new APCPRequestDAO();
+
+        double releaseVal = dao.getYearlySumOfReleasesByRequest(requests, year);
+
+        return provBudgetDbl - releaseVal;
+
+    }
+
+    public ArrayList<ProvincialBudget> getCAPDEVBudgetByProvOffice(int provOfficeCode) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        ArrayList<ProvincialBudget> capdevBudget = new ArrayList();
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String d = f.format(cal.getTime());
+
+        try {
+            String query = "SELECT * FROM `dar-bms`.CAPDEVBudget "
+                    + "WHERE provOfficeCode = ? "
+                    + "AND '" + d + "' BETWEEN startDate AND endDate "
+                    + "AND approvedBy IS NOT NULL";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, provOfficeCode);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                ProvincialBudget p = new ProvincialBudget();
+                p.setId(rs.getInt("id"));
+                p.setProvOfficeCode(rs.getInt("provOfficeCode"));
+                p.setBudget(rs.getDouble("budget"));
+                p.setRequestedBy(rs.getInt("requestedBy"));
+                p.setApprovedBy(rs.getInt("approvedBy"));
+                p.setReason(rs.getString("reason"));
+                p.setStartDate(rs.getDate("startDate"));
+                p.setEndDate(rs.getDate("endDate"));
+                p.setIsDisapproved(rs.getBoolean("isDisapproved"));
+                capdevBudget.add(p);
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return capdevBudget;
+    } // CURRENT DATE
+
+    public double getCurrentCAPDEVBudgetProv(ArrayList<CAPDEVPlan> plans, int provOfficeCode, int year) {
+
+        double provBudgetDbl = 0;
+
+        ArrayList<ProvincialBudget> provBudget = getCAPDEVBudgetByProvOffice(provOfficeCode);
+        for (ProvincialBudget p : provBudget) {
+            provBudgetDbl += p.getBudget();
+        }
+
+        CAPDEVDAO dao = new CAPDEVDAO();
+
+        double implementedVal = dao.getYearlyImplementedBudget(plans, year);
+
+        return provBudgetDbl - implementedVal;
+
+    }
+
+    public void requestCAPDEVBudget(ProvincialBudget p) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            String query = "INSERT INTO `CAPDEVBudget` (`provOfficeCode`,`budget`, `requestedBy`, `reason`,`regCode`) "
+                    + "VALUES (?,?,?,?,?)";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, p.getProvOfficeCode());
+            pstmt.setDouble(2, p.getBudget());
+            pstmt.setInt(3, p.getRequestedBy());
+            pstmt.setString(4, p.getReason());
+            pstmt.setInt(5, p.getRegCode());
+            pstmt.executeUpdate();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void requestAPCPBudget(ProvincialBudget p) {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        try {
+            String query = "INSERT INTO `APCPBudget` (`provOfficeCode`,`budget`, `requestedBy`, `reason`,`regCode`) VALUES (?,?,?,?,?)";
+            PreparedStatement pstmt = con.prepareStatement(query);
+            pstmt.setInt(1, p.getProvOfficeCode());
+            pstmt.setDouble(2, p.getBudget());
+            pstmt.setInt(3, p.getRequestedBy());
+            pstmt.setString(4, p.getReason());
+            pstmt.setInt(5, p.getRegCode());
+            pstmt.executeUpdate();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public double getSumAPCPBudgetRegion(ArrayList<Province> provOfficeCodes) {
+
+        double provBudgetDbl = 0;
+
+        for (Province pro : provOfficeCodes) {
+            ArrayList<ProvincialBudget> provBudget = getAPCPBudgetByProvOffice(pro.getProvCode());
+            for (ProvincialBudget p : provBudget) {
+                provBudgetDbl += p.getBudget();
+            }
+        }
+
+        return provBudgetDbl;
+
+    }
+    
+    public double getSumCAPDEVBudgetRegion(ArrayList<Province> provOfficeCodes) {
+
+        double provBudgetDbl = 0;
+
+        for (Province prov : provOfficeCodes) {
+            ArrayList<ProvincialBudget> provBudget = getCAPDEVBudgetByProvOffice(prov.getProvCode());
+            for (ProvincialBudget p : provBudget) {
+                provBudgetDbl += p.getBudget();
+            }
+        }
+
+        return provBudgetDbl;
+
+    }
+    
+    public double getCurrentAPCPBudgetRegion(ArrayList<APCPRequest> requests, ArrayList<Province> provOfficeCodes, int year) {
+
+        double provBudgetDbl = 0;
+
+        for (Province pro : provOfficeCodes) {
+            ArrayList<ProvincialBudget> provBudget = getAPCPBudgetByProvOffice(pro.getProvCode());
+            for (ProvincialBudget p : provBudget) {
+                provBudgetDbl += p.getBudget();
+                System.out.println(provBudgetDbl);
+            }
+        }
+
+        APCPRequestDAO dao = new APCPRequestDAO();
+
+        double releaseVal = dao.getYearlySumOfReleasesByRequest(requests, year);
+        System.out.println("RELEASE VAL:"+releaseVal);
+        return provBudgetDbl - releaseVal;
+
+    }
+
+    public double getCurrentCAPDEVBudgetRegion(ArrayList<CAPDEVPlan> plans, ArrayList<Province> provOfficeCodes, int year) {
+
+        double provBudgetDbl = 0;
+
+        for (Province prov : provOfficeCodes) {
+            ArrayList<ProvincialBudget> provBudget = getCAPDEVBudgetByProvOffice(prov.getProvCode());
+            for (ProvincialBudget p : provBudget) {
+                provBudgetDbl += p.getBudget();
+            }
+        }
+
+        CAPDEVDAO dao = new CAPDEVDAO();
+
+        double implementedVal = dao.getYearlyImplementedBudget(plans, year);
+
+        return provBudgetDbl - implementedVal;
+
+    }
+
+    public double getSumAPCPBudget() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        ArrayList<ProvincialBudget> apcpBudget = new ArrayList();
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String d = f.format(cal.getTime());
+
+        try {
+            String query = "SELECT SUM(budget) FROM `dar-bms`.APCPBudget "
+                    + "WHERE '2018-01-01' "
+                    + "BETWEEN startDate AND endDate "
+                    + "AND approvedBy IS NOT NULL";
+            PreparedStatement pstmt = con.prepareStatement(query);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("SUM(budget)");
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    } // CURRENT DATE
+
+    public double getCurrentSumAPCPBudget(ArrayList<APCPRequest> requests, int year) {
+
+        APCPRequestDAO dao = new APCPRequestDAO();
+
+        double releaseVal = dao.getYearlySumOfReleasesByRequest(requests, year);
+
+        return getSumAPCPBudget() - releaseVal;
+    }
+
+    public double getSumCAPDEVBudget() {
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+
+        ArrayList<ProvincialBudget> apcpBudget = new ArrayList();
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        String d = f.format(cal.getTime());
+
+        try {
+            String query = "SELECT SUM(budget) FROM `dar-bms`.CAPDEVBudget "
+                    + "WHERE '2018-01-01' "
+                    + "BETWEEN startDate AND endDate "
+                    + "AND approvedBy IS NOT NULL";
+            PreparedStatement pstmt = con.prepareStatement(query);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("SUM(budget)");
+            }
+            rs.close();
+            pstmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    } // CURRENT DATE
+
+    public double getCurrentSumCAPDEVBudget(ArrayList<CAPDEVPlan> plans, int year) {
+
+        CAPDEVDAO dao = new CAPDEVDAO();
+
+        double implementedVal = dao.getYearlyImplementedBudget(plans, year);
+
+        return getSumCAPDEVBudget() - implementedVal;
+    }
+    
+    public double getFilteredSumAPCPBudget(ArrayList<Region> regions){
+        double sum = 0;
+        for(Region r : regions){
+            ArrayList<Province> provOffices = getAllProvOfficesRegion(r.getRegCode());
+            sum += getSumAPCPBudgetRegion(provOffices);
+        }
+        return sum;
+    }
+    
+    public double getFilteredCurrentAPCPBudget(ArrayList<Region> regions, ArrayList<APCPRequest> released, int year){
+        double sum = 0;
+        for(Region r : regions){
+            ArrayList<Province> provOffices = getAllProvOfficesRegion(r.getRegCode());
+            sum += getSumAPCPBudgetRegion(provOffices);
+        }
+        APCPRequestDAO dao = new APCPRequestDAO();
+        double releaseVal = dao.getYearlySumOfReleasesByRequest(released, year);
+        return sum - releaseVal;
+    }
+    
+    public double getFilteredSumCAPDEVBudget(ArrayList<Region> regions){
+        double sum = 0;
+        for(Region r : regions){
+            ArrayList<Province> provOffices = getAllProvOfficesRegion(r.getRegCode());
+            sum += getSumCAPDEVBudgetRegion(provOffices);
+        }
+        return sum;
+    }
+    
+    public double getFilteredCurrentCAPDEVBudget(ArrayList<Region> regions, ArrayList<CAPDEVPlan> plans, int year){
+        double sum = 0;
+        for(Region r : regions){
+            ArrayList<Province> provOffices = getAllProvOfficesRegion(r.getRegCode());
+            sum += getSumCAPDEVBudgetRegion(provOffices);
+        }
+        CAPDEVDAO dao = new CAPDEVDAO();
+
+        double implementedVal = dao.getYearlyImplementedBudget(plans, year);
+        return sum - implementedVal;
+    }
+    //</editor-fold>
+
     public void disapproveAPCPBudget(int id) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
 
         try {
-            String query = "UPDATE `provincialAPCPBudget` SET `isDisapproved=1` WHERE id=?";
+            String query = "UPDATE `APCPBudget` SET `isDisapproved=1` WHERE id=?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
@@ -904,13 +1408,13 @@ public class AddressDAO {
             Logger.getLogger(AddressDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void disapproveCAPDEVBudget(int id) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
 
         try {
-            String query = "UPDATE `provincialCAPDEVBudget` SET `isDisapproved=1` WHERE id=?";
+            String query = "UPDATE `CAPDEVBudget` SET `isDisapproved=1` WHERE id=?";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setInt(1, id);
             pstmt.executeUpdate();

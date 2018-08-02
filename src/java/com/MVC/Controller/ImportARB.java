@@ -65,32 +65,22 @@ public class ImportARB extends BaseServlet {
                 storeARB = (ArrayList) arbHolder.get(i);
                 ARB arb = new ARB();
 
-                String id = String.valueOf(arbo.getArboID());
-                int size = arbo.getArbList().size();
-                int counter = size + 1;
-
-                if (size <= 9) {
-                    id += "00" + counter;
-                } else if (size >= 10) {
-                    id += "0" + counter;
-                } else if (size >= 100) {
-                    id += counter;
-                }
-
-                int finalID = Integer.parseInt(id);
+                
+                double id = Double.parseDouble(storeARB.get(0).toString());
+                int finalID = (int)id;
                 
                 arb.setArbID(finalID);
 
-                arb.setArboRepresentative(0);
+                arb.setIsCOMAT(0);
                 arb.setArboID(arboID);
 
-                arb.setFirstName(storeARB.get(0).toString());
-                arb.setMiddleName(storeARB.get(1).toString());
-                arb.setLastName(storeARB.get(2).toString());
-                arb.setGender(storeARB.get(3).toString());
+                arb.setFirstName(storeARB.get(1).toString());
+                arb.setMiddleName(storeARB.get(2).toString());
+                arb.setLastName(storeARB.get(3).toString());
+                arb.setGender(storeARB.get(4).toString());
 
                 java.sql.Date memberSince = null;
-                String excelDate = storeARB.get(4).toString(); // Parsing of Excel Date to Java Date
+                String excelDate = storeARB.get(5).toString(); // Parsing of Excel Date to Java Date
                 String[] dateArr = excelDate.split("-");
                 int memberSinceMonth = getValOfMonth(dateArr[1]);
                 String finalMemberSince = dateArr[2] + "-" + memberSinceMonth + "-" + dateArr[0];
@@ -102,14 +92,14 @@ public class ImportARB extends BaseServlet {
                 }
                 arb.setMemberSince(memberSince);
 
-                arb.setArbUnitNumStreet(storeARB.get(5).toString());
-                arb.setRegCode(addressDAO.getRegCode(storeARB.get(9).toString()));
-                arb.setProvCode(addressDAO.getProvCode(storeARB.get(8).toString(), arb.getRegCode()));
-                arb.setCityMunCode(addressDAO.getCityMunCode(storeARB.get(7).toString(), arb.getProvCode(), arb.getRegCode()));
-                arb.setBrgyCode(addressDAO.getBrgyCode(storeARB.get(6).toString(), arb.getCityMunCode(), arb.getProvCode(), arb.getRegCode()));
-                arb.setEducationLevel(arbDAO.getEducationalLevel(storeARB.get(10).toString()));
-                arb.setLandArea(Double.parseDouble(storeARB.get(11).toString()));
-                arb.setTIN(Integer.parseInt(storeARB.get(12).toString()));
+                arb.setArbUnitNumStreet(storeARB.get(6).toString());
+                arb.setRegCode(addressDAO.getRegCode(storeARB.get(10).toString()));
+                arb.setProvCode(addressDAO.getProvCode(storeARB.get(9).toString(), arb.getRegCode()));
+                arb.setCityMunCode(addressDAO.getCityMunCode(storeARB.get(8).toString(), arb.getProvCode(), arb.getRegCode()));
+                arb.setBrgyCode(addressDAO.getBrgyCode(storeARB.get(7).toString(), arb.getCityMunCode(), arb.getProvCode(), arb.getRegCode()));
+                arb.setEducationLevel(arbDAO.getEducationalLevel(storeARB.get(11).toString()));
+                arb.setLandArea(Double.parseDouble(storeARB.get(12).toString()));
+                arb.setTIN(Integer.parseInt(storeARB.get(13).toString()));
 
                 arbDAO.addARB(arb);
 

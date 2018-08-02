@@ -6,8 +6,12 @@
 package com.MVC.Controller;
 
 import com.MVC.DAO.APCPRequestDAO;
+import com.MVC.DAO.MessageDAO;
+import com.MVC.DAO.UserDAO;
+import com.MVC.Model.Message;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +37,23 @@ public class EndorseAPCPRequest extends BaseServlet {
             request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
         } else {
             if (requestDAO.endorseRequest(requestID, (Integer) session.getAttribute("userID"), ltn)) {
+                
+                MessageDAO messageDAO = new MessageDAO();
+                UserDAO userDAO = new UserDAO();
+
+                Message m = new Message();
+                m.setBody("[RE:APCP REQUEST ENDORSED] APCP Request #" + requestID + " has now been endorsed to LANDBANK.");
+                m.setSentBy((Integer) session.getAttribute("userID"));
+                int messageID = messageDAO.addMessage(m);
+
+                ArrayList<Integer> userIDs = userDAO.retrieveProvincialUserIDsByUserType(6, (Integer) session.getAttribute("provOfficeCode")); // PFO-APCP
+
+                for (int userID : userIDs) {
+                    if (messageDAO.sendMessage(messageID, userID)) {
+                        System.out.println("Message sent!");
+                    }
+                }
+                
                 request.setAttribute("success", "APCP Request endorsed!");
                 request.getRequestDispatcher("view-apcp-status.jsp").forward(request, response);
             } else {

@@ -39,6 +39,8 @@ public class FilterARBDashboard extends BaseServlet {
             arbos = arboDAO.getAllARBOs();
         } else if ((Integer) session.getAttribute("userType") == 4) {
             arbos = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
+        } else if ((Integer) session.getAttribute("userType") == 3) {
+            arbos = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
         }
 
         ArrayList<ARB> filtered = new ArrayList();
@@ -68,19 +70,22 @@ public class FilterARBDashboard extends BaseServlet {
 
         switch (category) {
             case 1:
-                categoryDesc = "Credit Rating";
+                categoryDesc = "COUNT";
                 break;
             case 2:
-                categoryDesc = "Self-Assessment Rating";
+                categoryDesc = "APCP Recipients";
                 break;
             case 3:
-                categoryDesc = "Crops";
+                categoryDesc = "APCP/CAPDEV Participants";
                 break;
             case 4:
-                categoryDesc = "Attendance Rate";
+                categoryDesc = "Participation Rate";
                 break;
             case 5:
-                categoryDesc = "Count";
+                categoryDesc = "Mean Ave. Disbursed Amount";
+                break;
+            case 6:
+                categoryDesc = "Mean Ave. O/S Balance Amount";
                 break;
             default:
                 categoryDesc = "N/A";
@@ -91,13 +96,13 @@ public class FilterARBDashboard extends BaseServlet {
             if ((Integer) session.getAttribute("userType") == 5) { // CENTRAL
                 if (category == 2) { // RECIPIENTS
                     filtered = arbDAO.getAllAPCPRecipients();
-                    System.out.println("FILTERED " + filtered.size());
                 } else {
                     filtered = arbDAO.getAllARBs();
                 }
-                // filtered = arbDAO.getAllARBs();
             } else if ((Integer) session.getAttribute("userType") == 4) { // RFO
                 filtered = arbDAO.getAllRegionalARBs((Integer) session.getAttribute("regOfficeCode"));
+            } else if ((Integer) session.getAttribute("userType") == 3) { // PFO
+                filtered = arbDAO.getAllProvincialARBs((Integer) session.getAttribute("provOfficeCode"));
             }
         } else if (filterBy.equals("regions")) {
             request.setAttribute("filterByREGION", true);
@@ -107,10 +112,10 @@ public class FilterARBDashboard extends BaseServlet {
                 }
             }
 
-            if (category == 2) { // RECIPIENTS
-                for(int regionID : regionIDs){
-                    for(ARB arb : arbDAO.getAllAPCPRecipients()){
-                        if(arb.getRegCode() == regionID){
+            if (category == 2) {
+                for (int regionID : regionIDs) {
+                    for (ARB arb : arbDAO.getAllAPCPRecipients()) {
+                        if (arb.getRegCode() == regionID) {
                             filtered.add(arb);
                         }
                     }
@@ -120,6 +125,7 @@ public class FilterARBDashboard extends BaseServlet {
                 for (int regionID : regionIDs) { // POPULATE FILTERED
                     for (ARBO arbo : arbos) {
                         if (arbo.getArboRegion() == regionID) {
+                            arbo.setArbList(arbDAO.getAllARBsARBO(arbo.getArboID()));
                             for (ARB arb : arbo.getArbList()) {
                                 filtered.add(arb);
                             }
@@ -129,11 +135,7 @@ public class FilterARBDashboard extends BaseServlet {
             }
         } else if (filterBy.equals("provinces")) {
             request.setAttribute("filterByPROVINCE", true);
-            if (provincesStr != null && regionsStr != null) {
-
-                for (String regionStr : regionsStr) {
-                    regionIDs.add(Integer.parseInt(regionStr));
-                }
+            if (provincesStr != null) {
 
                 for (String provinceStr : provincesStr) {
                     provinceIDs.add(Integer.parseInt(provinceStr));
@@ -143,6 +145,7 @@ public class FilterARBDashboard extends BaseServlet {
             for (int provinceID : provinceIDs) { // POPULATE FILTERED
                 for (ARBO arbo : arbos) {
                     if (arbo.getProvOfficeCode() == provinceID) {
+                        arbo.setArbList(arbDAO.getAllARBsARBO(arbo.getArboID()));
                         for (ARB arb : arbo.getArbList()) {
                             filtered.add(arb);
                         }

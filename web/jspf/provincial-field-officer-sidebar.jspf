@@ -12,8 +12,7 @@
                 CAPDEVDAO capdevDAO = new CAPDEVDAO();
                 UserDAO uDAO = new UserDAO();
                 
-                ProvincialBudget apcpBudget = addressDAO.getAPCPBudgetByProvOffice((Integer)session.getAttribute("provOfficeCode"));
-                ProvincialBudget capdevBudget = addressDAO.getCAPDEVBudgetByProvOffice((Integer)session.getAttribute("provOfficeCode"));
+                
                 
                 ArrayList<APCPRequest> allRequestStatus = apcpRequestDAO.getAllRequestStatus();
                 ArrayList<CAPDEVPlan> allPlanStatus = capdevDAO.getAllPlanStatus();
@@ -33,27 +32,39 @@
 
                 ArrayList<APCPRequest> provincialRequests = apcpRequestDAO.getAllProvincialRequests((Integer) session.getAttribute("provOfficeCode"));
                 
-                ArrayList<APCPRequest> newAccessingRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(0, (Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4, (Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(6, (Integer) session.getAttribute("provOfficeCode"));
+                ArrayList<APCPRequest> newAccessingRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,0);
+                ArrayList<APCPRequest> requestedRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,1);
+                ArrayList<APCPRequest> clearedRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,2);
+                ArrayList<APCPRequest> endorsedRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,3);
+                ArrayList<APCPRequest> approvedRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,4);
+                ArrayList<APCPRequest> releasedRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,5);
+                ArrayList<APCPRequest> forReleaseRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,6);
 
-                ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getAllPastDueAccountsByRequestList(provincialRequests);
+                ArrayList<PastDueAccount> pdaByRequestList = apcpRequestDAO.getYearlyPastDueAccountsByRequestList(provincialRequests,year);
+                ArrayList<PastDueAccount> unsettledPDAByRequestList = apcpRequestDAO.getYearlyUnsettledPastDueAccountsByRequestList(provincialRequests,year);
 
                 ArrayList<CAPDEVActivity> activities = capdevDAO.getCAPDEVActivities();
                 ArrayList<PastDueAccount> reasons = capdevDAO.getAllPastDueReasons();
 
                 ArrayList<CAPDEVPlan> allPlans = capdevDAO.getAllProvincialCAPDEVPlan((Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
-                ArrayList<CAPDEVPlan> postponedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(6, (Integer) session.getAttribute("provOfficeCode"));
-
+                ArrayList<CAPDEVPlan> pendingPlans = capdevDAO.getFilteredByStatus(allPlans,1);
+                ArrayList<CAPDEVPlan> approvedPlans = capdevDAO.getFilteredByStatus(allPlans,2);
+                ArrayList<CAPDEVPlan> disapprovedPlans = capdevDAO.getFilteredByStatus(allPlans,3);
+                ArrayList<CAPDEVPlan> assignedPlans = capdevDAO.getFilteredByStatus(allPlans,4);
+                ArrayList<CAPDEVPlan> implementedPlans = capdevDAO.getFilteredByStatus(allPlans,5);
+                ArrayList<CAPDEVPlan> postponedPlans = capdevDAO.getFilteredByStatus(allPlans,6);
                 
+                ArrayList<ProvincialBudget> apcpBudget = addressDAO.getAPCPBudgetByProvOffice((Integer)session.getAttribute("provOfficeCode"));
+                ArrayList<ProvincialBudget> capdevBudget = addressDAO.getCAPDEVBudgetByProvOffice((Integer)session.getAttribute("provOfficeCode"));
+                
+                //double currentRegAPCPBudget = addressDAO.getCurrentAPCPBudgetReg(releasedRequests,(Integer)session.getAttribute("regOfficeCode"),year);
+                //double currentRegCAPDEVBudget = addressDAO.getCurrentCAPDEVBudgetReg(implementedPlans,(Integer)session.getAttribute("regOfficeCode"),year);
+
+                double currentAPCPBudget = addressDAO.getCurrentAPCPBudgetProv(releasedRequests,(Integer)session.getAttribute("provOfficeCode"),year);
+                double currentCAPDEVBudget = addressDAO.getCurrentCAPDEVBudgetProv(implementedPlans,(Integer)session.getAttribute("provOfficeCode"),year);
+                
+                double sumAPCPBudget = addressDAO.getSumAPCPBudgetProv((Integer)session.getAttribute("provOfficeCode"));
+                double sumCAPDEVBudget = addressDAO.getSumCAPDEVBudgetProv((Integer)session.getAttribute("provOfficeCode"));
     
 %>
 
@@ -126,6 +137,20 @@
                 <ul class="treeview-menu">
                     <li><a href="view-capdev-status.jsp"><i class="fa fa-dot-circle-o"></i> View CAPDEV Status</a></li>
 
+                </ul>
+            </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-clipboard"></i> <span>Reports</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="arb-dashboard.jsp"><i class="fa fa-dot-circle-o"></i> ARB</a></li>
+                    <li><a href="arbo-dashboard.jsp"><i class="fa fa-dot-circle-o"></i> ARBO</a></li>
+                    <li><a href="apcp-dashboard.jsp"><i class="fa fa-dot-circle-o"></i> APCP</a></li>
+                    <li><a href="capdev-dashboard.jsp"><i class="fa fa-dot-circle-o"></i> CAPDEV</a></li>
                 </ul>
             </li>
             <li>

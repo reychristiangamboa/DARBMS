@@ -15,14 +15,34 @@ import java.util.ArrayList;
 public class ProvincialBudget {
     
     private int id;
+    private int regCode;
     private int provOfficeCode;
     private double budget;
     private int requestedBy;
+    private int approvedByRegional;
     private int approvedBy;
     private String reason;
     private Date startDate;
     private Date endDate;
     private boolean isDisapproved;
+
+    public int getRegCode() {
+        return regCode;
+    }
+
+    public void setRegCode(int regCode) {
+        this.regCode = regCode;
+    }
+
+    public int getApprovedByRegional() {
+        return approvedByRegional;
+    }
+
+    public void setApprovedByRegional(int approvedByRegional) {
+        this.approvedByRegional = approvedByRegional;
+    }
+    
+    
 
     public int getId() {
         return id;

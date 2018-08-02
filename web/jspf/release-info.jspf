@@ -63,7 +63,7 @@
                                     <div class="input-group-addon">
                                         <i>&#8369;</i>
                                     </div>
-                                    <input type="text" id="releaseAmount" class="form-control numberOnly" name="releaseAmount" autocomplete="off" required>
+                                    <input type="text" id="releaseAmount" class="form-control" name="releaseAmount" autocomplete="off" required>
                                 </div>
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                                     <div class="input-group-addon">
                                         <i>&#8369;</i>
                                     </div>
-                                    <input type="text" id="releaseOSBalance" class="form-control numberOnly" name="releaseOSBalance" autocomplete="off" required />
+                                    <input type="text" id="releaseOSBalance" class="form-control numberOnly" name="releaseOSBalance" autocomplete="off" disabled />
                                 </div>
                             </div>
                         </div>
@@ -98,7 +98,6 @@
 
         </div>
     </div>
-    <!--                                        /.modal-dialog -->
 </div>
 <div class="modal fade" id="import-release-modal">
     <div class="modal-dialog modal-sm">
@@ -116,14 +115,14 @@
                         <div class="col-xs-12">
                             <div class="form-group">
                                 <label for="">Import File</label>
-                                <input type="file" class="form-control" name="file" required>
+                                <input type="file" class="form-control" name="file" required/>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="requestID" value="<%=r.getRequestID()%>">
-                    <button type="submit" name="manual" onclick="form.action = 'ImportRelease'" class="btn btn-primary pull-right">Submit</button>
+                    <button type="submit" name="import" onclick="form.action = 'ImportRelease'" class="btn btn-primary pull-right">Submit</button>
                 </div>
             </form>
 

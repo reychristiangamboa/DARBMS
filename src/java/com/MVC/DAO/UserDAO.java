@@ -440,5 +440,32 @@ public class UserDAO {
         }
         return list;
     }
+    
+    public ArrayList<Integer> retrieveProvincialUserIDsByUserType(int type, int provOfficeCode){
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        ArrayList<Integer> list = new ArrayList();
+        try {
+            String query = "SELECT userID FROM users WHERE userType=? AND provOfficeCode=?";
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, type);
+            p.setInt(2, provOfficeCode);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                list.add(rs.getInt("userID"));
+            }
+            rs.close();
+            p.close();
+            con.close();
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 
 }

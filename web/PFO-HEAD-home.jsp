@@ -2,6 +2,7 @@
 <html>
     <head>
         <%@include file="jspf/header.jspf"%>
+
     </head>
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
@@ -23,33 +24,57 @@
 
                 <!-- Main content -->
                 <section class="content">
+
+                    <%if(issueDAO.retrieveUnresolvedIssues((Integer)session.getAttribute("userType"),(Integer)session.getAttribute("provOfficeCode")).size() > 0){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> You have <a href="view-issues.jsp">ISSUES</a> pending. Please resolve them immediately.</h4>
+                    </div>
+                    <%}%>
                     <!-- Info boxes -->
                     <div class="row">
-
-
                         <div class="col-md-4 col-sm-6 col-xs-12">
+                            <%
+                                double delayedPercentage = apcpRequestDAO.getPercentage(apcpRequestDAO.getDelayedRequests(provincialRequests),provincialRequests.size());
+                            %>
                             <div class="info-box">
+                                <%if (delayedPercentage <= 20) {%>
+                                <span class="info-box-icon bg-green"><i class="fa fa-warning"></i></span>
+                                    <%}else if (delayedPercentage <= 50){%>
                                 <span class="info-box-icon bg-yellow"><i class="fa fa-warning"></i></span>
-
+                                    <%}else{%>
+                                <span class="info-box-icon bg-red"><i class="fa fa-warning"></i></span>
+                                    <%}%>
                                 <div class="info-box-content">
                                     <span class="info-box-text">Delayed Requests</span>
-                                    <span class="info-box-number"><%out.print(apcpRequestDAO.getPercentage(apcpRequestDAO.getDelayedRequests(provincialRequests),provincialRequests.size()));%><small>%</small></span>
+                                    <span class="info-box-number"><%out.print(df.format(delayedPercentage));%><small>%</small></span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
+
                             <!-- /.info-box -->
                         </div>
                         <!-- /.col -->
                         <div class="col-md-4 col-sm-6 col-xs-12">
+                            <%
+                                double pdaPercentage = apcpRequestDAO.getPercentage(unsettledPDAByRequestList.size(),pdaByRequestList.size());
+                            %>
                             <div class="info-box">
+                                <%if (pdaPercentage >= 80){%>
                                 <span class="info-box-icon bg-red"><i class="fa fa-hourglass-end"></i></span>
-
+                                    <%}else if (pdaPercentage >= 50){%>
+                                <span class="info-box-icon bg-yellow"><i class="fa fa-hourglass-end"></i></span>
+                                    <%}else{%>
+                                <span class="info-box-icon bg-green"><i class="fa fa-hourglass-end"></i></span>
+                                    <%}%>
                                 <div class="info-box-content">
                                     <span class="info-box-text">Past Due Accounts</span>
-                                    <span class="info-box-number">41,410</span>
+                                    <span class="info-box-number"><%out.print(unsettledPDAByRequestList.size());%></span>
+                                    <span class="info-box-text"><small><%out.print(df.format(pdaPercentage));%>%</small></span>
                                 </div>
                                 <!-- /.info-box-content -->
                             </div>
+
                             <!-- /.info-box -->
                         </div>
                         <!-- /.col -->
@@ -58,16 +83,23 @@
                         <div class="clearfix visible-sm-block"></div>
 
                         <div class="col-md-4 col-sm-6 col-xs-12">
+                            <%
+                                double postponedPercentage = capdevDAO.getPercentage(postponedPlans.size(),allPlans.size());
+                            %>
                             <div class="info-box">
-                                <span class="info-box-icon bg-orange"><i class="fa fa-pause"></i></span>
-
+                                <%if (postponedPercentage >= 80){%>
+                                <span class="info-box-icon bg-red"><i class="fa fa-pause"></i></span>
+                                    <%}else if(postponedPercentage >= 50){%>
+                                <span class="info-box-icon bg-yellow"><i class="fa fa-pause"></i></span>
+                                    <%}else{%>
+                                <span class="info-box-icon bg-green"><i class="fa fa-pause"></i></span>
+                                    <%}%>
                                 <div class="info-box-content">
                                     <span class="info-box-text">Postponed Plans</span>
                                     <span class="info-box-number"><%out.print(postponedPlans.size());%></span>
+                                    <span class="info-box-text"><small><%out.print(df.format(postponedPercentage));%>%</small></span>
                                 </div>
-                                <!-- /.info-box-content -->
                             </div>
-                            <!-- /.info-box -->
                         </div>
                         <!-- /.col -->
                         <!-- /.col -->
@@ -76,29 +108,41 @@
                         <div class="col-md-2 col-sm-6 col-xs-12">
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
+                            <%
+                                double apcpBudgetPercentage = apcpRequestDAO.getPercentage(apcpRequestDAO.getYearlySumOfReleasesByRequest(releasedRequests,year),sumAPCPBudget);
+                            %>
                             <div class="info-box">
-                                <%if (apcpBudget.getBudget() <= 100000){%>
+                                <%if (apcpBudgetPercentage >= 80){%>
                                 <span class="info-box-icon bg-red"><i class="fa fa-money"></i></span>
+                                    <%}else if(apcpBudgetPercentage >= 50){%>
+                                <span class="info-box-icon bg-yellow"><i class="fa fa-money"></i></span>
                                     <%}else{%>
                                 <span class="info-box-icon bg-green"><i class="fa fa-money"></i></span>
                                     <%}%>
                                 <div class="info-box-content">
                                     <span class="info-box-text">APCP BUDGET</span>
-                                    <span class="info-box-number"><%out.print(currency.format(apcpBudget.getBudget()));%></span>
+                                    <span class="info-box-number"><%out.print(currency.format(currentAPCPBudget));%></span>
+                                    <span class="info-box-text"><small><%out.print(df.format(apcpBudgetPercentage));%>%</small></span>
                                 </div>
                             </div>
                             <!-- /.info-box -->
                         </div>
                         <div class="col-md-4 col-sm-6 col-xs-12">
+                            <%
+                                double capdevBudgetPercentage = capdevDAO.getPercentage(capdevDAO.getYearlyImplementedBudget(implementedPlans,year),sumCAPDEVBudget);
+                            %>
                             <div class="info-box">
-                                <%if (capdevBudget.getBudget() <= 100000){%>
-                                <span class="info-box-icon bg-red"><i class="fa fa-database"></i></span>
+                                <%if (capdevBudgetPercentage >= 80){%>
+                                <span class="info-box-icon bg-red"><i class="fa fa-money"></i></span>
+                                    <%}else if(capdevBudgetPercentage >= 50){%>
+                                <span class="info-box-icon bg-yellow"><i class="fa fa-money"></i></span>
                                     <%}else{%>
-                                <span class="info-box-icon bg-green"><i class="fa fa-database"></i></span>
+                                <span class="info-box-icon bg-green"><i class="fa fa-money"></i></span>
                                     <%}%>
                                 <div class="info-box-content">
                                     <span class="info-box-text">CAPDEV BUDGET</span>
-                                    <span class="info-box-number"><%out.print(currency.format(capdevBudget.getBudget()));%></span>
+                                    <span class="info-box-number"><%out.print(currency.format(currentCAPDEVBudget));%></span>
+                                    <span class="info-box-text"><small><%out.print(df.format(capdevBudgetPercentage));%>%</small></span>
                                 </div>
                             </div>
                         </div>
@@ -114,7 +158,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">
-                                    <table id="table" class="table table-bordered table-striped modTable">
+                                    <table class="table table-bordered table-striped export">
                                         <thead>
                                             <tr>
                                                 <th>ARBO</th>
@@ -155,7 +199,7 @@
                                     <h3 class="box-title"><a href="view-capdev-status.jsp">Pending CAPDEV Plans</a></h3>
                                 </div>
                                 <div class="box-body">
-                                    <table class="table table-bordered table-striped modTable">
+                                    <table class="table table-bordered table-striped export">
                                         <thead>
                                             <tr>
                                                 <th>Plan DTN</th>
@@ -249,10 +293,10 @@
 
                                             <div class="progress-group">
                                                 <span class="progress-text">Budget Allocated</span>
-                                                <span class="progress-number"><%out.print(currency.format(apcpRequestDAO.getYearlyBudgetAllocated(provincialRequests, year)));%>/<strong><%out.print(currency.format(apcpBudget.getBudget()));%></strong></span>
+                                                <span class="progress-number"><%out.print(currency.format(apcpRequestDAO.getYearlyBudgetAllocated(provincialRequests, year)));%>/<strong><%out.print(currency.format(sumAPCPBudget));%></strong></span>
 
                                                 <div class="progress sm">
-                                                    <div class="progress-bar progress-bar-yellow" style="width: <%out.print(apcpRequestDAO.getPercentage(apcpRequestDAO.getYearlyBudgetAllocated(provincialRequests, year),apcpBudget.getBudget()) + "%");%>"></div>
+                                                    <div class="progress-bar progress-bar-yellow" style="width: <%out.print(apcpRequestDAO.getPercentage(apcpRequestDAO.getYearlyBudgetAllocated(provincialRequests, year),sumAPCPBudget) + "%");%>"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -266,25 +310,71 @@
                                             %>
                                             <div class="btn-group">
                                                 <button class="btn btn-default" id="APCPOnTrackDelayed<%out.print(req.getRequestStatus());%>"><%out.print(req.getRequestStatusDesc());%></button>
-                                                <button class="btn btn-success" id="APCPOnTrackDelayed<%out.print(req.getRequestStatus());%>" data-toggle="modal" data-target="#modal-default"><%out.print(apcpRequestDAO.getOnTrackRequestsPerStatus(provincialRequests,req.getRequestStatus()));%> </button>
-                                                <button class="btn btn-danger" id="APCPOnTrackDelayed<%out.print(req.getRequestStatus());%>" data-toggle="modal" data-target="#modal-info"><strong><%out.print(apcpRequestDAO.getDelayedRequestsPerStatus(provincialRequests,req.getRequestStatus()));%></strong></button>
+                                                <button class="btn btn-success" id="APCPOnTrackDelayed<%out.print(req.getRequestStatus());%>" data-toggle="modal" data-target="#onTrackAPCP<%out.print(req.getRequestStatus());%>"><%out.print(apcpRequestDAO.getOnTrackRequestsPerStatus(provincialRequests,req.getRequestStatus()));%> </button>
+                                                <button class="btn btn-danger" id="APCPOnTrackDelayed<%out.print(req.getRequestStatus());%>" data-toggle="modal" data-target="#delayedAPCP<%out.print(req.getRequestStatus());%>"><strong><%out.print(apcpRequestDAO.getDelayedRequestsPerStatus(provincialRequests,req.getRequestStatus()));%></strong></button>
                                             </div>
                                             &nbsp;
 
-                                            <div class="modal modal-primary fade" id="modal-primary">
-                                                <div class="modal-dialog">
+                                            <%ArrayList<APCPRequest> requests = new ArrayList();%>
+                                            <%
+                                                if(req.getRequestStatus() == 0){
+                                                    requests = newAccessingRequests;
+                                                }else if(req.getRequestStatus() == 1){
+                                                    requests = requestedRequests;
+                                                }else if(req.getRequestStatus() == 2){
+                                                    requests = clearedRequests;
+                                                }else if(req.getRequestStatus() == 3){
+                                                    requests = endorsedRequests;
+                                                }else if(req.getRequestStatus() == 4){
+                                                    requests = approvedRequests;
+                                                }
+                                            %>
+
+                                            <div class="modal fade" id="onTrackAPCP<%out.print(req.getRequestStatus());%>">
+                                                <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title">Primary Modal</h4>
+                                                            <h4 class="modal-title">On Track <%out.print(req.getRequestStatusDesc());%> Requests</h4>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <p>One fine body&hellip;</p>
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <table class="table table-bordered table-striped export">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>ARBO</th>
+                                                                                <th>Loan Reason</th>
+                                                                                <th>Loan Amount</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+
+                                                                            <%
+                                                                                for(APCPRequest delayedRequest : requests){
+                                                                            %>
+                                                                            <%if(delayedRequest.checkIfRequestIsOnTrack(delayedRequest.getDateRequested())){%>
+                                                                            <tr>
+                                                                                <%ARBO arbo = arboDAO.getARBOByID(delayedRequest.getArboID());%>
+                                                                                <td><a rel="noopener noreferrer" target="_blank" href="ViewARBO?id=<%out.print(delayedRequest.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                                                <%if(delayedRequest.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                                                <td><%out.print(delayedRequest.getLoanReason().getLoanReasonDesc() + ": " + delayedRequest.getLoanReason().getOtherReason());%></td>
+                                                                                <%}else{%> <!--LOAN REASON-->
+                                                                                <td><%out.print(delayedRequest.getLoanReason().getLoanReasonDesc());%></td>
+                                                                                <%}%>
+                                                                                <td><%out.print(currency.format(delayedRequest.getLoanAmount()));%></td>
+                                                                            </tr>
+                                                                            <%}%>
+                                                                            <%}%>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-                                                            <button type="button" class="btn btn-outline">Save changes</button>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
@@ -292,20 +382,51 @@
                                                 <!-- /.modal-dialog -->
                                             </div>
 
-                                            <div class="modal modal-primary fade" id="modal-info">
-                                                <div class="modal-dialog">
+                                            <div class="modal fade" id="delayedAPCP<%out.print(req.getRequestStatus());%>">
+                                                <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title">Primary Modal</h4>
+                                                            <h4 class="modal-title">Delayed <%out.print(req.getRequestStatusDesc());%> Requests</h4>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <p>One fine body&hellip;</p>
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <table class="table table-bordered table-striped export">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>ARBO</th>
+                                                                                <th>Loan Reason</th>
+                                                                                <th>Loan Amount</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+
+                                                                            <%
+                                                                                for(APCPRequest delayedRequest : requests){
+                                                                            %>
+                                                                            <%if(!delayedRequest.checkIfRequestIsOnTrack(delayedRequest.getDateRequested())){%>
+                                                                            <tr>
+                                                                                <%ARBO arbo = arboDAO.getARBOByID(delayedRequest.getArboID());%>
+                                                                                <td><a rel="noopener noreferrer" target="_blank" href="ViewARBO?id=<%out.print(delayedRequest.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                                                <%if(delayedRequest.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                                                <td><%out.print(delayedRequest.getLoanReason().getLoanReasonDesc() + ": " + delayedRequest.getLoanReason().getOtherReason());%></td>
+                                                                                <%}else{%> <!--LOAN REASON-->
+                                                                                <td><%out.print(delayedRequest.getLoanReason().getLoanReasonDesc());%></td>
+                                                                                <%}%>
+                                                                                <td><%out.print(currency.format(delayedRequest.getLoanAmount()));%></td>
+                                                                            </tr>
+                                                                            <%}%>
+                                                                            <%}%>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-                                                            <button type="button" class="btn btn-outline">Save changes</button>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
@@ -315,16 +436,30 @@
                                             <%}%>
                                             <%}%>
                                             <div class="row">
-                                                <h6>Status: <strong class="bg-green">On-track</strong> | <strong class="bg-red">Delayed</strong></h6>
+                                                <h6>Status: <strong class="text-green">On-track</strong> | <strong class="text-red">Delayed</strong></h6>
                                             </div>
                                         </center>
                                     </div>
                                 </div>
                                 <div class="box-footer">
+                                    <%
+                                    double APCPARBOsPercentage = apcpRequestDAO.getPercentageComparison(apcpRequestDAO.getDistinctARBOCountWithReleased(provincialRequests,lastYear),apcpRequestDAO.getDistinctARBOCountWithReleased(provincialRequests,year));
+                                    double APCPARBsPercentage = apcpRequestDAO.getPercentageComparison(apcpRequestDAO.getDistinctRecipientCountWithReleased(provincialRequests,lastYear),apcpRequestDAO.getDistinctRecipientCountWithReleased(provincialRequests,year));
+                                    double APCPReleasedPercentage = apcpRequestDAO.getPercentageComparison(apcpRequestDAO.getYearlySumOfReleasesByRequest(provincialRequests,lastYear),apcpRequestDAO.getYearlySumOfReleasesByRequest(provincialRequests,year));
+                                    double APCPPDAPercentage = apcpRequestDAO.getPercentageComparison(apcpRequestDAO.getYearlyTotalPastDueAmount(provincialRequests, lastYear),apcpRequestDAO.getYearlyTotalPastDueAmount(provincialRequests, year));
+                                    %>
                                     <div class="row">
                                         <div class="col-sm-3 col-xs-6" id="totalARBOsAPCP">
                                             <div class="description-block border-right">
-                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span>
+
+                                                <%if(APCPARBOsPercentage > 0){%>
+                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> <%out.print(df.format(APCPARBOsPercentage));%>%</span>
+                                                <%}else if(APCPARBOsPercentage < 0){%>
+                                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> <%out.print(df.format(APCPARBOsPercentage));%>%</span>
+                                                <%}else{%>
+                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> <%out.print(df.format(APCPARBOsPercentage));%>%</span>
+                                                <%}%>
+
                                                 <h5 class="description-header"><%out.print(apcpRequestDAO.getDistinctARBOCountWithReleased(provincialRequests,year));%></h5>
                                                 <span class="description-text">TOTAL ARBOs</span>
                                             </div>
@@ -333,7 +468,15 @@
                                         <!-- /.col -->
                                         <div class="col-sm-3 col-xs-6" id="totalARBsAPCP">
                                             <div class="description-block border-right">
-                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
+
+                                                <%if(APCPARBsPercentage > 0){%>
+                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> <%out.print(df.format(APCPARBsPercentage));%>%</span>
+                                                <%}else if(APCPARBsPercentage < 0){%>
+                                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> <%out.print(df.format(APCPARBsPercentage));%>%</span>
+                                                <%}else{%>
+                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> <%out.print(df.format(APCPARBsPercentage));%>%</span>
+                                                <%}%>
+
                                                 <h5 class="description-header"><%out.print(apcpRequestDAO.getDistinctRecipientCountWithReleased(provincialRequests,year));%></h5>
                                                 <span class="description-text">TOTAL ARBs</span>
                                             </div>
@@ -342,7 +485,15 @@
                                         <!-- /.col -->
                                         <div class="col-sm-3 col-xs-6" id="totalReleasedAmountAPCP">
                                             <div class="description-block border-right">
-                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 20%</span>
+
+                                                <%if(APCPReleasedPercentage > 0){%>
+                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> <%out.print(df.format(APCPReleasedPercentage));%>%</span>
+                                                <%}else if(APCPReleasedPercentage < 0){%>
+                                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> <%out.print(df.format(APCPReleasedPercentage));%>%</span>
+                                                <%}else{%>
+                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> <%out.print(df.format(APCPReleasedPercentage));%>%</span>
+                                                <%}%>
+
                                                 <h5 class="description-header"><%out.print(currency.format(apcpRequestDAO.getYearlySumOfReleasesByRequest(provincialRequests,year)));%></h5>
                                                 <span class="description-text">TOTAL RELEASED AMOUNT (<%out.print(year);%>)</span>
                                             </div>
@@ -351,7 +502,15 @@
                                         <!-- /.col -->
                                         <div class="col-sm-3 col-xs-6" id="totalPastDueAmountAPCP">
                                             <div class="description-block">
-                                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> 18%</span>
+
+                                                <%if(APCPPDAPercentage > 0){%>
+                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> <%out.print(df.format(APCPPDAPercentage));%>%</span>
+                                                <%}else if(APCPPDAPercentage < 0){%>
+                                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> <%out.print(df.format(APCPPDAPercentage));%>%</span>
+                                                <%}else{%>
+                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> <%out.print(df.format(APCPPDAPercentage));%>%</span>
+                                                <%}%>
+
                                                 <h5 class="description-header"><%out.print(currency.format(apcpRequestDAO.getYearlyTotalPastDueAmount(provincialRequests, year)));%></h5>
                                                 <span class="description-text">TOTAL PAST DUE (<%out.print(year);%>)</span>
                                             </div>
@@ -362,7 +521,6 @@
                                         <div class="col-sm-2"></div>
                                         <div class="col-sm-4 col-xs-6" id="cumulativeReleasedAmountAPCP">
                                             <div class="description-block border-right">
-                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span>
                                                 <h5 class="description-header"><%out.print(currency.format(apcpRequestDAO.getSumOfAccumulatedReleasesByRequest(provincialRequests)));%></h5>
                                                 <span class="description-text">CUMULATIVE RELEASED AMOUNT</span>
                                             </div>
@@ -371,7 +529,6 @@
                                         <!-- /.col -->
                                         <div class="col-sm-4 col-xs-6" id="cumulativePastDueAmountAPCP">
                                             <div class="description-block border-right">
-                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
                                                 <h5 class="description-header"><%out.print(currency.format(apcpRequestDAO.getTotalPastDueAmount(provincialRequests)));%></h5>
                                                 <span class="description-text">CUMULATIVE PAST DUE AMOUNT</span>
                                             </div>
@@ -440,11 +597,11 @@
                                             </div>
 
                                             <div class="progress-group">
-                                                <span class="progress-text">Budget</span>
-                                                <span class="progress-number"><b>250</b>/500</span>
+                                                <span class="progress-text">Implemented Plans Budget</span>
+                                                <span class="progress-number"><b><%out.print(currency.format(capdevDAO.getYearlyImplementedBudget(implementedPlans,year)));%></b>/<%out.print(currency.format(sumCAPDEVBudget));%></span>
 
                                                 <div class="progress sm">
-                                                    <div class="progress-bar progress-bar-yellow" style="width: 80%"></div>
+                                                    <div class="progress-bar progress-bar-yellow" style="width: <%out.print(capdevDAO.getPercentage(capdevDAO.getYearlyImplementedBudget(implementedPlans,year),sumCAPDEVBudget));%>%"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -462,64 +619,157 @@
 
                                             <div class="btn-group">
                                                 <button class="btn btn-default" id="CAPDEVOnTrackDelayed<%out.print(plan.getPlanStatus());%>"><%out.print(plan.getPlanStatusDesc());%></button>
-                                                <button class="btn btn-success" id="CAPDEVOnTrackDelayed<%out.print(plan.getPlanStatus());%>" data-toggle="modal" data-target="#modal-default"><%out.print(capdevDAO.getOnTrackPlansPerStatus(allPlans,plan.getPlanStatus()));%> </button>
-                                                <button class="btn btn-danger" id="CAPDEVOnTrackDelayed<%out.print(plan.getPlanStatus());%>" data-toggle="modal" data-target="#modal-info"><strong><%out.print(capdevDAO.getDelayedPlansPerStatus(allPlans,plan.getPlanStatus()));%></strong>  </button>
+                                                <button class="btn btn-success" id="CAPDEVOnTrackDelayed<%out.print(plan.getPlanStatus());%>" data-toggle="modal" data-target="#onTrackCAPDEV<%out.print(plan.getPlanStatus());%>"><%out.print(capdevDAO.getOnTrackPlansPerStatus(allPlans,plan.getPlanStatus()));%> </button>
+                                                <button class="btn btn-danger" id="CAPDEVOnTrackDelayed<%out.print(plan.getPlanStatus());%>" data-toggle="modal" data-target="#delayedCAPDEV<%out.print(plan.getPlanStatus());%>"><strong><%out.print(capdevDAO.getDelayedPlansPerStatus(allPlans,plan.getPlanStatus()));%></strong>  </button>
                                             </div>
                                             &nbsp;
-                                            <div class="modal fade" id="modal-default">
-                                                <div class="modal-dialog">
+
+                                            <%ArrayList<CAPDEVPlan> plans = new ArrayList();%>
+                                            <%
+                                                if(plan.getPlanStatus() == 1){
+                                                    plans = pendingPlans;
+                                                }else if(plan.getPlanStatus() == 2){
+                                                    plans = approvedPlans;
+                                                }else if(plan.getPlanStatus() == 4){
+                                                    plans = assignedPlans;
+                                                }
+                                            %>
+
+                                            <div class="modal fade" id="onTrackCAPDEV<%out.print(plan.getPlanStatus());%>">
+                                                <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title">Default Modal</h4>
+                                                            <h4 class="modal-title">On Track <%out.print(plan.getPlanStatusDesc());%> Plans</h4>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <p>One fine body&hellip;</p>
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <table class="table table-bordered table-striped export">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Plan DTN</th>
+                                                                                <th>ARBO</th>
+                                                                                <th>No. of Activities</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+
+                                                                            <%
+                                                                                for(CAPDEVPlan plan65 : plans){
+                                                                            %>
+                                                                            <%if(plan65.checkIfPlanIsOnTrack(plan65.getPlanDate())){%>
+                                                                            <tr>
+                                                                                <%
+                                                                                    plan65.setActivities(capdevDAO.getCAPDEVPlanActivities(plan65.getPlanID()));
+                                                                                    APCPRequest rr = apcpRequestDAO.getRequestByID(plan65.getRequestID());
+                                                                                    ARBO arbo = arboDAO.getARBOByID(rr.getArboID());
+                                                                                %>
+                                                                                <td><%out.print(plan65.getPlanDTN());%></td>
+                                                                                <td><a rel="noopener noreferrer" target="_blank" href="ViewARBO?id=<%out.print(rr.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                                                <td><%out.print(plan65.getActivities().size());%></td>
+                                                                            </tr>
+                                                                            <%}%>
+                                                                            <%}%>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                                            <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
                                                 </div>
                                                 <!-- /.modal-dialog -->
                                             </div>
-                                            <div class="modal fade" id="modal-info">
-                                                <div class="modal-dialog">
+
+                                            <div class="modal fade" id="delayedCAPDEV<%out.print(plan.getPlanStatus());%>">
+                                                <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title">Default Modal</h4>
+                                                            <h4 class="modal-title">Delayed <%out.print(plan.getPlanStatusDesc());%> Plans</h4>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <p>One fine body&hellip;</p>
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <table class="table table-bordered table-striped export">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Plan DTN</th>
+                                                                                <th>ARBO</th>
+                                                                                <th>No. of Activities</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+
+                                                                            <%
+                                                                                for(CAPDEVPlan plan87 : plans){
+                                                                            %>
+                                                                            <%if(!plan87.checkIfPlanIsOnTrack(plan87.getPlanDate())){%>
+                                                                            <tr>
+                                                                                <%
+                                                                                    plan87.setActivities(capdevDAO.getCAPDEVPlanActivities(plan87.getPlanID()));
+                                                                                    APCPRequest rr = apcpRequestDAO.getRequestByID(plan87.getRequestID());
+                                                                                    ARBO arbo = arboDAO.getARBOByID(rr.getArboID());
+                                                                                %>
+                                                                                <td><%out.print(plan87.getPlanDTN());%></td>
+                                                                                <td><a rel="noopener noreferrer" target="_blank" href="ViewARBO?id=<%out.print(rr.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                                                <td><%out.print(plan87.getActivities().size());%></td>
+                                                                            </tr>
+                                                                            <%}%>
+                                                                            <%}%>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                                            <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
                                                         </div>
                                                     </div>
                                                     <!-- /.modal-content -->
                                                 </div>
                                                 <!-- /.modal-dialog -->
                                             </div>
+
+
                                             <%}%>
                                             <%}%>
                                             <div class="row">
-                                                <h6>Status: <strong class="bg-green">On-track</strong> | <strong class="bg-red">Delayed</strong></h6>
+                                                <h6>Status: <strong class="text-green">On-track</strong> | <strong class="text-red">Delayed</strong></h6>
                                             </div>
                                         </center>
                                     </div>
                                 </div>
                                 <!-- ./box-body -->
                                 <div class="box-footer">
+                                    <%
+                                    double CAPDEVARBOsPercentage = capdevDAO.getPercentageComparison(capdevDAO.getDistinctARBOCountWithImplemented(implementedPlans,lastYear),capdevDAO.getDistinctARBOCountWithImplemented(implementedPlans,year));
+                                    double CAPDEVARBsPercentage = capdevDAO.getPercentageComparison(capdevDAO.getDistinctParticipantCountWithImplemented(implementedPlans, lastYear),capdevDAO.getDistinctParticipantCountWithImplemented(implementedPlans, year));
+                                    double CAPDEVImplementedPercentage = capdevDAO.getPercentageComparison(capdevDAO.getYearlyImplementedCount(implementedPlans, lastYear),capdevDAO.getYearlyImplementedCount(implementedPlans, year));
+                                    double CAPDEVPostponedPercentage = capdevDAO.getPercentageComparison(capdevDAO.getYearlyPostponedCount(allPlans, lastYear),capdevDAO.getYearlyPostponedCount(allPlans, year));
+                                    double CAPDEVImplementedBudgetPercentage = capdevDAO.getPercentageComparison(capdevDAO.getYearlyImplementedBudget(implementedPlans, lastYear),capdevDAO.getYearlyImplementedBudget(implementedPlans, year));
+                                    double CAPDEVPostponedBudgetPercentage = capdevDAO.getPercentageComparison(capdevDAO.getYearlyPostponedBudget(allPlans,lastYear),capdevDAO.getYearlyPostponedBudget(allPlans,year));
+                                    %>
                                     <div class="row">
                                         <div class="col-sm-3 col-xs-6" id="totalARBOsCAPDEV">
                                             <div class="description-block border-right">
-                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span>
+
+                                                <%if(CAPDEVARBOsPercentage > 0){%>
+                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> <%out.print(df.format(CAPDEVARBOsPercentage));%>%</span>
+                                                <%}else if(CAPDEVARBOsPercentage < 0){%>
+                                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> <%out.print(df.format(CAPDEVARBOsPercentage));%>%</span>
+                                                <%}else{%>
+                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> <%out.print(df.format(CAPDEVARBOsPercentage));%>%</span>
+                                                <%}%>
+
                                                 <h5 class="description-header"><%out.print(capdevDAO.getDistinctARBOCountWithImplemented(implementedPlans,year));%></h5>
                                                 <span class="description-text">TOTAL ARBOs</span>
                                             </div>
@@ -528,7 +778,15 @@
                                         <!-- /.col -->
                                         <div class="col-sm-3 col-xs-6" id="totalARBsCAPDEV">
                                             <div class="description-block border-right">
-                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
+
+                                                <%if(CAPDEVARBsPercentage > 0){%>
+                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> <%out.print(df.format(CAPDEVARBsPercentage));%>%</span>
+                                                <%}else if(CAPDEVARBsPercentage < 0){%>
+                                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> <%out.print(df.format(CAPDEVARBsPercentage));%>%</span>
+                                                <%}else{%>
+                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> <%out.print(df.format(CAPDEVARBsPercentage));%>%</span>
+                                                <%}%>
+
                                                 <h5 class="description-header"><%out.print(capdevDAO.getDistinctParticipantCountWithImplemented(implementedPlans, year));%></h5>
                                                 <span class="description-text">TOTAL ARBs</span>
                                             </div>
@@ -537,7 +795,15 @@
                                         <!-- /.col -->
                                         <div class="col-sm-3 col-xs-6" id="totalImplementedPlans">
                                             <div class="description-block border-right">
-                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 20%</span>
+
+                                                <%if(CAPDEVImplementedPercentage > 0){%>
+                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> <%out.print(df.format(CAPDEVImplementedPercentage));%>%</span>
+                                                <%}else if(CAPDEVImplementedPercentage < 0){%>
+                                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> <%out.print(df.format(CAPDEVImplementedPercentage));%>%</span>
+                                                <%}else{%>
+                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> <%out.print(df.format(CAPDEVImplementedPercentage));%>%</span>
+                                                <%}%>
+
                                                 <h5 class="description-header"><%out.print(capdevDAO.getYearlyImplementedCount(implementedPlans, year));%></h5>
                                                 <span class="description-text">TOTAL PLANS IMPLEMENTED</span>
                                             </div>
@@ -546,9 +812,17 @@
                                         <!-- /.col -->
                                         <div class="col-sm-3 col-xs-6">
                                             <div class="description-block">
-                                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> 18%</span>
-                                                <h5 class="description-header"><%out.print(postponedPlans.size());%></h5>
-                                                <span class="description-text">TOTAL POSTPONED ACTIVITIES</span>
+
+                                                <%if(CAPDEVPostponedPercentage > 0){%>
+                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> <%out.print(df.format(CAPDEVPostponedPercentage));%>%</span>
+                                                <%}else if(CAPDEVPostponedPercentage < 0){%>
+                                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> <%out.print(df.format(CAPDEVPostponedPercentage));%>%</span>
+                                                <%}else{%>
+                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> <%out.print(df.format(CAPDEVPostponedPercentage));%>%</span>
+                                                <%}%>
+
+                                                <h5 class="description-header"><%out.print(capdevDAO.getYearlyPostponedCount(allPlans, year));%></h5>
+                                                <span class="description-text">TOTAL POSTPONED PLANS</span>
                                             </div>
                                             <!-- /.description-block -->
                                         </div>
@@ -556,15 +830,31 @@
                                     <div class="row">
                                         <div class="col-sm-3" id="totalImplementedBudget">
                                             <div class="description-block border-right">
-                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
+
+                                                <%if(CAPDEVImplementedBudgetPercentage > 0){%>
+                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> <%out.print(df.format(CAPDEVImplementedBudgetPercentage));%>%</span>
+                                                <%}else if(CAPDEVImplementedBudgetPercentage < 0){%>
+                                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> <%out.print(df.format(CAPDEVImplementedBudgetPercentage));%>%</span>
+                                                <%}else{%>
+                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> <%out.print(df.format(CAPDEVImplementedBudgetPercentage));%>%</span>
+                                                <%}%>
+
                                                 <h5 class="description-header"><%out.print(currency.format(capdevDAO.getYearlyImplementedBudget(implementedPlans, year)));%></h5>
                                                 <span class="description-text">IMPLEMENTED ACTIVITY BUDGET (<%out.print(year);%>)</span>
                                             </div>
                                         </div>
                                         <div class="col-sm-3 col-xs-6">
                                             <div class="description-block border-right">
-                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span>
-                                                <h5 class="description-header"><%out.print(currency.format(capdevDAO.getCumulativeApprovedAmount(allPlans)));%></h5>
+
+                                                <%if(CAPDEVPostponedBudgetPercentage > 0){%>
+                                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> <%out.print(df.format(CAPDEVPostponedBudgetPercentage));%>%</span>
+                                                <%}else if(CAPDEVPostponedBudgetPercentage < 0){%>
+                                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> <%out.print(df.format(CAPDEVPostponedBudgetPercentage));%>%</span>
+                                                <%}else{%>
+                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> <%out.print(df.format(CAPDEVPostponedBudgetPercentage));%>%</span>
+                                                <%}%>
+
+                                                <h5 class="description-header"><%out.print(currency.format(capdevDAO.getYearlyPostponedBudget(allPlans,year)));%></h5>
                                                 <span class="description-text">POSTPONED ACTIVITY BUDGET (<%=year%>)</span>
                                             </div>
                                             <!-- /.description-block -->
@@ -572,7 +862,6 @@
                                         <!-- /.col -->
                                         <div class="col-sm-3 col-xs-6">
                                             <div class="description-block border-right">
-                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
                                                 <h5 class="description-header"><%out.print(currency.format(capdevDAO.getCumulativeBudgetSpent(allPlans)));%></h5>
                                                 <span class="description-text">CUMULATIVE IMPLEMENTED BUDGET</span>
                                             </div>
@@ -581,7 +870,6 @@
                                         <!-- /.col -->
                                         <div class="col-sm-3">
                                             <div class="description-block border-right">
-                                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
                                                 <h5 class="description-header"><%out.print(currency.format(capdevDAO.getCumulativeBudgetSpent(allPlans)));%></h5>
                                                 <span class="description-text">CUMULATIVE POSTPONED BUDGET</span>
                                             </div>
@@ -602,10 +890,13 @@
 
 
         </div>
-        <!-- ./wrapper -->
+
+
 
         <%@include file="jspf/footer.jspf" %>
         <script type="text/javascript">
+
+
 
             $(document).ready(function () {
 
@@ -652,23 +943,6 @@
             %>
                     APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
                 });
-
-            <%--$('#cumulativeReleasedAmountAPCP').on('click', function () {
-                APCPChart.destroy();
-        <%
-                    json = chart.getLineChart();
-        %>
-                APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
-            });
-                
-            $('#cumulativePastDueAmountAPCP').on('click', function () {
-                APCPChart.destroy();
-        <%
-                    json = chart.getLineChart();
-        %>
-                APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
-            });--%>
-
 
                 $('#APCPOnTrackDelayed0').on('click', function () {
                     APCPChart.destroy();
@@ -805,21 +1079,7 @@
                     CAPDEVChart = new Chart(ctxCAPDEV, <%out.print(json2);%>);
                 });
 
-            <%--$('#cumulativeReleasedAmountAPCP').on('click', function () {
-                APCPChart.destroy();
-        <%
-                    json = chart.getLineChart();
-        %>
-                APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
-            });
-                
-            $('#cumulativePastDueAmountAPCP').on('click', function () {
-                APCPChart.destroy();
-        <%
-                    json = chart.getLineChart();
-        %>
-                APCPChart = new Chart(ctxAPCP, <%out.print(json);%>);
-            });--%>
+
 
 
                 $('#CAPDEVOnTrackDelayed1').on('click', function () {
@@ -847,9 +1107,7 @@
                 });
             });
 
-
-
-
         </script>
+
     </body>
 </html>

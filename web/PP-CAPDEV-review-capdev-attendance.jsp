@@ -62,11 +62,11 @@
                                         </ul>
 
                                         <% int count2 = 0;  %>
-                                        <div class="tab-content no-padding">
+                                        <div class="tab-content no-padding" style="height: 100%">
                                             <%for (CAPDEVActivity b : plan.getActivities()) {%>
                                             <div class="chart tab-pane <%if (count2 == 0) {
                                                     out.print("active");
-                                                }%>" id="activity<%out.print(b.getActivityID());%>" style="position: relative; height: 300px;">
+                                                }%>" id="activity<%out.print(b.getActivityID());%>">
                                                 <%count2++;%>
 
                                                 <form method="post">
@@ -100,11 +100,11 @@
                                                                 <input type="file" name="file" disabled>
                                                             </div>
                                                             <div class="col-xs-12" id="manualAttendance<%out.print(b.getActivityID());%>">
-                                                                <table class="table table-striped table-bordered modTable">
+                                                                <table class="table table-striped table-bordered modTable" style="position: relative; overflow-y:scroll; overflow-x: hidden; width: 100%; height: 250px;">
                                                                     <thead>
                                                                         <tr>
                                                                             <td>Action</td>
-                                                                            <td>Full Name</td>
+                                                                            <td>ARB</td>
                                                                             <td>COMAT</td>
                                                                         </tr>
                                                                     </thead>
@@ -122,7 +122,7 @@
                                                                                 <%}else{ // AVAILABLE/ABSENT %>
                                                                             <td><input type="checkbox" name="attendee" value="<%out.print(arb.getArbID());%>" /></td>
                                                                                 <%}%>
-                                                                            <td><%out.print(arb.getFullName());%></td>
+                                                                            <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFullName());%></a></td>
 
                                                                             <%if(arb.getIsCOMAT() > 0){%>
                                                                             <td>&checkmark;</td>

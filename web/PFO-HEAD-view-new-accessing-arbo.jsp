@@ -61,43 +61,7 @@
                         <!-- /.box-header -->
                         <form method="post">
                             <div class="box-body">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="">Name of ARBO</label>
-                                            <input type="text" class="form-control" value="<%out.print(arbo.getArboName());%>"disabled >
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <!-- /.form-group -->
-                                        <div class="form-group">
-                                            <label for="Type">ARBO Type</label>
-                                            <input type="text" class="form-control" id="Type" value="<%out.print(arbo.getArboTypeDesc());%>">
-                                        </div>
-                                        <!-- /.form-group -->
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>ARBO Members</label>
-
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
-                                                <div class="input-group-btn">
-                                                    <button type="button" class="btn btn-info">View</button>
-                                                </div>
-                                            </div>
-                                            <!-- /.input group -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <label>Address</label>
-                                            <input type="text" class="form-control" id="address" value="<%out.print(arbo.getFullAddress());%>" disabled>
-                                        </div>
-                                    </div>
-                                </div>
+                                <%@include file="jspf/arbo-information.jspf" %>
                                 <!-- /.row -->
                                 <div class="box-header with-border">
                                     <h4 class="box-title"><strong>Conduit Qualification Checklist</strong></h4>
@@ -173,7 +137,7 @@
                                                 <div class="input-group-addon">
                                                     <i>&#8369;</i>
                                                 </div>
-                                                <input id="loanAmount" value="<%=r.getLoanAmount()%>" name="loanAmount" class="form-control numberOnly" disabled>
+                                                <input id="loanAmount" value="<%out.print(currency.format(r.getLoanAmount()));%>" name="loanAmount" class="form-control numberOnly" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -211,19 +175,25 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <label>Loan Recipients</label>
-                                        <table id="example3" class="table table-bordered table-striped">
+                                        <table class="table table-bordered table-striped modTable">
                                             <thead>
                                                 <tr>
-                                                    <th>Full Name</th> 
-                                                    <th>Membership Date</th> 
-                                                    <th>COMAT</th> 
+                                                    <th>ARB</th> 
+                                                    <th>Membership Date</th>
+                                                    <th>Crops</th>
+                                                    <th>COMAT</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <%for(ARB arb : r.getRecipients()){%>
+                                                <%
+                                                    r.setRecipients(apcpRequestDAO.getAllAPCPRecipientsByRequest(r.getRequestID()));
+                                                    for(ARB arb : r.getRecipients()){
+                                                        arb.setCurrentCrops(arbDAO.getAllARBCurrentCrops(arb.getArbID()));
+                                                %>
                                                 <tr>
                                                     <td><%out.print(arb.getFLName());%></td>
                                                     <td><%out.print(f.format(arb.getMemberSince()));%></td>
+                                                    <td><%out.print(arb.printAllCrops());%></td>
                                                     <%if(arb.getIsCOMAT() > 0){%>
                                                     <td>&checkmark;</td>
                                                     <%}else{%>
@@ -234,9 +204,10 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th>Full Name</th> 
-                                                    <th>Membership Date</th> 
-                                                    <th>COMAT</th> 
+                                                    <th>ARB</th> 
+                                                    <th>Membership Date</th>
+                                                    <th>Crops</th>
+                                                    <th>COMAT</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -278,7 +249,7 @@
                                     <div class="col-xs-12">
                                         <div class="form-group">
                                             <label for="">Remarks</label>
-                                            <textarea name="remarks" cols="10" rows="8" class="form-control" disabled><%out.print(r.getRemarks());%></textarea>
+                                            <textarea name="remarks" cols="3" rows="3" class="form-control" disabled><%out.print(r.getRemarks());%></textarea>
                                         </div>
                                     </div>
                                 </div>

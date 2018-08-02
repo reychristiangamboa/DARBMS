@@ -16,6 +16,9 @@ public class Issue {
     private int id;
     private int issueType;
     private String issueTypeDesc;
+    private int issuedTo;
+    private int issuedBy;
+    private int provOfficeCode;
     private int requestID;
     private int planID;
     private int pastDueAccountID;
@@ -23,6 +26,7 @@ public class Issue {
     private Date dateResolved;
     private String findings;
     private String resolution;
+    private boolean resolved;
 
     public int getId() {
         return id;
@@ -48,6 +52,30 @@ public class Issue {
         this.issueTypeDesc = issueTypeDesc;
     }
 
+    public int getIssuedTo() {
+        return issuedTo;
+    }
+
+    public void setIssuedTo(int issuedTo) {
+        this.issuedTo = issuedTo;
+    }
+
+    public int getIssuedBy() {
+        return issuedBy;
+    }
+
+    public void setIssuedBy(int issuedBy) {
+        this.issuedBy = issuedBy;
+    }
+    
+    public int getProvOfficeCode() {
+        return provOfficeCode;
+    }
+
+    public void setProvOfficeCode(int provOfficeCode) {
+        this.provOfficeCode = provOfficeCode;
+    }
+    
     public int getRequestID() {
         return requestID;
     }
@@ -103,5 +131,14 @@ public class Issue {
     public void setResolution(String resolution) {
         this.resolution = resolution;
     }
+
+    public boolean isResolved() {
+        return resolved;
+    }
+
+    public void setResolved(boolean resolved) {
+        this.resolved = resolved;
+    }
+    
     
 }

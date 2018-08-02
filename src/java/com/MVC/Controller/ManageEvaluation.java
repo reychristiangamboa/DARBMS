@@ -28,7 +28,7 @@ public class ManageEvaluation extends BaseServlet {
         ArrayList<Question> questions = eDAO.getAllQuestionsByType(Integer.parseInt(request.getParameter("type")));
         request.setAttribute("questions",questions);
         request.setAttribute("type", Integer.parseInt(request.getParameter("type")));
-        request.getRequestDispatcher("central-manage-evaluations.jsp").forward(request, response);
+        request.getRequestDispatcher("CO-manage-evaluations.jsp").forward(request, response);
         
     }
 

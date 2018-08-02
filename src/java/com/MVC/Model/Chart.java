@@ -45,6 +45,14 @@ public class Chart {
     Locale pinoy = new Locale("fil", "PH");
     NumberFormat currency = NumberFormat.getCurrencyInstance(pinoy);
 
+    public double getAverage(ArrayList<Double> figures) {
+        double sum = 0;
+        for (double d : figures) {
+            sum += d;
+        }
+        return sum / figures.size();
+    }
+
     public String getBarChart() {
 
         ArrayList<Double> doubleFigures = new ArrayList();
@@ -675,8 +683,9 @@ public class Chart {
         return TimeUnit.MILLISECONDS.toDays(Math.abs(end - start));
     }
 
-    // <editor-fold desc="ARB DASHBOARD">
+    // <editor-fold desc="ARB REPORTS">
     // <editor-fold desc="GENDER">
+    // <editor-fold desc="COUNT">
     public String getPieChartGender(ArrayList<ARB> arbGender) {
 
         ArrayList<ARB> dataMale = new ArrayList();
@@ -717,7 +726,7 @@ public class Chart {
         return new PieChart(data).toJson();
     }
 
-    public String getBarChartRecipientsByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+    public String getBarChartARBGenderByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
 
         BarData data = new BarData();
         BarDataset male = new BarDataset();
@@ -725,13 +734,15 @@ public class Chart {
         ArrayList<Integer> maleValues = new ArrayList();
         ArrayList<Integer> femaleValues = new ArrayList();
 
+        ARBODAO arboDAO = new ARBODAO();
+
         for (Region r : regionList) {
             int maleTotal = 0;
             int femaleTotal = 0;
             for (ARB arb : arbList) {
-                if (arb.getRegCode() == r.getRegCode() && arb.getGender().equals("M")) {
+                if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode() && arb.getGender().equals("M")) {
                     maleTotal++;
-                } else if (arb.getRegCode() == r.getRegCode() && arb.getGender().equals("F")) {
+                } else if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode() && arb.getGender().equals("F")) {
                     femaleTotal++;
                 }
             }
@@ -760,7 +771,7 @@ public class Chart {
 
     }
 
-    public String getBarChartRecipientsByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+    public String getBarChartARBGenderByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
 
         BarData data = new BarData();
         BarDataset male = new BarDataset();
@@ -804,9 +815,725 @@ public class Chart {
         return new BarChart(data).toJson();
 
     }
+
+    // </editor-fold>
+    // <editor-fold desc="APCP RECIPIENT">
+    public String getPieChartGenderRecipient(ArrayList<ARB> arbGender) {
+
+        ArrayList<ARB> dataMale = new ArrayList();
+        ArrayList<ARB> dataFemale = new ArrayList();
+        APCPRequestDAO dao = new APCPRequestDAO();
+
+        for (ARB arb : arbGender) {
+            if (dao.checkHasBeenRecipient(arb.getArbID())) {
+                if (arb.getGender().equalsIgnoreCase("M")) {
+                    dataMale.add(arb);
+                } else if (arb.getGender().equalsIgnoreCase("F")) {
+                    dataFemale.add(arb);
+                }
+            }
+        }
+
+        ArrayList<Integer> doubleFigures = new ArrayList();
+        doubleFigures.add(dataMale.size());
+        doubleFigures.add(dataFemale.size());
+
+        ArrayList<String> stringLabels = new ArrayList();
+        stringLabels.add("Male");
+        stringLabels.add("Female");
+
+        PieDataset dataset = new PieDataset();
+        dataset.setLabel("DATASET");
+        for (int i = 0; i < doubleFigures.size(); i++) {
+            dataset.addData(doubleFigures.get(i));
+            dataset.addBackgroundColor(Color.BLUE);
+            dataset.addBackgroundColor(Color.DARK_SALMON);
+
+        }
+        dataset.setBorderWidth(2);
+
+        PieData data = new PieData();
+        for (int j = 0; j < stringLabels.size(); j++) {
+            data.addLabel(stringLabels.get(j));
+        }
+
+        data.addDataset(dataset);
+
+        return new PieChart(data).toJson();
+    }
+
+    public String getBarChartARBGenderRecipientByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+
+        BarData data = new BarData();
+        BarDataset male = new BarDataset();
+        BarDataset female = new BarDataset();
+        ArrayList<Integer> maleValues = new ArrayList();
+        ArrayList<Integer> femaleValues = new ArrayList();
+        APCPRequestDAO dao = new APCPRequestDAO();
+
+        for (Region r : regionList) {
+            int maleTotal = 0;
+            int femaleTotal = 0;
+            for (ARB arb : arbList) {
+                if (dao.checkHasBeenRecipient(arb.getArbID())) {
+                    if (arb.getRegCode() == r.getRegCode() && arb.getGender().equals("M")) {
+                        maleTotal++;
+                    } else if (arb.getRegCode() == r.getRegCode() && arb.getGender().equals("F")) {
+                        femaleTotal++;
+                    }
+                }
+
+            }
+            maleValues.add(maleTotal);
+            femaleValues.add(femaleTotal);
+            data.addLabel(r.getRegDesc());
+        }
+
+        for (int maleValue : maleValues) {
+            male.addData(maleValue);
+            male.addBackgroundColor(Color.AQUA);
+        }
+
+        for (int femaleValue : femaleValues) {
+            female.addData(femaleValue);
+            female.addBackgroundColor(Color.PINK);
+        }
+
+        male.setLabel("MALE");
+        female.setLabel("FEMALE");
+
+        data.addDataset(male);
+        data.addDataset(female);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartARBGenderRecipientByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+
+        BarData data = new BarData();
+        BarDataset male = new BarDataset();
+        BarDataset female = new BarDataset();
+        ArrayList<Integer> maleValues = new ArrayList();
+        ArrayList<Integer> femaleValues = new ArrayList();
+
+        ARBODAO arboDAO = new ARBODAO();
+        APCPRequestDAO dao = new APCPRequestDAO();
+
+        for (Province p : provOfficeList) {
+            int maleTotal = 0;
+            int femaleTotal = 0;
+            for (ARB arb : arbList) {
+                if (dao.checkHasBeenRecipient(arb.getArbID())) {
+                    if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode() && arb.getGender().equals("M")) {
+                        maleTotal++;
+                    } else if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode() && arb.getGender().equals("F")) {
+                        femaleTotal++;
+                    }
+                }
+            }
+
+            maleValues.add(maleTotal);
+            femaleValues.add(femaleTotal);
+            data.addLabel(p.getProvDesc());
+        }
+
+        for (int maleValue : maleValues) {
+            male.addData(maleValue);
+            male.addBackgroundColor(Color.AQUA);
+        }
+
+        for (int femaleValue : femaleValues) {
+            female.addData(femaleValue);
+            female.addBackgroundColor(Color.PINK);
+        }
+
+        male.setLabel("MALE");
+        female.setLabel("FEMALE");
+
+        data.addDataset(male);
+        data.addDataset(female);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    // </editor-fold>
+    // <editor-fold desc="CAPDEV PARTICIPANT">
+    public String getPieChartGenderParticipant(ArrayList<ARB> arbGender) {
+
+        ArrayList<ARB> dataMale = new ArrayList();
+        ArrayList<ARB> dataFemale = new ArrayList();
+        CAPDEVDAO dao = new CAPDEVDAO();
+
+        for (ARB arb : arbGender) {
+            if (dao.checkHasBeenParticipant(arb.getArbID())) {
+                if (arb.getGender().equalsIgnoreCase("M")) {
+                    dataMale.add(arb);
+                } else if (arb.getGender().equalsIgnoreCase("F")) {
+                    dataFemale.add(arb);
+                }
+            }
+        }
+
+        ArrayList<Integer> doubleFigures = new ArrayList();
+        doubleFigures.add(dataMale.size());
+        doubleFigures.add(dataFemale.size());
+
+        ArrayList<String> stringLabels = new ArrayList();
+        stringLabels.add("Male");
+        stringLabels.add("Female");
+
+        PieDataset dataset = new PieDataset();
+        dataset.setLabel("DATASET");
+        for (int i = 0; i < doubleFigures.size(); i++) {
+            dataset.addData(doubleFigures.get(i));
+            dataset.addBackgroundColor(Color.BLUE);
+            dataset.addBackgroundColor(Color.DARK_SALMON);
+
+        }
+        dataset.setBorderWidth(2);
+
+        PieData data = new PieData();
+        for (int j = 0; j < stringLabels.size(); j++) {
+            data.addLabel(stringLabels.get(j));
+        }
+
+        data.addDataset(dataset);
+
+        return new PieChart(data).toJson();
+    }
+
+    public String getBarChartARBGenderParticipantByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+
+        BarData data = new BarData();
+        BarDataset male = new BarDataset();
+        BarDataset female = new BarDataset();
+        ArrayList<Integer> maleValues = new ArrayList();
+        ArrayList<Integer> femaleValues = new ArrayList();
+        CAPDEVDAO dao = new CAPDEVDAO();
+
+        for (Region r : regionList) {
+            int maleTotal = 0;
+            int femaleTotal = 0;
+            for (ARB arb : arbList) {
+                if (dao.checkHasBeenParticipant(arb.getArbID())) {
+                    if (arb.getRegCode() == r.getRegCode() && arb.getGender().equals("M")) {
+                        maleTotal++;
+                    } else if (arb.getRegCode() == r.getRegCode() && arb.getGender().equals("F")) {
+                        femaleTotal++;
+                    }
+                }
+
+            }
+            maleValues.add(maleTotal);
+            femaleValues.add(femaleTotal);
+            data.addLabel(r.getRegDesc());
+        }
+
+        for (int maleValue : maleValues) {
+            male.addData(maleValue);
+            male.addBackgroundColor(Color.AQUA);
+        }
+
+        for (int femaleValue : femaleValues) {
+            female.addData(femaleValue);
+            female.addBackgroundColor(Color.PINK);
+        }
+
+        male.setLabel("MALE");
+        female.setLabel("FEMALE");
+
+        data.addDataset(male);
+        data.addDataset(female);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartARBGenderParticipantByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+
+        BarData data = new BarData();
+        BarDataset male = new BarDataset();
+        BarDataset female = new BarDataset();
+        ArrayList<Integer> maleValues = new ArrayList();
+        ArrayList<Integer> femaleValues = new ArrayList();
+
+        ARBODAO arboDAO = new ARBODAO();
+        CAPDEVDAO dao = new CAPDEVDAO();
+
+        for (Province p : provOfficeList) {
+            int maleTotal = 0;
+            int femaleTotal = 0;
+            for (ARB arb : arbList) {
+                if (dao.checkHasBeenParticipant(arb.getArbID())) {
+                    if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode() && arb.getGender().equals("M")) {
+                        maleTotal++;
+                    } else if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode() && arb.getGender().equals("F")) {
+                        femaleTotal++;
+                    }
+                }
+            }
+
+            maleValues.add(maleTotal);
+            femaleValues.add(femaleTotal);
+            data.addLabel(p.getProvDesc());
+        }
+
+        for (int maleValue : maleValues) {
+            male.addData(maleValue);
+            male.addBackgroundColor(Color.AQUA);
+        }
+
+        for (int femaleValue : femaleValues) {
+            female.addData(femaleValue);
+            female.addBackgroundColor(Color.PINK);
+        }
+
+        male.setLabel("MALE");
+        female.setLabel("FEMALE");
+
+        data.addDataset(male);
+        data.addDataset(female);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    // </editor-fold>
+    // <editor-fold desc="PARTICIPATION RATE">
+    public String getPieChartGenderParticipation(ArrayList<ARB> arbs) {
+
+        ArrayList<Double> dataMale = new ArrayList();
+        ArrayList<Double> dataFemale = new ArrayList();
+        CAPDEVDAO capdevDAO = new CAPDEVDAO();
+        CAPDEVActivity act = new CAPDEVActivity();
+
+        for (ARB arb : arbs) {
+            arb.setActivities(capdevDAO.getCAPDEVPlanByARB(arb.getArbID()));
+            if (arb.getGender().equalsIgnoreCase("M")) {
+                dataMale.add(act.getAttendanceRate(arb.getActivities()));
+            } else if (arb.getGender().equalsIgnoreCase("F")) {
+                dataFemale.add(act.getAttendanceRate(arb.getActivities()));
+            }
+        }
+        ArrayList<Double> doubleFigures = new ArrayList();
+        doubleFigures.add(getAverage(dataMale));
+        doubleFigures.add(getAverage(dataFemale));
+
+        ArrayList<String> stringLabels = new ArrayList();
+        stringLabels.add("Male");
+        stringLabels.add("Female");
+
+        PieDataset dataset = new PieDataset();
+        for (int i = 0; i < doubleFigures.size(); i++) {
+            dataset.addData(doubleFigures.get(i));
+            dataset.addBackgroundColor(Color.BLUE);
+            dataset.addBackgroundColor(Color.DARK_SALMON);
+        }
+
+        dataset.setBorderWidth(2);
+
+        PieData data = new PieData();
+        for (int j = 0; j < stringLabels.size(); j++) {
+            data.addLabel(stringLabels.get(j));
+        }
+
+        data.addDataset(dataset);
+
+        return new PieChart(data).toJson();
+    }
+
+    public String getBarChartGenderParticipationByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+
+        BarData data = new BarData();
+        BarDataset male = new BarDataset();
+        BarDataset female = new BarDataset();
+        ArrayList<Double> maleValues = new ArrayList();
+        ArrayList<Double> femaleValues = new ArrayList();
+        CAPDEVDAO capdevDAO = new CAPDEVDAO();
+        CAPDEVActivity act = new CAPDEVActivity();
+
+        ARBODAO arboDAO = new ARBODAO();
+
+        for (Region r : regionList) {
+            double maleTotal = 0;
+            int maleCount = 0;
+            double femaleTotal = 0;
+            int femaleCount = 0;
+            for (ARB arb : arbList) {
+                arb.setActivities(capdevDAO.getCAPDEVPlanByARB(arb.getArbID()));
+                if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode() && arb.getGender().equals("M")) {
+                    maleTotal += act.getAttendanceRate(arb.getActivities());
+                    maleCount++;
+                } else if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode() && arb.getGender().equals("F")) {
+                    femaleTotal += act.getAttendanceRate(arb.getActivities());
+                    femaleCount++;
+                }
+            }
+            maleValues.add(maleTotal / maleCount);
+            femaleValues.add(femaleTotal / femaleCount);
+            data.addLabel(r.getRegDesc());
+        }
+
+        for (double maleValue : maleValues) {
+            male.addData(maleValue);
+            male.addBackgroundColor(Color.AQUA);
+        }
+
+        for (double femaleValue : femaleValues) {
+            female.addData(femaleValue);
+            female.addBackgroundColor(Color.PINK);
+        }
+
+        male.setLabel("MALE");
+        female.setLabel("FEMALE");
+
+        data.addDataset(male);
+        data.addDataset(female);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartGenderParticipationByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+
+        BarData data = new BarData();
+        BarDataset male = new BarDataset();
+        BarDataset female = new BarDataset();
+        ArrayList<Double> maleValues = new ArrayList();
+        ArrayList<Double> femaleValues = new ArrayList();
+
+        ARBODAO arboDAO = new ARBODAO();
+        CAPDEVDAO capdevDAO = new CAPDEVDAO();
+        CAPDEVActivity act = new CAPDEVActivity();
+
+        for (Province p : provOfficeList) {
+            double maleTotal = 0;
+            int maleCount = 0;
+            double femaleTotal = 0;
+            int femaleCount = 0;
+            for (ARB arb : arbList) {
+                arb.setActivities(capdevDAO.getCAPDEVPlanByARB(arb.getArbID()));
+                if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode() && arb.getGender().equals("M")) {
+                    maleTotal += act.getAttendanceRate(arb.getActivities());
+                    maleCount++;
+                } else if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode() && arb.getGender().equals("F")) {
+                    femaleTotal += act.getAttendanceRate(arb.getActivities());
+                    femaleCount++;
+                }
+            }
+            maleValues.add(maleTotal / maleCount);
+            femaleValues.add(femaleTotal / femaleCount++);
+            data.addLabel(p.getProvDesc());
+        }
+
+        for (double maleValue : maleValues) {
+            male.addData(maleValue);
+            male.addBackgroundColor(Color.AQUA);
+        }
+
+        for (double femaleValue : femaleValues) {
+            female.addData(femaleValue);
+            female.addBackgroundColor(Color.PINK);
+        }
+
+        male.setLabel("MALE");
+        female.setLabel("FEMALE");
+
+        data.addDataset(male);
+        data.addDataset(female);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    // </editor-fold>
+    // <editor-fold desc="DISBURSEMENT">
+    public String getPieChartDisbursementARB(ArrayList<ARB> arbs) {
+
+        ArrayList<Double> dataMale = new ArrayList();
+        ArrayList<Double> dataFemale = new ArrayList();
+
+        for (ARB arb : arbs) {
+            if (arb.getGender().equalsIgnoreCase("M")) {
+                dataMale.add(arb.getCurrentTotalDisbursementAmount());
+            } else if (arb.getGender().equalsIgnoreCase("F")) {
+                dataFemale.add(arb.getCurrentTotalDisbursementAmount());
+            }
+        }
+        ArrayList<Double> doubleFigures = new ArrayList();
+        doubleFigures.add(getAverage(dataMale));
+        doubleFigures.add(getAverage(dataFemale));
+
+        ArrayList<String> stringLabels = new ArrayList();
+        stringLabels.add("Male");
+        stringLabels.add("Female");
+
+        PieDataset dataset = new PieDataset();
+        for (int i = 0; i < doubleFigures.size(); i++) {
+            dataset.addData(doubleFigures.get(i));
+            dataset.addBackgroundColor(Color.BLUE);
+            dataset.addBackgroundColor(Color.DARK_SALMON);
+        }
+
+        dataset.setBorderWidth(2);
+
+        PieData data = new PieData();
+        for (int j = 0; j < stringLabels.size(); j++) {
+            data.addLabel(stringLabels.get(j));
+        }
+
+        data.addDataset(dataset);
+
+        return new PieChart(data).toJson();
+    }
+
+    public String getBarChartDisbursementsByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+
+        BarData data = new BarData();
+        BarDataset male = new BarDataset();
+        BarDataset female = new BarDataset();
+        ArrayList<Double> maleValues = new ArrayList();
+        ArrayList<Double> femaleValues = new ArrayList();
+
+        ARBODAO arboDAO = new ARBODAO();
+
+        for (Region r : regionList) {
+            double maleTotal = 0;
+            int maleCount = 0;
+            double femaleTotal = 0;
+            int femaleCount = 0;
+            for (ARB arb : arbList) {
+                if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode() && arb.getGender().equals("M")) {
+                    maleTotal += arb.getCurrentTotalDisbursementAmount();
+                    maleCount++;
+                } else if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode() && arb.getGender().equals("F")) {
+                    femaleTotal += arb.getCurrentTotalDisbursementAmount();
+                    femaleCount++;
+                }
+            }
+            maleValues.add(maleTotal / maleCount);
+            femaleValues.add(femaleTotal / femaleCount);
+            data.addLabel(r.getRegDesc());
+        }
+
+        for (double maleValue : maleValues) {
+            male.addData(maleValue);
+            male.addBackgroundColor(Color.AQUA);
+        }
+
+        for (double femaleValue : femaleValues) {
+            female.addData(femaleValue);
+            female.addBackgroundColor(Color.PINK);
+        }
+
+        male.setLabel("MALE");
+        female.setLabel("FEMALE");
+
+        data.addDataset(male);
+        data.addDataset(female);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartDisbursementsByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+
+        BarData data = new BarData();
+        BarDataset male = new BarDataset();
+        BarDataset female = new BarDataset();
+        ArrayList<Double> maleValues = new ArrayList();
+        ArrayList<Double> femaleValues = new ArrayList();
+
+        ARBODAO arboDAO = new ARBODAO();
+
+        for (Province p : provOfficeList) {
+            double maleTotal = 0;
+            int maleCount = 0;
+            double femaleTotal = 0;
+            int femaleCount = 0;
+            for (ARB arb : arbList) {
+                if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode() && arb.getGender().equals("M")) {
+                    maleTotal += arb.getCurrentTotalDisbursementAmount();
+                    maleCount++;
+                } else if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode() && arb.getGender().equals("F")) {
+                    femaleTotal += arb.getCurrentTotalDisbursementAmount();
+                    femaleCount++;
+                }
+            }
+            maleValues.add(maleTotal / maleCount);
+            femaleValues.add(femaleTotal / femaleCount++);
+            data.addLabel(p.getProvDesc());
+        }
+
+        for (double maleValue : maleValues) {
+            male.addData(maleValue);
+            male.addBackgroundColor(Color.AQUA);
+        }
+
+        for (double femaleValue : femaleValues) {
+            female.addData(femaleValue);
+            female.addBackgroundColor(Color.PINK);
+        }
+
+        male.setLabel("MALE");
+        female.setLabel("FEMALE");
+
+        data.addDataset(male);
+        data.addDataset(female);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    // </editor-fold>
+    // <editor-fold desc="O/S BALANCE">
+    public String getPieChartOSBalanceARB(ArrayList<ARB> arbs) {
+
+        ArrayList<Double> dataMale = new ArrayList();
+        ArrayList<Double> dataFemale = new ArrayList();
+        APCPRequest r = new APCPRequest();
+
+        for (ARB arb : arbs) {
+
+            if (arb.getGender().equalsIgnoreCase("M")) {
+                dataMale.add(r.getTotalARBOSBalance(arb.getArbID()));
+            } else if (arb.getGender().equalsIgnoreCase("F")) {
+                dataFemale.add(r.getTotalARBOSBalance(arb.getArbID()));
+            }
+        }
+        ArrayList<Double> doubleFigures = new ArrayList();
+        doubleFigures.add(getAverage(dataMale));
+        doubleFigures.add(getAverage(dataFemale));
+
+        ArrayList<String> stringLabels = new ArrayList();
+        stringLabels.add("Male");
+        stringLabels.add("Female");
+
+        PieDataset dataset = new PieDataset();
+        for (int i = 0; i < doubleFigures.size(); i++) {
+            dataset.addData(doubleFigures.get(i));
+            dataset.addBackgroundColor(Color.BLUE);
+            dataset.addBackgroundColor(Color.DARK_SALMON);
+        }
+
+        dataset.setBorderWidth(2);
+
+        PieData data = new PieData();
+        for (int j = 0; j < stringLabels.size(); j++) {
+            data.addLabel(stringLabels.get(j));
+        }
+
+        data.addDataset(dataset);
+
+        return new PieChart(data).toJson();
+    }
+
+    public String getBarChartOSBalanceARBByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+
+        BarData data = new BarData();
+        BarDataset male = new BarDataset();
+        BarDataset female = new BarDataset();
+        ArrayList<Double> maleValues = new ArrayList();
+        ArrayList<Double> femaleValues = new ArrayList();
+
+        ARBODAO arboDAO = new ARBODAO();
+        APCPRequest req = new APCPRequest();
+
+        for (Region r : regionList) {
+            double maleTotal = 0;
+            int maleCount = 0;
+            double femaleTotal = 0;
+            int femaleCount = 0;
+            for (ARB arb : arbList) {
+                if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode() && arb.getGender().equals("M")) {
+                    maleTotal += req.getTotalARBOSBalance(arb.getArbID());
+                    maleCount++;
+                } else if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode() && arb.getGender().equals("F")) {
+                    femaleTotal += req.getTotalARBOSBalance(arb.getArbID());
+                    femaleCount++;
+                }
+            }
+            maleValues.add(maleTotal / maleCount);
+            femaleValues.add(femaleTotal / femaleCount);
+            data.addLabel(r.getRegDesc());
+        }
+
+        for (double maleValue : maleValues) {
+            male.addData(maleValue);
+            male.addBackgroundColor(Color.AQUA);
+        }
+
+        for (double femaleValue : femaleValues) {
+            female.addData(femaleValue);
+            female.addBackgroundColor(Color.PINK);
+        }
+
+        male.setLabel("MALE");
+        female.setLabel("FEMALE");
+
+        data.addDataset(male);
+        data.addDataset(female);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartOSBalanceARBByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+
+        BarData data = new BarData();
+        BarDataset male = new BarDataset();
+        BarDataset female = new BarDataset();
+        ArrayList<Double> maleValues = new ArrayList();
+        ArrayList<Double> femaleValues = new ArrayList();
+
+        ARBODAO arboDAO = new ARBODAO();
+        APCPRequest req = new APCPRequest();
+
+        for (Province p : provOfficeList) {
+            double maleTotal = 0;
+            int maleCount = 0;
+            double femaleTotal = 0;
+            int femaleCount = 0;
+            for (ARB arb : arbList) {
+                if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode() && arb.getGender().equals("M")) {
+                    maleTotal += req.getTotalARBOSBalance(arb.getArbID());
+                    maleCount++;
+                } else if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode() && arb.getGender().equals("F")) {
+                    femaleTotal += req.getTotalARBOSBalance(arb.getArbID());
+                    femaleCount++;
+                }
+            }
+            maleValues.add(maleTotal / maleCount);
+            femaleValues.add(femaleTotal / femaleCount);
+            data.addLabel(p.getProvDesc());
+        }
+
+        for (double maleValue : maleValues) {
+            male.addData(maleValue);
+            male.addBackgroundColor(Color.AQUA);
+        }
+
+        for (double femaleValue : femaleValues) {
+            female.addData(femaleValue);
+            female.addBackgroundColor(Color.PINK);
+        }
+
+        male.setLabel("MALE");
+        female.setLabel("FEMALE");
+
+        data.addDataset(male);
+        data.addDataset(female);
+
+        return new BarChart(data).toJson();
+
+    }
+    // </editor-fold>
     // </editor-fold>
 
     // <editor-fold desc="AGE">
+    // <editor-fold desc="COUNT">
     public String getBarChartAgeCount(ArrayList<ARB> arbList) {
 
         ArrayList<String> labels = new ArrayList();
@@ -853,14 +1580,1537 @@ public class Chart {
         return new BarChart(data).toJson();
 
     }
+
+    public String getBarChartAgeCountByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+
+        BarData data = new BarData();
+        BarDataset age18to24 = new BarDataset();
+        age18to24.setBackgroundColor(Color.random());
+        age18to24.setLabel("18-24");
+
+        BarDataset age25to34 = new BarDataset();
+        age25to34.setBackgroundColor(Color.random());
+        age25to34.setLabel("25-34");
+
+        BarDataset age35to44 = new BarDataset();
+        age35to44.setBackgroundColor(Color.random());
+        age35to44.setLabel("35-44");
+
+        BarDataset age45to54 = new BarDataset();
+        age45to54.setBackgroundColor(Color.random());
+        age45to54.setLabel("45-54");
+
+        BarDataset age55to64 = new BarDataset();
+        age55to64.setBackgroundColor(Color.random());
+        age55to64.setLabel("55-64");
+
+        BarDataset age65greater = new BarDataset();
+        age65greater.setBackgroundColor(Color.random());
+        age65greater.setLabel("65>");
+
+        ARBODAO arboDAO = new ARBODAO();
+
+        for (Region r : regionList) {
+            int age18to24Ct = 0;
+            int age25to34Ct = 0;
+            int age35to44Ct = 0;
+            int age45to54Ct = 0;
+            int age55to64Ct = 0;
+            int age65greaterCt = 0;
+            for (ARB arb : arbList) {
+                if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode()) {
+                    if (arb.getAge() >= 18 && arb.getAge() <= 24) {
+                        age18to24Ct++;
+                    } else if (arb.getAge() >= 25 && arb.getAge() <= 34) {
+                        age25to34Ct++;
+                    } else if (arb.getAge() >= 35 && arb.getAge() <= 44) {
+                        age35to44Ct++;
+                    } else if (arb.getAge() >= 45 && arb.getAge() <= 54) {
+                        age45to54Ct++;
+                    } else if (arb.getAge() >= 55 && arb.getAge() <= 64) {
+                        age55to64Ct++;
+                    } else if (arb.getAge() >= 65) {
+                        age65greaterCt++;
+                    }
+                }
+            }
+            age18to24.addData(age18to24Ct);
+            age25to34.addData(age25to34Ct);
+            age35to44.addData(age35to44Ct);
+            age45to54.addData(age45to54Ct);
+            age55to64.addData(age55to64Ct);
+            age65greater.addData(age65greaterCt);
+
+            data.addLabel(r.getRegDesc());
+        }
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(age18to24);
+        datasets.add(age25to34);
+        datasets.add(age35to44);
+        datasets.add(age45to54);
+        datasets.add(age55to64);
+        datasets.add(age65greater);
+
+        data.setDatasets(datasets);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartAgeCountByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+
+        BarData data = new BarData();
+        BarDataset age18to24 = new BarDataset();
+        age18to24.setBackgroundColor(Color.random());
+        age18to24.setLabel("18-24");
+
+        BarDataset age25to34 = new BarDataset();
+        age25to34.setBackgroundColor(Color.random());
+        age25to34.setLabel("25-34");
+
+        BarDataset age35to44 = new BarDataset();
+        age35to44.setBackgroundColor(Color.random());
+        age35to44.setLabel("35-44");
+
+        BarDataset age45to54 = new BarDataset();
+        age45to54.setBackgroundColor(Color.random());
+        age45to54.setLabel("45-54");
+
+        BarDataset age55to64 = new BarDataset();
+        age55to64.setBackgroundColor(Color.random());
+        age55to64.setLabel("55-64");
+
+        BarDataset age65greater = new BarDataset();
+        age65greater.setBackgroundColor(Color.random());
+        age65greater.setLabel("65>");
+
+        ARBODAO arboDAO = new ARBODAO();
+
+        for (Province p : provOfficeList) {
+            int age18to24Ct = 0;
+            int age25to34Ct = 0;
+            int age35to44Ct = 0;
+            int age45to54Ct = 0;
+            int age55to64Ct = 0;
+            int age65greaterCt = 0;
+            for (ARB arb : arbList) {
+                if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode()) {
+                    if (arb.getAge() >= 18 && arb.getAge() <= 24) {
+                        age18to24Ct++;
+                    } else if (arb.getAge() >= 25 && arb.getAge() <= 34) {
+                        age25to34Ct++;
+                    } else if (arb.getAge() >= 35 && arb.getAge() <= 44) {
+                        age35to44Ct++;
+                    } else if (arb.getAge() >= 45 && arb.getAge() <= 54) {
+                        age45to54Ct++;
+                    } else if (arb.getAge() >= 55 && arb.getAge() <= 64) {
+                        age55to64Ct++;
+                    } else if (arb.getAge() >= 65) {
+                        age65greaterCt++;
+                    }
+                }
+            }
+            age18to24.addData(age18to24Ct);
+            age25to34.addData(age25to34Ct);
+            age35to44.addData(age35to44Ct);
+            age45to54.addData(age45to54Ct);
+            age55to64.addData(age55to64Ct);
+            age65greater.addData(age65greaterCt);
+
+            data.addLabel(p.getProvDesc());
+        }
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(age18to24);
+        datasets.add(age25to34);
+        datasets.add(age35to44);
+        datasets.add(age45to54);
+        datasets.add(age55to64);
+        datasets.add(age65greater);
+
+        data.setDatasets(datasets);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    // </editor-fold>
+    // <editor-fold desc="RECIPIENTS">
+    public String getBarChartAgeRecipient(ArrayList<ARB> arbList) {
+
+        ArrayList<String> labels = new ArrayList();
+        labels.add("18-24");
+        labels.add("25-34");
+        labels.add("35-44");
+        labels.add("45-54");
+        labels.add("55-64");
+        labels.add("> 65");
+
+        BarData data = new BarData();
+        BarDataset dataset = new BarDataset();
+        ArrayList<Integer> values = new ArrayList();
+        APCPRequestDAO dao = new APCPRequestDAO();
+        for (int i = 0; i < labels.size(); i++) {
+            int total = 0;
+            for (ARB arb : arbList) {
+                if (dao.checkHasBeenRecipient(arb.getArbID())) {
+                    if (i == 0 && (arb.getAge() >= 18 && arb.getAge() <= 24)) {
+                        total++;
+                    } else if (i == 1 && (arb.getAge() >= 25 && arb.getAge() <= 34)) {
+                        total++;
+                    } else if (i == 2 && (arb.getAge() >= 35 && arb.getAge() <= 44)) {
+                        total++;
+                    } else if (i == 3 && (arb.getAge() >= 45 && arb.getAge() <= 54)) {
+                        total++;
+                    } else if (i == 4 && (arb.getAge() >= 55 && arb.getAge() <= 64)) {
+                        total++;
+                    } else if (i == 5 && arb.getAge() >= 65) {
+                        total++;
+                    }
+                }
+            }
+            values.add(total);
+            data.addLabel(labels.get(i));
+        }
+
+        for (int value : values) {
+            dataset.addData(value);
+            dataset.addBackgroundColor(Color.DARK_OLIVE_GREEN);
+        }
+
+        dataset.setLabel("Age");
+        dataset.setBorderWidth(2);
+        data.addDataset(dataset);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartAgeRecipientByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+
+        BarData data = new BarData();
+        BarDataset age18to24 = new BarDataset();
+        age18to24.setBackgroundColor(Color.random());
+        age18to24.setLabel("18-24");
+
+        BarDataset age25to34 = new BarDataset();
+        age25to34.setBackgroundColor(Color.random());
+        age25to34.setLabel("25-34");
+
+        BarDataset age35to44 = new BarDataset();
+        age35to44.setBackgroundColor(Color.random());
+        age35to44.setLabel("35-44");
+
+        BarDataset age45to54 = new BarDataset();
+        age45to54.setBackgroundColor(Color.random());
+        age45to54.setLabel("45-54");
+
+        BarDataset age55to64 = new BarDataset();
+        age55to64.setBackgroundColor(Color.random());
+        age55to64.setLabel("55-64");
+
+        BarDataset age65greater = new BarDataset();
+        age65greater.setBackgroundColor(Color.random());
+        age65greater.setLabel("65>");
+
+        ARBODAO arboDAO = new ARBODAO();
+        APCPRequestDAO dao = new APCPRequestDAO();
+
+        for (Region r : regionList) {
+            int age18to24Ct = 0;
+            int age25to34Ct = 0;
+            int age35to44Ct = 0;
+            int age45to54Ct = 0;
+            int age55to64Ct = 0;
+            int age65greaterCt = 0;
+            for (ARB arb : arbList) {
+                if (dao.checkHasBeenRecipient(arb.getArbID())) {
+                    if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode()) {
+                        if (arb.getAge() >= 18 && arb.getAge() <= 24) {
+                            age18to24Ct++;
+                        } else if (arb.getAge() >= 25 && arb.getAge() <= 34) {
+                            age25to34Ct++;
+                        } else if (arb.getAge() >= 35 && arb.getAge() <= 44) {
+                            age35to44Ct++;
+                        } else if (arb.getAge() >= 45 && arb.getAge() <= 54) {
+                            age45to54Ct++;
+                        } else if (arb.getAge() >= 55 && arb.getAge() <= 64) {
+                            age55to64Ct++;
+                        } else if (arb.getAge() >= 65) {
+                            age65greaterCt++;
+                        }
+                    }
+                }
+            }
+            age18to24.addData(age18to24Ct);
+            age25to34.addData(age25to34Ct);
+            age35to44.addData(age35to44Ct);
+            age45to54.addData(age45to54Ct);
+            age55to64.addData(age55to64Ct);
+            age65greater.addData(age65greaterCt);
+
+            data.addLabel(r.getRegDesc());
+        }
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(age18to24);
+        datasets.add(age25to34);
+        datasets.add(age35to44);
+        datasets.add(age45to54);
+        datasets.add(age55to64);
+        datasets.add(age65greater);
+
+        data.setDatasets(datasets);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartAgeRecipientByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+
+        BarData data = new BarData();
+        BarDataset age18to24 = new BarDataset();
+        age18to24.setBackgroundColor(Color.random());
+        age18to24.setLabel("18-24");
+
+        BarDataset age25to34 = new BarDataset();
+        age25to34.setBackgroundColor(Color.random());
+        age25to34.setLabel("25-34");
+
+        BarDataset age35to44 = new BarDataset();
+        age35to44.setBackgroundColor(Color.random());
+        age35to44.setLabel("35-44");
+
+        BarDataset age45to54 = new BarDataset();
+        age45to54.setBackgroundColor(Color.random());
+        age45to54.setLabel("45-54");
+
+        BarDataset age55to64 = new BarDataset();
+        age55to64.setBackgroundColor(Color.random());
+        age55to64.setLabel("55-64");
+
+        BarDataset age65greater = new BarDataset();
+        age65greater.setBackgroundColor(Color.random());
+        age65greater.setLabel("65>");
+
+        ARBODAO arboDAO = new ARBODAO();
+        APCPRequestDAO dao = new APCPRequestDAO();
+
+        for (Province p : provOfficeList) {
+            int age18to24Ct = 0;
+            int age25to34Ct = 0;
+            int age35to44Ct = 0;
+            int age45to54Ct = 0;
+            int age55to64Ct = 0;
+            int age65greaterCt = 0;
+            for (ARB arb : arbList) {
+                if (dao.checkHasBeenRecipient(arb.getArbID())) {
+                    if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode()) {
+                        if (arb.getAge() >= 18 && arb.getAge() <= 24) {
+                            age18to24Ct++;
+                        } else if (arb.getAge() >= 25 && arb.getAge() <= 34) {
+                            age25to34Ct++;
+                        } else if (arb.getAge() >= 35 && arb.getAge() <= 44) {
+                            age35to44Ct++;
+                        } else if (arb.getAge() >= 45 && arb.getAge() <= 54) {
+                            age45to54Ct++;
+                        } else if (arb.getAge() >= 55 && arb.getAge() <= 64) {
+                            age55to64Ct++;
+                        } else if (arb.getAge() >= 65) {
+                            age65greaterCt++;
+                        }
+                    }
+                }
+            }
+
+            age18to24.addData(age18to24Ct);
+            age25to34.addData(age25to34Ct);
+            age35to44.addData(age35to44Ct);
+            age45to54.addData(age45to54Ct);
+            age55to64.addData(age55to64Ct);
+            age65greater.addData(age65greaterCt);
+
+            data.addLabel(p.getProvDesc());
+        }
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(age18to24);
+        datasets.add(age25to34);
+        datasets.add(age35to44);
+        datasets.add(age45to54);
+        datasets.add(age55to64);
+        datasets.add(age65greater);
+
+        data.setDatasets(datasets);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    // </editor-fold>
+    // <editor-fold desc="CAPDEV PARTICIPANT">
+    public String getBarChartAgeParticipant(ArrayList<ARB> arbList) {
+
+        ArrayList<String> labels = new ArrayList();
+        labels.add("18-24");
+        labels.add("25-34");
+        labels.add("35-44");
+        labels.add("45-54");
+        labels.add("55-64");
+        labels.add("> 65");
+
+        BarData data = new BarData();
+        BarDataset dataset = new BarDataset();
+        ArrayList<Integer> values = new ArrayList();
+        CAPDEVDAO dao = new CAPDEVDAO();
+        for (int i = 0; i < labels.size(); i++) {
+            int total = 0;
+            for (ARB arb : arbList) {
+                if (dao.checkHasBeenParticipant(arb.getArbID())) {
+                    if (i == 0 && (arb.getAge() >= 18 && arb.getAge() <= 24)) {
+                        total++;
+                    } else if (i == 1 && (arb.getAge() >= 25 && arb.getAge() <= 34)) {
+                        total++;
+                    } else if (i == 2 && (arb.getAge() >= 35 && arb.getAge() <= 44)) {
+                        total++;
+                    } else if (i == 3 && (arb.getAge() >= 45 && arb.getAge() <= 54)) {
+                        total++;
+                    } else if (i == 4 && (arb.getAge() >= 55 && arb.getAge() <= 64)) {
+                        total++;
+                    } else if (i == 5 && arb.getAge() >= 65) {
+                        total++;
+                    }
+                }
+            }
+            values.add(total);
+            data.addLabel(labels.get(i));
+        }
+
+        for (int value : values) {
+            dataset.addData(value);
+            dataset.addBackgroundColor(Color.DARK_OLIVE_GREEN);
+        }
+
+        dataset.setLabel("Age");
+        dataset.setBorderWidth(2);
+        data.addDataset(dataset);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartAgeParticipantByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+
+        BarData data = new BarData();
+        BarDataset age18to24 = new BarDataset();
+        age18to24.setBackgroundColor(Color.random());
+        age18to24.setLabel("18-24");
+
+        BarDataset age25to34 = new BarDataset();
+        age25to34.setBackgroundColor(Color.random());
+        age25to34.setLabel("25-34");
+
+        BarDataset age35to44 = new BarDataset();
+        age35to44.setBackgroundColor(Color.random());
+        age35to44.setLabel("35-44");
+
+        BarDataset age45to54 = new BarDataset();
+        age45to54.setBackgroundColor(Color.random());
+        age45to54.setLabel("45-54");
+
+        BarDataset age55to64 = new BarDataset();
+        age55to64.setBackgroundColor(Color.random());
+        age55to64.setLabel("55-64");
+
+        BarDataset age65greater = new BarDataset();
+        age65greater.setBackgroundColor(Color.random());
+        age65greater.setLabel("65>");
+
+        ARBODAO arboDAO = new ARBODAO();
+        CAPDEVDAO dao = new CAPDEVDAO();
+
+        for (Region r : regionList) {
+            int age18to24Ct = 0;
+            int age25to34Ct = 0;
+            int age35to44Ct = 0;
+            int age45to54Ct = 0;
+            int age55to64Ct = 0;
+            int age65greaterCt = 0;
+            for (ARB arb : arbList) {
+                if (dao.checkHasBeenParticipant(arb.getArbID())) {
+                    if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode()) {
+                        if (arb.getAge() >= 18 && arb.getAge() <= 24) {
+                            age18to24Ct++;
+                        } else if (arb.getAge() >= 25 && arb.getAge() <= 34) {
+                            age25to34Ct++;
+                        } else if (arb.getAge() >= 35 && arb.getAge() <= 44) {
+                            age35to44Ct++;
+                        } else if (arb.getAge() >= 45 && arb.getAge() <= 54) {
+                            age45to54Ct++;
+                        } else if (arb.getAge() >= 55 && arb.getAge() <= 64) {
+                            age55to64Ct++;
+                        } else if (arb.getAge() >= 65) {
+                            age65greaterCt++;
+                        }
+                    }
+                }
+            }
+            age18to24.addData(age18to24Ct);
+            age25to34.addData(age25to34Ct);
+            age35to44.addData(age35to44Ct);
+            age45to54.addData(age45to54Ct);
+            age55to64.addData(age55to64Ct);
+            age65greater.addData(age65greaterCt);
+
+            data.addLabel(r.getRegDesc());
+        }
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(age18to24);
+        datasets.add(age25to34);
+        datasets.add(age35to44);
+        datasets.add(age45to54);
+        datasets.add(age55to64);
+        datasets.add(age65greater);
+
+        data.setDatasets(datasets);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartAgeParticipantByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+
+        BarData data = new BarData();
+        BarDataset age18to24 = new BarDataset();
+        age18to24.setBackgroundColor(Color.random());
+        age18to24.setLabel("18-24");
+
+        BarDataset age25to34 = new BarDataset();
+        age25to34.setBackgroundColor(Color.random());
+        age25to34.setLabel("25-34");
+
+        BarDataset age35to44 = new BarDataset();
+        age35to44.setBackgroundColor(Color.random());
+        age35to44.setLabel("35-44");
+
+        BarDataset age45to54 = new BarDataset();
+        age45to54.setBackgroundColor(Color.random());
+        age45to54.setLabel("45-54");
+
+        BarDataset age55to64 = new BarDataset();
+        age55to64.setBackgroundColor(Color.random());
+        age55to64.setLabel("55-64");
+
+        BarDataset age65greater = new BarDataset();
+        age65greater.setBackgroundColor(Color.random());
+        age65greater.setLabel("65>");
+
+        ARBODAO arboDAO = new ARBODAO();
+        CAPDEVDAO dao = new CAPDEVDAO();
+
+        for (Province p : provOfficeList) {
+            int age18to24Ct = 0;
+            int age25to34Ct = 0;
+            int age35to44Ct = 0;
+            int age45to54Ct = 0;
+            int age55to64Ct = 0;
+            int age65greaterCt = 0;
+            for (ARB arb : arbList) {
+                if (dao.checkHasBeenParticipant(arb.getArbID())) {
+                    if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode()) {
+                        if (arb.getAge() >= 18 && arb.getAge() <= 24) {
+                            age18to24Ct++;
+                        } else if (arb.getAge() >= 25 && arb.getAge() <= 34) {
+                            age25to34Ct++;
+                        } else if (arb.getAge() >= 35 && arb.getAge() <= 44) {
+                            age35to44Ct++;
+                        } else if (arb.getAge() >= 45 && arb.getAge() <= 54) {
+                            age45to54Ct++;
+                        } else if (arb.getAge() >= 55 && arb.getAge() <= 64) {
+                            age55to64Ct++;
+                        } else if (arb.getAge() >= 65) {
+                            age65greaterCt++;
+                        }
+                    }
+                }
+            }
+
+            age18to24.addData(age18to24Ct);
+            age25to34.addData(age25to34Ct);
+            age35to44.addData(age35to44Ct);
+            age45to54.addData(age45to54Ct);
+            age55to64.addData(age55to64Ct);
+            age65greater.addData(age65greaterCt);
+
+            data.addLabel(p.getProvDesc());
+        }
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(age18to24);
+        datasets.add(age25to34);
+        datasets.add(age35to44);
+        datasets.add(age45to54);
+        datasets.add(age55to64);
+        datasets.add(age65greater);
+
+        data.setDatasets(datasets);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    // </editor-fold>
+    // <editor-fold desc="PARTICIPATION RATE">
+    public String getBarChartAgeParticipation(ArrayList<ARB> arbList) {
+
+        ArrayList<String> labels = new ArrayList();
+        labels.add("18-24");
+        labels.add("25-34");
+        labels.add("35-44");
+        labels.add("45-54");
+        labels.add("55-64");
+        labels.add("> 65");
+
+        BarData data = new BarData();
+        BarDataset dataset = new BarDataset();
+        ArrayList<Double> values = new ArrayList();
+
+        CAPDEVDAO dao = new CAPDEVDAO();
+        CAPDEVActivity act = new CAPDEVActivity();
+
+        for (int i = 0; i < labels.size(); i++) {
+            double total = 0;
+            int total2 = 0;
+            for (ARB arb : arbList) {
+
+                arb.setActivities(dao.getCAPDEVPlanByARB(arb.getArbID()));
+
+                if (i == 0 && (arb.getAge() >= 18 && arb.getAge() <= 24)) {
+                    total += act.getAttendanceRate(arb.getActivities());
+                    total2++;
+                } else if (i == 1 && (arb.getAge() >= 25 && arb.getAge() <= 34)) {
+                    total += act.getAttendanceRate(arb.getActivities());
+                    total2++;
+                } else if (i == 2 && (arb.getAge() >= 35 && arb.getAge() <= 44)) {
+                    total += act.getAttendanceRate(arb.getActivities());
+                    total2++;
+                } else if (i == 3 && (arb.getAge() >= 45 && arb.getAge() <= 54)) {
+                    total += act.getAttendanceRate(arb.getActivities());
+                    total2++;
+                } else if (i == 4 && (arb.getAge() >= 55 && arb.getAge() <= 64)) {
+                    total += act.getAttendanceRate(arb.getActivities());
+                    total2++;
+                } else if (i == 5 && arb.getAge() >= 65) {
+                    total += act.getAttendanceRate(arb.getActivities());
+                    total2++;
+                }
+            }
+            values.add(total / total2);
+            data.addLabel(labels.get(i));
+        }
+
+        for (double value : values) {
+            dataset.addData(value);
+            dataset.addBackgroundColor(Color.GREEN);
+        }
+
+        dataset.setLabel("Age");
+        dataset.setBorderWidth(2);
+        data.addDataset(dataset);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartAgeParticipationByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+
+        BarData data = new BarData();
+        BarDataset age18to24 = new BarDataset();
+        age18to24.setBackgroundColor(Color.random());
+        age18to24.setLabel("18-24");
+
+        BarDataset age25to34 = new BarDataset();
+        age25to34.setBackgroundColor(Color.random());
+        age25to34.setLabel("25-34");
+
+        BarDataset age35to44 = new BarDataset();
+        age35to44.setBackgroundColor(Color.random());
+        age35to44.setLabel("35-44");
+
+        BarDataset age45to54 = new BarDataset();
+        age45to54.setBackgroundColor(Color.random());
+        age45to54.setLabel("45-54");
+
+        BarDataset age55to64 = new BarDataset();
+        age55to64.setBackgroundColor(Color.random());
+        age55to64.setLabel("55-64");
+
+        BarDataset age65greater = new BarDataset();
+        age65greater.setBackgroundColor(Color.random());
+        age65greater.setLabel("65>");
+
+        ARBODAO arboDAO = new ARBODAO();
+        CAPDEVDAO dao = new CAPDEVDAO();
+        CAPDEVActivity act = new CAPDEVActivity();
+
+        for (Region r : regionList) {
+            double age18to24Ct = 0;
+            int age18to24Ct2 = 0;
+
+            double age25to34Ct = 0;
+            int age25to34Ct2 = 0;
+
+            double age35to44Ct = 0;
+            int age35to44Ct2 = 0;
+
+            double age45to54Ct = 0;
+            int age45to54Ct2 = 0;
+
+            double age55to64Ct = 0;
+            int age55to64Ct2 = 0;
+
+            double age65greaterCt = 0;
+            int age65greaterCt2 = 0;
+
+            for (ARB arb : arbList) {
+
+                arb.setActivities(dao.getCAPDEVPlanByARB(arb.getArbID()));
+
+                if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode()) {
+                    if (arb.getAge() >= 18 && arb.getAge() <= 24) {
+                        age18to24Ct += act.getAttendanceRate(arb.getActivities());
+                        age18to24Ct2++;
+                    } else if (arb.getAge() >= 25 && arb.getAge() <= 34) {
+                        age25to34Ct += act.getAttendanceRate(arb.getActivities());
+                        age25to34Ct2++;
+                    } else if (arb.getAge() >= 35 && arb.getAge() <= 44) {
+                        age35to44Ct += act.getAttendanceRate(arb.getActivities());
+                        age35to44Ct2++;
+                    } else if (arb.getAge() >= 45 && arb.getAge() <= 54) {
+                        age45to54Ct += act.getAttendanceRate(arb.getActivities());
+                        age45to54Ct2++;
+                    } else if (arb.getAge() >= 55 && arb.getAge() <= 64) {
+                        age55to64Ct += act.getAttendanceRate(arb.getActivities());
+                        age55to64Ct2++;
+                    } else if (arb.getAge() >= 65) {
+                        age65greaterCt += act.getAttendanceRate(arb.getActivities());
+                        age65greaterCt2++;
+                    }
+                }
+            }
+            age18to24.addData(age18to24Ct / age18to24Ct2);
+            age25to34.addData(age25to34Ct / age25to34Ct2);
+            age35to44.addData(age35to44Ct / age35to44Ct2);
+            age45to54.addData(age45to54Ct / age45to54Ct2);
+            age55to64.addData(age55to64Ct / age55to64Ct2);
+            age65greater.addData(age65greaterCt / age65greaterCt2);
+
+            data.addLabel(r.getRegDesc());
+        }
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(age18to24);
+        datasets.add(age25to34);
+        datasets.add(age35to44);
+        datasets.add(age45to54);
+        datasets.add(age55to64);
+        datasets.add(age65greater);
+
+        data.setDatasets(datasets);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartAgeParticipationByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+
+        BarData data = new BarData();
+        BarDataset age18to24 = new BarDataset();
+        age18to24.setBackgroundColor(Color.random());
+        age18to24.setLabel("18-24");
+
+        BarDataset age25to34 = new BarDataset();
+        age25to34.setBackgroundColor(Color.random());
+        age25to34.setLabel("25-34");
+
+        BarDataset age35to44 = new BarDataset();
+        age35to44.setBackgroundColor(Color.random());
+        age35to44.setLabel("35-44");
+
+        BarDataset age45to54 = new BarDataset();
+        age45to54.setBackgroundColor(Color.random());
+        age45to54.setLabel("45-54");
+
+        BarDataset age55to64 = new BarDataset();
+        age55to64.setBackgroundColor(Color.random());
+        age55to64.setLabel("55-64");
+
+        BarDataset age65greater = new BarDataset();
+        age65greater.setBackgroundColor(Color.random());
+        age65greater.setLabel("65>");
+
+        ARBODAO arboDAO = new ARBODAO();
+        CAPDEVDAO dao = new CAPDEVDAO();
+        CAPDEVActivity act = new CAPDEVActivity();
+
+        for (Province p : provOfficeList) {
+            double age18to24Ct = 0;
+            int age18to24Ct2 = 0;
+
+            double age25to34Ct = 0;
+            int age25to34Ct2 = 0;
+
+            double age35to44Ct = 0;
+            int age35to44Ct2 = 0;
+
+            double age45to54Ct = 0;
+            int age45to54Ct2 = 0;
+
+            double age55to64Ct = 0;
+            int age55to64Ct2 = 0;
+
+            double age65greaterCt = 0;
+            int age65greaterCt2 = 0;
+            for (ARB arb : arbList) {
+
+                arb.setActivities(dao.getCAPDEVPlanByARB(arb.getArbID()));
+
+                if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode()) {
+                    if (arb.getAge() >= 18 && arb.getAge() <= 24) {
+                        age18to24Ct += act.getAttendanceRate(arb.getActivities());
+                        age18to24Ct2++;
+                    } else if (arb.getAge() >= 25 && arb.getAge() <= 34) {
+                        age25to34Ct += act.getAttendanceRate(arb.getActivities());
+                        age25to34Ct2++;
+                    } else if (arb.getAge() >= 35 && arb.getAge() <= 44) {
+                        age35to44Ct += act.getAttendanceRate(arb.getActivities());
+                        age35to44Ct2++;
+                    } else if (arb.getAge() >= 45 && arb.getAge() <= 54) {
+                        age45to54Ct += act.getAttendanceRate(arb.getActivities());
+                        age45to54Ct2++;
+                    } else if (arb.getAge() >= 55 && arb.getAge() <= 64) {
+                        age55to64Ct += act.getAttendanceRate(arb.getActivities());
+                        age55to64Ct2++;
+                    } else if (arb.getAge() >= 65) {
+                        age65greaterCt += act.getAttendanceRate(arb.getActivities());
+                        age65greaterCt2++;
+                    }
+                }
+            }
+            age18to24.addData(age18to24Ct / age18to24Ct2);
+            age25to34.addData(age25to34Ct / age25to34Ct2);
+            age35to44.addData(age35to44Ct / age35to44Ct2);
+            age45to54.addData(age45to54Ct / age45to54Ct2);
+            age55to64.addData(age55to64Ct / age55to64Ct2);
+            age65greater.addData(age65greaterCt / age65greaterCt2);
+
+            data.addLabel(p.getProvDesc());
+        }
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(age18to24);
+        datasets.add(age25to34);
+        datasets.add(age35to44);
+        datasets.add(age45to54);
+        datasets.add(age55to64);
+        datasets.add(age65greater);
+
+        data.setDatasets(datasets);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    // </editor-fold>
+    // <editor-fold desc="DISBURSEMENT">
+    public String getBarChartAgeDisbursement(ArrayList<ARB> arbList) {
+
+        ArrayList<String> labels = new ArrayList();
+        labels.add("18-24");
+        labels.add("25-34");
+        labels.add("35-44");
+        labels.add("45-54");
+        labels.add("55-64");
+        labels.add("> 65");
+
+        BarData data = new BarData();
+        BarDataset dataset = new BarDataset();
+        ArrayList<Double> values = new ArrayList();
+        for (int i = 0; i < labels.size(); i++) {
+            double total = 0;
+            int total2 = 0;
+            for (ARB arb : arbList) {
+                if (i == 0 && (arb.getAge() >= 18 && arb.getAge() <= 24)) {
+                    total += arb.getCurrentTotalDisbursementAmount();
+                    total2++;
+                } else if (i == 1 && (arb.getAge() >= 25 && arb.getAge() <= 34)) {
+                    total += arb.getCurrentTotalDisbursementAmount();
+                    total2++;
+                } else if (i == 2 && (arb.getAge() >= 35 && arb.getAge() <= 44)) {
+                    total += arb.getCurrentTotalDisbursementAmount();
+                    total2++;
+                } else if (i == 3 && (arb.getAge() >= 45 && arb.getAge() <= 54)) {
+                    total += arb.getCurrentTotalDisbursementAmount();
+                    total2++;
+                } else if (i == 4 && (arb.getAge() >= 55 && arb.getAge() <= 64)) {
+                    total += arb.getCurrentTotalDisbursementAmount();
+                    total2++;
+                } else if (i == 5 && arb.getAge() >= 65) {
+                    total += arb.getCurrentTotalDisbursementAmount();
+                    total2++;
+                }
+            }
+            values.add(total / total2);
+            data.addLabel(labels.get(i));
+        }
+
+        for (double value : values) {
+            dataset.addData(value);
+            dataset.addBackgroundColor(Color.GREEN);
+        }
+
+        dataset.setLabel("Age");
+        dataset.setBorderWidth(2);
+        data.addDataset(dataset);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartAgeDisbursementByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+
+        BarData data = new BarData();
+        BarDataset age18to24 = new BarDataset();
+        age18to24.setBackgroundColor(Color.random());
+        age18to24.setLabel("18-24");
+
+        BarDataset age25to34 = new BarDataset();
+        age25to34.setBackgroundColor(Color.random());
+        age25to34.setLabel("25-34");
+
+        BarDataset age35to44 = new BarDataset();
+        age35to44.setBackgroundColor(Color.random());
+        age35to44.setLabel("35-44");
+
+        BarDataset age45to54 = new BarDataset();
+        age45to54.setBackgroundColor(Color.random());
+        age45to54.setLabel("45-54");
+
+        BarDataset age55to64 = new BarDataset();
+        age55to64.setBackgroundColor(Color.random());
+        age55to64.setLabel("55-64");
+
+        BarDataset age65greater = new BarDataset();
+        age65greater.setBackgroundColor(Color.random());
+        age65greater.setLabel("65>");
+
+        ARBODAO arboDAO = new ARBODAO();
+
+        for (Region r : regionList) {
+            double age18to24Ct = 0;
+            int age18to24Ct2 = 0;
+
+            double age25to34Ct = 0;
+            int age25to34Ct2 = 0;
+
+            double age35to44Ct = 0;
+            int age35to44Ct2 = 0;
+
+            double age45to54Ct = 0;
+            int age45to54Ct2 = 0;
+
+            double age55to64Ct = 0;
+            int age55to64Ct2 = 0;
+
+            double age65greaterCt = 0;
+            int age65greaterCt2 = 0;
+
+            for (ARB arb : arbList) {
+                if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode()) {
+                    if (arb.getAge() >= 18 && arb.getAge() <= 24) {
+                        age18to24Ct += arb.getCurrentTotalDisbursementAmount();
+                        age18to24Ct2++;
+                    } else if (arb.getAge() >= 25 && arb.getAge() <= 34) {
+                        age25to34Ct += arb.getCurrentTotalDisbursementAmount();
+                        age25to34Ct2++;
+                    } else if (arb.getAge() >= 35 && arb.getAge() <= 44) {
+                        age35to44Ct += arb.getCurrentTotalDisbursementAmount();
+                        age35to44Ct2++;
+                    } else if (arb.getAge() >= 45 && arb.getAge() <= 54) {
+                        age45to54Ct += arb.getCurrentTotalDisbursementAmount();
+                        age45to54Ct2++;
+                    } else if (arb.getAge() >= 55 && arb.getAge() <= 64) {
+                        age55to64Ct += arb.getCurrentTotalDisbursementAmount();
+                        age55to64Ct2++;
+                    } else if (arb.getAge() >= 65) {
+                        age65greaterCt += arb.getCurrentTotalDisbursementAmount();
+                        age65greaterCt2++;
+                    }
+                }
+            }
+            age18to24.addData(age18to24Ct / age18to24Ct2);
+            age25to34.addData(age25to34Ct / age25to34Ct2);
+            age35to44.addData(age35to44Ct / age35to44Ct2);
+            age45to54.addData(age45to54Ct / age45to54Ct2);
+            age55to64.addData(age55to64Ct / age55to64Ct2);
+            age65greater.addData(age65greaterCt / age65greaterCt2);
+
+            data.addLabel(r.getRegDesc());
+        }
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(age18to24);
+        datasets.add(age25to34);
+        datasets.add(age35to44);
+        datasets.add(age45to54);
+        datasets.add(age55to64);
+        datasets.add(age65greater);
+
+        data.setDatasets(datasets);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartAgeDisbursementByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+
+        BarData data = new BarData();
+        BarDataset age18to24 = new BarDataset();
+        age18to24.setBackgroundColor(Color.random());
+        age18to24.setLabel("18-24");
+
+        BarDataset age25to34 = new BarDataset();
+        age25to34.setBackgroundColor(Color.random());
+        age25to34.setLabel("25-34");
+
+        BarDataset age35to44 = new BarDataset();
+        age35to44.setBackgroundColor(Color.random());
+        age35to44.setLabel("35-44");
+
+        BarDataset age45to54 = new BarDataset();
+        age45to54.setBackgroundColor(Color.random());
+        age45to54.setLabel("45-54");
+
+        BarDataset age55to64 = new BarDataset();
+        age55to64.setBackgroundColor(Color.random());
+        age55to64.setLabel("55-64");
+
+        BarDataset age65greater = new BarDataset();
+        age65greater.setBackgroundColor(Color.random());
+        age65greater.setLabel("65>");
+
+        ARBODAO arboDAO = new ARBODAO();
+
+        for (Province p : provOfficeList) {
+            double age18to24Ct = 0;
+            int age18to24Ct2 = 0;
+
+            double age25to34Ct = 0;
+            int age25to34Ct2 = 0;
+
+            double age35to44Ct = 0;
+            int age35to44Ct2 = 0;
+
+            double age45to54Ct = 0;
+            int age45to54Ct2 = 0;
+
+            double age55to64Ct = 0;
+            int age55to64Ct2 = 0;
+
+            double age65greaterCt = 0;
+            int age65greaterCt2 = 0;
+            for (ARB arb : arbList) {
+                if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode()) {
+                    if (arb.getAge() >= 18 && arb.getAge() <= 24) {
+                        age18to24Ct += arb.getCurrentTotalDisbursementAmount();
+                        age18to24Ct2++;
+                    } else if (arb.getAge() >= 25 && arb.getAge() <= 34) {
+                        age25to34Ct += arb.getCurrentTotalDisbursementAmount();
+                        age25to34Ct2++;
+                    } else if (arb.getAge() >= 35 && arb.getAge() <= 44) {
+                        age35to44Ct += arb.getCurrentTotalDisbursementAmount();
+                        age35to44Ct2++;
+                    } else if (arb.getAge() >= 45 && arb.getAge() <= 54) {
+                        age45to54Ct += arb.getCurrentTotalDisbursementAmount();
+                        age45to54Ct2++;
+                    } else if (arb.getAge() >= 55 && arb.getAge() <= 64) {
+                        age55to64Ct += arb.getCurrentTotalDisbursementAmount();
+                        age55to64Ct2++;
+                    } else if (arb.getAge() >= 65) {
+                        age65greaterCt += arb.getCurrentTotalDisbursementAmount();
+                        age65greaterCt2++;
+                    }
+                }
+            }
+            age18to24.addData(age18to24Ct / age18to24Ct2);
+            age25to34.addData(age25to34Ct / age25to34Ct2);
+            age35to44.addData(age35to44Ct / age35to44Ct2);
+            age45to54.addData(age45to54Ct / age45to54Ct2);
+            age55to64.addData(age55to64Ct / age55to64Ct2);
+            age65greater.addData(age65greaterCt / age65greaterCt2);
+
+            data.addLabel(p.getProvDesc());
+        }
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(age18to24);
+        datasets.add(age25to34);
+        datasets.add(age35to44);
+        datasets.add(age45to54);
+        datasets.add(age55to64);
+        datasets.add(age65greater);
+
+        data.setDatasets(datasets);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    // </editor-fold>
+    // <editor-fold desc="O/S BALANCE">
+    public String getBarChartAgeOSBalance(ArrayList<ARB> arbList) {
+
+        ArrayList<String> labels = new ArrayList();
+        labels.add("18-24");
+        labels.add("25-34");
+        labels.add("35-44");
+        labels.add("45-54");
+        labels.add("55-64");
+        labels.add("> 65");
+
+        BarData data = new BarData();
+        BarDataset dataset = new BarDataset();
+        ArrayList<Double> values = new ArrayList();
+        APCPRequest req = new APCPRequest();
+        for (int i = 0; i < labels.size(); i++) {
+            double total = 0;
+            int total2 = 0;
+            for (ARB arb : arbList) {
+                if (i == 0 && (arb.getAge() >= 18 && arb.getAge() <= 24)) {
+                    total += req.getTotalARBOSBalance(arb.getArbID());
+                    total2++;
+                } else if (i == 1 && (arb.getAge() >= 25 && arb.getAge() <= 34)) {
+                    total += req.getTotalARBOSBalance(arb.getArbID());
+                    total2++;
+                } else if (i == 2 && (arb.getAge() >= 35 && arb.getAge() <= 44)) {
+                    total += req.getTotalARBOSBalance(arb.getArbID());
+                    total2++;
+                } else if (i == 3 && (arb.getAge() >= 45 && arb.getAge() <= 54)) {
+                    total += req.getTotalARBOSBalance(arb.getArbID());
+                    total2++;
+                } else if (i == 4 && (arb.getAge() >= 55 && arb.getAge() <= 64)) {
+                    total += req.getTotalARBOSBalance(arb.getArbID());
+                    total2++;
+                } else if (i == 5 && arb.getAge() >= 65) {
+                    total += req.getTotalARBOSBalance(arb.getArbID());
+                    total2++;
+                }
+            }
+            values.add(total / total2);
+            data.addLabel(labels.get(i));
+        }
+
+        for (double value : values) {
+            dataset.addData(value);
+            dataset.addBackgroundColor(Color.GREEN);
+        }
+
+        dataset.setLabel("Age");
+        dataset.setBorderWidth(2);
+        data.addDataset(dataset);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartAgeOSBalanceByRegion(ArrayList<ARB> arbList, ArrayList<Region> regionList) {
+
+        BarData data = new BarData();
+        BarDataset age18to24 = new BarDataset();
+        age18to24.setBackgroundColor(Color.random());
+        age18to24.setLabel("18-24");
+
+        BarDataset age25to34 = new BarDataset();
+        age25to34.setBackgroundColor(Color.random());
+        age25to34.setLabel("25-34");
+
+        BarDataset age35to44 = new BarDataset();
+        age35to44.setBackgroundColor(Color.random());
+        age35to44.setLabel("35-44");
+
+        BarDataset age45to54 = new BarDataset();
+        age45to54.setBackgroundColor(Color.random());
+        age45to54.setLabel("45-54");
+
+        BarDataset age55to64 = new BarDataset();
+        age55to64.setBackgroundColor(Color.random());
+        age55to64.setLabel("55-64");
+
+        BarDataset age65greater = new BarDataset();
+        age65greater.setBackgroundColor(Color.random());
+        age65greater.setLabel("65>");
+
+        ARBODAO arboDAO = new ARBODAO();
+        APCPRequest req = new APCPRequest();
+
+        for (Region r : regionList) {
+            double age18to24Ct = 0;
+            int age18to24Ct2 = 0;
+
+            double age25to34Ct = 0;
+            int age25to34Ct2 = 0;
+
+            double age35to44Ct = 0;
+            int age35to44Ct2 = 0;
+
+            double age45to54Ct = 0;
+            int age45to54Ct2 = 0;
+
+            double age55to64Ct = 0;
+            int age55to64Ct2 = 0;
+
+            double age65greaterCt = 0;
+            int age65greaterCt2 = 0;
+            for (ARB arb : arbList) {
+                if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode()) {
+                    if (arb.getAge() >= 18 && arb.getAge() <= 24) {
+                        age18to24Ct += req.getTotalARBOSBalance(arb.getArbID());
+                        age18to24Ct2++;
+                    } else if (arb.getAge() >= 25 && arb.getAge() <= 34) {
+                        age25to34Ct += req.getTotalARBOSBalance(arb.getArbID());
+                        age25to34Ct2++;
+                    } else if (arb.getAge() >= 35 && arb.getAge() <= 44) {
+                        age35to44Ct += req.getTotalARBOSBalance(arb.getArbID());
+                        age35to44Ct2++;
+                    } else if (arb.getAge() >= 45 && arb.getAge() <= 54) {
+                        age45to54Ct += req.getTotalARBOSBalance(arb.getArbID());
+                        age45to54Ct2++;
+                    } else if (arb.getAge() >= 55 && arb.getAge() <= 64) {
+                        age55to64Ct += req.getTotalARBOSBalance(arb.getArbID());
+                        age55to64Ct2++;
+                    } else if (arb.getAge() >= 65) {
+                        age65greaterCt += req.getTotalARBOSBalance(arb.getArbID());
+                        age65greaterCt2++;
+                    }
+                }
+            }
+            age18to24.addData(age18to24Ct / age18to24Ct2);
+            age25to34.addData(age25to34Ct / age25to34Ct2);
+            age35to44.addData(age35to44Ct / age35to44Ct2);
+            age45to54.addData(age45to54Ct / age45to54Ct2);
+            age55to64.addData(age55to64Ct / age55to64Ct2);
+            age65greater.addData(age65greaterCt / age65greaterCt2);
+
+            data.addLabel(r.getRegDesc());
+        }
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(age18to24);
+        datasets.add(age25to34);
+        datasets.add(age35to44);
+        datasets.add(age45to54);
+        datasets.add(age55to64);
+        datasets.add(age65greater);
+
+        data.setDatasets(datasets);
+
+        return new BarChart(data).toJson();
+
+    }
+
+    public String getBarChartAgeOSBalanceByProvOffice(ArrayList<ARB> arbList, ArrayList<Province> provOfficeList) {
+
+        BarData data = new BarData();
+        BarDataset age18to24 = new BarDataset();
+        age18to24.setBackgroundColor(Color.random());
+        age18to24.setLabel("18-24");
+
+        BarDataset age25to34 = new BarDataset();
+        age25to34.setBackgroundColor(Color.random());
+        age25to34.setLabel("25-34");
+
+        BarDataset age35to44 = new BarDataset();
+        age35to44.setBackgroundColor(Color.random());
+        age35to44.setLabel("35-44");
+
+        BarDataset age45to54 = new BarDataset();
+        age45to54.setBackgroundColor(Color.random());
+        age45to54.setLabel("45-54");
+
+        BarDataset age55to64 = new BarDataset();
+        age55to64.setBackgroundColor(Color.random());
+        age55to64.setLabel("55-64");
+
+        BarDataset age65greater = new BarDataset();
+        age65greater.setBackgroundColor(Color.random());
+        age65greater.setLabel("65>");
+
+        ARBODAO arboDAO = new ARBODAO();
+        APCPRequest req = new APCPRequest();
+
+        for (Province p : provOfficeList) {
+            double age18to24Ct = 0;
+            int age18to24Ct2 = 0;
+
+            double age25to34Ct = 0;
+            int age25to34Ct2 = 0;
+
+            double age35to44Ct = 0;
+            int age35to44Ct2 = 0;
+
+            double age45to54Ct = 0;
+            int age45to54Ct2 = 0;
+
+            double age55to64Ct = 0;
+            int age55to64Ct2 = 0;
+
+            double age65greaterCt = 0;
+            int age65greaterCt2 = 0;
+            for (ARB arb : arbList) {
+                if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode()) {
+                    if (arb.getAge() >= 18 && arb.getAge() <= 24) {
+                        age18to24Ct += req.getTotalARBOSBalance(arb.getArbID());
+                        age18to24Ct2++;
+                    } else if (arb.getAge() >= 25 && arb.getAge() <= 34) {
+                        age25to34Ct += req.getTotalARBOSBalance(arb.getArbID());
+                        age25to34Ct2++;
+                    } else if (arb.getAge() >= 35 && arb.getAge() <= 44) {
+                        age35to44Ct += req.getTotalARBOSBalance(arb.getArbID());
+                        age35to44Ct2++;
+                    } else if (arb.getAge() >= 45 && arb.getAge() <= 54) {
+                        age45to54Ct += req.getTotalARBOSBalance(arb.getArbID());
+                        age45to54Ct2++;
+                    } else if (arb.getAge() >= 55 && arb.getAge() <= 64) {
+                        age55to64Ct += req.getTotalARBOSBalance(arb.getArbID());
+                        age55to64Ct2++;
+                    } else if (arb.getAge() >= 65) {
+                        age65greaterCt += req.getTotalARBOSBalance(arb.getArbID());
+                        age65greaterCt2++;
+                    }
+                }
+            }
+            age18to24.addData(age18to24Ct / age18to24Ct2);
+            age25to34.addData(age25to34Ct / age25to34Ct2);
+            age35to44.addData(age35to44Ct / age35to44Ct2);
+            age45to54.addData(age45to54Ct / age45to54Ct2);
+            age55to64.addData(age55to64Ct / age55to64Ct2);
+            age65greater.addData(age65greaterCt / age65greaterCt2);
+
+            data.addLabel(p.getProvDesc());
+        }
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        datasets.add(age18to24);
+        datasets.add(age25to34);
+        datasets.add(age35to44);
+        datasets.add(age45to54);
+        datasets.add(age55to64);
+        datasets.add(age65greater);
+
+        data.setDatasets(datasets);
+
+        return new BarChart(data).toJson();
+
+    }
     // </editor-fold>
     // </editor-fold>
 
-    // <editor-fold desc="APCP DASHBOARD">
-    public String getStackedBarChartAPCPRequests(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+    // </editor-fold>
+    //<editor-fold desc="ARBO REPORTS">
+    public String getStackedBarChartARBODaysUnsettled(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+        CAPDEVDAO capdevDAO = new CAPDEVDAO();
+        ArrayList<String> labels = new ArrayList();
+
+        boolean b = true;
+
+        BarOptions options = new BarOptions();
+        BarScale scales = new BarScale();
+        XAxis x = new XAxis();
+        YAxis y = new YAxis();
+        x.setStacked(Boolean.TRUE);
+        y.setStacked(Boolean.TRUE);
+        scales.addxAxes(x);
+        scales.addyAxes(y);
+        options.setScales(scales);
+        
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("ARBO: Credit Standing");
+
+        if (regionList.isEmpty()) {
+            labels.add("REGION I (ILOCOS REGION)");
+            labels.add("REGION II (CAGAYAN VALLEY)");
+            labels.add("REGION III (CENTRAL LUZON)");
+            labels.add("REGION IV-A (CALABARZON)");
+            labels.add("REGION IV-B (MIMAROPA)");
+            labels.add("REGION V (BICOL REGION)");
+            labels.add("REGION VI (WESTERN VISAYAS)");
+            labels.add("REGION VII (CENTRAL VISAYAS)");
+            labels.add("REGION VIII (EASTERN VISAYAS)");
+            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+            labels.add("REGION X (NORTHERN MINDANAO)");
+            labels.add("REGION XI (DAVAO REGION)");
+            labels.add("REGION XII (SOCCSKSARGEN)");
+            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+            labels.add("REGION XIII (Caraga)");
+            System.out.println("REGION EMPTY!");
+        } else if (provList.isEmpty()) {
+            for (Region r : regionList) {
+                labels.add(r.getRegDesc());
+            }
+            System.out.println("PROV EMPTY!");
+        } else {
+            for (Province p : provList) {
+                labels.add(p.getProvDesc());
+            }
+            b = false;
+
+        }
+
+        APCPRequestDAO dao = new APCPRequestDAO();
+        CAPDEVDAO dao2 = new CAPDEVDAO();
+        BarData data = new BarData();
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        for (ARBO arbo : arboList) {
+            BarDataset dataset = new BarDataset(); // initializes
+            dataset.setLabel(arbo.getArboName()); // ONE color
+            dataset.setBackgroundColor(Color.random()); // ONE bar
+            arbo.setRequestList(dao.getAllARBORequests(arbo.getArboID()));
+            for (String label : labels) { // REGIONS/PROVINCES
+                double count = 0;
+
+                if (b) { // REGIONAL
+                    if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                        count = dao.getAverageDaysUnsettled(arbo.getRequestList());
+                    }
+                } else { // PROVINCIAL OFFICE
+                    if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                        count = dao.getAverageDaysUnsettled(arbo.getRequestList());
+                    }
+                }
+
+                if (count > 0) {
+                    dataset.addData(count);
+                }
+            }
+            if (dataset.getData().size() > 0) {
+                datasets.add(dataset);
+            }
+
+        }
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new BarChart(data, options).setHorizontal().toJson();
+    }
+    
+    public String getStackedBarChartARBOParticipationRate(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+        CAPDEVDAO capdevDAO = new CAPDEVDAO();
+        ARBDAO aDAO = new ARBDAO();
+        ArrayList<String> labels = new ArrayList();
+
+        boolean b = true;
+
+        BarOptions options = new BarOptions();
+        BarScale scales = new BarScale();
+        XAxis x = new XAxis();
+        YAxis y = new YAxis();
+        x.setStacked(Boolean.TRUE);
+        y.setStacked(Boolean.TRUE);
+        scales.addxAxes(x);
+        scales.addyAxes(y);
+        options.setScales(scales);
+        
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("ARBO: Participation Rate");
+
+        if (regionList.isEmpty()) {
+            labels.add("REGION I (ILOCOS REGION)");
+            labels.add("REGION II (CAGAYAN VALLEY)");
+            labels.add("REGION III (CENTRAL LUZON)");
+            labels.add("REGION IV-A (CALABARZON)");
+            labels.add("REGION IV-B (MIMAROPA)");
+            labels.add("REGION V (BICOL REGION)");
+            labels.add("REGION VI (WESTERN VISAYAS)");
+            labels.add("REGION VII (CENTRAL VISAYAS)");
+            labels.add("REGION VIII (EASTERN VISAYAS)");
+            labels.add("REGION IX (ZAMBOANGA PENINSULA)");
+            labels.add("REGION X (NORTHERN MINDANAO)");
+            labels.add("REGION XI (DAVAO REGION)");
+            labels.add("REGION XII (SOCCSKSARGEN)");
+            labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
+            labels.add("REGION XIII (Caraga)");
+            System.out.println("REGION EMPTY!");
+        } else if (provList.isEmpty()) {
+            for (Region r : regionList) {
+                labels.add(r.getRegDesc());
+            }
+            System.out.println("PROV EMPTY!");
+        } else {
+            for (Province p : provList) {
+                labels.add(p.getProvDesc());
+            }
+            b = false;
+
+        }
+
+        APCPRequestDAO dao = new APCPRequestDAO();
+        CAPDEVDAO dao2 = new CAPDEVDAO();
+        BarData data = new BarData();
+
+        ArrayList<BarDataset> datasets = new ArrayList();
+        for (ARBO arbo : arboList) {
+            
+            arbo.setArbList(aDAO.getAllARBsARBO(arbo.getArboID()));
+            
+            BarDataset dataset = new BarDataset(); // initializes
+            dataset.setLabel(arbo.getArboName()); // ONE color
+            dataset.setBackgroundColor(Color.random()); // ONE bar
+            for (String label : labels) { // REGIONS/PROVINCES
+                double count = 0;
+
+                if (b) { // REGIONAL
+                    if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                        count = capdevDAO.getMeanAverageAttendanceRateARBO(arbo.getArbList());
+                    }
+                } else { // PROVINCIAL OFFICE
+                    if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                        count = capdevDAO.getMeanAverageAttendanceRateARBO(arbo.getArbList());
+                    }
+                }
+
+                if (count > 0) {
+                    dataset.addData(count);
+                }
+            }
+            if (dataset.getData().size() > 0) {
+                datasets.add(dataset);
+            }
+
+        }
+
+        data.setLabels(labels);
+        data.setDatasets(datasets);
+
+        return new BarChart(data, options).setHorizontal().toJson();
+    }
+
+    //</editor-fold>
+    // <editor-fold desc="APCP REPORTS">
+    public String getStackedBarChartAPCPRequests(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList, Date start, Date end) {
 
         ArrayList<String> labels = new ArrayList();
         boolean b = true;
+        APCPRequestDAO dao = new APCPRequestDAO();
 
         if (regionList.isEmpty()) {
             labels.add("REGION I (ILOCOS REGION)");
@@ -918,6 +3168,13 @@ public class Chart {
         scales.addyAxes(y);
         options.setScales(scales);
 
+        SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("APCP Requests: " + f.format(start) + " - " + f.format(end));
+
+        options.setTitle(title);
+
         for (int i = 0; i < labels.size(); i++) { // REGIONS/PROVINCES
 
             int requestedCount = 0;
@@ -928,9 +3185,13 @@ public class Chart {
             int releasedCount = 0;
 
             for (ARBO arbo : arboList) {
+
+                arbo.setRequestList(dao.getAllARBORequests(arbo.getArboID()));
+                ArrayList<APCPRequest> filtered = filterAPCPByDate(arbo.getRequestList(), start, end);
+
                 if (b) { // REGIONAL
                     if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
-                        for (APCPRequest r : arbo.getRequestList()) {
+                        for (APCPRequest r : filtered) {
                             if (r.getRequestStatus() == 1) { // requested
                                 requestedCount++;
                             } else if (r.getRequestStatus() == 2) { // cleared
@@ -948,7 +3209,7 @@ public class Chart {
                     }
                 } else { // PROVINCIAL OFFICE
                     if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
-                        for (APCPRequest r : arbo.getRequestList()) {
+                        for (APCPRequest r : filtered) {
                             if (r.getRequestStatus() == 1) { // requested
                                 requestedCount++;
                             } else if (r.getRequestStatus() == 2) { // cleared
@@ -980,37 +3241,37 @@ public class Chart {
 
         for (int value : requestedValues) {
             requested.addData(value);
-            requested.addBackgroundColor(Color.random());
+            requested.addBackgroundColor(Color.RED);
             requested.setLabel("REQUESTED");
         }
 
         for (int value : clearedValues) {
             cleared.addData(value);
-            cleared.addBackgroundColor(Color.random());
+            cleared.addBackgroundColor(Color.ORANGE);
             cleared.setLabel("CLEARED");
         }
 
         for (int value : endorsedValues) {
             endorsed.addData(value);
-            endorsed.addBackgroundColor(Color.random());
+            endorsed.addBackgroundColor(Color.YELLOW);
             endorsed.setLabel("ENDORSED");
         }
 
         for (int value : approvedValues) {
             approved.addData(value);
-            approved.addBackgroundColor(Color.random());
+            approved.addBackgroundColor(Color.GREEN);
             approved.setLabel("APPROVED");
         }
 
         for (int value : forReleaseValues) {
             forRelease.addData(value);
-            forRelease.addBackgroundColor(Color.random());
+            forRelease.addBackgroundColor(Color.BLUE);
             forRelease.setLabel("FOR RELEASE");
         }
 
         for (int value : releasedValues) {
             released.addData(value);
-            released.addBackgroundColor(Color.random());
+            released.addBackgroundColor(Color.PURPLE);
             released.setLabel("RELEASED");
         }
 
@@ -1025,11 +3286,11 @@ public class Chart {
 
     }
 
-    public String getStackedBarChartApprovalRate(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+    public String getStackedBarChartApprovalRate(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList, Date start, Date end) {
 
         ArrayList<String> labels = new ArrayList();
         boolean b = true;
-
+        APCPRequestDAO dao = new APCPRequestDAO();
         if (regionList.isEmpty()) {
             labels.add("REGION I (ILOCOS REGION)");
             labels.add("REGION II (CAGAYAN VALLEY)");
@@ -1087,6 +3348,13 @@ public class Chart {
         scales.addyAxes(y);
         options.setScales(scales);
 
+        SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("Approval Rate: " + f.format(start) + " - " + f.format(end));
+
+        options.setTitle(title);
+
         Calendar current = Calendar.getInstance();
 
         for (int i = 0; i < labels.size(); i++) { // REGIONS/PROVINCES
@@ -1105,10 +3373,11 @@ public class Chart {
             int forReleaseDays = 0;
 
             for (ARBO arbo : arboList) {
-
+                arbo.setRequestList(dao.getAllARBORequests(arbo.getArboID()));
+                ArrayList<APCPRequest> filtered = filterAPCPByDate(arbo.getRequestList(), start, end);
                 if (b) { // REGIONAL
                     if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
-                        for (APCPRequest r : arbo.getRequestList()) {
+                        for (APCPRequest r : filtered) {
                             Calendar startDate = Calendar.getInstance();
                             Calendar endDate = Calendar.getInstance();
 
@@ -1166,7 +3435,7 @@ public class Chart {
                     }
                 } else { // PROVINCIAL OFFICE
                     if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
-                        for (APCPRequest r : arbo.getRequestList()) {
+                        for (APCPRequest r : filtered) {
                             Calendar startDate = Calendar.getInstance();
                             Calendar endDate = Calendar.getInstance();
 
@@ -1286,10 +3555,20 @@ public class Chart {
 
     }
 
-    public String getBarChartLoanType(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+    public String getBarChartLoanType(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList, Date start, Date end) {
 
         ArrayList<String> labels = new ArrayList();
         boolean b = true;
+
+        BarOptions options = new BarOptions();
+        SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("Loan Type Availability: " + f.format(start) + " - " + f.format(end));
+
+        options.setTitle(title);
+
+        APCPRequestDAO dao = new APCPRequestDAO();
 
         if (regionList.isEmpty()) {
             labels.add("REGION I (ILOCOS REGION)");
@@ -1332,9 +3611,13 @@ public class Chart {
             int total = 0;
             int total1 = 0;
             for (ARBO arbo : arboList) {
+
+                arbo.setRequestList(dao.getAllARBORequests(arbo.getArboID()));
+                ArrayList<APCPRequest> filtered = filterAPCPByDate(arbo.getRequestList(), start, end);
+
                 if (b) { // REGIONAL
                     if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
-                        for (APCPRequest r : arbo.getRequestList()) {
+                        for (APCPRequest r : filtered) {
                             if (r.getApcpType() == 1) { // crop prod
                                 total++;
                             } else { // livelihood
@@ -1344,7 +3627,7 @@ public class Chart {
                     }
                 } else { // PROVINCIAL OFFICE
                     if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
-                        for (APCPRequest r : arbo.getRequestList()) {
+                        for (APCPRequest r : filtered) {
                             if (r.getApcpType() == 1) { // crop prod
                                 total++;
                             } else { // livelihood
@@ -1374,14 +3657,23 @@ public class Chart {
         data.addDataset(cropProd);
         data.addDataset(live);
 
-        return new BarChart(data).setHorizontal().toJson();
+        return new BarChart(data, options).setHorizontal().toJson();
 
     }
 
-    public String getBarChartLoanTerm(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+    public String getBarChartLoanTerm(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList, Date start, Date end) {
 
         ArrayList<String> labels = new ArrayList();
         boolean b = true;
+        APCPRequestDAO dao = new APCPRequestDAO();
+
+        BarOptions options = new BarOptions();
+        SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("Loan Term Availability: " + f.format(start) + " - " + f.format(end));
+
+        options.setTitle(title);
 
         if (regionList.isEmpty()) {
             labels.add("REGION I (ILOCOS REGION)");
@@ -1415,8 +3707,10 @@ public class Chart {
 
         BarData data = new BarData();
 
-        BarDataset cropProd = new BarDataset();
-        BarDataset live = new BarDataset();
+        BarDataset annualDS = new BarDataset();
+        BarDataset plantationDS = new BarDataset();
+        BarDataset capitalDS = new BarDataset();
+        BarDataset fixedAssetDS = new BarDataset();
         ArrayList<Integer> annualValues = new ArrayList();
         ArrayList<Integer> plantationValues = new ArrayList();
         ArrayList<Integer> capitalValues = new ArrayList();
@@ -1429,9 +3723,11 @@ public class Chart {
             int fixedAsset = 0;
 
             for (ARBO arbo : arboList) {
+                arbo.setRequestList(dao.getAllARBORequests(arbo.getArboID()));
+                ArrayList<APCPRequest> filtered = filterAPCPByDate(arbo.getRequestList(), start, end);
                 if (b) { // REGIONAL
                     if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
-                        for (APCPRequest r : arbo.getRequestList()) {
+                        for (APCPRequest r : filtered) {
                             if (r.getLoanReason().getLoanReasonDesc() != null) {
                                 if (r.getLoanReason().getLoanTermID() == 1) { // Semi-Annual / Annual
                                     annual++;
@@ -1448,7 +3744,7 @@ public class Chart {
                     }
                 } else { // PROVINCIAL OFFICE
                     if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
-                        for (APCPRequest r : arbo.getRequestList()) {
+                        for (APCPRequest r : filtered) {
                             if (r.getLoanReason().getLoanReasonDesc() != null) {
                                 if (r.getLoanReason().getLoanTermID() == 1) { // Semi-Annual / Annual
                                     annual++;
@@ -1473,37 +3769,39 @@ public class Chart {
         }
 
         for (int value : annualValues) {
-            cropProd.addData(value);
-            cropProd.addBackgroundColor(Color.DARK_OLIVE_GREEN);
-            cropProd.setLabel("SEMI-ANNUAL/ANNUAL CROPS");
+            annualDS.addData(value);
+            annualDS.addBackgroundColor(Color.RED);
+            annualDS.setLabel("SEMI-ANNUAL/ANNUAL CROPS");
         }
 
         for (int value : plantationValues) {
-            live.addData(value);
-            live.addBackgroundColor(Color.RED);
-            live.setLabel("PLANTATION CROPS");
+            plantationDS.addData(value);
+            plantationDS.addBackgroundColor(Color.ORANGE);
+            plantationDS.setLabel("PLANTATION CROPS");
         }
 
         for (int value : capitalValues) {
-            cropProd.addData(value);
-            cropProd.addBackgroundColor(Color.DARK_OLIVE_GREEN);
-            cropProd.setLabel("WORKING CAPITAL");
+            capitalDS.addData(value);
+            capitalDS.addBackgroundColor(Color.YELLOW);
+            capitalDS.setLabel("WORKING CAPITAL");
         }
 
         for (int value : fixedAssetValues) {
-            live.addData(value);
-            live.addBackgroundColor(Color.RED);
-            live.setLabel("FIXED ASSET ACQUISITION");
+            fixedAssetDS.addData(value);
+            fixedAssetDS.addBackgroundColor(Color.GREEN);
+            fixedAssetDS.setLabel("FIXED ASSET ACQUISITION");
         }
 
-        data.addDataset(cropProd);
-        data.addDataset(live);
+        data.addDataset(annualDS);
+        data.addDataset(plantationDS);
+        data.addDataset(capitalDS);
+        data.addDataset(fixedAssetDS);
 
-        return new BarChart(data).setHorizontal().toJson();
+        return new BarChart(data, options).setHorizontal().toJson();
 
     }
 
-    public String getStackedBarChartLoanReason(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+    public String getStackedBarChartLoanReason(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList, Date start, Date end) {
 
         APCPRequestDAO requestDAO = new APCPRequestDAO();
         ArrayList<String> labels = new ArrayList();
@@ -1519,6 +3817,13 @@ public class Chart {
         scales.addxAxes(x);
         scales.addyAxes(y);
         options.setScales(scales);
+
+        SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("Loan Reasons: " + f.format(start) + " - " + f.format(end));
+
+        options.setTitle(title);
 
         if (regionList.isEmpty()) {
             labels.add("REGION I (ILOCOS REGION)");
@@ -1560,9 +3865,13 @@ public class Chart {
             for (String label : labels) { // REGIONS/PROVINCES
                 int count = 0;
                 for (ARBO arbo : arboList) {
+
+                    arbo.setRequestList(requestDAO.getAllARBORequests(arbo.getArboID()));
+                    ArrayList<APCPRequest> filtered = filterAPCPByDate(arbo.getRequestList(), start, end);
+
                     if (b) { // REGIONAL
                         if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
-                            for (APCPRequest r : arbo.getRequestList()) {
+                            for (APCPRequest r : filtered) {
                                 if (r.getLoanReason().getLoanReasonDesc() != null) {
                                     if (r.getLoanReason().getLoanReasonDesc().equals(reason.getLoanReasonDesc())) {
                                         count++;
@@ -1573,7 +3882,7 @@ public class Chart {
                         }
                     } else { // PROVINCIAL OFFICE
                         if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
-                            for (APCPRequest r : arbo.getRequestList()) {
+                            for (APCPRequest r : filtered) {
                                 if (r.getLoanReason().getLoanReasonDesc() != null) {
                                     if (r.getLoanReason().getLoanReasonDesc().equals(reason.getLoanReasonDesc())) {
                                         count++;
@@ -1710,13 +4019,10 @@ public class Chart {
 //        return new BarChart(data).toJson();
 //
 //    }
-    public String getStackedBarChartApprovedAmounts(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+    public String getStackedBarChartPastDue(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList, Date start, Date end) {
 
         APCPRequestDAO requestDAO = new APCPRequestDAO();
-        AddressDAO addressDAO = new AddressDAO();
         ArrayList<String> labels = new ArrayList();
-        ArrayList<LoanReason> refLoanReasons = requestDAO.getAllLoanReasons();
-        double totalApprovedAmount = requestDAO.getTotalApprovedAmount();
         boolean b = true;
 
         BarOptions options = new BarOptions();
@@ -1728,6 +4034,13 @@ public class Chart {
         scales.addxAxes(x);
         scales.addyAxes(y);
         options.setScales(scales);
+
+        SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("Past Due Amounts: " + f.format(start) + " - " + f.format(end));
+
+        options.setTitle(title);
 
         if (regionList.isEmpty()) { // REGION parameter is empty
             labels.add("REGION I (ILOCOS REGION)");
@@ -1761,44 +4074,40 @@ public class Chart {
         BarData data = new BarData();
 
         ArrayList<BarDataset> datasets = new ArrayList();
-        for (LoanReason reason : refLoanReasons) {
-            BarDataset dataset = new BarDataset(); // initializes
-            dataset.setLabel(reason.getLoanReasonDesc()); // ONE color
-            dataset.setBackgroundColor(Color.random()); // ONE bar
-            for (String label : labels) { // REGIONS/PROVINCES
-                int count = 0;
-                for (ARBO arbo : arboList) {
-                    if (b) { // REGIONAL
-                        if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
-                            for (APCPRequest r : arbo.getRequestList()) {
-                                if (r.getLoanReason().getLoanReasonDesc() != null) {
-                                    if (r.getLoanReason().getLoanReasonDesc().equals(reason.getLoanReasonDesc())) {
-                                        count++;
-                                    }
-                                }
 
-                            }
+        for (String label : labels) { // REGIONS/PROVINCES
+
+            double sum = 0;
+            BarDataset dataset = new BarDataset(); // initializes
+            dataset.setLabel(label); // ONE color
+            dataset.setBackgroundColor(Color.random()); // ONE bar
+
+            for (ARBO arbo : arboList) {
+
+                arbo.setRequestList(requestDAO.getAllARBORequests(arbo.getArboID()));
+                ArrayList<APCPRequest> filtered = filterAPCPByDate(arbo.getRequestList(), start, end);
+
+                if (b) { // REGIONAL
+                    if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                        for (APCPRequest r : filtered) {
+                            sum += r.getTotalPDAAmountPerRequest();
                         }
-                    } else { // PROVINCIAL OFFICE
-                        if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
-                            for (APCPRequest r : arbo.getRequestList()) {
-                                if (r.getLoanReason().getLoanReasonDesc() != null) {
-                                    if (r.getLoanReason().getLoanReasonDesc().equals(reason.getLoanReasonDesc())) {
-                                        count++;
-                                    }
-                                }
-                            }
+                    }
+                } else { // PROVINCIAL OFFICE
+                    if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                        for (APCPRequest r : filtered) {
+                            sum += r.getTotalPDAAmountPerRequest();
                         }
                     }
                 }
-                if (count > 0) {
-                    dataset.addData(count);
-                }
             }
+            if (sum > 0) {
+                dataset.addData(sum);
+            }
+
             if (dataset.getData().size() > 0) {
                 datasets.add(dataset);
             }
-
         }
 
         data.setLabels(labels);
@@ -1808,17 +4117,12 @@ public class Chart {
 
     }
 
-    public String getBarChartApprovedAmounts(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+    public String getStackedBarChartApprovedAmounts(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList, Date start, Date end) {
 
         APCPRequestDAO requestDAO = new APCPRequestDAO();
-        AddressDAO aDAO = new AddressDAO();
-        ARBODAO arboDAO = new ARBODAO();
-        Province provOffice = new Province();
-        ArrayList<Province> provOffices = aDAO.getAllProvOffices();
-
         ArrayList<String> labels = new ArrayList();
         boolean b = true;
-        double totalApprovedAmount = requestDAO.getTotalApprovedAmount();
+
         BarOptions options = new BarOptions();
         BarScale scales = new BarScale();
         XAxis x = new XAxis();
@@ -1829,7 +4133,14 @@ public class Chart {
         scales.addyAxes(y);
         options.setScales(scales);
 
-        if (regionList.isEmpty()) {
+        SimpleDateFormat f = new SimpleDateFormat("MMMMM dd, yyyy");
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("Approved Amounts: " + f.format(start) + " - " + f.format(end));
+
+        options.setTitle(title);
+
+        if (regionList.isEmpty()) { // REGION parameter is empty
             labels.add("REGION I (ILOCOS REGION)");
             labels.add("REGION II (CAGAYAN VALLEY)");
             labels.add("REGION III (CENTRAL LUZON)");
@@ -1845,8 +4156,7 @@ public class Chart {
             labels.add("REGION XII (SOCCSKSARGEN)");
             labels.add("CORDILLERA ADMINISTRATIVE REGION (CAR)");
             labels.add("REGION XIII (Caraga)");
-            System.out.println("REGION EMPTY!");
-        } else if (provList.isEmpty()) {
+        } else if (provList.isEmpty()) { // PROVINCE parameter is empty
             for (Region r : regionList) {
                 labels.add(r.getRegDesc());
             }
@@ -1860,100 +4170,59 @@ public class Chart {
         }
 
         BarData data = new BarData();
-        BarDataset dataset = new BarDataset(); // initializes
+
         ArrayList<BarDataset> datasets = new ArrayList();
 
-        // REGIONAL
-        for (String label : labels) { // REGIONS
-            dataset = new BarDataset(); // initializes
-            if (b) {
-                for (Province p : provOffices) {
-                    if (p.matchProvOfficeByDesc(p, label)) {
-                        dataset.setLabel(p.getProvDesc()); // ONE color
-                        dataset.setBackgroundColor(Color.random()); // ONE bar
+        for (String label : labels) { // REGIONS/PROVINCES
 
-                        double provincialApprovedAmount = 0;
+            double sum = 0;
+            BarDataset dataset = new BarDataset(); // initializes
+            dataset.setLabel(label); // ONE color
+            dataset.setBackgroundColor(Color.random()); // ONE bar
 
-                        for (APCPRequest req : requestDAO.getAllProvincialRequests(p.getProvCode())) {
-                            if (req.getRequestStatus() == 4 || req.getRequestStatus() == 5 || req.getRequestStatus() == 6) {
-                                provincialApprovedAmount += req.getLoanAmount();
+            for (ARBO arbo : arboList) {
+
+                arbo.setRequestList(requestDAO.getAllARBORequests(arbo.getArboID()));
+                ArrayList<APCPRequest> filtered = filterAPCPByDate(arbo.getRequestList(), start, end);
+
+                if (b) { // REGIONAL
+                    if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
+                        for (APCPRequest r : filtered) {
+                            if (r.getRequestStatus() == 1 || r.getRequestStatus() == 2 || r.getRequestStatus() == 3 || r.getRequestStatus() == 4) {
+                                sum += r.getLoanAmount();
                             }
                         }
-                        dataset.addData(provincialApprovedAmount / totalApprovedAmount);
+                    }
+                } else { // PROVINCIAL OFFICE
+                    if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
+                        for (APCPRequest r : filtered) {
+                            if (r.getRequestStatus() == 1 || r.getRequestStatus() == 2 || r.getRequestStatus() == 3 || r.getRequestStatus() == 4) {
+                                sum += r.getLoanAmount();
+                            }
+                        }
                     }
                 }
-            } else { // PROVINCIAL
-//                for (ARBO a : arboDAO.getAllARBOsByProvinceDesc(label)) {
-//                    dataset.setLabel(a.getArboName()); // ONE color
-//                    dataset.setBackgroundColor(Color.random()); // ONE bar
-//
-//                    double arboApprovedAmount = 0;
-//
-//                    for (APCPRequest req : a.getRequestList()) {
-//                        if (req.getRequestStatus() == 4 || req.getRequestStatus() == 5 || req.getRequestStatus() == 6) {
-//                            arboApprovedAmount += req.getLoanAmount();
-//                        }
-//                    }
-//
-//                    dataset.addData(arboApprovedAmount / totalApprovedAmount);
-//
-//                }
-//
-//                datasets.add(dataset);
-
+            }
+            if (sum > 0) {
+                dataset.addData(sum);
             }
 
+            if (dataset.getData().size() > 0) {
+                datasets.add(dataset);
+            }
         }
 
-//        for (String label : labels) { // REGIONS/
-//            for (String label : labels) { // REGIONS/PROVINCES
-//
-//                int count = 0;
-//                for (ARBO arbo : arboList) {
-//                    if (b) { // REGIONAL
-//                        if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
-//                            for (APCPRequest r : arbo.getRequestList()) {
-//                                if (r.getLoanReason().getLoanReasonDesc() != null) {
-//                                    System.out.println("R " + r.getLoanReason().getLoanReasonDesc());
-//                                    System.out.println("reason " + reason.getLoanReasonDesc());
-//                                    if (r.getLoanReason().getLoanReasonDesc().equals(reason.getLoanReasonDesc())) {
-//                                        count++;
-//                                    }
-//                                }
-//
-//                            }
-//                        }
-//                    } else { // PROVINCIAL OFFICE
-//                        if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
-//                            for (APCPRequest r : arbo.getRequestList()) {
-//                                if (r.getLoanReason().getLoanReasonDesc() != null) {
-//                                    if (r.getLoanReason().getLoanReasonDesc().equals(reason.getLoanReasonDesc())) {
-//                                        count++;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                if (count > 0) {
-//                    dataset.addData(count);
-//                }
-//            }
-//            if (dataset.getData().size() > 0) {
-//                datasets.add(dataset);
-//            }
-//
-//        }
         data.setLabels(labels);
         data.setDatasets(datasets);
+
         return new BarChart(data, options).setHorizontal().toJson();
 
     }
-    // </editor-fold>
 
-    //<editor-fold desc="CAPDEV DASHBOARD">
+    // </editor-fold>
+    //<editor-fold desc="CAPDEV REPORTS">
     // CAPDEV Plan Status
-    public String getStackedBarChartCAPDEVPlans(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+    public String getStackedBarChartCAPDEVPlans(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList, Date start, Date end) {
 
         ArrayList<String> labels = new ArrayList();
         boolean b = true;
@@ -2006,6 +4275,17 @@ public class Chart {
         scales.addxAxes(x);
         scales.addyAxes(y);
         options.setScales(scales);
+        
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("CAPDEV Plans: " + f.format(start) + " - " + f.format(end));
+
+        options.setTitle(title);
+
+        APCPRequestDAO dao = new APCPRequestDAO();
+        CAPDEVDAO dao2 = new CAPDEVDAO();
 
         for (int i = 0; i < labels.size(); i++) { // REGIONS/PROVINCES
 
@@ -2015,10 +4295,15 @@ public class Chart {
             int implementedCount = 0;
 
             for (ARBO arbo : arboList) {
+
+                arbo.setRequestList(dao.getAllARBORequests(arbo.getArboID()));
+
                 if (b) { // REGIONAL
                     if (labels.get(i).equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
                         for (APCPRequest r : arbo.getRequestList()) {
-                            for (CAPDEVPlan c : r.getPlans()) {
+                            r.setPlans(dao2.getAllCAPDEVPlanByRequest(r.getRequestID()));
+                            ArrayList<CAPDEVPlan> filtered = filterCAPDEVByDate(r.getPlans(), start, end);
+                            for (CAPDEVPlan c : filtered) {
                                 if (c.getPlanStatus() == 1) { // pending
                                     pendingCount++;
                                 } else if (c.getPlanStatus() == 2) { // approved
@@ -2034,7 +4319,9 @@ public class Chart {
                 } else { // PROVINCIAL OFFICE
                     if (labels.get(i).equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
                         for (APCPRequest r : arbo.getRequestList()) {
-                            for (CAPDEVPlan c : r.getPlans()) {
+                            r.setPlans(dao2.getAllCAPDEVPlanByRequest(r.getRequestID()));
+                            ArrayList<CAPDEVPlan> filtered = filterCAPDEVByDate(r.getPlans(), start, end);
+                            for (CAPDEVPlan c : filtered) {
                                 if (c.getPlanStatus() == 1) { // pending
                                     pendingCount++;
                                 } else if (c.getPlanStatus() == 2) { // approved
@@ -2093,7 +4380,7 @@ public class Chart {
     }
 
     // Frequency of Activity Types
-    public String getStackedBarChartActivityTypes(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
+    public String getStackedBarChartActivityTypes(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList, Date start, Date end) {
 
         CAPDEVDAO capdevDAO = new CAPDEVDAO();
         ArrayList<String> labels = new ArrayList();
@@ -2110,6 +4397,12 @@ public class Chart {
         scales.addxAxes(x);
         scales.addyAxes(y);
         options.setScales(scales);
+        
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        
+        Title title = new Title();
+        title.setDisplay(true);
+        title.setText("CAPDEV Activities: " + f.format(start) + " - " + f.format(end));
 
         if (regionList.isEmpty()) {
             labels.add("REGION I (ILOCOS REGION)");
@@ -2141,6 +4434,8 @@ public class Chart {
 
         }
 
+        APCPRequestDAO dao = new APCPRequestDAO();
+        CAPDEVDAO dao2 = new CAPDEVDAO();
         BarData data = new BarData();
 
         ArrayList<BarDataset> datasets = new ArrayList();
@@ -2151,10 +4446,13 @@ public class Chart {
             for (String label : labels) { // REGIONS/PROVINCES
                 int count = 0;
                 for (ARBO arbo : arboList) {
+                    arbo.setRequestList(dao.getAllARBORequests(arbo.getArboID()));
                     if (b) { // REGIONAL
                         if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) { // checker
                             for (APCPRequest r : arbo.getRequestList()) {
-                                for (CAPDEVPlan p : r.getPlans()) {
+                                r.setPlans(dao2.getAllCAPDEVPlanByRequest(r.getRequestID()));
+                                ArrayList<CAPDEVPlan> filtered = filterCAPDEVByDate(r.getPlans(), start, end);
+                                for (CAPDEVPlan p : filtered) {
                                     if (p.getPlanStatus() == 5) { // IMPLEMENTED
                                         for (CAPDEVActivity planActivity : p.getActivities()) {
                                             if (planActivity.getActivityName() != null) { // NOT NULL/HAS VALUE
@@ -2170,7 +4468,9 @@ public class Chart {
                     } else { // PROVINCIAL OFFICE
                         if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) { // checker
                             for (APCPRequest r : arbo.getRequestList()) {
-                                for (CAPDEVPlan p : r.getPlans()) {
+                                r.setPlans(dao2.getAllCAPDEVPlanByRequest(r.getRequestID()));
+                                ArrayList<CAPDEVPlan> filtered = filterCAPDEVByDate(r.getPlans(), start, end);
+                                for (CAPDEVPlan p : filtered) {
                                     if (p.getPlanStatus() == 5) { // IMPLEMENTED
                                         for (CAPDEVActivity planActivity : p.getActivities()) {
                                             if (planActivity.getActivityName() != null) { // NOT NULL/HAS VALUE
@@ -2203,7 +4503,7 @@ public class Chart {
     }
     //</editor-fold>
 
-    //<editor-fold desc="PFO-HEAD DASHBOARD">
+    //<editor-fold desc="DASHBOARDS">
     //APCP
     public String getStackedBarChartAPCPOnTrackDelayedByStatus(ArrayList<ARBO> arboList, int status, int userType, String titleStr) {
 
@@ -2255,12 +4555,13 @@ public class Chart {
 
         BarDataset delayed = new BarDataset();
         delayed.setLabel("DELAYED");
-        delayed.setBackgroundColor(Color.YELLOW);
+        delayed.setBackgroundColor(Color.RED);
 
         for (String label : labels) {
             int onTrackCount = 0;
             int delayedCount = 0;
             for (ARBO arbo : arboList) {
+                arbo.setRequestList(requestDAO.getAllARBORequests(arbo.getArboID()));
                 if (userType == 3) { // PROVINCIAL
                     if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) {
                         onTrackCount += requestDAO.getOnTrackRequestsPerStatus(arbo.getRequestList(), status);
@@ -2733,7 +5034,9 @@ public class Chart {
     public String getStackedBarChartCAPDEVOnTrackDelayedByStatus(ArrayList<ARBO> arboList, int status, int userType, String titleStr) {
 
         ArrayList<String> labels = new ArrayList();
+
         CAPDEVDAO capdevDAO = new CAPDEVDAO();
+        APCPRequestDAO apcpRequestDAO = new APCPRequestDAO();
 
         BarOptions options = new BarOptions();
         BarScale scales = new BarScale();
@@ -2780,15 +5083,17 @@ public class Chart {
 
         BarDataset delayed = new BarDataset();
         delayed.setLabel("DELAYED");
-        delayed.setBackgroundColor(Color.YELLOW);
+        delayed.setBackgroundColor(Color.RED);
 
         for (String label : labels) {
             int onTrackCount = 0;
             int delayedCount = 0;
             for (ARBO arbo : arboList) {
+                arbo.setRequestList(apcpRequestDAO.getAllARBORequests(arbo.getArboID()));
                 if (userType == 3) { // PROVINCIAL
                     if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) {
                         for (APCPRequest req : arbo.getRequestList()) {
+                            req.setPlans(capdevDAO.getAllCAPDEVPlanByRequest(req.getRequestID()));
                             onTrackCount += capdevDAO.getOnTrackPlansPerStatus(req.getPlans(), status);
                             delayedCount += capdevDAO.getDelayedPlansPerStatus(req.getPlans(), status);
                         }
@@ -2796,6 +5101,7 @@ public class Chart {
                 } else if (userType == 2) { // REGIONAL
                     if (label.equalsIgnoreCase(arbo.getProvOfficeCodeDesc())) {
                         for (APCPRequest req : arbo.getRequestList()) {
+                            req.setPlans(capdevDAO.getAllCAPDEVPlanByRequest(req.getRequestID()));
                             onTrackCount += capdevDAO.getOnTrackPlansPerStatus(req.getPlans(), status);
                             delayedCount += capdevDAO.getDelayedPlansPerStatus(req.getPlans(), status);
                         }
@@ -2803,6 +5109,7 @@ public class Chart {
                 } else if (userType == 1) { // CENTRAL
                     if (label.equalsIgnoreCase(arbo.getArboRegionDesc())) {
                         for (APCPRequest req : arbo.getRequestList()) {
+                            req.setPlans(capdevDAO.getAllCAPDEVPlanByRequest(req.getRequestID()));
                             onTrackCount += capdevDAO.getOnTrackPlansPerStatus(req.getPlans(), status);
                             delayedCount += capdevDAO.getDelayedPlansPerStatus(req.getPlans(), status);
                         }
@@ -3520,6 +5827,7 @@ public class Chart {
             int count = 0;
             stringLabels.add(reason.getReasonPastDueDesc());
             for (APCPRequest r : unsettledProvincialRequests) {
+                r.setUnsettledPastDueAccounts(dao2.getAllUnsettledPastDueAccountsByRequest(r.getRequestID()));
                 ArrayList<PastDueAccount> unsettled = r.getUnsettledPastDueAccounts();
                 for (PastDueAccount pda : unsettled) {
                     if (pda.getReasonPastDue() == reason.getReasonPastDue()) {
@@ -3540,4 +5848,34 @@ public class Chart {
         return new PieChart(data).toJson();
     }
     //</editor-fold>
+
+    public ArrayList<APCPRequest> filterAPCPByDate(ArrayList<APCPRequest> list, Date start, Date end) {
+
+        ArrayList<APCPRequest> filtered = new ArrayList();
+
+        for (APCPRequest r : list) {
+            if (isIncluded(r.getDateRequested(), start, end)) {
+                filtered.add(r);
+            }
+        }
+
+        return filtered;
+    }
+
+    public ArrayList<CAPDEVPlan> filterCAPDEVByDate(ArrayList<CAPDEVPlan> list, Date start, Date end) {
+
+        ArrayList<CAPDEVPlan> filtered = new ArrayList();
+
+        for (CAPDEVPlan r : list) {
+            if (isIncluded(r.getPlanDate(), start, end)) {
+                filtered.add(r);
+            }
+        }
+
+        return filtered;
+    }
+
+    public boolean isIncluded(Date d, Date start, Date end) {
+        return start.compareTo(d) * d.compareTo(end) > 0;
+    }
 }

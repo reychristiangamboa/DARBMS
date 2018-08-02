@@ -64,7 +64,7 @@
 <div class="row">
     <div class="col-xs-12">
         <label>Loan Recipients</label>
-        <table id="example3" class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped modTable">
             <thead>
                 <tr>
                     <th>Full Name</th> 

@@ -32,77 +32,94 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author Rey Christian
  */
 public class ImportPastDueAccount extends BaseServlet {
-
+    
     @Override
     protected void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        
         HttpSession session = request.getSession();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
+        
         APCPRequestDAO dao = new APCPRequestDAO();
         CAPDEVDAO capdevDAO = new CAPDEVDAO();
         ArrayList pastDueAccountHolder = readExcelFile(request.getParameter("file"));
         ArrayList store = new ArrayList();
-
+        
         for (int i = 1; i < pastDueAccountHolder.size(); i++) {
             store = (ArrayList) pastDueAccountHolder.get(i);
             PastDueAccount pda = new PastDueAccount();
-
+            
             pda.setPastDueAmount(Double.parseDouble(store.get(0).toString()));
-
+            
             int reason = capdevDAO.getPastDueReasonByDesc(store.get(1).toString());
             pda.setReasonPastDue(reason);
-
+            
             if (store.get(2).toString().equalsIgnoreCase("N/A")) {
                 pda.setOtherReason("N/A");
             } else {
-                pda.setOtherReason(store.get(3).toString());
+                pda.setOtherReason(store.get(2).toString());
             }
-
+            
             if (!store.get(3).toString().equalsIgnoreCase("N/A")) {
                 java.sql.Date dateSettled = null;
-
-                String excelDate = store.get(1).toString(); // Parsing of Excel Date to Java Date
+                
+                String excelDate = store.get(3).toString(); // Parsing of Excel Date to Java Date
                 String[] dateArr = excelDate.split("-");
-
+                
                 int val = getValOfMonth(dateArr[1]);
                 String finalDate = dateArr[2] + "-" + val + "-" + dateArr[0];
-
+                
                 try {
                     java.util.Date parsedDateSettled = sdf.parse(finalDate);
                     dateSettled = new java.sql.Date(parsedDateSettled.getTime());
                 } catch (ParseException ex) {
                     Logger.getLogger(ImportPastDueAccount.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
+                
                 pda.setDateSettled(dateSettled);
             }
-
+            
+            java.sql.Date dateRecorded = null;
+            
+            String excelDate = store.get(4).toString(); // Parsing of Excel Date to Java Date
+            String[] dateArr = excelDate.split("-");
+            
+            int val = getValOfMonth(dateArr[1]);
+            String finalDate = dateArr[2] + "-" + val + "-" + dateArr[0];
+            
+            try {
+                java.util.Date parsedDateRecorded = sdf.parse(finalDate);
+                dateRecorded = new java.sql.Date(parsedDateRecorded.getTime());
+            } catch (ParseException ex) {
+                Logger.getLogger(ImportPastDueAccount.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            pda.setDateRecorded(dateRecorded);
+            
             pda.setRequestID(Integer.parseInt(request.getParameter("requestID")));
             pda.setRecordedBy((Integer) session.getAttribute("userID"));
-
+            
             dao.addPastDueAccount(pda);
-
+            
         }
-
+        
         request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
         request.setAttribute("success", "Past Due Accounts successfully imported!");
-        request.getRequestDispatcher("point-person-monitor-release.jsp").forward(request, response);
-
+        request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
+        
     }
-
+    
     public static ArrayList readExcelFile(String file) {
         ArrayList cellArrayListHolder = new ArrayList();
         try {
             OPCPackage pkg = OPCPackage.open(file);
             XSSFWorkbook workbook = new XSSFWorkbook(pkg);
             XSSFSheet sheet = workbook.getSheetAt(0);
-
+            
             Iterator rowIter = sheet.rowIterator();
             while (rowIter.hasNext()) {
                 XSSFRow row = (XSSFRow) rowIter.next();
                 Iterator cellIter = row.cellIterator();
-
+                
                 ArrayList cellStoreArrayList = new ArrayList();
                 while (cellIter.hasNext()) {
                     XSSFCell cell = (XSSFCell) cellIter.next();
@@ -115,11 +132,11 @@ public class ImportPastDueAccount extends BaseServlet {
         }
         return cellArrayListHolder;
     }
-
+    
     public static int getValOfMonth(String month) {
-
+        
         int val = 0;
-
+        
         if (month.equals("Jan")) {
             val = 01;
         } else if (month.equals("Feb")) {
@@ -145,9 +162,9 @@ public class ImportPastDueAccount extends BaseServlet {
         } else if (month.equals("Dec")) {
             val = 12;
         }
-
+        
         return val;
-
+        
     }
-
+    
 }

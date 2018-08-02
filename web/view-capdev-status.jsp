@@ -234,7 +234,7 @@
                         <div class="col-lg-3 col-xs-6" >
                             <!-- small box -->
                             <a href="#" name="btn1">
-                                <div class="small-box bg-warning">
+                                <div class="small-box bg-yellow">
                                     <div class="inner">
                                         <h3><%=pendingPlans.size()%></h3>
 
@@ -250,7 +250,7 @@
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn2">
-                                <div class="small-box bg-green-gradient">
+                                <div class="small-box bg-blue">
                                     <div class="inner">
                                         <h3><%=approvedPlans.size()%></h3>
 
@@ -284,7 +284,7 @@
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <a href="#" name="btn4">
-                                <div class="small-box bg-green-active">
+                                <div class="small-box bg-green">
                                     <div class="inner">
                                         <h3><%=implementedPlans.size()%></h3>
 
@@ -314,7 +314,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>Plan DTN</th>
@@ -368,7 +368,7 @@
                     <!--PP MONITORS CAPDEV-->
                     <div class="row" id="2" style="display:none;">
                         <div class="col-xs-12">
-                            <div class="box bg-green-gradient">
+                            <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Approved</strong></h3>
                                     <div class="btn-group pull-right">
@@ -377,7 +377,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>Plan DTN</th>
@@ -426,7 +426,7 @@
                     <!--DISAPPROVED-->
                     <div class="row" id="3" style="display:none;">
                         <div class="col-xs-12">
-                            <div class="box bg-red">
+                            <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Disapproved</strong></h3>
                                     <div class="btn-group pull-right">
@@ -435,7 +435,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>Plan DTN</th>
@@ -486,7 +486,7 @@
                     <!--IMPLEMENTED-->
                     <div class="row" id="4" style="display:none;">
                         <div class="col-xs-12" >
-                            <div class="box bg-green-active">
+                            <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Implemented</strong></h3>
                                     <div class="btn-group pull-right">
@@ -495,7 +495,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>Plan DTN</th>
@@ -545,7 +545,7 @@
                     <!--PFO-HEAD RESCHEDULES-->
                     <div class="row" id="5" style="display:none;">
                         <div class="col-xs-12" >
-                            <div class="box bg-green-active">
+                            <div class="box">
                                 <div class="box-header with-border">
                                     <h3 class="box-title"><strong>Postponed</strong></h3>
                                     <div class="btn-group pull-right">
@@ -554,7 +554,7 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">             
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped modTable">
                                         <thead>
                                             <tr>
                                                 <th>Plan DTN</th>

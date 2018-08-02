@@ -80,7 +80,7 @@
                     endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
                     approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4, (Integer) session.getAttribute("provOfficeCode"));
                     releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
-                    forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(7, (Integer) session.getAttribute("provOfficeCode"));
+                    forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(6, (Integer) session.getAttribute("provOfficeCode"));
                     incompleteRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(8, (Integer) session.getAttribute("provOfficeCode"));
                     forConduitApprovalRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(0, (Integer) session.getAttribute("provOfficeCode"));
                 } else if(userType == 4){
@@ -91,12 +91,12 @@
                     endorsedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
                     approvedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(4, (Integer) session.getAttribute("regOfficeCode"));
                     releasedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(5, (Integer) session.getAttribute("regOfficeCode"));
-                    forReleaseRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(7, (Integer) session.getAttribute("regOfficeCode"));
+                    forReleaseRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(6, (Integer) session.getAttribute("regOfficeCode"));
                     incompleteRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(8, (Integer) session.getAttribute("regOfficeCode"));
                     forConduitApprovalRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(0, (Integer) session.getAttribute("regOfficeCode"));
                 } else if (userType == 5){
                     releasedRequests = apcpRequestDAO.getAllRequestsByStatus(5);
-                    forReleaseRequests = apcpRequestDAO.getAllRequestsByStatus(7);
+                    forReleaseRequests = apcpRequestDAO.getAllRequestsByStatus(6);
                     approvedRequests = apcpRequestDAO.getAllRequestsByStatus(4);
                     endorsedRequests = apcpRequestDAO.getAllRequestsByStatus(3);
                     clearedRequests = apcpRequestDAO.getAllRequestsByStatus(2);
@@ -551,7 +551,7 @@
                                                 <%if (userType == 7){%>
                                                 <td><a href="CreateCAPDEVProposal?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}else{%>
-                                                <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><a href="ViewAPCP?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
                                                     <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
@@ -608,12 +608,10 @@
                                             %>
 
                                             <tr>
-                                                <%if (userType == 4 || userType == 3 || userType == 5  || userType == 6){%>
-                                                <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}else if(userType == 2){%>
-                                                <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}else if (userType == 7){%>
+                                                <%if (userType == 7){%>
                                                 <td><a href="CreateCAPDEVProposal?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ViewAPCP?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
                                                     <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
@@ -671,12 +669,10 @@
                                             %>
 
                                             <tr>
-                                                <%if (userType == 4 || userType == 3 || userType == 5  || userType == 6){%>
-                                                <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}else if(userType == 2){%>
-                                                <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}else if (userType == 7){%>
+                                                <%if (userType == 7){%>
                                                 <td><a href="CreateCAPDEVProposal?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
                                                     <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
@@ -702,7 +698,7 @@
                     </div>
 
                     <div class="row" id="7">
-                        <!--RELEASED-->
+                        <!--INCOMPLETE-->
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -760,7 +756,7 @@
                     </div>
 
                     <div class="row" id="8">
-                        <!--RELEASED-->
+                        <!--FOR CONDUIT APPROVAL-->
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -790,10 +786,10 @@
                                             %>
 
                                             <tr>
-                                                <%if (userType == 4 || userType == 3 || userType == 5  || userType == 6){%>
-                                                <td><a href="ViewARBOInfo?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                    <%}else if(userType == 2){%>
-                                                <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <%if (userType == 3){%>
+                                                <td><a href="ViewNewAccessingARBO?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                    <%}else{%>
+                                                <td><a href="ViewAPCP?id=<%out.print(r.getRequestID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                     <%}%>
                                                     <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                 <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>

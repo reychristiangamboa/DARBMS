@@ -18,6 +18,7 @@ public class Disbursement {
     private int requestID;
     private int arbID;
     private double disbursedAmount;
+    private double totalReleasedAmount;
     private double OSBalance;
     private Date dateDisbursed;
     private int disbursedBy;
@@ -54,6 +55,15 @@ public class Disbursement {
     public void setDisbursedAmount(Double amount) {
         this.disbursedAmount = amount;
     }
+
+    public double getTotalReleasedAmount() {
+        return totalReleasedAmount;
+    }
+
+    public void setTotalReleasedAmount(double totalReleasedAmount) {
+        this.totalReleasedAmount = totalReleasedAmount;
+    }
+    
 
     public double getOSBalance() {
         return OSBalance;

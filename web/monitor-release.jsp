@@ -58,7 +58,6 @@
             <% User u2 = new User(); %>
             <% User u3 = new User(); %>
             <% User u4 = new User(); %>
-            %>
 
 
             <!-- Content Wrapper. Contains page content -->
@@ -88,7 +87,7 @@
                         <div class="col-xs-12">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">APCP Information</h3>
+                                    <h3 class="box-title">AGRARIAN REFORM PRODUCTION CREDIT PROGRAM</h3>
                                     <div class="btn-group pull-right">
                                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>                                                                                   
                                     </div>  
@@ -223,15 +222,15 @@
         <%@include file="jspf/footer.jspf" %>
         <script type="text/javascript">
             $(document).ready(function () {
-                alert("WEW!");
-                var arboInterestRate = <%out.print(r.getLoanReason().getLoanTerm().getArboInterestRate());%>
-                alert(arboInterestRate);
+                
+                var arboInterestRate = <%out.print(r.getLoanReason().getLoanTerm().getArboInterestRate() + ";");%>
+                
                 $('#releaseAmount').on('input', function () {
                     var val = this.value * arboInterestRate;
                     $('#releaseOSBalance').val(val);
                 });
                 
-                var interestRate = <%out.print(r.getLoanReason().getLoanTerm().getArbInterestRate());%>
+                var interestRate = <%out.print(r.getLoanReason().getLoanTerm().getArbInterestRate() + ";");%>
 
                 $('#disbursementAmount').on('input', function () {
                     var val = this.value * interestRate;
@@ -243,15 +242,13 @@
             function chg() {
                 var arbID = document.getElementById('arbRepaymentSelect').value;
                 
-                alert(arbID);
-
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
                         document.getElementById('arbRepaymentDetails').innerHTML = xhttp.responseText;
                     }
                 };
-                xhttp.open("GET", "RefreshARBRepayment?arbID=" + arbID + "&requestID=" + r.getRequestID()), true);
+                xhttp.open("GET", "RefreshARBRepayment?arbID=" + arbID + "&requestID=<%out.print(r.getRequestID());%>", true);
                 xhttp.send();
             }
         </script>

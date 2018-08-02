@@ -8,6 +8,7 @@ package com.MVC.Model;
 import com.MVC.DAO.CAPDEVDAO;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -242,6 +243,17 @@ public class CAPDEVPlan {
         }
         return true;
     }
+    
+    public boolean hasAPCPOrientation() {
+        CAPDEVDAO dao = new CAPDEVDAO();
+        this.activities = dao.getCAPDEVPlanActivities(this.planID);
+        for (CAPDEVActivity act : this.activities) {
+            if (act.getActivityType() == 2) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public boolean hasPreReleaseOrientation() {
         CAPDEVDAO dao = new CAPDEVDAO();
@@ -252,6 +264,57 @@ public class CAPDEVPlan {
             }
         }
         return false;
+    }
+    
+    public boolean checkIfPlanIsOnTrack(Date date) {
+
+        if (getDateDiff(date) < 5) {
+            System.out.println("IT'S STILL ON TRACK!!");
+            return true;
+        }
+        System.out.println("IT'S NOT ON TRACK!!");
+        return false;
+    }
+
+    public int getDateDiff(Date date1) {
+        long diffInMillies = date1.getTime() - System.currentTimeMillis();
+        System.out.println((int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS));
+        return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+    
+    public boolean isPlanForReschedule(){
+        CAPDEVDAO dao = new CAPDEVDAO();
+        this.activities = dao.getCAPDEVPlanActivities(this.planID);
+        
+        for(CAPDEVActivity act : this.activities){
+            if(act.getActive() == 1 && this.planStatus == 2){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public ArrayList<ARB> getMandatoryAbsentees(){
+        
+        ArrayList<ARB> absentees = new ArrayList();
+        CAPDEVDAO dao = new CAPDEVDAO();
+        
+        this.activities = dao.getCAPDEVPlanActivities(this.planID);
+        
+        for(CAPDEVActivity act : this.activities){
+            if(act.getActivityType() == 2 || act.getActivityType() == 3){
+                for(ARB arb : act.getArbList()){
+                    if(!dao.hasAttendedMandatoryActivities(arb.getArbID(), this.planID)){
+                        if(!absentees.contains(arb)){
+                            absentees.add(arb);
+                        }
+                    }
+                }
+            }
+        }
+        
+        return absentees;
+        
     }
 
 }

@@ -46,10 +46,10 @@ public class ImportDisbursement extends BaseServlet {
         ArrayList store = new ArrayList();
         
 
-        APCPRelease rel = dao.getAPCPReleaseByID(Integer.parseInt(request.getParameter("releaseID")));
-        double amountLimit = rel.getReleaseAmount()-sumDibursements2(rel.getDisbursements());
+        APCPRequest req = dao.getRequestByID(Integer.parseInt(request.getParameter("requestID")));
+        double amountLimit = req.getTotalReleasedAmountPerRequest() - sumDibursements2(dao.getAllDisbursementsByRequest(req.getRequestID()));
 
-        if (disbursementsExceedLimit(rel, disbursementHolder)) {
+        if (disbursementsExceedLimit(req, disbursementHolder)) {
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
             request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
             request.setAttribute("errMessage", "DISBURSEMENT/S amount (Php " + sumDibursements(disbursementHolder) + ") exceeds RELEASE amount (Php " + amountLimit + "). Try again.");
@@ -58,22 +58,26 @@ public class ImportDisbursement extends BaseServlet {
             for (int i = 1; i < disbursementHolder.size(); i++) {
                 store = (ArrayList) disbursementHolder.get(i);
                 Disbursement d = new Disbursement();
-
-                String lN = store.get(0).toString();
-                String fN = store.get(1).toString();
-                String mN = store.get(2).toString();
-                int arbID = arbDAO.getARBID(fN, mN, lN);
+                int arbID = 0;
+//                String lN = store.get(0).toString();
+//                String fN = store.get(1).toString();
+//                String mN = store.get(2).toString();
+//                int arbID = arbDAO.getARBID(fN, mN, lN);
                 
+                arbID = (int)Double.parseDouble(store.get(0).toString());
                 
+                System.out.println("ARB ID: "+arbID);
 
                 d.setArbID(arbID);
-                d.setReleaseID(Integer.parseInt(request.getParameter("releaseID")));
-                d.setDisbursedAmount(Double.parseDouble(store.get(3).toString()));
-                d.setOSBalance(Double.parseDouble(store.get(4).toString()));
+                d.setRequestID(Integer.parseInt(request.getParameter("requestID")));
+                d.setDisbursedAmount(Double.parseDouble(store.get(2).toString()));
+                
+                double OSBalance = d.getDisbursedAmount() * req.getLoanReason().getLoanTerm().getArbInterestRate();
+                d.setOSBalance(OSBalance);
 
                 java.sql.Date disbursedDate = null;
 
-                String excelDate = store.get(5).toString(); // Parsing of Excel Date to Java Date
+                String excelDate = store.get(3).toString(); // Parsing of Excel Date to Java Date
                 String[] dateArr = excelDate.split("-");
 
                 int val = getValOfMonth(dateArr[1]);
@@ -89,20 +93,17 @@ public class ImportDisbursement extends BaseServlet {
                 d.setDateDisbursed(disbursedDate);
                 d.setDisbursedBy((Integer) session.getAttribute("userID"));
                
-                System.out.println(d.getArbID() + " " + d.getReleaseID() + " " + d.getDisbursedAmount() + " " + d.getOSBalance());
-
                 dao.addDisbursement(d);
             }
 
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-            request.setAttribute("releaseID", Integer.parseInt(request.getParameter("releaseID")));
             request.setAttribute("success", "Disbursements successfully imported!");
-            request.getRequestDispatcher("monitor-disbursement.jsp").forward(request, response);
+            request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
         }
 
     }
 
-    public static boolean disbursementsExceedLimit(APCPRelease rel, ArrayList disbursementHolder) {
+    public static boolean disbursementsExceedLimit(APCPRequest req, ArrayList disbursementHolder) {
         ArrayList store = new ArrayList();
         double limit = 0;
         double sumCurrentDisbursement = 0;
@@ -110,14 +111,18 @@ public class ImportDisbursement extends BaseServlet {
 
         for (int i = 1; i < disbursementHolder.size(); i++) {
             store = (ArrayList) disbursementHolder.get(i);
-            limit += Double.parseDouble(store.get(3).toString());
+            limit += Double.parseDouble(store.get(2).toString());
         }
         
-        for(Disbursement d : rel.getDisbursements()){
+        APCPRequestDAO dao = new APCPRequestDAO();
+        
+        req.setDisbursements(dao.getAllDisbursementsByRequest(req.getRequestID()));
+        
+        for(Disbursement d : req.getDisbursements()){
             sumCurrentDisbursement += d.getDisbursedAmount();
         }
         
-        finalLimit = rel.getReleaseAmount() - sumCurrentDisbursement;
+        finalLimit = req.getTotalReleasedAmountPerRequest() - sumCurrentDisbursement;
 
         if (limit > finalLimit) {
             return true;

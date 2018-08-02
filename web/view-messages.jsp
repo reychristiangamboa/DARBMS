@@ -77,6 +77,7 @@
                         </div>
 
                     </div>
+                    <br>
                     <div class="row">
                         <div class="col-xs-12">  
                             <div class="box">
@@ -137,7 +138,7 @@
                                                     To: 
                                                     <select name="sendTo" id="" class="form-control">
                                                         <%for(User u : uList){%>
-                                                        <option value="<%out.print(u.getUserID());%>"><%out.print(u.getFullName());%></option>
+                                                        <option value="<%out.print(u.getUserID());%>"><%out.print(u.getFullName() + " - " + u.getUserTypeDesc());%></option>
                                                         <%}%>
                                                     </select>
                                                 </div>

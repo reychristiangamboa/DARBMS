@@ -47,6 +47,12 @@
 
                 <!-- Main content -->
                 <section class="content">
+                    
+                    <%if(issueDAO.retrieveUnresolvedIssues((Integer)session.getAttribute("userType"),(Integer)session.getAttribute("provOfficeCode")).size() > 0){%>
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-ban"></i> You have <a href="view-issues.jsp">ISSUES</a> pending. Please resolve them immediately.</h4>
+                    </div>
 
                     <%if(request.getAttribute("success") != null){%>
                     <div class="alert alert-success alert-dismissible">
@@ -114,8 +120,13 @@
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>
                                                 <td>
                                                     <a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>" class="btn btn-success">ASSESS</a>
+                                                    <%if(p.isPlanForReschedule()){%>
+                                                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#postponeModal<%out.print(p.getPlanID());%>">RESCHEDULE</button>
+                                                    <%}else{%>
                                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#postponeModal<%out.print(p.getPlanID());%>">POSTPONE</button>
+                                                    <%}%>
                                                 </td>
+
                                             </tr>
 
                                         <div class="modal fade" id="postponeModal<%out.print(p.getPlanID());%>">
@@ -125,7 +136,7 @@
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">×</span>
                                                         </button>
-                                                        <h4 class="modal-title">Confirm Postpone</h4>
+                                                        <h4 class="modal-title">Confirm Postpone/Reschedule</h4>
                                                     </div>
                                                     <form method="post">
                                                         <div class="modal-body">
@@ -172,66 +183,6 @@
                         </div>
                         <!-- /.col -->
                     </div>
-
-                    <%--<div class="row">
-                        <div class="col-xs-12">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title"><strong>With Past Due CAPDEV Plans</strong></h3>
-                                    <div class="btn-group pull-right">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                    </div>                         
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">             
-                                    <table id="example5" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Plan DTN</th>
-                                                <th>ARBO Name</th>
-                                                <th>No. of Activities</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            <%
-                                                for(CAPDEVPlan p : assignedPlansPastDue){
-                                                    APCPRequest r = apcpRequestDAO.getRequestByID(p.getRequestID());
-                                                    ARBO arbo = arboDAO.getARBOByID(r.getArboID());
-                                            %>
-                                            <tr>
-                                                <td><a href="MonitorCAPDEVAttendance?planID=<%out.print(p.getPlanID());%>"><%out.print(p.getPlanDTN());%></a></td>
-                                                <td><a href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                <td><%out.print(p.getActivities().size());%></td>
-                                                <td><%out.print(p.getPlanStatusDesc());%></td>
-                                            </tr>
-                                            <%}%>
-
-                                        </tbody>
-
-                                        <tfoot>
-                                            <tr>
-                                                <th>Plan DTN</th>
-                                                <th>ARBO Name</th>
-                                                <th>No. of Activities</th>
-                                                <th>Status</th>      
-                                            </tr>
-
-                                        </tfoot>
-
-                                    </table>
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-                        <!-- /.col -->
-                    </div>--%>
-
-
-                    <!-- /.row -->
                 </section>
                 <!-- /.content -->
             </div>

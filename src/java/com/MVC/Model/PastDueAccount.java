@@ -108,7 +108,7 @@ public class PastDueAccount {
     
     public int getDaysUnsettled(){
         Calendar settled = Calendar.getInstance();
-        
+        System.out.println("DITO KAYA 'YUN?");
         Calendar recorded = Calendar.getInstance();
         recorded.setTime(this.dateRecorded);
         
@@ -118,9 +118,10 @@ public class PastDueAccount {
             settled.setTime(this.dateSettled);
             days = daysBetween (recorded,settled);
         } else {
-            days = daysBetween (recorded,settled);
+            days = daysBetween (recorded,today);
         }
          
+        System.out.println("WALA AKO!!");
         
         return (int)days;
     }

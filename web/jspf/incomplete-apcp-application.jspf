@@ -1,0 +1,72 @@
+<div class="panel box box-success">
+    <div class="box-header with-border">
+        <h4 class="box-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                Incomplete APCP Request
+            </a>
+        </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+        <div class="box-body">
+
+            <div class="box-header with-border text-center">
+                <h5 class="box-title"><strong>Supporting Documents</strong></h5>
+            </div>
+            <br />
+
+            <div class="row">
+
+                <div class="col-xs-2"></div>
+                <div class="col-xs-8">
+
+                    <form method="post">
+                        <table id="supportingTable" class="table table-bordered table-striped" >
+                            <thead>
+                                <tr>
+                                    <th>Document</th>
+                                    <th>Date Submitted</th>
+                                </tr>
+                            </thead>
+                            <tbody id="supportingWrapper">
+                                <%for(APCPDocument d : req.getApcpDocument()){%>
+                                <tr>
+
+                                    <%if(d.getDocument() != 12){ // APCP%>
+                                    <td style="border: transparent;"><h5><%out.print(d.getDocumentDesc());%></h5></td>
+                                            <%} else if(d.getDocument() == 12){ // OTHERS%>
+                                    <td style="border: transparent;"><h5><%out.print(d.getDocumentDesc() + " (" + d.getDocumentName() + ")");%></h5></td>
+                                            <%}%>
+                                    <td style="border: transparent;">
+                                        <div class="input-group date">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <%if(d.getDateSubmitted() != null){%>
+                                            <input type="date" value="<%=d.getDateSubmitted()%>" class="form-control" disabled>
+                                            <%}else{%>
+                                            <input type="hidden" name="documentID" value="<%out.print(d.getDocument());%>">
+                                            <input type="date" name="dateSubmitted" class="form-control" required>
+                                            <%}%>
+                                        </div> 
+                                    </td>
+
+                                </tr>
+                                <%}%>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+
+                                    <td><button class="btn btn-primary" onclick="form.action = 'ResubmitDocuments?requestID=<%out.print(reqID);%>'">RESUBMIT</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>                 
+                </div>
+                <div class="col-xs-2"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

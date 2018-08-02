@@ -1,7 +1,4 @@
 
-<%
-ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.getAttribute("provOfficeCode"));
-%>
 
 <div class="panel box box-success">
     <div class="box-header with-border">
@@ -107,6 +104,24 @@ ArrayList<User> pointPersons = uDAO.getAllPointPersonProvince((Integer) session.
                         <%}%>
                         <%}else if(req.getRequestStatus() == 4){ // APPROVED %>
                         <%if(act.getActivityType() == 3){ // Pre-Release ONLY %>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <label for="Category">Category</label>
+                                    <input type="text" class="form-control" value="<%out.print(act.getActivityCategoryDesc());%>" disabled/>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label for="Activity">Activity</label>
+                                    <input type="hidden" name="activities[]" value="<%out.print(act.getActivityType());%>" />
+                                    <input type="text" class="form-control" value="<%out.print(act.getActivityName());%>" disabled />
+                                </div>
+                            </div>
+                        </div>    
+                        <%}%>
+                        <%}else if(req.getRequestStatus() == 5){ // RELEASED %>
+                        <%if(act.getActivityCategory() == 4){ // PAST DUE PLANS %>
                         <div class="row">
                             <div class="col-xs-4">
                                 <div class="form-group">

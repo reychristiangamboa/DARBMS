@@ -41,7 +41,16 @@ public class AddCAPDEVPlan extends BaseServlet {
 
         capdevPlan.setRequestID(Integer.parseInt(request.getParameter("requestID")));
         capdevPlan.setPlanDTN(request.getParameter("dtn"));
-        capdevPlan.setBudget(Double.parseDouble(request.getParameter("budget")));
+        
+        String[] vals = request.getParameter("budget").split(",");
+        StringBuilder sb = new StringBuilder();
+        for(String val : vals){
+            sb.append(val);
+        }
+        
+        String finAmount = sb.toString();
+        
+        capdevPlan.setBudget(Double.parseDouble(finAmount));
         capdevPlan.setAssignedTo(pointPersonID);
         
         java.sql.Date planDate = null;

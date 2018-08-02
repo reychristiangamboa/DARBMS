@@ -8,8 +8,6 @@
 <html>
     <head>
         <%@include file="jspf/header.jspf"%>
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
         <style>
             .rate{
                 color:black;
@@ -51,7 +49,7 @@
 
             <%if ((Integer) session.getAttribute("userType") == 2) {%>
             <%@include file="jspf/field-officer-navbar.jspf" %>
-
+            <%@include file="jspf/pp-apcp-sidebar.jspf" %>
             <%} else if ((Integer) session.getAttribute("userType") == 3) {%>
             <%@include file="jspf/field-officer-navbar.jspf" %>
             <%@include file="jspf/provincial-field-officer-sidebar.jspf" %>
@@ -87,7 +85,9 @@
                 ArrayList<ARB> arbListARBO = dao2.getAllARBsARBO(arbo.getArboID());
                 ArrayList<APCPRequest> arboRequest = dao4.getAllARBORequests(arbo.getArboID());
                 ArrayList<APCPRequest> arboReleasedRequest = dao4.getAllARBORequestsByStatus(5, arbo.getArboID());
-                ArrayList<CAPDEVActivity> activityHistory = capdevDAO2.getAPCPCAPDEVActivityHistoryByARBO(arbo.getArboID());
+                
+                ArrayList<CAPDEVPlan> plans = capdevDAO2.getAllCAPDEVPlanARBO(arbo.getArboID());
+                
                 ArrayList<Repayment> repaymentHistory = dao4.getRepaymentHistoryByARBO(arbo.getArboID());
                 ArrayList<Crop> crops = dao3.getAllCropsByARBList(arbListARBO);
             %>
@@ -148,7 +148,7 @@
                                             <div class="modal-body" id="modalBody">
                                                 <div class="row">
                                                     <div class="col-xs-12">
-                                                        <table id="arbTable" class="table table-bordered table-striped">
+                                                        <table class="table table-bordered table-striped export">
                                                             <thead>
                                                                 <tr>
                                                                     <th>Full Name</th>
@@ -162,7 +162,7 @@
                                                                     for (ARB arb : arbListARBO) {
                                                                 %>
                                                                 <tr>
-                                                                    <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFullName());%></a></td>
+                                                                    <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFullName());%></a></td>
                                                                     <td><%out.print(arb.getFullAddress());%></td>
                                                                     <td><%out.print(arb.printAllCrops());%></td>
                                                                 </tr>
@@ -185,25 +185,15 @@
                                             <div class="modal-footer">
                                                 <div class="pull-right">
                                                     <form method="post">
-                                                        <button class="btn btn-primary" onclick="form.action = 'ProceedAddARB?id=<%out.print(arbo.getArboID());%>'">Add ARB</button>
+                                                        <button class="btn btn-primary btn-sm" onclick="form.action = 'ProceedAddARB?id=<%out.print(arbo.getArboID());%>'">Add ARB</button>
                                                     </form>
                                                 </div>
                                             </div>
                                             <%}%>
 
                                         </div>
-                                        <!--                                            /.modal-content -->
                                     </div>
-                                    <!--                                        /.modal-dialog -->
                                 </div>
-                            </div>
-
-                            <!-- About Me Box -->
-                            <div class="box box-primary">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">About the ARBO</h3>
-                                </div>
-                                <!-- /.box-header -->
                                 <div class="box-body">
                                     <strong><i class="fa fa-book margin-r-5"></i> Main Office</strong>
                                     <p class="text-muted">
@@ -220,22 +210,37 @@
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">
-                                    <strong><i class="fa fa-book margin-r-5"></i> Approved Amount</strong>
-                                    <p class="text-muted">
-                                        100
-                                    </p>
+                                    <strong><i class="fa fa-money margin-r-5"></i> Approved Amount</strong>
+                                    <p class="text-muted"><%out.print(currency.format(dao4.getTotalApprovedAmount(arbo.getRequestList())));%></p>
                                     <hr>
-                                    <strong><i class="fa fa-map-marker margin-r-5"></i> Released Amount</strong>
-                                    <p class="text-muted">100</p>
+                                    <strong><i class="fa fa-money margin-r-5"></i> Released Amount</strong>
+                                    <p class="text-muted"><%out.print(currency.format(dao4.getSumOfAccumulatedReleasesByRequest(arbo.getRequestList())));%></p>
                                     <hr>
-                                    <strong><i class="fa fa-map-marker margin-r-5"></i> Outstanding Balance</strong>
-                                    <p class="text-muted">100</p>
+                                    <strong><i class="fa fa-money margin-r-5"></i> Outstanding Balance</strong>
+                                    <p class="text-muted"><%out.print(currency.format(dao4.getTotalARBOOSBalance(arbo.getRequestList())));%></p>
                                     <hr>
-                                    <strong><i class="fa fa-map-marker margin-r-5"></i> Past Due Amount</strong>
-                                    <p class="text-muted">100</p>
+                                    <strong><i class="fa fa-money margin-r-5"></i> Past Due Amount</strong>
+                                    <p class="text-muted"><%out.print(currency.format(dao4.getTotalPastDueAmount(arbo.getRequestList())));%></p>
                                     <hr>
-                                    <strong><i class="fa fa-map-marker margin-r-5"></i> Average Days Unsettled</strong>
-                                    <p class="text-muted">200</p>
+                                    <strong><i class="fa fa-briefcase margin-r-5"></i> Average Days Unsettled</strong>
+                                    <p class="text-muted"><%out.print(dao4.getAverageDaysUnsettled(arbo.getRequestList()));%></p>
+                                </div>
+                            </div>
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">CAPDEV</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <strong><i class="fa fa-clipboard margin-r-5"></i> Implemented Plans</strong>
+                                    <p class="text-muted"><%out.print(capdevDAO2.getImplementedPlanCountARBO(arbo.getRequestList()));%></p>
+                                    <hr>
+                                    <strong><i class="fa fa-clipboard margin-r-5"></i> Scheduled Plans</strong>
+                                    <p class="text-muted"><%out.print(capdevDAO2.getScheduledPlanCountARBO(arbo.getRequestList()));%></p>
+                                    <hr>
+                                    <strong><i class="fa fa-clipboard margin-r-5"></i> Participation Rate</strong>
+                                    <p class="text-muted"><%out.print(df.format(capdevDAO2.getMeanAverageAttendanceRateARBO(arbListARBO))+"%");%></p>
+
                                 </div>
                             </div>
 
@@ -248,7 +253,7 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">
 
-
+                                    <!--ARB VISUALS--> 
                                     <div class="panel box box-danger">
                                         <div class="box-header with-border">
                                             <h4 class="box-title">
@@ -293,92 +298,92 @@
                                                                     <div class="modal-body">
                                                                         <div class="row">
                                                                             <div class="col-xs-12">
-                                                                                <div class="col-xs-6">
-                                                                                    <table class="table table-bordered table-striped modTable">
-                                                                                        <thead>
-                                                                                            <tr>
-                                                                                                <th>Male</th>
-                                                                                                <th>ARBO</th>
-                                                                                                <th>Address</th>
-                                                                                                <th>Land Area</th>
-                                                                                                <th>ARB Rating</th>
-                                                                                                <th>ARB Status</th>
-                                                                                            </tr>
-                                                                                        </thead>
-                                                                                        <tbody>
-                                                                                            <%
-                                                                                                ARBODAO arbol = new ARBODAO();
-                                                                                                for (ARB arb : arbListARBO) {
-                                                                                                    if (arb.getGender().equalsIgnoreCase("M")) {
-                                                                                            %>
-                                                                                            <tr>
-                                                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
-                                                                                                <td><%out.print(arbol.getARBOByID(arb.getArboID()).getArboName());%></td>
-                                                                                                <td><%out.print(arb.getFullAddress());%></td>
-                                                                                                <td><%out.print(arb.getLandArea());%></td>
-                                                                                                <td><%out.print(arb.getArbRating());%></td>
-                                                                                                <td><%out.print(arb.getArbStatusDesc());%></td>
-                                                                                            </tr>
-                                                                                            <%}
+                                                                                <table class="table table-bordered table-striped export">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>Male</th>
+                                                                                            <th>ARBO</th>
+                                                                                            <th>Address</th>
+                                                                                            <th>Land Area</th>
+                                                                                            <th>ARB Rating</th>
+                                                                                            <th>ARB Status</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <%
+                                                                                            ARBODAO arbol = new ARBODAO();
+                                                                                            for (ARB arb : arbListARBO) {
+                                                                                                if (arb.getGender().equalsIgnoreCase("M")) {
+                                                                                        %>
+                                                                                        <tr>
+                                                                                            <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
+                                                                                            <td><%out.print(arbol.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                                                            <td><%out.print(arb.getFullAddress());%></td>
+                                                                                            <td><%out.print(arb.getLandArea());%></td>
+                                                                                            <td><%out.print(arb.getArbRating());%></td>
+                                                                                            <td><%out.print(arb.getArbStatusDesc());%></td>
+                                                                                        </tr>
+                                                                                        <%}
                                                                                     }%>
 
-                                                                                        </tbody>
-                                                                                        <tfoot>
-                                                                                            <tr>
-                                                                                                <th>Male</th>
-                                                                                                <th>ARBO</th>
-                                                                                                <th>Address</th> 
-                                                                                                <th>Land Area</th>
-                                                                                                <th>ARB Rating</th>
-                                                                                                <th>ARB Status</th>
+                                                                                    </tbody>
+                                                                                    <tfoot>
+                                                                                        <tr>
+                                                                                            <th>Male</th>
+                                                                                            <th>ARBO</th>
+                                                                                            <th>Address</th> 
+                                                                                            <th>Land Area</th>
+                                                                                            <th>ARB Rating</th>
+                                                                                            <th>ARB Status</th>
 
-                                                                                            </tr>
-                                                                                        </tfoot>
-                                                                                    </table>
-                                                                                </div>
-                                                                                <div class="col-xs-6">
-                                                                                    <table class="table table-bordered table-striped modTable">
-                                                                                        <thead>
-                                                                                            <tr>
-                                                                                                <th>Female</th>
-                                                                                                <th>ARBO</th>
-                                                                                                <th>Address</th>
-                                                                                                <th>Land Area</th>
-                                                                                                <th>ARB Rating</th>
-                                                                                                <th>ARB Status</th>
-                                                                                            </tr>
-                                                                                        </thead>
-                                                                                        <tbody>
-                                                                                            <%
-                                                                                                ARBODAO arboll = new ARBODAO();
-                                                                                                for (ARB arb : arbListARBO) {
-                                                                                                    if (arb.getGender().equalsIgnoreCase("F")) {
-                                                                                            %>
-                                                                                            <tr>
-                                                                                                <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
-                                                                                                <td><%out.print(arboll.getARBOByID(arb.getArboID()).getArboName());%></td>
-                                                                                                <td><%out.print(arb.getFullAddress());%></td>
-                                                                                                <td><%out.print(arb.getLandArea());%></td>
-                                                                                                <td><%out.print(arb.getArbRating());%></td>
-                                                                                                <td><%out.print(arb.getArbStatusDesc());%></td>
-                                                                                            </tr>
-                                                                                            <%}
+                                                                                        </tr>
+                                                                                    </tfoot>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-xs-12">
+                                                                                <table class="table table-bordered table-striped export">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>Female</th>
+                                                                                            <th>ARBO</th>
+                                                                                            <th>Address</th>
+                                                                                            <th>Land Area</th>
+                                                                                            <th>ARB Rating</th>
+                                                                                            <th>ARB Status</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <%
+                                                                                            ARBODAO arboll = new ARBODAO();
+                                                                                            for (ARB arb : arbListARBO) {
+                                                                                                if (arb.getGender().equalsIgnoreCase("F")) {
+                                                                                        %>
+                                                                                        <tr>
+                                                                                            <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(arb.getFullName());%> </a></td>
+                                                                                            <td><%out.print(arboll.getARBOByID(arb.getArboID()).getArboName());%></td>
+                                                                                            <td><%out.print(arb.getFullAddress());%></td>
+                                                                                            <td><%out.print(arb.getLandArea());%></td>
+                                                                                            <td><%out.print(arb.getArbRating());%></td>
+                                                                                            <td><%out.print(arb.getArbStatusDesc());%></td>
+                                                                                        </tr>
+                                                                                        <%}
                                                                                     }%>
 
-                                                                                        </tbody>
-                                                                                        <tfoot>
-                                                                                            <tr>
-                                                                                                <th>Female</th>
-                                                                                                <th>ARBO</th>
-                                                                                                <th>Address</th> 
-                                                                                                <th>Land Area</th>
-                                                                                                <th>ARB Rating</th>
-                                                                                                <th>ARB Status</th>
+                                                                                    </tbody>
+                                                                                    <tfoot>
+                                                                                        <tr>
+                                                                                            <th>Female</th>
+                                                                                            <th>ARBO</th>
+                                                                                            <th>Address</th> 
+                                                                                            <th>Land Area</th>
+                                                                                            <th>ARB Rating</th>
+                                                                                            <th>ARB Status</th>
 
-                                                                                            </tr>
-                                                                                        </tfoot>
-                                                                                    </table>
-                                                                                </div>
+                                                                                        </tr>
+                                                                                    </tfoot>
+                                                                                </table>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -417,7 +422,7 @@
                                                                     </div>
                                                                     <div class="modal-body">
 
-                                                                        <table class="table table-bordered table-striped modTable">
+                                                                        <table class="table table-bordered table-striped export">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>ARB Name</th>
@@ -500,7 +505,7 @@
                                                                                 </div>
                                                                                 <div class="modal-body">
 
-                                                                                    <table class="table table-bordered table-striped modTable">
+                                                                                    <table class="table table-bordered table-striped export">
                                                                                         <thead>
                                                                                             <tr>
                                                                                                 <th>ARB Name</th>
@@ -570,7 +575,7 @@
                                                                     </div>
                                                                     <div class="modal-body">
 
-                                                                        <table class="table table-bordered table-striped modTable">
+                                                                        <table class="table table-bordered table-striped export">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>ARB Name</th>
@@ -626,6 +631,7 @@
                                         </div>
                                     </div>
 
+                                    <!--APCP-->                                           
                                     <div class="panel box box-success">
                                         <div class="box-header with-border">
                                             <h4 class="box-title">
@@ -634,19 +640,19 @@
                                                 </a>
                                             </h4>
                                         </div>
-                                        <div id="collapseThree" class="panel-collapse collapse" aria-expanded="false">
+                                        <div id="collapseThree" class="panel-collapse collapse in" aria-expanded="false">
                                             <div class="box-body">
 
                                                 <div class="nav-tabs-custom">
                                                     <ul class="nav nav-tabs">
                                                         <li class="active"><a href="#release" data-toggle="tab">Release Line</a></li>
-                                                        <li><a href="#pend" data-toggle="tab">Pending Requests</a></li>
+                                                        <li><a href="#pend" data-toggle="tab">Requests</a></li>
                                                         <li><a href="#disbursement" data-toggle="tab">Disbursements & Repayments</a></li>
                                                         <li><a href="#pastDue" data-toggle="tab">Past Due</a></li>
                                                     </ul>
                                                     <div class="tab-content">
                                                         <div class="active tab-pane" id="release">
-                                                            <table id="example1" class="table table-bordered table-striped">
+                                                            <table class="table table-bordered table-striped export">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Loan <br>Tracking No.</th>
@@ -663,11 +669,11 @@
                                                                     <tr>
                                                                         <td><a href="MonitorRelease?id=<%out.print(r.getRequestID());%>"><%=r.getLoanTrackingNo()%></a></td>
 
-                                                                        <td><%=f.format(r.getReleases().get(r.getReleases().size() - 1).getReleaseDate())%></td>
-                                                                        <td  width=50%>
+                                                                        <td><%=r.getReleases().get(r.getReleases().size() - 1).getReleaseDate()%></td>
+                                                                        <td width=50%>
                                                                             <div class="progress">
-                                                                                <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: <%out.print(r.getProgressBarWidth(dao4.getSumOfReleasesByRequestId(r.getRequestID()), r.getLoanAmount()));%>%">
-                                                                                    <strong><i>&#8369</i><%=dao4.getSumOfReleasesByRequestId(r.getRequestID())%> / <i>&#8369</i><%=r.getLoanAmount()%></strong>
+                                                                                <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: <%out.print(r.getProgressBarWidth(dao4.getSumOfReleasesByRequest(r.getRequestID()), r.getLoanAmount()));%>%">
+                                                                                    <strong><%=currency.format(dao4.getSumOfReleasesByRequest(r.getRequestID()))%> / <%=currency.format(r.getLoanAmount())%></strong>
                                                                                 </div> 
                                                                             </div> 
                                                                         </td>
@@ -688,7 +694,7 @@
                                                         <div class="tab-pane" id="pend">
                                                             <div class="row">
                                                                 <div class="col-xs-12">
-                                                                    <table id="example6" class="table table-bordered table-striped">
+                                                                    <table class="table table-bordered table-striped export">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>Request ID</th>
@@ -701,32 +707,35 @@
                                                                         </thead>
                                                                         <tbody>
                                                                             <%
-
                                                                                 for (APCPRequest r : arboRequest) {
                                                                             %>
                                                                             <tr>
                                                                                 <td><%out.print(r.getRequestID());%></td>
-                                                                                <td><%out.print(r.getLoanReason());%></td>
-                                                                                <td><%out.print(r.getLoanAmount());%></td>
+                                                                                <%if(r.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc() + ": " + r.getLoanReason().getOtherReason());%></td>
+                                                                                <%}else{%> <!--LOAN REASON-->
+                                                                                <td><%out.print(r.getLoanReason().getLoanReasonDesc());%></td>
+                                                                                <%}%>
+                                                                                <td><%out.print(currency.format(r.getLoanAmount()));%></td>
                                                                                 <td><%out.print(r.getHectares() + " hectares");%></td>
 
                                                                                 <%if (r.getRequestStatus() == 1) {%>
-                                                                                <td><%out.print(f.format(r.getDateRequested()));%></td>
+                                                                                <td><%out.print(r.getDateRequested());%></td>
                                                                                 <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                                                     <%} else if (r.getRequestStatus() == 2) {%>
-                                                                                <td><%out.print(f.format(r.getDateCleared()));%></td>
+                                                                                <td><%out.print(r.getDateCleared());%></td>
                                                                                 <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                                                     <%} else if (r.getRequestStatus() == 3) {%>
-                                                                                <td><%out.print(f.format(r.getDateEndorsed()));%></td>
+                                                                                <td><%out.print(r.getDateEndorsed());%></td>
                                                                                 <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                                                     <%} else if (r.getRequestStatus() == 4) {%>
-                                                                                <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
                                                                                 <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                                                     <%} else if (r.getRequestStatus() == 5) {%>
-                                                                                <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
                                                                                 <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                                                     <%} else if (r.getRequestStatus() == 7) {%>
-                                                                                <td><%out.print(f.format(r.getDateApproved()));%></td>
+                                                                                <td><%out.print(r.getDateApproved());%></td>
                                                                                 <td><span class="label label-success"><%out.print(r.getRequestStatusDesc());%></span></td>
                                                                                     <%}%>
 
@@ -759,7 +768,7 @@
                                                             <div class="row">
 
                                                                 <div class="col-xs-12">
-                                                                    <table id="example6" class="table table-bordered table-striped">
+                                                                    <table class="table table-bordered table-striped export">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>ARB</th>
@@ -804,7 +813,7 @@
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-xs-12">
-                                                                        <table id="example6" class="table table-bordered table-striped">
+                                                                        <table class="table table-bordered table-striped export">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>Date Recorded</th>
@@ -825,14 +834,14 @@
                                                                                 <tr>
                                                                                     <td><%out.print(pda.getDateRecorded());%></td>
                                                                                     <td><%out.print(currency.format(pda.getPastDueAmount()));%></td>
-                                                                                    
+
                                                                                     <%if(pda.getDateSettled() != null){%>
                                                                                     <td><%out.print(pda.getDateSettled());%></td>
                                                                                     <%}else{%>
                                                                                     <td>Unsettled</td>
                                                                                     <%}%>
-                                                                                    
-                                                                                    <td><small class="label <%out.print("bg-"+color);%>"><%out.print(daysDiff + " days");%></small></td>
+
+                                                                                    <td><small class="label <%out.print("bg-"+color);%>"><%out.print(daysDiff);%></small></td>
                                                                                     <td><%out.print(pda.getReasonPastDueDesc());%></td>
                                                                                 </tr>
                                                                                 <%
@@ -862,314 +871,343 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!--CAPDEV-->
                                     <div class="panel box box-success">
                                         <div class="box-header with-border">
                                             <h4 class="box-title">
                                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="collapsed" aria-expanded="false">
-                                                    Collapsible Group Success
+                                                    CAPDEV Visuals
                                                 </a>
                                             </h4>
                                         </div>
-                                        <div id="collapseFour" class="panel-collapse collapse" aria-expanded="false">
+                                        <div id="collapseFour" class="panel-collapse collapse in" aria-expanded="false">
                                             <div class="box-body">
 
-
-                                                <div class="box">
-                                                    <div class="box-header with-border" >
-                                                        <h3 class="box-title">CAPDEV Visuals</h3>
-                                                        <div class="box-tools pull-right">
-                                                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="box-body" >
-                                                        <div class="nav-tabs-custom">
-                                                            <ul class="nav nav-tabs">
-                                                                <li class="active"><a href="#apcpCapdev" data-toggle="tab">APCP CAPDEV</a></li>
-
-
-                                                            </ul>
-                                                            <%--<div class="tab-content"  style="overflow-y: scroll; overflow-x: hidden;  max-height: 300px; ">
-                                                                <div class="active tab-pane" id="apcpCapdev">
-                                                                    <div class="col-xs-12" style="margin:10px;" >
-                                                                        <ul class="timeline">
+                                                <div class="nav-tabs-custom">
+                                                    <ul class="nav nav-tabs">
+                                                        <li class="active"><a href="#attendanceRate" data-toggle="tab">Attendance Rate</a></li>
+                                                        <li><a href="#actTimeline" data-toggle="tab">Activity Timeline</a></li>
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane active" id ="attendanceRate">
+                                                            <div class="row">
+                                                                <div class="col-xs-12">
+                                                                    <table class="table table-bordered table-striped export">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="text-center">ARB</th>
+                                                                                <th>Attendance Rate</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
                                                                             <%
-                                                                                boolean firstInstance = true;
-                                                                                Date date = null;
+                                                                                for(ARB arb : arbListARBO){
+                                                                                    CAPDEVActivity attendance = new CAPDEVActivity();
+                                                                                    ArrayList<CAPDEVActivity> myActivities = capdevDAO2.getCAPDEVPlanByARB(arb.getArbID());
                                                                             %>
-                                                                            <% for (CAPDEVActivity activity : activityHistory) { %>
-                                                                            <%
-                                                                                boolean dateChanged = false;
+                                                                            <tr>
+                                                                                <td class="text-center"><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                                                                <td width=50%>
+                                                                                    <div class="progress">
+                                                                                        <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: <%out.print(attendance.getAttendanceRate(myActivities));%>%">
+                                                                                            <%out.print(attendance.getAttendance(myActivities));%> / <%out.print(myActivities.size());%>
+                                                                                        </div> 
+                                                                                    </div> 
+                                                                                </td>
+                                                                            </tr>
+                                                                            <%}%>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="tab-pane" id="actTimeline">
+                                                            <div class="col-xs-12" style="margin:10px;" >
+                                                                <ul class="timeline">
+                                                                    <%
+                                                                        boolean firstInstance = true;
+                                                                        Date date = null;
+                                                                    %>
+                                                                    <% 
+                                                                        for (CAPDEVPlan plan : plans) { 
+                                                                            plan.setActivities(capdevDAO2.getCAPDEVPlanActivities(plan.getPlanID()));
+                                                                            for(CAPDEVActivity activity : plan.getActivities()){
+                                                                                activity.setArbList(capdevDAO2.getCAPDEVPlanActivityParticipants(activity.getActivityID()));
+                                                                    %>
+                                                                    <%
+                                                                        boolean dateChanged = false;
 
                                                             if (firstInstance) { // FIRST INSTANCE
-                                                                date = activity.getActivityDate();
+                                                                date = plan.getImplementedDate();
                                                             }
-                                                        %>
+                                                                    %>
 
-                                                        <%
-                                                            if (date.compareTo(activity.getActivityDate()) != 0) { // NEW DATE, change currDate
-                                                                date = activity.getActivityDate();
-                                                                dateChanged = true;
-                                                                System.out.print("Date changed!");
-                                                            }
-                                                        %>
+                                                                    <%
+                                                                        if (date.compareTo(plan.getImplementedDate()) != 0) { // NEW DATE, change currDate
+                                                                            date = plan.getImplementedDate();
+                                                                            dateChanged = true;
+                                                                            System.out.print("Date changed!");
+                                                                        }
+                                                                    %>
 
-                                                        <%if (firstInstance || dateChanged) {%>
-                                                        <li class="time-label">
-                                                            <span class="bg-green">
-                                                                <%out.print(f.format(date));%>
-                                                            </span>
-                                                        </li>
-                                                        <%firstInstance = false;%>
-                                                        <%}%>
+                                                                    <%if (firstInstance || dateChanged) {%>
+                                                                    <li class="time-label">
+                                                                        <span class="bg-green">
+                                                                            <%out.print(f.format(date));%>
+                                                                        </span>
+                                                                    </li>
+                                                                    <%firstInstance = false;%>
+                                                                    <%}%>
 
-                                                        <li>
-                                                            <%if (activity.getActivityCategory() == 1) {%>
-                                                            <i class="fa fa-clipboard bg-green"></i>
-                                                            <%} else if (activity.getActivityCategory() == 2) {%>
-                                                            <i class="fa fa-clipboard bg-red"></i>
-                                                            <%} else if (activity.getActivityCategory() == 3) {%>
-                                                            <i class="fa fa-clipboard bg-orange"></i>
-                                                            <%}%>
-                                                            <div class="timeline-item">
-                                                                <h3 class="timeline-header">
-                                                                    <a href="#" data-toggle='modal' data-target='#activity<%out.print(activity.getActivityID());%>'><%out.print(activity.getActivityName());%></a>
-                                                                </h3>
+                                                                    <li>
+                                                                        <i class="fa fa-clipboard bg-green"></i>
+                                                                        <div class="timeline-item">
+                                                                            <h3 class="timeline-header">
+                                                                                <a href="#" data-toggle='modal' data-target='#activity<%out.print(activity.getActivityID());%>'><%out.print(activity.getActivityName());%></a>
+                                                                            </h3>
+                                                                        </div>
+                                                                    </li>
+
+                                                                    <div class="modal fade" id="activity<%out.print(activity.getActivityID());%>">
+                                                                        <div class="modal-dialog modal-md">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span></button>
+                                                                                    <h4 class="modal-title">Activity Details</h4>
+                                                                                </div>
+                                                                                <div class="modal-body" id="modalBody">
+                                                                                    <div class="row">
+                                                                                        <div class="col-xs-4">
+                                                                                            <div class="form-group">
+                                                                                                <label for="">Activity Title</label>
+                                                                                                <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getActivityName());%>" disabled>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-xs-8">
+                                                                                            <div class="form-group">
+                                                                                                <label for="">Activity Description</label>
+                                                                                                <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getActivityDesc());%>" disabled>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-xs-4">
+                                                                                            <div class="form-group">
+                                                                                                <label for="">Activity Date</label>
+                                                                                                <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(f.format(activity.getActivityDate()));%>" disabled>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-xs-2">
+                                                                                            <div class="form-group">
+                                                                                                <label for="">No. of Participants</label>
+                                                                                                <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getArbList().size());%>" disabled>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-xs-12">
+                                                                                            <table class="table table-bordered table-striped export">
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                        <th>ARB</th>
+                                                                                                        <th>Absent/Present</th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody>
+                                                                                                    <%for(ARB arb : activity.getArbList()){%>
+                                                                                                    <tr>
+                                                                                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                                                                                            <%if(arb.getIsPresent() > 0){%>
+                                                                                                        <td>Present</td>
+                                                                                                        <%}else{%>
+                                                                                                        <td>Absent</td>
+                                                                                                        <%}%>
+                                                                                                    </tr>
+                                                                                                    <%}%>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-xs-12">
+                                                                                            <div class="form-group">
+                                                                                                <label for="">Observations</label>
+                                                                                                <textarea id="" cols="30" rows="3" class="form-control" disabled><%if (plan.getObservations() != null) {
+                                                                                                        out.print(plan.getObservations());
+                                                                                                    } else {
+                                                                                                        out.print("N/A");
+                                                                                                    };%></textarea>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="row">
+                                                                                        <div class="col-xs-12">
+                                                                                            <div class="form-group">
+                                                                                                <label for="">Recommendation</label>
+                                                                                                <textarea id="" cols="30" rows="3" class="form-control" disabled><%if (plan.getRecommendation() != null) {
+                                                                                                        out.print(plan.getRecommendation());
+                                                                                                    } else {
+                                                                                                        out.print("N/A");
+                                                                                                    };%></textarea>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <div class="pull-right">
+                                                                                        <button type='button' class="btn btn-default">Cancel</button>
+                                                                                        <button type='button' class="btn btn-primary">View More</button>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <!--                                            /.modal-content -->
+                                                                        </div>
+                                                                    </div>
+                                                                    <%}}%>
+                                                                </ul>
+
                                                             </div>
-                                                        </li>
-
-                                                        <div class="modal fade" id="activity<%out.print(activity.getActivityID());%>">
-                                                            <div class="modal-dialog modal-md">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span></button>
-                                                                        <h4 class="modal-title">Activity Details</h4>
-                                                                    </div>
-
-
-                                                                    <div class="modal-body" id="modalBody">
-
-                                                                        <div class="row">
-                                                                            <div class="col-xs-4">
-                                                                                <div class="form-group">
-                                                                                    <label for="">Activity Title</label>
-                                                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getActivityName());%>" disabled>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-xs-8">
-                                                                                <div class="form-group">
-                                                                                    <label for="">Activity Description</label>
-                                                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getActivityDesc());%>" disabled>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-xs-4">
-                                                                                <div class="form-group">
-                                                                                    <label for="">Activity Date</label>
-                                                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(f.format(activity.getActivityDate()));%>" disabled>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-xs-4">
-                                                                                <div class="form-group">
-                                                                                    <label for="">No. of Participants</label>
-                                                                                    <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(activity.getArbList().size());%>" disabled>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-xs-12">
-                                                                                <div class="form-group">
-                                                                                    <label for="">Observations</label>
-                                                                                    <textarea id="" cols="30" rows="3" class="form-control" disabled><%if (activity.getObservations() != null) {
-                                                                                            out.print(activity.getObservations());
-                                                                                        } else {
-                                                                                            out.print("N/A");
-                                                                                        };%></textarea>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-xs-12">
-                                                                                <div class="form-group">
-                                                                                    <label for="">Recommendation</label>
-                                                                                    <textarea id="" cols="30" rows="3" class="form-control" disabled><%if (activity.getRecommendation() != null) {
-                                                                                            out.print(activity.getRecommendation());
-                                                                                        } else {
-                                                                                            out.print("N/A");
-                                                                                        };%></textarea>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <div class="pull-right">
-                                                                            <button type='button' class="btn btn-default">Cancel</button>
-                                                                            <button type='button' class="btn btn-primary">View More</button>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-                                                                <!--                                            /.modal-content -->
-                                                            </div>
-                                                            <!--                                        /.modal-dialog -->
                                                         </div>
-                                                        <% }%>
-                                                    </ul>
-
-                                                </div>
 
 
-                                            </div>
-                                        </div>--%>
 
-
-                                                            <!-- /.tab-content -->
-                                                        </div>
-                                                        <!-- /.nav-tabs-custom -->
-
+                                                        <!-- /.tab-content -->
                                                     </div>
+                                                    <!-- /.nav-tabs-custom -->
+
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- /.box-body -->
                             </div>
-                            <!-- /.box-body -->
                         </div>
+
+
                     </div>
 
+                    <!-- /.row -->
+
+                </section>
+                <!-- /.content -->
             </div>
-            <div class="row">
+            <!-- /.content-wrapper -->
+        </div>
+        <!-- ./wrapper -->
+        <%@include file="jspf/footer.jspf" %>
+        <script>
 
-                <!-- /.col -->
-                <div class="col-md-9">
+            $(document).ready(function () {
+                var context = $('#disbursementRepaymentChart').get(0).getContext('2d');
+                var APCPChart;
+            <%
+                    Chart chart = new Chart();
+                    String chartJSON = "";
+                    chartJSON = chart.getPieChartDisbursement(arbListARBO);
+            %>
 
+                APCPChart = new Chart(context, <%out.print(chartJSON);%>);
 
-
-
-                    <!-- /.col -->
-
-                </div>
-                <!-- /.col -->
-
-            </div>
-            <!-- /.row -->
-
-        </section>
-        <!-- /.content -->
-    </div>
-    <!-- /.content-wrapper -->
-</div>
-<!-- ./wrapper -->
-<%@include file="jspf/footer.jspf" %>
-<script>
-
-    $(document).ready(function () {
-        var context = $('#disbursementRepaymentChart').get(0).getContext('2d');
-        var APCPChart;
-    <%
-            Chart chart = new Chart();
-            String chartJSON = "";
-            chartJSON = chart.getPieChartDisbursement(arbListARBO);
-    %>
-
-        APCPChart = new Chart(context, <%out.print(chartJSON);%>);
-
-        $('#disbursementPie').on('click', function () {
-            APCPChart.destroy();
-    <%
-            chartJSON = chart.getPieChartDisbursement(arbListARBO);
-    %>
-            APCPChart = new Chart(context, <%out.print(chartJSON);%>);
-        });
+                $('#disbursementPie').on('click', function () {
+                    APCPChart.destroy();
+            <%
+                    chartJSON = chart.getPieChartDisbursement(arbListARBO);
+            %>
+                    APCPChart = new Chart(context, <%out.print(chartJSON);%>);
+                });
 
 
-        $('#repaymentPie').on('click', function () {
-            APCPChart.destroy();
-    <%
-            chartJSON = chart.getPieChartRepayment(arbListARBO);
-    %>
-            APCPChart = new Chart(context, <%out.print(chartJSON);%>);
-        });
+                $('#repaymentPie').on('click', function () {
+                    APCPChart.destroy();
+            <%
+                    chartJSON = chart.getPieChartRepayment(arbListARBO);
+            %>
+                    APCPChart = new Chart(context, <%out.print(chartJSON);%>);
+                });
 
-        $('#osPie').on('click', function () {
-            APCPChart.destroy();
-    <%
-            chartJSON = chart.getPieChartOSBalance(arbListARBO);
-    %>
-            APCPChart = new Chart(context, <%out.print(chartJSON);%>);
-        });
-
-
-    });
-
-    $(document).ready(function () {
-        var context2 = $('#pastDueChart').get(0).getContext('2d');
-        var APCPChart2;
-    <%
-            Chart chart2 = new Chart();
-            String chartJSON2 = "";
-            chartJSON2 = chart2.getLineChartPastDue(arbo.getRequestList(),"SETTLED PAST DUE AMOUNTS");
-    %>
-
-        APCPChart2 = new Chart(context2, <%out.print(chartJSON2);%>);
-
-        $('#amountLine').on('click', function () {
-            APCPChart2.destroy();
-    <%
-            chartJSON2 = chart2.getLineChartPastDue(arbo.getRequestList(),"SETTLED PAST DUE AMOUNTS");
-    %>
-            APCPChart2 = new Chart(context2, <%out.print(chartJSON2);%>);
-        });
+                $('#osPie').on('click', function () {
+                    APCPChart.destroy();
+            <%
+                    chartJSON = chart.getPieChartOSBalance(arbListARBO);
+            %>
+                    APCPChart = new Chart(context, <%out.print(chartJSON);%>);
+                });
 
 
-        $('#reasonPie').on('click', function () {
-            APCPChart2.destroy();
-    <%
-            chartJSON2 = chart2.getPieChartPastDue(arbo.getRequestList());
-    %>
-            APCPChart2 = new Chart(context2, <%out.print(chartJSON2);%>);
-        });
+            });
 
-    });
+            $(document).ready(function () {
+                var context2 = $('#pastDueChart').get(0).getContext('2d');
+                var APCPChart2;
+            <%
+                    Chart chart2 = new Chart();
+                    String chartJSON2 = "";
+                    chartJSON2 = chart2.getLineChartPastDue(arbo.getRequestList(),"SETTLED PAST DUE AMOUNTS");
+            %>
 
+                APCPChart2 = new Chart(context2, <%out.print(chartJSON2);%>);
 
-    $(function () {
-        var ctx = $('#barCanvas').get(0).getContext('2d');
-    <%
-        Chart bar = new Chart();
-        String json = bar.getBarChartEducation(arbListARBO);
-    %>
-        new Chart(ctx, <%out.print(json);%>);
-
-        var ctx2 = $('#lineCanvas').get(0).getContext('2d');
-    <%
-        Chart line = new Chart();
-        String json2 = line.getCropHistory(crops,arbListARBO);
-    %>
-        new Chart(ctx2, <%out.print(json2);%>);
-
-        var ctx3 = $('#pieCanvas').get(0).getContext('2d');
-    <%
-        Chart pie = new Chart();
-        String json3 = pie.getPieChartGender(arbListARBO);
-    %>
-        new Chart(ctx3, <%out.print(json3);%>);
-
-        var ctx5 = $('#pieCanvasPastDue').get(0).getContext('2d');
-    <%
-        Chart pie3 = new Chart();
-        String json5 = pie3.getPieChartPastDue(arboReleasedRequest);
-    %>
-        new Chart(ctx5, <%out.print(json5);%>);
+                $('#amountLine').on('click', function () {
+                    APCPChart2.destroy();
+            <%
+                    chartJSON2 = chart2.getLineChartPastDue(arbo.getRequestList(),"SETTLED PAST DUE AMOUNTS");
+            %>
+                    APCPChart2 = new Chart(context2, <%out.print(chartJSON2);%>);
+                });
 
 
-    });
-</script>
-</body>
+                $('#reasonPie').on('click', function () {
+                    APCPChart2.destroy();
+            <%
+                    chartJSON2 = chart2.getPieChartPastDue(arbo.getRequestList());
+            %>
+                    APCPChart2 = new Chart(context2, <%out.print(chartJSON2);%>);
+                });
+
+            });
+
+
+            $(function () {
+                var ctx = $('#barCanvas').get(0).getContext('2d');
+            <%
+                Chart bar = new Chart();
+                String json = bar.getBarChartEducation(arbListARBO);
+            %>
+                new Chart(ctx, <%out.print(json);%>);
+
+                var ctx2 = $('#lineCanvas').get(0).getContext('2d');
+            <%
+                Chart line = new Chart();
+                String json2 = line.getCropHistory(crops,arbListARBO);
+            %>
+                new Chart(ctx2, <%out.print(json2);%>);
+
+                var ctx3 = $('#pieCanvas').get(0).getContext('2d');
+            <%
+                Chart pie = new Chart();
+                String json3 = pie.getPieChartGender(arbListARBO);
+            %>
+                new Chart(ctx3, <%out.print(json3);%>);
+
+                var ctx5 = $('#pieCanvasPastDue').get(0).getContext('2d');
+            <%
+                Chart pie3 = new Chart();
+                String json5 = pie3.getPieChartPastDue(arboReleasedRequest);
+            %>
+                new Chart(ctx5, <%out.print(json5);%>);
+
+
+            });
+        </script>
+    </body>
 </html>

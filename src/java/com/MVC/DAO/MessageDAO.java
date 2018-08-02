@@ -23,24 +23,63 @@ import java.sql.Time;
  */
 public class MessageDAO {
     
-    public boolean addMessage(Message m){
+    public int addMessage(Message m){
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
+        int n = 0;
         try {
             con.setAutoCommit(false);
-            String query = "INSERT INTO `messages` (`body`, `dateSent`, `timeSent`, `sentBy`, `sentTo`) "
-                    + "VALUES (?, ?, ?, ?, ?);";
+            String query = "INSERT INTO `messages` (`body`, `dateSent`, `timeSent`, `sentBy`) "
+                    + "VALUES (?, ?, ?, ?);";
             
             long s = System.currentTimeMillis();
             Date d = new Date(s);
             Time t = new Time(s);
             
-            PreparedStatement p = con.prepareStatement(query);
+            PreparedStatement p = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setString(1, m.getBody());
             p.setDate(2, d);
             p.setTime(3, t);
             p.setInt(4, m.getSentBy());
-            p.setInt(5, m.getSentTo());
+            
+            
+            p.executeUpdate();
+            
+            ResultSet rs = p.getGeneratedKeys();
+            
+            if (rs.next()) {
+                n = rs.getInt(1);
+                p.close();
+
+            }
+            
+            p.close();
+            con.commit();
+            con.close();
+            
+            
+        } catch (SQLException ex) {
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(MessageDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(MessageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return n;
+    }
+    
+    public boolean sendMessage(int messageID, int userID){
+        DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
+        Connection con = myFactory.getConnection();
+        try {
+            con.setAutoCommit(false);
+            String query = "INSERT INTO `received_messages` (`messageID`,`userID`) "
+                    + "VALUES (?, ?);";
+            
+            PreparedStatement p = con.prepareStatement(query);
+            p.setInt(1, messageID);
+            p.setInt(2, userID);
             
             
             p.execute();
@@ -67,7 +106,7 @@ public class MessageDAO {
         Connection con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "SELECT * FROM messages WHERE `sentTo`=? AND `isRead`='1' ORDER BY messageID DESC";
+            String query = "SELECT * FROM received_messages rm JOIN messages m ON rm.messageID=m.messageID WHERE rm.userID=? AND rm.isRead='1' ORDER BY m.messageID DESC";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, userID);
             ResultSet rs = p.executeQuery();
@@ -78,7 +117,7 @@ public class MessageDAO {
                 temp.setDateSent(rs.getDate("dateSent"));
                 temp.setTimeSent(rs.getTime("timeSent"));
                 temp.setSentBy(rs.getInt("sentBy"));
-                temp.setSentTo(rs.getInt("sentTo"));
+                temp.setSentTo(rs.getInt("userID"));
                 list.add(temp);
             }
             p.close();
@@ -102,7 +141,7 @@ public class MessageDAO {
         Connection con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "SELECT count(*) FROM messages WHERE `sentTo`=? AND `isRead`='0' ORDER BY messageID DESC";
+            String query = "SELECT count(*) FROM received_messages WHERE `userID`=? AND `isRead`='0' ORDER BY messageID DESC";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, userID);
             ResultSet rs = p.executeQuery();
@@ -130,7 +169,7 @@ public class MessageDAO {
         Connection con = myFactory.getConnection();
         try {
             con.setAutoCommit(false);
-            String query = "UPDATE `messages` SET `isRead`='1' WHERE `sentTo`=?;";
+            String query = "UPDATE `received_messages` SET `isRead`='1' WHERE `userID`=?;";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, userID);
             p.executeUpdate();
