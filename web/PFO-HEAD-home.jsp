@@ -354,7 +354,7 @@
                                                                             <%
                                                                                 for(APCPRequest delayedRequest : requests){
                                                                             %>
-                                                                            <%if(delayedRequest.checkIfRequestIsOnTrack(delayedRequest.getDateRequested())){%>
+                                                                            <%if(delayedRequest.checkIfRequestIsOnTrack()){%>
                                                                             <tr>
                                                                                 <%ARBO arbo = arboDAO.getARBOByID(delayedRequest.getArboID());%>
                                                                                 <td><a rel="noopener noreferrer" target="_blank" href="ViewARBO?id=<%out.print(delayedRequest.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
@@ -406,7 +406,7 @@
                                                                             <%
                                                                                 for(APCPRequest delayedRequest : requests){
                                                                             %>
-                                                                            <%if(!delayedRequest.checkIfRequestIsOnTrack(delayedRequest.getDateRequested())){%>
+                                                                            <%if(!delayedRequest.checkIfRequestIsOnTrack()){%>
                                                                             <tr>
                                                                                 <%ARBO arbo = arboDAO.getARBOByID(delayedRequest.getArboID());%>
                                                                                 <td><a rel="noopener noreferrer" target="_blank" href="ViewARBO?id=<%out.print(delayedRequest.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>

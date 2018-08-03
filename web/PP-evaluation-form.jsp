@@ -16,8 +16,13 @@
         <div class="wrapper">
 
             <%@include file="jspf/field-officer-navbar.jspf" %>
-            <%@include file="jspf/point-person-sidebar.jspf" %>
+            <%if((Integer)session.getAttribute("userType") == 2){%>
+            <%@include file="jspf/pp-apcp-sidebar.jspf" %>
+            <%}else{%>
+            <%@include file="jspf/pp-capdev-sidebar.jspf" %>
+            <%}%>
             <%
+            EvaluationDAO eDAO = new EvaluationDAO();
             Evaluation e = eDAO.getEvaluationByID((Integer)request.getAttribute("evaluationID"));
             ArrayList<Question> questions = eDAO.getAllQuestionsByType(e.getEvaluationType());
             %>

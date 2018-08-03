@@ -48,6 +48,7 @@
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                         <h4><i class="icon fa fa-ban"></i> You have <a href="view-issues.jsp">ISSUES</a> pending. Please resolve them immediately.</h4>
                     </div>
+                    <%}%>
 
                     <div class="row">
                         <div class="col-xs-12">

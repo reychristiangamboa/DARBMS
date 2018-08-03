@@ -2182,7 +2182,7 @@ public class Chart {
 
         for (int i = 0; i < labels.size(); i++) {
             double total = 0;
-            int total2 = 0;
+            double total2 = 0;
             for (ARB arb : arbList) {
 
                 arb.setActivities(dao.getCAPDEVPlanByARB(arb.getArbID()));
@@ -2207,7 +2207,12 @@ public class Chart {
                     total2++;
                 }
             }
-            values.add(total / total2);
+            if (total2 > 0) {
+                double finalVal = total / total2;
+                System.out.println("FINAL VAL: " + finalVal);
+                values.add(finalVal);
+                data.addLabel(labels.get(i));
+            }
             data.addLabel(labels.get(i));
         }
 
@@ -2257,22 +2262,22 @@ public class Chart {
 
         for (Region r : regionList) {
             double age18to24Ct = 0;
-            int age18to24Ct2 = 0;
+            double age18to24Ct2 = 0;
 
             double age25to34Ct = 0;
-            int age25to34Ct2 = 0;
+            double age25to34Ct2 = 0;
 
             double age35to44Ct = 0;
-            int age35to44Ct2 = 0;
+            double age35to44Ct2 = 0;
 
             double age45to54Ct = 0;
-            int age45to54Ct2 = 0;
+            double age45to54Ct2 = 0;
 
             double age55to64Ct = 0;
-            int age55to64Ct2 = 0;
+            double age55to64Ct2 = 0;
 
             double age65greaterCt = 0;
-            int age65greaterCt2 = 0;
+            double age65greaterCt2 = 0;
 
             for (ARB arb : arbList) {
 
@@ -2300,12 +2305,24 @@ public class Chart {
                     }
                 }
             }
-            age18to24.addData(age18to24Ct / age18to24Ct2);
-            age25to34.addData(age25to34Ct / age25to34Ct2);
-            age35to44.addData(age35to44Ct / age35to44Ct2);
-            age45to54.addData(age45to54Ct / age45to54Ct2);
-            age55to64.addData(age55to64Ct / age55to64Ct2);
-            age65greater.addData(age65greaterCt / age65greaterCt2);
+            if(age18to24Ct2 > 0){
+                age18to24.addData(age18to24Ct / age18to24Ct2);
+            }
+            if(age25to34Ct2 > 0){
+                age25to34.addData(age25to34Ct / age25to34Ct2);
+            }
+            if(age35to44Ct2 > 0){
+                age35to44.addData(age35to44Ct / age35to44Ct2);
+            }
+            if(age45to54Ct2 > 0){
+                age45to54.addData(age45to54Ct / age45to54Ct2);
+            }
+            if(age55to64Ct2 > 0){
+                age55to64.addData(age55to64Ct / age55to64Ct2);
+            }
+            if(age65greaterCt2 > 0){
+                age65greater.addData(age65greaterCt / age65greaterCt2);
+            }
 
             data.addLabel(r.getRegDesc());
         }
@@ -2357,22 +2374,22 @@ public class Chart {
 
         for (Province p : provOfficeList) {
             double age18to24Ct = 0;
-            int age18to24Ct2 = 0;
+            double age18to24Ct2 = 0;
 
             double age25to34Ct = 0;
-            int age25to34Ct2 = 0;
+            double age25to34Ct2 = 0;
 
             double age35to44Ct = 0;
-            int age35to44Ct2 = 0;
+            double age35to44Ct2 = 0;
 
             double age45to54Ct = 0;
-            int age45to54Ct2 = 0;
+            double age45to54Ct2 = 0;
 
             double age55to64Ct = 0;
-            int age55to64Ct2 = 0;
+            double age55to64Ct2 = 0;
 
             double age65greaterCt = 0;
-            int age65greaterCt2 = 0;
+            double age65greaterCt2 = 0;
             for (ARB arb : arbList) {
 
                 arb.setActivities(dao.getCAPDEVPlanByARB(arb.getArbID()));
@@ -2399,12 +2416,24 @@ public class Chart {
                     }
                 }
             }
-            age18to24.addData(age18to24Ct / age18to24Ct2);
-            age25to34.addData(age25to34Ct / age25to34Ct2);
-            age35to44.addData(age35to44Ct / age35to44Ct2);
-            age45to54.addData(age45to54Ct / age45to54Ct2);
-            age55to64.addData(age55to64Ct / age55to64Ct2);
-            age65greater.addData(age65greaterCt / age65greaterCt2);
+            if(age18to24Ct2 > 0){
+                age18to24.addData(age18to24Ct / age18to24Ct2);
+            }
+            if(age25to34Ct2 > 0){
+                age25to34.addData(age25to34Ct / age25to34Ct2);
+            }
+            if(age35to44Ct2 > 0){
+                age35to44.addData(age35to44Ct / age35to44Ct2);
+            }
+            if(age45to54Ct2 > 0){
+                age45to54.addData(age45to54Ct / age45to54Ct2);
+            }
+            if(age55to64Ct2 > 0){
+                age55to64.addData(age55to64Ct / age55to64Ct2);
+            }
+            if(age65greaterCt2 > 0){
+                age65greater.addData(age65greaterCt / age65greaterCt2);
+            }
 
             data.addLabel(p.getProvDesc());
         }
@@ -2440,7 +2469,7 @@ public class Chart {
         ArrayList<Double> values = new ArrayList();
         for (int i = 0; i < labels.size(); i++) {
             double total = 0;
-            int total2 = 0;
+            double total2 = 0;
             for (ARB arb : arbList) {
                 if (i == 0 && (arb.getAge() >= 18 && arb.getAge() <= 24)) {
                     total += arb.getCurrentTotalDisbursementAmount();
@@ -2462,8 +2491,15 @@ public class Chart {
                     total2++;
                 }
             }
-            values.add(total / total2);
-            data.addLabel(labels.get(i));
+            System.out.println("TOTAL: " + total);
+            System.out.println("TOTAL2: " + total2);
+            if (total2 > 0) {
+                double finalVal = total / total2;
+                System.out.println("FINAL VAL: " + finalVal);
+                values.add(finalVal);
+                data.addLabel(labels.get(i));
+            }
+
         }
 
         for (double value : values) {
@@ -2510,22 +2546,22 @@ public class Chart {
 
         for (Region r : regionList) {
             double age18to24Ct = 0;
-            int age18to24Ct2 = 0;
+            double age18to24Ct2 = 0;
 
             double age25to34Ct = 0;
-            int age25to34Ct2 = 0;
+            double age25to34Ct2 = 0;
 
             double age35to44Ct = 0;
-            int age35to44Ct2 = 0;
+            double age35to44Ct2 = 0;
 
             double age45to54Ct = 0;
-            int age45to54Ct2 = 0;
+            double age45to54Ct2 = 0;
 
             double age55to64Ct = 0;
-            int age55to64Ct2 = 0;
+            double age55to64Ct2 = 0;
 
             double age65greaterCt = 0;
-            int age65greaterCt2 = 0;
+            double age65greaterCt2 = 0;
 
             for (ARB arb : arbList) {
                 if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode()) {
@@ -2550,12 +2586,24 @@ public class Chart {
                     }
                 }
             }
-            age18to24.addData(age18to24Ct / age18to24Ct2);
-            age25to34.addData(age25to34Ct / age25to34Ct2);
-            age35to44.addData(age35to44Ct / age35to44Ct2);
-            age45to54.addData(age45to54Ct / age45to54Ct2);
-            age55to64.addData(age55to64Ct / age55to64Ct2);
-            age65greater.addData(age65greaterCt / age65greaterCt2);
+            if(age18to24Ct2 > 0){
+                age18to24.addData(age18to24Ct / age18to24Ct2);
+            }
+            if(age25to34Ct2 > 0){
+                age25to34.addData(age25to34Ct / age25to34Ct2);
+            }
+            if(age35to44Ct2 > 0){
+                age35to44.addData(age35to44Ct / age35to44Ct2);
+            }
+            if(age45to54Ct2 > 0){
+                age45to54.addData(age45to54Ct / age45to54Ct2);
+            }
+            if(age55to64Ct2 > 0){
+                age55to64.addData(age55to64Ct / age55to64Ct2);
+            }
+            if(age65greaterCt2 > 0){
+                age65greater.addData(age65greaterCt / age65greaterCt2);
+            }
 
             data.addLabel(r.getRegDesc());
         }
@@ -2605,22 +2653,22 @@ public class Chart {
 
         for (Province p : provOfficeList) {
             double age18to24Ct = 0;
-            int age18to24Ct2 = 0;
+            double age18to24Ct2 = 0;
 
             double age25to34Ct = 0;
-            int age25to34Ct2 = 0;
+            double age25to34Ct2 = 0;
 
             double age35to44Ct = 0;
-            int age35to44Ct2 = 0;
+            double age35to44Ct2 = 0;
 
             double age45to54Ct = 0;
-            int age45to54Ct2 = 0;
+            double age45to54Ct2 = 0;
 
             double age55to64Ct = 0;
-            int age55to64Ct2 = 0;
+            double age55to64Ct2 = 0;
 
             double age65greaterCt = 0;
-            int age65greaterCt2 = 0;
+            double age65greaterCt2 = 0;
             for (ARB arb : arbList) {
                 if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode()) {
                     if (arb.getAge() >= 18 && arb.getAge() <= 24) {
@@ -2644,12 +2692,24 @@ public class Chart {
                     }
                 }
             }
-            age18to24.addData(age18to24Ct / age18to24Ct2);
-            age25to34.addData(age25to34Ct / age25to34Ct2);
-            age35to44.addData(age35to44Ct / age35to44Ct2);
-            age45to54.addData(age45to54Ct / age45to54Ct2);
-            age55to64.addData(age55to64Ct / age55to64Ct2);
-            age65greater.addData(age65greaterCt / age65greaterCt2);
+            if(age18to24Ct2 > 0){
+                age18to24.addData(age18to24Ct / age18to24Ct2);
+            }
+            if(age25to34Ct2 > 0){
+                age25to34.addData(age25to34Ct / age25to34Ct2);
+            }
+            if(age35to44Ct2 > 0){
+                age35to44.addData(age35to44Ct / age35to44Ct2);
+            }
+            if(age45to54Ct2 > 0){
+                age45to54.addData(age45to54Ct / age45to54Ct2);
+            }
+            if(age55to64Ct2 > 0){
+                age55to64.addData(age55to64Ct / age55to64Ct2);
+            }
+            if(age65greaterCt2 > 0){
+                age65greater.addData(age65greaterCt / age65greaterCt2);
+            }
 
             data.addLabel(p.getProvDesc());
         }
@@ -2686,7 +2746,7 @@ public class Chart {
         APCPRequest req = new APCPRequest();
         for (int i = 0; i < labels.size(); i++) {
             double total = 0;
-            int total2 = 0;
+            double total2 = 0;
             for (ARB arb : arbList) {
                 if (i == 0 && (arb.getAge() >= 18 && arb.getAge() <= 24)) {
                     total += req.getTotalARBOSBalance(arb.getArbID());
@@ -2708,8 +2768,12 @@ public class Chart {
                     total2++;
                 }
             }
-            values.add(total / total2);
-            data.addLabel(labels.get(i));
+            if (total2 > 0) {
+                double finalVal = total / total2;
+                System.out.println("FINAL VAL: " + finalVal);
+                values.add(finalVal);
+                data.addLabel(labels.get(i));
+            }
         }
 
         for (double value : values) {
@@ -2757,22 +2821,22 @@ public class Chart {
 
         for (Region r : regionList) {
             double age18to24Ct = 0;
-            int age18to24Ct2 = 0;
+            double age18to24Ct2 = 0;
 
             double age25to34Ct = 0;
-            int age25to34Ct2 = 0;
+            double age25to34Ct2 = 0;
 
             double age35to44Ct = 0;
-            int age35to44Ct2 = 0;
+            double age35to44Ct2 = 0;
 
             double age45to54Ct = 0;
-            int age45to54Ct2 = 0;
+            double age45to54Ct2 = 0;
 
             double age55to64Ct = 0;
-            int age55to64Ct2 = 0;
+            double age55to64Ct2 = 0;
 
             double age65greaterCt = 0;
-            int age65greaterCt2 = 0;
+            double age65greaterCt2 = 0;
             for (ARB arb : arbList) {
                 if (arboDAO.getARBOByID(arb.getArboID()).getArboRegion() == r.getRegCode()) {
                     if (arb.getAge() >= 18 && arb.getAge() <= 24) {
@@ -2796,12 +2860,25 @@ public class Chart {
                     }
                 }
             }
-            age18to24.addData(age18to24Ct / age18to24Ct2);
-            age25to34.addData(age25to34Ct / age25to34Ct2);
-            age35to44.addData(age35to44Ct / age35to44Ct2);
-            age45to54.addData(age45to54Ct / age45to54Ct2);
-            age55to64.addData(age55to64Ct / age55to64Ct2);
-            age65greater.addData(age65greaterCt / age65greaterCt2);
+            if(age18to24Ct2 > 0){
+                age18to24.addData(age18to24Ct / age18to24Ct2);
+            }
+            if(age25to34Ct2 > 0){
+                age25to34.addData(age25to34Ct / age25to34Ct2);
+            }
+            if(age35to44Ct2 > 0){
+                age35to44.addData(age35to44Ct / age35to44Ct2);
+            }
+            if(age45to54Ct2 > 0){
+                age45to54.addData(age45to54Ct / age45to54Ct2);
+            }
+            if(age55to64Ct2 > 0){
+                age55to64.addData(age55to64Ct / age55to64Ct2);
+            }
+            if(age65greaterCt2 > 0){
+                age65greater.addData(age65greaterCt / age65greaterCt2);
+            }
+            
 
             data.addLabel(r.getRegDesc());
         }
@@ -2852,22 +2929,22 @@ public class Chart {
 
         for (Province p : provOfficeList) {
             double age18to24Ct = 0;
-            int age18to24Ct2 = 0;
+            double age18to24Ct2 = 0;
 
             double age25to34Ct = 0;
-            int age25to34Ct2 = 0;
+            double age25to34Ct2 = 0;
 
             double age35to44Ct = 0;
-            int age35to44Ct2 = 0;
+            double age35to44Ct2 = 0;
 
             double age45to54Ct = 0;
-            int age45to54Ct2 = 0;
+            double age45to54Ct2 = 0;
 
             double age55to64Ct = 0;
-            int age55to64Ct2 = 0;
+            double age55to64Ct2 = 0;
 
             double age65greaterCt = 0;
-            int age65greaterCt2 = 0;
+            double age65greaterCt2 = 0;
             for (ARB arb : arbList) {
                 if (arboDAO.getARBOByID(arb.getArboID()).getProvOfficeCode() == p.getProvCode()) {
                     if (arb.getAge() >= 18 && arb.getAge() <= 24) {
@@ -2891,12 +2968,24 @@ public class Chart {
                     }
                 }
             }
-            age18to24.addData(age18to24Ct / age18to24Ct2);
-            age25to34.addData(age25to34Ct / age25to34Ct2);
-            age35to44.addData(age35to44Ct / age35to44Ct2);
-            age45to54.addData(age45to54Ct / age45to54Ct2);
-            age55to64.addData(age55to64Ct / age55to64Ct2);
-            age65greater.addData(age65greaterCt / age65greaterCt2);
+            if(age18to24Ct2 > 0){
+                age18to24.addData(age18to24Ct / age18to24Ct2);
+            }
+            if(age25to34Ct2 > 0){
+                age25to34.addData(age25to34Ct / age25to34Ct2);
+            }
+            if(age35to44Ct2 > 0){
+                age35to44.addData(age35to44Ct / age35to44Ct2);
+            }
+            if(age45to54Ct2 > 0){
+                age45to54.addData(age45to54Ct / age45to54Ct2);
+            }
+            if(age55to64Ct2 > 0){
+                age55to64.addData(age55to64Ct / age55to64Ct2);
+            }
+            if(age65greaterCt2 > 0){
+                age65greater.addData(age65greaterCt / age65greaterCt2);
+            }
 
             data.addLabel(p.getProvDesc());
         }
@@ -2934,9 +3023,9 @@ public class Chart {
         scales.addxAxes(x);
         scales.addyAxes(y);
         options.setScales(scales);
-        
+
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        
+
         Title title = new Title();
         title.setDisplay(true);
         title.setText("ARBO: Credit Standing");
@@ -3009,7 +3098,7 @@ public class Chart {
 
         return new BarChart(data, options).setHorizontal().toJson();
     }
-    
+
     public String getStackedBarChartARBOParticipationRate(ArrayList<Region> regionList, ArrayList<Province> provList, ArrayList<ARBO> arboList) {
         CAPDEVDAO capdevDAO = new CAPDEVDAO();
         ARBDAO aDAO = new ARBDAO();
@@ -3026,9 +3115,9 @@ public class Chart {
         scales.addxAxes(x);
         scales.addyAxes(y);
         options.setScales(scales);
-        
+
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        
+
         Title title = new Title();
         title.setDisplay(true);
         title.setText("ARBO: Participation Rate");
@@ -3069,9 +3158,9 @@ public class Chart {
 
         ArrayList<BarDataset> datasets = new ArrayList();
         for (ARBO arbo : arboList) {
-            
+
             arbo.setArbList(aDAO.getAllARBsARBO(arbo.getArboID()));
-            
+
             BarDataset dataset = new BarDataset(); // initializes
             dataset.setLabel(arbo.getArboName()); // ONE color
             dataset.setBackgroundColor(Color.random()); // ONE bar
@@ -4275,9 +4364,9 @@ public class Chart {
         scales.addxAxes(x);
         scales.addyAxes(y);
         options.setScales(scales);
-        
+
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        
+
         Title title = new Title();
         title.setDisplay(true);
         title.setText("CAPDEV Plans: " + f.format(start) + " - " + f.format(end));
@@ -4397,9 +4486,9 @@ public class Chart {
         scales.addxAxes(x);
         scales.addyAxes(y);
         options.setScales(scales);
-        
+
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-        
+
         Title title = new Title();
         title.setDisplay(true);
         title.setText("CAPDEV Activities: " + f.format(start) + " - " + f.format(end));

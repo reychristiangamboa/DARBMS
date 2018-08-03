@@ -70,7 +70,7 @@ public class RecordPastDueAccount extends BaseServlet {
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
             
             
-            request.setAttribute("errMessage", "APCP pended! An issue has been raised to the PFO-HEAD.");
+            request.setAttribute("errMessage", "APCP pended! An issue has been raised to the PFO-CAPDEV.");
                 
                 Issue i = new Issue();
                 i.setIssueType(4); // PAST DUE SCHEDULE CAPDEV

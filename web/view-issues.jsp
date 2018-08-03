@@ -49,7 +49,7 @@
                 ArrayList<Issue> iList = new ArrayList();
                 ArrayList<Issue> iListResolved = new ArrayList();
                 iList = iDAO.retrieveUnresolvedIssues((Integer)session.getAttribute("userType"), (Integer)session.getAttribute("provOfficeCode"));
-                iListResolved = iDAO.retrieveUnresolvedIssues((Integer)session.getAttribute("userType"), (Integer)session.getAttribute("provOfficeCode"));
+                iListResolved = iDAO.retrieveResolvedIssues((Integer)session.getAttribute("userType"), (Integer)session.getAttribute("provOfficeCode"));
                 
             %>
 
@@ -113,7 +113,7 @@
                                                         <%}else if(i.getIssueType() == 3){ //SINGLE ARB DISBURSEMENT %>
                                                         <td><a data-toggle="modal" data-target="#singleARBDisbursement<%out.print(i.getId());%>">Disbursement ID <%out.print(i.getRequestID());%></a></td>
                                                         <%}else if(i.getIssueType() == 4){ //PAST DUE ACCOUNT %>
-                                                        <td><a href="CreateCAPDEVProposal?id=<%out.print(i.getRequestID());%>">Past Due Account ID <%out.print(i.getPastDueAccountID());%></a></td>
+                                                        <td><a href="CreateCAPDEVProposal?pastDueID=<%out.print(i.getPastDueAccountID());%>&id=<%out.print(i.getRequestID());%>">Past Due Account ID <%out.print(i.getPastDueAccountID());%></a></td>
                                                         <%}%>
                                                         <td><%out.print(u.getFullName());%></td>
                                                         <td><%out.print(i.getDateRecorded());%></td>
@@ -407,7 +407,7 @@
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">×</span>
                                             </button>
-                                            <h4 class="modal-title">SINGLE ARB DISBURSEMENT</h4>
+                                            <h4 class="modal-title">PAST DUE ACCOUNT</h4>
                                         </div>
                                         <form method="post">
                                             <div class="modal-body">

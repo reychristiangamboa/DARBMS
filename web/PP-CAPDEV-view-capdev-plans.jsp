@@ -53,6 +53,7 @@
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                         <h4><i class="icon fa fa-ban"></i> You have <a href="view-issues.jsp">ISSUES</a> pending. Please resolve them immediately.</h4>
                     </div>
+                    <%}%>
 
                     <%if(request.getAttribute("success") != null){%>
                     <div class="alert alert-success alert-dismissible">
@@ -98,6 +99,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Plan DTN</th>
+                                                <th>Plan Date</th>
                                                 <th>ARBO</th>
                                                 <th>No. of Activities</th>
                                                 <th>Status</th>
@@ -115,6 +117,7 @@
                                             %>
                                             <tr>
                                                 <td><%out.print(p.getPlanDTN());%></td>
+                                                <td><%out.print(p.getPlanDate());%></td>
                                                 <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
                                                 <td><%out.print(p.getActivities().size());%></td>
                                                 <td><%out.print(p.getPlanStatusDesc());%></td>

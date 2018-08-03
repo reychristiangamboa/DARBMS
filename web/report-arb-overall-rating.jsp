@@ -23,7 +23,9 @@
             <%}else if((Integer)session.getAttribute("userType") == 5){ // RFO%>
             <%@include file="jspf/central-sidebar.jspf"%>
             <%}else if((Integer)session.getAttribute("userType") == 2){ // RFO%>
-            <%@include file="jspf/point-person-sidebar.jspf"%>
+            <%@include file="jspf/pp-apcp-sidebar.jspf"%>
+            <%}else if((Integer)session.getAttribute("userType") == 8){ // RFO%>
+            <%@include file="jspf/pp-capdev-sidebar.jspf"%>
             <%}%>
 
             <%

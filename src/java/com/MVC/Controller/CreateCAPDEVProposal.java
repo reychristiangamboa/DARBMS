@@ -23,9 +23,9 @@ public class CreateCAPDEVProposal extends BaseServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         request.setAttribute("requestID", id);
         
-//        if (request.getParameter("pastDueID") != null) {
-//            request.setAttribute("pastDueID", Integer.parseInt(request.getParameter("pastDueID")));
-//        }
+        if (request.getParameter("pastDueID") != null) {
+            request.setAttribute("pastDueID", Integer.parseInt(request.getParameter("pastDueID")));
+        }
 
         request.getRequestDispatcher("PFO-CAPDEV-create-capdev-proposal.jsp").forward(request, response);
     }

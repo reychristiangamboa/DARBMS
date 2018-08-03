@@ -77,11 +77,11 @@
                     
                     requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
                     allPlans = capdevDAO.getAllProvincialCAPDEVPlan((Integer) session.getAttribute("provOfficeCode"));
-                    pendingPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
-                    approvedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
-                    disapprovedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
-                    implementedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
-                    postponedPlans = capdevDAO.getAllProvincialCAPDEVPlanByStatus(6, (Integer) session.getAttribute("provOfficeCode"));
+                    pendingPlans = capdevDAO.getFilteredByStatus(allPlans,1);
+                    approvedPlans = capdevDAO.getFilteredByStatus(allPlans,2);
+                    disapprovedPlans = capdevDAO.getFilteredByStatus(allPlans,3);
+                    implementedPlans = capdevDAO.getFilteredByStatus(allPlans,5);
+                    postponedPlans = capdevDAO.getFilteredByStatus(allPlans,6);
                     
                     
                 } else if(userType == 4){ // RFO
@@ -89,19 +89,19 @@
                     ArrayList<ARB> arbListRegion = arbDAO.getAllARBsOfARBOs(arboListRegion);
                     requestedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
                     allPlans = capdevDAO.getAllRegionalCAPDEVPlan((Integer) session.getAttribute("regOfficeCode"));
-                    pendingPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
-                    approvedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(2, (Integer) session.getAttribute("regOfficeCode"));
-                    disapprovedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
-                    implementedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(5, (Integer) session.getAttribute("regOfficeCode"));
-                    postponedPlans = capdevDAO.getAllRegionalCAPDEVPlanByStatus(6, (Integer) session.getAttribute("regOfficeCode"));
+                    pendingPlans = capdevDAO.getFilteredByStatus(allPlans,1);
+                    approvedPlans = capdevDAO.getFilteredByStatus(allPlans,2);
+                    disapprovedPlans = capdevDAO.getFilteredByStatus(allPlans,3);
+                    implementedPlans = capdevDAO.getFilteredByStatus(allPlans,5);
+                    postponedPlans = capdevDAO.getFilteredByStatus(allPlans,6);
                 } else if (userType == 5){ // CO
                     requestedRequests = apcpRequestDAO.getAllRequestsByStatus(1);
                     allPlans = capdevDAO.getAllCAPDEVPlan();
-                    pendingPlans = capdevDAO.getAllCAPDEVPlanByStatus(1);
-                    approvedPlans = capdevDAO.getAllCAPDEVPlanByStatus(2);
-                    disapprovedPlans = capdevDAO.getAllCAPDEVPlanByStatus(3);
-                    implementedPlans = capdevDAO.getAllCAPDEVPlanByStatus(5);
-                    postponedPlans = capdevDAO.getAllCAPDEVPlanByStatus(6);
+                    pendingPlans = capdevDAO.getFilteredByStatus(allPlans,1);
+                    approvedPlans = capdevDAO.getFilteredByStatus(allPlans,2);
+                    disapprovedPlans = capdevDAO.getFilteredByStatus(allPlans,3);
+                    implementedPlans = capdevDAO.getFilteredByStatus(allPlans,5);
+                    postponedPlans = capdevDAO.getFilteredByStatus(allPlans,6);
                 }
                 
                 if(request.getAttribute("requested") != null){

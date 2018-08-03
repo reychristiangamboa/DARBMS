@@ -11,6 +11,7 @@ import com.MVC.DAO.MessageDAO;
 import com.MVC.DAO.UserDAO;
 import com.MVC.Model.APCPRequest;
 import com.MVC.Model.CAPDEVPlan;
+import com.MVC.Model.Issue;
 import com.MVC.Model.Message;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -45,7 +46,6 @@ public class SendCAPDEVAssessment extends BaseServlet {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         CAPDEVPlan plan = dao.getCAPDEVPlan(planID);
-        
 
         java.sql.Date implementedDate = null;
 
@@ -74,14 +74,12 @@ public class SendCAPDEVAssessment extends BaseServlet {
                         System.out.println("Message sent!");
                     }
                 }
-                
+
                 for (int userID : userIDs2) {
                     if (messageDAO.sendMessage(messageID, userID)) {
                         System.out.println("Message sent!");
                     }
                 }
-
-                
 
                 request.setAttribute("success", "CAPDEV Assessment sent!");
                 request.getRequestDispatcher("PP-CAPDEV-view-capdev-plans.jsp").forward(request, response);
@@ -90,8 +88,8 @@ public class SendCAPDEVAssessment extends BaseServlet {
                 request.getRequestDispatcher("PP-CAPDEV-view-capdev-plans.jsp").forward(request, response);
             }
         } else {
-            
-            if(plan.hasAPCPOrientation()){
+
+            if (plan.hasAPCPOrientation()) {
                 Message m = new Message();
                 m.setBody("[RE:APCP IMPLEMENTED] APCP Orientation IMPLEMENTED! APCP Request is now ready to be CLEARED.");
                 m.setSentBy((Integer) session.getAttribute("userID"));
@@ -107,6 +105,21 @@ public class SendCAPDEVAssessment extends BaseServlet {
             }
             if (dao.updatePlanStatus(planID, 5, implementedDate)) {
                 request.setAttribute("success", "CAPDEV Assessment sent!");
+                if (plan.getPastDueAccountID() > 0) {
+                    Message m = new Message();
+                    m.setBody("[RE:PAST DUE CAPDEV PLAN IMPLEMENTED] PAST DUE CAPDEV PLAN IMPLEMENTED! Past Due #" + plan.getPastDueAccountID()+ " is now FOR RELEASE. Please resolve this.");
+                    m.setSentBy((Integer) session.getAttribute("userID"));
+                    int messageID = messageDAO.addMessage(m);
+
+                    ArrayList<Integer> userIDs = userDAO.retrieveProvincialUserIDsByUserType(7, (Integer) session.getAttribute("provOfficeCode")); // PFO-CAPDEV
+                    
+                    for (int userID : userIDs) {
+                        if (messageDAO.sendMessage(messageID, userID)) {
+                            System.out.println("Message sent!");
+                        }
+                    }
+
+                }
                 request.getRequestDispatcher("PP-CAPDEV-view-capdev-plans.jsp").forward(request, response);
             } else {
                 request.setAttribute("errMessage", "Error in sending CAPDEV assessment.");

@@ -70,9 +70,9 @@ public class ARBDAO {
                 arb.setEducationLevel(rs.getInt("educationLevel"));
                 arb.setEducationLevelDesc(rs.getString("educationLevelDesc"));
                 arb.setLandArea(rs.getDouble("landArea"));
-                arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
-                arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
-                arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
+//                arb.setCurrentCrops(getAllARBCurrentCrops(rs.getInt("arbID")));
+//                arb.setCrops(getAllARBCrops(rs.getInt("arbID")));
+//                arb.setDependents(getAllARBDependents(rs.getInt("arbID")));
                 arb.setArbStatus(rs.getInt("arbStatus"));
                 arb.setArbStatusDesc(rs.getString("arbStatusDesc"));
                 arb.setClusterID(rs.getInt("clusterID"));

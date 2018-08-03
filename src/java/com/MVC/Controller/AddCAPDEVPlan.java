@@ -68,6 +68,7 @@ public class AddCAPDEVPlan extends BaseServlet {
         int requestID = Integer.parseInt(request.getParameter("requestID"));
 
         if (request.getParameter("pastDueID") != null) {
+            System.out.println("PAST DUE: "+request.getParameter("pastDueID"));
             capdevPlan.setPastDueAccountID(Integer.parseInt(request.getParameter("pastDueID")));
             planID = capdevDAO.addCAPDEVPlanForPastDue(capdevPlan, (Integer) session.getAttribute("userID"));
             //capdevDAO.assignPointPerson(planID, pointPersonID);

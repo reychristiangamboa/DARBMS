@@ -50,7 +50,7 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
-                        <strong><i class="fa fa-money"></i> APCP Request for New Accessing Conduits</strong> 
+                        <strong><i class="fa fa-money"></i> APCP Request for Conduits</strong> 
                         <small><%out.print((String) session.getAttribute("provOfficeDesc") + ", " + (String) session.getAttribute("regOfficeDesc"));%></small>
                     </h1>
 

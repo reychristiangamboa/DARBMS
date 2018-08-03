@@ -5,7 +5,6 @@
             <tr>
                 <th>Amount</th>
                 <th>Reason Past Due</th>
-                <th>Other Reason</th>
                 <th>Date Settled</th>
                 <th>Recorded By</th>
                 <th>Status</th>
@@ -21,9 +20,9 @@
             %>
             <tr>
                 <td><a href="#" data-toggle="modal" data-target="#pastDueModal<%out.print(p.getPastDueAccountID());%>"><%out.print(currency.format(p.getPastDueAmount()));%></a></td>
+                
                 <td><%out.print(p.getReasonPastDueDesc());%></td>
-                <td><%out.print(p.getOtherReason());%></td>
-
+                
                 <%if (p.getDateSettled() != null) {%>
                 <td><%out.print(p.getDateSettled());%></td>
                 <%} else {%>
@@ -124,7 +123,6 @@
             <tr>
                 <th>Amount</th>
                 <th>Reason Past Due</th>
-                <th>Other Reason</th>
                 <th>Date</th>
                 <th>Recorded By</th>
                 <th>Status</th>

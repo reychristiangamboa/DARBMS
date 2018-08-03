@@ -56,24 +56,36 @@
                         
                     }
                     
-                    if(request.getAttribute("regions") != null){
-                        perRegionList = (ArrayList<Region>)request.getAttribute("regions");
+                    if(request.getAttribute("filterBy") != null){
+                        if(((String)request.getAttribute("filterBy")).equals("regions")){
+                            perRegionList = (ArrayList<Region>)request.getAttribute("regions");
                         
                         currentAPCPBudget = addressDAO.getFilteredCurrentAPCPBudget(perRegionList, releasedRequests, year);
                         sumAPCPBudget = addressDAO.getFilteredSumAPCPBudget(perRegionList);
                         
                         currentCAPDEVBudget = addressDAO.getFilteredCurrentCAPDEVBudget(perRegionList,implementedPlans,year);
                         sumCAPDEVBudget = addressDAO.getFilteredSumCAPDEVBudget(perRegionList);
-                    }
-                    
-                    if(request.getAttribute("provOffices") != null){
-                        provOfficeList2 = (ArrayList<Province>)request.getAttribute("provOffices");
+                        }else if(((String)request.getAttribute("filterBy")).equals("provinces")){
+                            provOfficeList2 = (ArrayList<Province>)request.getAttribute("provOffices");
                         currentAPCPBudget = addressDAO.getCurrentAPCPBudgetRegion(releasedRequests, provOfficeList2, year);
                         sumAPCPBudget = addressDAO.getSumAPCPBudgetRegion(provOfficeList2);
                         
                         currentCAPDEVBudget = addressDAO.getCurrentCAPDEVBudgetRegion(implementedPlans,provOfficeList2,year);
                         sumCAPDEVBudget = addressDAO.getSumCAPDEVBudgetRegion(provOfficeList2);
+                        }else if(((String)request.getAttribute("filterBy")).equals("All")){
+                            
+                          currentAPCPBudget = addressDAO.getCurrentSumAPCPBudget(releasedRequests,year);
+                            currentCAPDEVBudget = addressDAO.getCurrentSumCAPDEVBudget(implementedPlans,year);
+                
+                            sumAPCPBudget = addressDAO.getSumAPCPBudget();
+                            sumCAPDEVBudget = addressDAO.getSumCAPDEVBudget();
+                        }
+                        
                     }
+                    
+//                    if(request.getAttribute("provOffices") != null){
+//                        
+//                    }
                     %>
 
                     <div class="row">
@@ -353,6 +365,15 @@
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>ARBO</th>
+                                                                                <%if(req.getRequestStatus() == 0 || req.getRequestStatus() == 1){%>
+                                                                                <th>Date Requested</th>
+                                                                                <%}else if(req.getRequestStatus() == 2){%>
+                                                                                <th>Date Cleared</th>
+                                                                                <%}else if(req.getRequestStatus() == 3){%>
+                                                                                <th>Date Endorsed</th>
+                                                                                <%}else if(req.getRequestStatus() == 4){%>
+                                                                                <th>Date Approved</th>
+                                                                                <%}%>
                                                                                 <th>Loan Reason</th>
                                                                                 <th>Loan Amount</th>
                                                                             </tr>
@@ -362,10 +383,19 @@
                                                                             <%
                                                                                 for(APCPRequest delayedRequest : requests){
                                                                             %>
-                                                                            <%if(delayedRequest.checkIfRequestIsOnTrack(delayedRequest.getDateRequested())){%>
+                                                                            <%if(delayedRequest.checkIfRequestIsOnTrack()){%>
                                                                             <tr>
                                                                                 <%ARBO arbo = arboDAO.getARBOByID(delayedRequest.getArboID());%>
                                                                                 <td><a rel="noopener noreferrer" target="_blank" href="ViewARBO?id=<%out.print(delayedRequest.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                                                <%if(req.getRequestStatus() == 0 || req.getRequestStatus() == 1){%>
+                                                                                <td><%=delayedRequest.getDateRequested()%></td>
+                                                                                <%}else if(req.getRequestStatus() == 2){%>
+                                                                                <td><%=delayedRequest.getDateCleared()%></td>
+                                                                                <%}else if(req.getRequestStatus() == 3){%>
+                                                                                <td><%=delayedRequest.getDateEndorsed()%></td>
+                                                                                <%}else if(req.getRequestStatus() == 4){%>
+                                                                                <td><%=delayedRequest.getDateApproved()%></td>
+                                                                                <%}%>
                                                                                 <%if(delayedRequest.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                                                 <td><%out.print(delayedRequest.getLoanReason().getLoanReasonDesc() + ": " + delayedRequest.getLoanReason().getOtherReason());%></td>
                                                                                 <%}else{%> <!--LOAN REASON-->
@@ -405,6 +435,15 @@
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>ARBO</th>
+                                                                                <%if(req.getRequestStatus() == 0 || req.getRequestStatus() == 1){%>
+                                                                                <th>Date Requested</th>
+                                                                                <%}else if(req.getRequestStatus() == 2){%>
+                                                                                <th>Date Cleared</th>
+                                                                                <%}else if(req.getRequestStatus() == 3){%>
+                                                                                <th>Date Endorsed</th>
+                                                                                <%}else if(req.getRequestStatus() == 4){%>
+                                                                                <th>Date Approved</th>
+                                                                                <%}%>
                                                                                 <th>Loan Reason</th>
                                                                                 <th>Loan Amount</th>
                                                                             </tr>
@@ -414,10 +453,19 @@
                                                                             <%
                                                                                 for(APCPRequest delayedRequest : requests){
                                                                             %>
-                                                                            <%if(!delayedRequest.checkIfRequestIsOnTrack(delayedRequest.getDateRequested())){%>
+                                                                            <%if(!delayedRequest.checkIfRequestIsOnTrack()){%>
                                                                             <tr>
                                                                                 <%ARBO arbo = arboDAO.getARBOByID(delayedRequest.getArboID());%>
                                                                                 <td><a rel="noopener noreferrer" target="_blank" href="ViewARBO?id=<%out.print(delayedRequest.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                                                <%if(req.getRequestStatus() == 0 || req.getRequestStatus() == 1){%>
+                                                                                <td><%=delayedRequest.getDateRequested()%></td>
+                                                                                <%}else if(req.getRequestStatus() == 2){%>
+                                                                                <td><%=delayedRequest.getDateCleared()%></td>
+                                                                                <%}else if(req.getRequestStatus() == 3){%>
+                                                                                <td><%=delayedRequest.getDateEndorsed()%></td>
+                                                                                <%}else if(req.getRequestStatus() == 4){%>
+                                                                                <td><%=delayedRequest.getDateApproved()%></td>
+                                                                                <%}%>
                                                                                 <%if(delayedRequest.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
                                                                                 <td><%out.print(delayedRequest.getLoanReason().getLoanReasonDesc() + ": " + delayedRequest.getLoanReason().getOtherReason());%></td>
                                                                                 <%}else{%> <!--LOAN REASON-->
@@ -904,9 +952,33 @@
         <%@include file="jspf/footer.jspf" %>
         <script type="text/javascript">
 
+            function chg2() {
+                var values = $('#regions').val();
 
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        document.getElementById('provinces').innerHTML = xhttp.responseText;
+                    }
+                };
+
+                var url = "RegionalProvincesFilterRefresh?";
+                for (i = 0; i < values.length; i++) {
+                    if (i === 0) {
+                        url += "valajax=" + values[i];
+                    } else {
+                        url += "&valajax=" + values[i];
+                    }
+                }
+
+
+                xhttp.open("GET", url, true);
+                xhttp.send();
+            }
 
             $(document).ready(function () {
+
+
 
                 var ctxAPCP = document.getElementById('apcpChart');
                 var APCPChart;

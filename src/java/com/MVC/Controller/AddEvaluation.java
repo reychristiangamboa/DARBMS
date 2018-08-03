@@ -89,7 +89,7 @@ public class AddEvaluation extends BaseServlet {
         } else {
             int evaluationID = dao.addEvaluation(e);
             request.setAttribute("evaluationID", evaluationID);
-            request.getRequestDispatcher("point-person-evaluation-form.jsp").forward(request, response);
+            request.getRequestDispatcher("PP-evaluation-form.jsp").forward(request, response);
         }
 
     }

@@ -250,7 +250,7 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <form id="drillDownGenderForm">
-                                    
+                                    <input type="hidden" name="filterBy" value="All">
                                     <div class="row no-print">
                                         <div class="col-xs-3">
                                             <label for="">Plan Date</label>
@@ -276,80 +276,114 @@
                         <div class="row invoice-info">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <div class="box-body">
-                                                <canvas id="chartCanvas"></canvas>
-                                                <div class="row text-center">
-                                                    <a class="btn btn-submit" data-toggle="modal" data-target="#modalPie">View More</a>
-                                                </div>
-                                                <div class="modal fade" id="modalPie">
-                                        <div class="modal-dialog modal-lg">
-                                            <%if(type == 1 || type == 2){ // APCP REQUESTS or APPROVAL RATE%>
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span></button>
-                                                    <h4 class="modal-title">CAPDEV Plans</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <div class="col-xs-12">
-                                                            <table class="table table-striped table-bordered export">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Plan DTN</th>
-                                                                        <th>ARBO</th>
-                                                                        <th>Plan Date</th>
-                                                                        <th>Status</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <%
-                                                                        for(CAPDEVPlan plan : allPlans){
-                                                                            APCPRequest req = apcpRequestDAO.getRequestByID(plan.getRequestID());
-                                                                            ARBO arbo = arboDAO.getARBOByID(req.getArboID());
-                                                                    %>
-                                                                    <tr>
-                                                                        <td><%out.print(req.getRequestID());%></td>
-                                                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                                        <td><%out.print(plan.getPlanDate());%></td>
-                                                                        <td><%out.print(plan.getPlanStatusDesc());%></td>
-                                                                    </tr>
-                                                                    <%}%>
-                                                                </tbody>
-                                                                <tfoot>
-                                                                    <tr>
-                                                                        <th>Plan DTN</th>
-                                                                        <th>ARBO</th>
-                                                                        <th>Plan Date</th>
-                                                                        <th>Status</th>
-                                                                    </tr>
-                                                                </tfoot>
-                                                            </table>
+                                    <div class="box-body">
+                                        <canvas id="chartCanvas"></canvas>
+                                        <div class="row text-center no-print">
+                                            <a class="btn btn-submit" data-toggle="modal" data-target="#modalPie">View More</a>
+                                        </div>
+                                        <div class="modal fade" id="modalPie">
+                                            <div class="modal-dialog modal-lg">
+                                                <%if(type == 1 || type == 2){ // APCP REQUESTS or APPROVAL RATE%>
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span></button>
+                                                        <h4 class="modal-title">CAPDEV Plans</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-xs-12">
+                                                                <table class="table table-striped table-bordered export">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Plan DTN</th>
+                                                                            <th>ARBO</th>
+                                                                            <th>Plan Date</th>
+                                                                            <th>Status</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <%
+                                                                            for(CAPDEVPlan plan : allPlans){
+                                                                                APCPRequest req = apcpRequestDAO.getRequestByID(plan.getRequestID());
+                                                                                ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                                                        %>
+                                                                        <tr>
+                                                                            <td><%out.print(req.getRequestID());%></td>
+                                                                            <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                                            <td><%out.print(plan.getPlanDate());%></td>
+                                                                            <td><%out.print(plan.getPlanStatusDesc());%></td>
+                                                                        </tr>
+                                                                        <%}%>
+                                                                    </tbody>
+                                                                    <tfoot>
+                                                                        <tr>
+                                                                            <th>Plan DTN</th>
+                                                                            <th>ARBO</th>
+                                                                            <th>Plan Date</th>
+                                                                            <th>Status</th>
+                                                                        </tr>
+                                                                    </tfoot>
+                                                                </table>
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                    </div>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                </div>
+                                                <%}%>
                                             </div>
-                                            <%}%>
-                                        </div>
-                                        <!-- /.modal-dialog -->
-                                    </div>
-                                            </div>
+                                            <!-- /.modal-dialog -->
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <hr>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <%if(type == 1 || type == 2){ // APCP REQUESTS or APPROVAL RATE%>
+                                    <table class="table table-striped table-bordered export">
+                                        <thead>
+                                            <tr>
+                                                <th>Plan DTN</th>
+                                                <th>ARBO</th>
+                                                <th>Plan Date</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <%
+                                                for(CAPDEVPlan plan : allPlans){
+                                                    APCPRequest req = apcpRequestDAO.getRequestByID(plan.getRequestID());
+                                                    ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                            %>
+                                            <tr>
+                                                <td><%out.print(req.getRequestID());%></td>
+                                                <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(plan.getPlanDate());%></td>
+                                                <td><%out.print(plan.getPlanStatusDesc());%></td>
+                                            </tr>
+                                            <%}%>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Plan DTN</th>
+                                                <th>ARBO</th>
+                                                <th>Plan Date</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    <%}%>
+                                </div>
+                            </div>
                         </div>
                         <div class="row no-print">
-                        <div class="col-xs-12">
-                            <button type="button" onclick="window.print()" class="btn btn-default pull-right"><i class="fa fa-print"></i> Print</button>
+                            <div class="col-xs-12">
+                                <button type="button" onclick="window.print()" class="btn btn-default pull-right"><i class="fa fa-print"></i> Print</button>
+                            </div>
                         </div>
-                    </div>
                     </section>
 
 

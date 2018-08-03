@@ -45,8 +45,6 @@
                         forReleaseRequests = apcpRequestDAO.getFilteredByStatus(provincialRequests,6);
                         pdaByRequestList = apcpRequestDAO.getYearlyPastDueAccountsByRequestList(provincialRequests,year);
                         unsettledPDAByRequestList = apcpRequestDAO.getYearlyUnsettledPastDueAccountsByRequestList(provincialRequests,year);
-                        currentAPCPBudget = addressDAO.getCurrentAPCPBudgetRegion(releasedRequests,provOffices2,year);
-                        sumAPCPBudget = addressDAO.getSumAPCPBudgetRegion(provOffices2);
                     }
                     
                     if(request.getAttribute("filteredPlans") != null){
@@ -57,8 +55,25 @@
                         assignedPlans = capdevDAO.getFilteredByStatus(allPlans,4);
                         implementedPlans = capdevDAO.getFilteredByStatus(allPlans,5);
                         postponedPlans = capdevDAO.getFilteredByStatus(allPlans,6);
+                    }
+                    
+                    if(request.getAttribute("filterBy") != null){
+                        if(((String)request.getAttribute("filterBy")).equals("provinces")){
+                            provOffices2 = (ArrayList<Province>)request.getAttribute("provOffices");
+                        currentAPCPBudget = addressDAO.getCurrentAPCPBudgetRegion(releasedRequests, provOffices2, year);
+                        sumAPCPBudget = addressDAO.getSumAPCPBudgetRegion(provOffices2);
+                        
                         currentCAPDEVBudget = addressDAO.getCurrentCAPDEVBudgetRegion(implementedPlans,provOffices2,year);
                         sumCAPDEVBudget = addressDAO.getSumCAPDEVBudgetRegion(provOffices2);
+                        }else if(((String)request.getAttribute("filterBy")).equals("All")){
+                            
+                          currentAPCPBudget = addressDAO.getCurrentAPCPBudgetRegion(releasedRequests,provOffices,year);
+                            currentCAPDEVBudget = addressDAO.getCurrentCAPDEVBudgetRegion(implementedPlans,provOffices,year);
+                
+                            sumAPCPBudget = addressDAO.getSumAPCPBudgetRegion(provOffices);
+                            sumCAPDEVBudget = addressDAO.getSumCAPDEVBudgetRegion(provOffices);
+                        }
+                        
                     }
                     %>
 
@@ -342,7 +357,7 @@
                                                                             <%
                                                                                 for(APCPRequest delayedRequest : requests){
                                                                             %>
-                                                                            <%if(delayedRequest.checkIfRequestIsOnTrack(delayedRequest.getDateRequested())){%>
+                                                                            <%if(delayedRequest.checkIfRequestIsOnTrack()){%>
                                                                             <tr>
                                                                                 <%ARBO arbo = arboDAO.getARBOByID(delayedRequest.getArboID());%>
                                                                                 <td><a rel="noopener noreferrer" target="_blank" href="ViewARBO?id=<%out.print(delayedRequest.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
@@ -394,7 +409,7 @@
                                                                             <%
                                                                                 for(APCPRequest delayedRequest : requests){
                                                                             %>
-                                                                            <%if(!delayedRequest.checkIfRequestIsOnTrack(delayedRequest.getDateRequested())){%>
+                                                                            <%if(!delayedRequest.checkIfRequestIsOnTrack()){%>
                                                                             <tr>
                                                                                 <%ARBO arbo = arboDAO.getARBOByID(delayedRequest.getArboID());%>
                                                                                 <td><a rel="noopener noreferrer" target="_blank" href="ViewARBO?id=<%out.print(delayedRequest.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>

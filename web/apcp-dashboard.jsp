@@ -267,7 +267,7 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <form id="drillDownGenderForm">
-                                    
+                                    <input type="hidden" name="filterBy" value="All">
                                     <div class="row no-print">
                                         <div class="col-xs-3">
                                             <label for="">Date Requested</label>
@@ -297,7 +297,7 @@
                             <div class="col-xs-12">
                                 <div class="box-body">
                                     <canvas id="chartCanvas"></canvas>
-                                    <div class="row text-center">
+                                    <div class="row text-center no-print">
                                         <a class="btn btn-submit" data-toggle="modal" data-target="#modalPie">View More</a>
                                     </div>
                                     <div class="modal fade" id="modalPie">
@@ -609,6 +609,222 @@
                             </div>
                         </div>
                         <hr>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <%if(type == 1 || type == 2){ // APCP REQUESTS or APPROVAL RATE%>
+
+                                <table class="table table-striped table-bordered export">
+                                    <thead>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>ARBO</th>
+                                            <th>Date Requested</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                            for(APCPRequest req : allRequests){
+                                                ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                        %>
+                                        <tr>
+                                            <td><%out.print(req.getRequestID());%></td>
+                                            <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                            <td><%out.print(req.getDateRequested());%></td>
+                                            <td><%out.print(req.getRequestStatusDesc());%></td>
+                                        </tr>
+                                        <%}%>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>ARBO</th>
+                                            <th>Date Requested</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                                <%}else if(type == 4){ // LOAN TYPE AVAILMENT%>
+
+                                <table class="table table-striped table-bordered export">
+                                    <thead>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>ARBO</th>
+                                            <th>Date Requested</th>
+                                            <th>Loan Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                            for(APCPRequest req : allRequests){
+                                                ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                        %>
+                                        <tr>
+                                            <td><%out.print(req.getRequestID());%></td>
+                                            <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                            <td><%out.print(req.getDateRequested());%></td>
+                                            <td><%out.print(req.getApcpTypeDesc());%></td>
+                                        </tr>
+                                        <%}%>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>ARBO</th>
+                                            <th>Date Requested</th>
+                                            <th>Loan Type</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <%}else if(type == 5){ // LOAN TERM AVAILMENT%>
+
+                                <table class="table table-striped table-bordered export">
+                                    <thead>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>ARBO</th>
+                                            <th>Date Requested</th>
+                                            <th>Loan Term</th>
+                                            <th>Loan Duration</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                            for(APCPRequest req : allRequests){
+                                                ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                        %>
+                                        <tr>
+                                            <td><%out.print(req.getRequestID());%></td>
+                                            <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                            <td><%out.print(req.getDateRequested());%></td>
+                                            <td><%out.print(req.getLoanReason().getLoanTerm().getLoanTermDesc());%></td>
+                                            <td><%out.print(req.getLoanTermDuration() + " months");%></td>
+                                        </tr>
+                                        <%}%>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>ARBO</th>
+                                            <th>Date Requested</th>
+                                            <th>Loan Term</th>
+                                            <th>Loan Duration</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <%}else if(type == 6){ // LOAN REASON%>
+
+                                <table class="table table-striped table-bordered export">
+                                    <thead>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>ARBO</th>
+                                            <th>Date Requested</th>
+                                            <th>Loan Reason</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                            for(APCPRequest req : allRequests){
+                                                ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                        %>
+                                        <tr>
+                                            <td><%out.print(req.getRequestID());%></td>
+                                            <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                            <td><%out.print(req.getDateRequested());%></td>
+                                            <%if(req.getLoanReason().getLoanReason() == 0){%> <!--OTHERS-->
+                                            <td><%out.print(req.getLoanReason().getLoanReasonDesc() + ": " + req.getLoanReason().getOtherReason());%></td>
+                                            <%}else{%> <!--LOAN REASON-->
+                                            <td><%out.print(req.getLoanReason().getLoanReasonDesc());%></td>
+                                            <%}%>
+                                        </tr>
+                                        <%}%>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>ARBO</th>
+                                            <th>Date Requested</th>
+                                            <th>Loan Reason</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <%}else if(type == 7){ // PAST DUE%>
+
+                                <table class="table table-striped table-bordered export">
+                                    <thead>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>ARBO</th>
+                                            <th>Date Requested</th>
+                                            <th>Past Due Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                            for(APCPRequest req : allRequests){
+                                                if(req.getTotalPDAAmountPerRequest() > 0){
+                                                ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                        %>
+                                        <tr>
+                                            <td><%out.print(req.getRequestID());%></td>
+                                            <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                            <td><%out.print(req.getDateRequested());%></td>
+                                            <td><%out.print(currency.format(req.getTotalPDAAmountPerRequest()));%></td>
+                                        </tr>
+                                        <%}%>
+                                        <%}%>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>ARBO</th>
+                                            <th>Date Requested</th>
+                                            <th>Past Due Amount</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <%}else if(type == 8){ // APPROVED AMOUNTS%>
+
+                                <table class="table table-striped table-bordered export">
+                                    <thead>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>ARBO</th>
+                                            <th>Date Requested</th>
+                                            <th>Loan Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                            for(APCPRequest req : allRequests){
+                                                if(req.getRequestStatus() <= 4){
+                                                ARBO arbo = arboDAO.getARBOByID(req.getArboID());
+                                        %>
+                                        <tr>
+                                            <td><%out.print(req.getRequestID());%></td>
+                                            <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                            <td><%out.print(req.getDateRequested());%></td>
+                                            <td><%out.print(currency.format(req.getLoanAmount()));%></td>
+                                        </tr>
+                                        <%}%>
+                                        <%}%>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Request ID</th>
+                                            <th>ARBO</th>
+                                            <th>Date Requested</th>
+                                            <th>Loan Amount</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <%}%>
+
+                            </div>
+                        </div>
                     </div>
 
 

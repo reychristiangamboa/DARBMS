@@ -118,7 +118,7 @@
 
                 <section class="invoice">
                     <section class="invoice no-print">
-                        <%if((Integer)session.getAttribute("userType") == 5 || (Integer)session.getAttribute("userType") == 4){%>
+
                         <div class="row no-print">
                             <div class="col-xs-12">
                                 <h5 class="page-header">
@@ -126,7 +126,7 @@
                                 </h5>
                             </div>
                         </div>
-                        <%}%>
+
 
                         <%if((Integer)session.getAttribute("userType") == 5){%>
                         <div class="row invoice-info">
@@ -248,14 +248,51 @@
                                 </form>
                             </div>
                         </div>
+                        <%}else if((Integer)session.getAttribute("userType") == 3){%>
+                        <div class="row invoice-info">
+                            <div class="col-sm-12">
+                                <form method="post">
+                                    <input type="hidden" name="filterBy" value="All">
+                                    <div class="row no-print">
+                                        <div class="col-xs-2">
+                                            <div class="form-group">
+                                                <label for="">Demographic</label>
+                                                <select name="demographic" id="demographic" class="form-control select2">
+                                                    <option value="1">Gender</option>
+                                                    <option value="2">Age</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <div class="form-group">
+                                                <label for="">Category</label>
+                                                <select name="category" id="category" class="form-control select2" >
+                                                    <option value="1">Count</option>
+                                                    <option value="2">APCP Recipients</option>
+                                                    <option value="3">APCP/CAPDEV Participants</option>
+                                                    <option value="4">Participation Rate </option>
+                                                    <option value="5">Mean Ave. Disbursed Amount</option>
+                                                    <option value="6">Mean Ave. O/S Balance Amount</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-2" style="padding-top:20px;">
+                                            <label for="">&nbsp;</label>
+                                            <button type="submit" onclick="form.action = 'FilterARBDashboard'" class="btn btn-success"><i class="fa fa-filter margin-r-5"></i> Filter</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         <%}%>
                     </section>
-                    
+
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="box-body" id="canvasContainer">
                                 <canvas id="chartCanvas"></canvas>
-                                <div class="row text-center">
+                                <div class="row text-center no-print">
                                     <a class="btn btn-submit" data-toggle="modal" data-target="#modal">View More</a>
                                 </div>
                             </div>
@@ -844,84 +881,444 @@
 
                     <div class="row">
                         <div class="col-xs-12">
-                            <div class="box box-solid" style="border-color: lightgrey; padding-bottom: 20px" >
-                                <div class="box-body">
-                                    <h5><strong>KEY FINDINGS</strong></h5>  
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <h6><strong>DEMOGRAPHIC: </strong> </h6>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <h6><strong>CATEGORY: </strong> </h6>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <h6><strong>REGION: </strong></h6>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <h6><strong>PROVINCE: </strong> </h6>
-                                        </div>  
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <%if(request.getAttribute("demographicDesc") != null){%>
-                                            <h6><%out.print((String)request.getAttribute("demographicDesc"));%></h6>
-                                            <%}%>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <%if(request.getAttribute("categoryDesc") != null){%>
-                                            <h6><%out.print((String)request.getAttribute("categoryDesc"));%></h6>
-                                            <%}%>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <%
-                                                String regionsStr = "";
-                                                
-                                            %>
-                                            <%if(regions.isEmpty()){%>
-                                            <h6>N/A</h6>
-                                            <%}else{
-                                                for(Region region : regions){
-                                                    regionsStr += region.getRegDesc() + " ";
-                                                }
-                                            %>
-                                            <h6><%out.print(regionsStr);%></h6>
-                                            <%}%>
-                                        </div>
 
-                                        <div class="col-xs-3">
-                                            <%
-                                                String provincesStr = "";
-                                                
-                                            %>
-                                            <%if(provOffices.isEmpty()){%>
-                                            <h6>N/A</h6>
-                                            <%}else{
-                                                for(Province province : provOffices){
-                                                    provincesStr += province.getProvDesc() + " ";
-                                                }
-                                            %>
-                                            <h6><%out.print(provincesStr);%></h6>
-                                            <%}%>
-                                        </div>  
-                                    </div>
-                                </div>
-                                <hr style="margin-left:20px; margin-right: 15px; margin-top: -10px;">
-                                <div class="box-body" style="margin:0 auto">
-                                    <div class="col-xs-1">
-                                    </div>
-                                    <div class="col-xs-5"  style="margin-left:5px; margin-right: 15px; margin-bottom: 10px; margin-top: 10px; background: lightgrey; display: inline; ">
-                                        <h4>HIGHEST</h4>
-                                        <p>This Region has the Highest</p>
-                                    </div>
-                                    <div class="col-xs-5"  style="margin-left:20px; margin-right: 15px; margin-bottom: 10px; margin-top: 10px; background: lightgrey; display: inline;">
-                                        <h4>LOWEST</h4>
-                                        <p>This Region has the Lowest</p>
-                                    </div>
-                                    <div class="col-xs-1">
-                                    </div>
-                                </div>
+                            <%if(demographic == 1 && category == 1){ // GENDER & COUNT %>
 
-                            </div>
+                            <table class="table table-striped table-bordered export">
+                                <thead>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Gender</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for(ARB arb : allArbsList){
+                                            ARBO arbo = arboDAO.getARBOByID(arb.getArboID());
+                                    %>
+                                    <tr>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                            <%if(arb.getGender().equalsIgnoreCase("M")){%>
+                                        <td><%out.print("MALE");%></td>
+                                        <%}else if(arb.getGender().equalsIgnoreCase("F")){%>
+                                        <td><%out.print("FEMALE");%></td>
+                                        <%}%>
+                                    </tr>
+                                    <%}%>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Gender</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <%}else if(demographic == 2 && category == 1){ // AGE & COUNT %>
+
+                            <table class="table table-striped table-bordered export">
+                                <thead>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Age</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for(ARB arb : allArbsList){
+                                            ARBO arbo = arboDAO.getARBOByID(arb.getArboID());
+                                    %>
+                                    <tr>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                        <td><%out.print(arb.getAge() + " years old");%></td>
+                                    </tr>
+                                    <%}%>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Age</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <%}else if(demographic == 1 && category == 2){ // GENDER & RECIPIENTS %>
+
+                            <table class="table table-striped table-bordered export">
+                                <thead>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Gender</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for(ARB arb : allArbsList){
+                                            ARBO arbo = arboDAO.getARBOByID(arb.getArboID());
+                                            if(apcpRequestDAO.checkHasBeenRecipient(arb.getArbID())){
+                                    %>
+                                    <tr>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                            <%if(arb.getGender().equalsIgnoreCase("M")){%>
+                                        <td><%out.print("MALE");%></td>
+                                        <%}else if(arb.getGender().equalsIgnoreCase("F")){%>
+                                        <td><%out.print("FEMALE");%></td>
+                                        <%}%>
+                                    </tr>
+                                    <%}%>
+                                    <%}%>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Gender</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <%}else if(demographic == 2 && category == 2){ // AGE & RECIPIENTS %>
+
+                            <table class="table table-striped table-bordered export">
+                                <thead>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Age</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for(ARB arb : allArbsList){
+                                            ARBO arbo = arboDAO.getARBOByID(arb.getArboID());
+                                            if(apcpRequestDAO.checkHasBeenRecipient(arb.getArbID())){
+                                    %>
+                                    <tr>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                        <td><%out.print(arb.getAge() + " years old");%></td>
+                                    </tr>
+                                    <%}%>
+                                    <%}%>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Age</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <%}else if(demographic == 1 && category == 3){ // GENDER & PARTICIPANTS %>
+
+                            <table class="table table-striped table-bordered export">
+                                <thead>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Gender</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for(ARB arb : allArbsList){
+                                            ARBO arbo = arboDAO.getARBOByID(arb.getArboID());
+                                            if(capdevDAO.checkHasBeenParticipant(arb.getArbID())){
+                                    %>
+                                    <tr>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                            <%if(arb.getGender().equalsIgnoreCase("M")){%>
+                                        <td><%out.print("MALE");%></td>
+                                        <%}else if(arb.getGender().equalsIgnoreCase("F")){%>
+                                        <td><%out.print("FEMALE");%></td>
+                                        <%}%>
+                                    </tr>
+                                    <%}%>
+                                    <%}%>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Gender</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <%}else if(demographic == 2 && category == 3){ // AGE & PARTICIPANTS %>
+
+                            <table class="table table-striped table-bordered export">
+                                <thead>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Age</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for(ARB arb : allArbsList){
+                                            ARBO arbo = arboDAO.getARBOByID(arb.getArboID());
+                                            if(capdevDAO.checkHasBeenParticipant(arb.getArbID())){
+                                    %>
+                                    <tr>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                        <td><%out.print(arb.getAge() + " years old");%></td>
+                                    </tr>
+                                    <%}%>
+                                    <%}%>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Age</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <%}else if(demographic == 1 && category == 4){ // GENDER & PARTICIPATION RATE %>
+
+                            <table class="table table-striped table-bordered export">
+                                <thead>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Gender</th>
+                                        <th>Participation Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for(ARB arb : allArbsList){
+                                            ARBO arbo = arboDAO.getARBOByID(arb.getArboID());
+                                            arb.setActivities(capdevDAO.getCAPDEVPlanByARB(arb.getArbID()));
+                                            CAPDEVActivity act = new CAPDEVActivity();
+                                    %>
+                                    <tr>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                            <%if(arb.getGender().equalsIgnoreCase("M")){%>
+                                        <td><%out.print("MALE");%></td>
+                                        <%}else if(arb.getGender().equalsIgnoreCase("F")){%>
+                                        <td><%out.print("FEMALE");%></td>
+                                        <%}%>
+                                        <td><%out.print(df.format(act.getAttendanceRate(arb.getActivities())));%></td>
+                                    </tr>
+
+                                    <%}%>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Gender</th>
+                                        <th>Participation Rate</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <%}else if(demographic == 2 && category == 4){ // AGE & PARTICIPATION RATE %>
+
+                            <table class="table table-striped table-bordered export">
+                                <thead>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Age</th>
+                                        <th>Participation Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for(ARB arb : allArbsList){
+                                            ARBO arbo = arboDAO.getARBOByID(arb.getArboID());
+                                            arb.setActivities(capdevDAO.getCAPDEVPlanByARB(arb.getArbID()));
+                                            CAPDEVActivity act = new CAPDEVActivity();
+                                    %>
+                                    <tr>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                        <td><%out.print(arb.getAge() + " years old");%></td>
+                                        <td><%out.print(df.format(act.getAttendanceRate(arb.getActivities())));%></td>
+                                    </tr>
+
+                                    <%}%>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Age</th>
+                                        <th>Participation Rate</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <%}else if(demographic == 1 && category == 5){ // GENDER & DISBURSEMENT %>
+
+                            <table class="table table-striped table-bordered export">
+                                <thead>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Gender</th>
+                                        <th>Disbursement Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for(ARB arb : allArbsList){
+                                            ARBO arbo = arboDAO.getARBOByID(arb.getArboID());
+                                                            
+                                    %>
+                                    <tr>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                            <%if(arb.getGender().equalsIgnoreCase("M")){%>
+                                        <td><%out.print("MALE");%></td>
+                                        <%}else if(arb.getGender().equalsIgnoreCase("F")){%>
+                                        <td><%out.print("FEMALE");%></td>
+                                        <%}%>
+                                        <td><%out.print(currency.format(arb.getCurrentTotalDisbursementAmount()));%></td>
+                                    </tr>
+
+                                    <%}%>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Gender</th>
+                                        <th>Disbursement Amount</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <%}else if(demographic == 2 && category == 5){ // AGE & DISBURSEMENT %>
+
+                            <table class="table table-striped table-bordered export">
+                                <thead>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Age</th>
+                                        <th>Disbursement Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for(ARB arb : allArbsList){
+                                            ARBO arbo = arboDAO.getARBOByID(arb.getArboID());
+                                    %>
+                                    <tr>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                        <td><%out.print(arb.getAge() + " years old");%></td>
+                                        <td><%out.print(currency.format(arb.getCurrentTotalDisbursementAmount()));%></td>
+                                    </tr>
+
+                                    <%}%>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Age</th>
+                                        <th>Disbursement Amount</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <%}else if(demographic == 1 && category == 6){ // GENDER & O/S BALANCE %>
+
+                            <table class="table table-striped table-bordered export">
+                                <thead>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Gender</th>
+                                        <th>O/S Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for(ARB arb : allArbsList){
+                                            ARBO arbo = arboDAO.getARBOByID(arb.getArboID());
+                                            APCPRequest r = new APCPRequest();
+                                    %>
+                                    <tr>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                            <%if(arb.getGender().equalsIgnoreCase("M")){%>
+                                        <td><%out.print("MALE");%></td>
+                                        <%}else if(arb.getGender().equalsIgnoreCase("F")){%>
+                                        <td><%out.print("FEMALE");%></td>
+                                        <%}%>
+                                        <td><%out.print(currency.format(r.getTotalARBOSBalance(arb.getArbID())));%></td>
+                                    </tr>
+
+                                    <%}%>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Gender</th>
+                                        <th>O/S Balance</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <%}else if(demographic == 2 && category == 6){ // AGE & O/S BALANCE %>
+
+                            <table class="table table-striped table-bordered export">
+                                <thead>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Age</th>
+                                        <th>O/S BALANCE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        for(ARB arb : allArbsList){
+                                            ARBO arbo = arboDAO.getARBOByID(arb.getArboID());
+                                            APCPRequest r = new APCPRequest();
+                                    %>
+                                    <tr>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
+                                        <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                        <td><%out.print(arb.getAge() + " years old");%></td>
+                                        <td><%out.print(currency.format(r.getTotalARBOSBalance(arb.getArbID())));%></td>
+                                    </tr>
+
+                                    <%}%>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ARB</th>
+                                        <th>ARBO</th>
+                                        <th>Age</th>
+                                        <th>O/S BALANCE</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                            <%}%>
+
                         </div>
                     </div>
 

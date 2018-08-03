@@ -54,7 +54,7 @@ import java.util.concurrent.TimeUnit;
  * @author Rey Christian
  */
 public class APCPRequestDAO {
-    
+
     public ArrayList<APCPRequest> getAllRequests() {
         System.out.println("LOL!! TINATAWAGAN SI GET ALL!!");
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -123,7 +123,7 @@ public class APCPRequestDAO {
     }
 
     public ArrayList<APCPRequest> getAllCropProdByRequest(int arboID) {
-        ArrayList<APCPRequest> all = allRequests;
+        ArrayList<APCPRequest> all = getAllRequests();
         ArrayList<APCPRequest> filtered = new ArrayList();
 
         for (APCPRequest r : all) {
@@ -195,16 +195,16 @@ public class APCPRequestDAO {
         }
         return r;
     }
-    
+
     public ArrayList<APCPRequest> getFilteredByStatus(ArrayList<APCPRequest> filtered, int status) {
         ArrayList<APCPRequest> filteredReq = new ArrayList();
-        
-        for(APCPRequest req : filtered){
-            if(req.getRequestStatus() == status){
+
+        for (APCPRequest req : filtered) {
+            if (req.getRequestStatus() == status) {
                 filteredReq.add(req);
             }
         }
-        
+
         return filteredReq;
     }
 
@@ -263,7 +263,7 @@ public class APCPRequestDAO {
         }
         return 0;
     }
-    
+
     public int requestAPCPCropProd(APCPRequest r, int userID) {
 
         PreparedStatement p = null;
@@ -318,7 +318,7 @@ public class APCPRequestDAO {
         }
         return 0;
     }
-    
+
     public int requestAPCPWithIssue(APCPRequest r, int userID) {
 
         PreparedStatement p = null;
@@ -589,7 +589,7 @@ public class APCPRequestDAO {
 
     public ArrayList<APCPRequest> getAllProvincialRequestsByStatus(int statusID, int provinceID) {
         ARBODAO dao = new ARBODAO();
-        ArrayList<APCPRequest> all = getAllRequests;
+        ArrayList<APCPRequest> all = getAllRequests();
         ArrayList<APCPRequest> filtered = new ArrayList();
 
         for (APCPRequest r : all) {
@@ -703,7 +703,7 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
+
     public boolean removeAPCPRecipient(int requestID, int arbID) {
         boolean success = false;
         PreparedStatement p = null;
@@ -796,7 +796,7 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
+
     public boolean resubmitDocument(APCPDocument doc, int requestID) {
         boolean success = false;
         PreparedStatement p = null;
@@ -884,17 +884,17 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
-    public void setDateCompleted(int requestID){
-        
+
+    public void setDateCompleted(int requestID) {
+
         PreparedStatement p = null;
         Connection con = null;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         con = myFactory.getConnection();
-        
+
         Long l = System.currentTimeMillis();
         Date d = new Date(l);
-        
+
         try {
             con.setAutoCommit(false);
             String query = "UPDATE apcp_requests SET `dateCompleted`=? WHERE `requestID`=?";
@@ -915,11 +915,11 @@ public class APCPRequestDAO {
             }
             Logger.getLogger(APCPRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     public int addPastDueAccount(PastDueAccount pda) {
-        
+
         PreparedStatement p = null;
         Connection con = null;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -937,7 +937,7 @@ public class APCPRequestDAO {
             p.setDate(6, pda.getDateRecorded());
 
             p.executeUpdate();
-            
+
             ResultSet rs = p.getGeneratedKeys();
 
             if (rs.next()) {
@@ -947,7 +947,7 @@ public class APCPRequestDAO {
                 con.close();
                 return n;
             }
-            
+
             p.close();
             con.commit();
             con.close();
@@ -1093,8 +1093,8 @@ public class APCPRequestDAO {
         }
         return list2;
     }
-    
-    public ArrayList<PastDueAccount> getYearlyPastDueAccountsByRequestList(ArrayList<APCPRequest> request,int year) {
+
+    public ArrayList<PastDueAccount> getYearlyPastDueAccountsByRequestList(ArrayList<APCPRequest> request, int year) {
         Calendar cal = Calendar.getInstance();
         ArrayList<PastDueAccount> list = getAllPastDueAccounts();
         ArrayList<PastDueAccount> list2 = new ArrayList();
@@ -1108,8 +1108,8 @@ public class APCPRequestDAO {
         }
         return list2;
     }
-    
-    public ArrayList<PastDueAccount> getYearlyUnsettledPastDueAccountsByRequestList(ArrayList<APCPRequest> request,int year) {
+
+    public ArrayList<PastDueAccount> getYearlyUnsettledPastDueAccountsByRequestList(ArrayList<APCPRequest> request, int year) {
         Calendar cal = Calendar.getInstance();
         ArrayList<PastDueAccount> list = getAllPastDueAccounts();
         ArrayList<PastDueAccount> list2 = new ArrayList();
@@ -1667,7 +1667,7 @@ public class APCPRequestDAO {
     }
 
     public int addDisbursement(Disbursement d) {
-        
+
         PreparedStatement p = null;
         Connection con = null;
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
@@ -1686,7 +1686,7 @@ public class APCPRequestDAO {
             p.setDouble(7, d.getTotalReleasedAmount());
 
             p.executeUpdate();
-            
+
             ResultSet rs = p.getGeneratedKeys();
             if (rs.next()) {
                 int n = rs.getInt(1);
@@ -1695,8 +1695,7 @@ public class APCPRequestDAO {
                 con.close();
                 return n;
             }
-            
-            
+
             p.close();
             con.commit();
             con.close();
@@ -1710,11 +1709,11 @@ public class APCPRequestDAO {
         }
         return 0;
     }
-    
+
     public Disbursement getDisbursementsByID(int id) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
-        
+
         Disbursement d = new Disbursement();
         try {
             String query = "SELECT * FROM disbursements d "
@@ -1723,7 +1722,7 @@ public class APCPRequestDAO {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                
+
                 d.setDisbursementID(rs.getInt("disbursementID"));
                 d.setRequestID(rs.getInt("requestID"));
                 d.setArbID(rs.getInt("arbID"));
@@ -1732,7 +1731,7 @@ public class APCPRequestDAO {
                 d.setDateDisbursed(rs.getDate("dateDisbursed"));
                 d.setDisbursedBy(rs.getInt("disbursedBy"));
                 d.setTotalReleasedAmount(rs.getDouble("totalReleasedAmount"));
-                
+
             }
             rs.close();
             pstmt.close();
@@ -1818,8 +1817,8 @@ public class APCPRequestDAO {
         }
         return dList;
     }
-    
-    public ArrayList<Disbursement> getAllDisbursementsByARBPerRequest(int arbID,int requestID) {
+
+    public ArrayList<Disbursement> getAllDisbursementsByARBPerRequest(int arbID, int requestID) {
         DBConnectionFactory myFactory = DBConnectionFactory.getInstance();
         Connection con = myFactory.getConnection();
         ArrayList<Disbursement> dList = new ArrayList();
@@ -2090,7 +2089,7 @@ public class APCPRequestDAO {
         }
         return r;
     }
-    
+
     public LoanReason getLoanReasonById(int loanReason) {
 
         LoanReason r = new LoanReason();
@@ -2107,7 +2106,7 @@ public class APCPRequestDAO {
 
                 r.setLoanReason(rs.getInt("loanReason"));
                 r.setLoanReasonDesc(rs.getString("loanReasonDesc"));
-                
+
             }
             rs.close();
             p.close();
@@ -2443,7 +2442,7 @@ public class APCPRequestDAO {
         for (APCPRequest req : requestList) {
             if (req.getRequestStatus() == status) {
                 int difference = 0;
-                if (status == 0) {
+                if (req.getRequestStatus() == 0) {
 
                     difference = getDateDiff(req.getDateRequested());
 
@@ -2451,26 +2450,29 @@ public class APCPRequestDAO {
                         count++;
                     }
 
-                } else if (status == 1) {
+                } else if (req.getRequestStatus() == 1) {
                     difference = getDateDiff(req.getDateRequested());
 
                     if (difference < 5) {
                         count++;
                     }
-                } else if (status == 2) {
-                    difference = getDateDiff(req.getDateCleared());
+                } else if (req.getRequestStatus() == 2) {
+
+                    difference = getDateDiff(req.getDateRequested(), req.getDateCleared());
 
                     if (difference < 5) {
                         count++;
                     }
-                } else if (status == 3) {
-                    difference = getDateDiff(req.getDateEndorsed());
+                } else if (req.getRequestStatus() == 3) {
+
+                    difference = getDateDiff(req.getDateCleared(), req.getDateEndorsed());
 
                     if (difference < 5) {
                         count++;
                     }
-                } else if (status == 4) {
-                    difference = getDateDiff(req.getDateRequested());
+                } else if (req.getRequestStatus() == 4) {
+
+                    difference = getDateDiff(req.getDateEndorsed(), req.getDateApproved());
 
                     if (difference < 10) {
                         count++;
@@ -2504,19 +2506,19 @@ public class APCPRequestDAO {
                         count++;
                     }
                 } else if (status == 2) {
-                    difference = getDateDiff(req.getDateCleared());
+                    difference = getDateDiff(req.getDateRequested(),req.getDateCleared());
 
                     if (difference >= 5) {
                         count++;
                     }
                 } else if (status == 3) {
-                    difference = getDateDiff(req.getDateEndorsed());
+                    difference = getDateDiff(req.getDateCleared(),req.getDateEndorsed());
 
                     if (difference >= 5) {
                         count++;
                     }
                 } else if (status == 4) {
-                    difference = getDateDiff(req.getDateApproved());
+                    difference = getDateDiff(req.getDateEndorsed(),req.getDateApproved());
 
                     if (difference >= 10) {
                         count++;
@@ -2550,19 +2552,22 @@ public class APCPRequestDAO {
                     count++;
                 }
             } else if (req.getRequestStatus() == 2) {
-                difference = getDateDiff(req.getDateCleared());
+
+                difference = getDateDiff(req.getDateRequested(), req.getDateCleared());
 
                 if (difference >= 5) {
                     count++;
                 }
             } else if (req.getRequestStatus() == 3) {
-                difference = getDateDiff(req.getDateEndorsed());
+
+                difference = getDateDiff(req.getDateCleared(), req.getDateEndorsed());
 
                 if (difference >= 5) {
                     count++;
                 }
             } else if (req.getRequestStatus() == 4) {
-                difference = getDateDiff(req.getDateApproved());
+
+                difference = getDateDiff(req.getDateEndorsed(), req.getDateApproved());
 
                 if (difference >= 10) {
                     count++;
@@ -2579,12 +2584,17 @@ public class APCPRequestDAO {
         return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 
+    public int getDateDiff(Date date1, Date date2) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
     public double getPercentage(int value1, int value2) {
         double value = 0;
-        
-        double valuee1 = (double)value1;
-        double valuee2 = (double)value2;
-        
+
+        double valuee1 = (double) value1;
+        double valuee2 = (double) value2;
+
         if (valuee2 > 0) {
             value = (valuee1 / valuee2) * 100;
         }
@@ -2596,30 +2606,30 @@ public class APCPRequestDAO {
         if (value2 > 0) {
             value = (value1 / value2) * 100;
         }
-        
+
         return value;
     }
-    
+
     public double getPercentageComparison(int value1, int value2) {
         double value = 0;
-        
-        double valuee1 = (double)value1;
-        double valuee2 = (double)value2;
-        
-        if(valuee1 > 0){
+
+        double valuee1 = (double) value1;
+        double valuee2 = (double) value2;
+
+        if (valuee1 > 0) {
             value = ((valuee2 - valuee1) / valuee1) * 100;
         }
-        
+
         return value;
     }
 
     public double getPercentageComparison(double value1, double value2) {
         double value = 0;
-        
-        if(value1 > 0){
+
+        if (value1 > 0) {
             value = ((value2 - value1) / value1) * 100;
         }
-        
+
         return value;
     }
 
@@ -2633,8 +2643,8 @@ public class APCPRequestDAO {
                 list.add(pda.getDaysUnsettled());
             }
         }
-        
-        if(getAverage(list) > 0){
+
+        if (getAverage(list) > 0) {
             return getAverage(list);
         }
 
@@ -2666,20 +2676,20 @@ public class APCPRequestDAO {
 
         return sum;
     }
-    
+
     public double getTotalARBOOSBalance(ArrayList<APCPRequest> apcpRequestList) {
-        
+
         double sum = 0;
-        
+
         for (APCPRequest req : apcpRequestList) {
             sum += req.getTotalReleaseOSBalance();
         }
 
         return sum;
     }
-    
-    public boolean checkHasBeenRecipient(int arbID){
-        
+
+    public boolean checkHasBeenRecipient(int arbID) {
+
         boolean success = false;
         PreparedStatement p = null;
         Connection con = null;
@@ -2692,13 +2702,13 @@ public class APCPRequestDAO {
             p = con.prepareStatement(query);
             p.setInt(1, arbID);
             p.setInt(2, current.get(Calendar.YEAR));
-            
+
             ResultSet rs = p.executeQuery();
-            
-            if(rs.next()){
+
+            if (rs.next()) {
                 success = true;
             }
-            
+
             rs.close();
             p.close();
             con.commit();
@@ -2713,6 +2723,5 @@ public class APCPRequestDAO {
         }
         return success;
     }
-    
-    
+
 }

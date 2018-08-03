@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-xs-3">
             <div class="form-group">
-                <label for="">Loan Amount</label>
-                <input type="text" class="form-control" id="" placeholder="" value="<%=currency.format(r.getTotalReleasedAmountPerRequest())%>" disabled>
+                <label for="">Released Amount</label>
+                <input type="text" class="form-control" id="" placeholder="" value="<%=currency.format(r.getTotalAmountForDisbursement())%>" disabled>
             </div>
         </div>
     </div>
@@ -71,7 +71,6 @@
                                         <th>Action</th>
                                         <th>ARB</th>
                                         <th>Address</th>
-                                        <th>Crops</th>
                                     </tr>
                                 </thead>
                                 
@@ -88,7 +87,6 @@
                                         </td>
                                         <td><a target="_blank" re="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
                                         <td><%out.print(arb.getFullAddress());%></td>
-                                        <td><%out.print(arb.printAllCrops());%></td>
                                     </tr>
                                     <%}%>
                                     <%}%>

@@ -160,6 +160,7 @@
                                                             <tbody>
                                                                 <%
                                                                     for (ARB arb : arbListARBO) {
+                                                                        arb.setCurrentCrops(dao2.getAllARBCurrentCrops(arb.getArbID()));
                                                                 %>
                                                                 <tr>
                                                                     <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFullName());%></a></td>
@@ -925,14 +926,16 @@
 
 
                                                         <div class="tab-pane" id="actTimeline">
-                                                            <div class="col-xs-12" style="margin:10px;" >
+                                                            <div class="col-xs-12" style="margin:10px; overflow-x: hidden; overflow-y: scroll; max-height: 300px;"  >
                                                                 <ul class="timeline">
                                                                     <%
                                                                         boolean firstInstance = true;
+                                                                        Long wew123 = System.currentTimeMillis();
                                                                         Date date = null;
                                                                     %>
                                                                     <% 
                                                                         for (CAPDEVPlan plan : plans) { 
+                                                                            if(plan.getPlanStatus() == 5){
                                                                             plan.setActivities(capdevDAO2.getCAPDEVPlanActivities(plan.getPlanID()));
                                                                             for(CAPDEVActivity activity : plan.getActivities()){
                                                                                 activity.setArbList(capdevDAO2.getCAPDEVPlanActivityParticipants(activity.getActivityID()));
@@ -942,21 +945,25 @@
 
                                                             if (firstInstance) { // FIRST INSTANCE
                                                                 date = plan.getImplementedDate();
+                                                                System.out.print("WEW!!");
                                                             }
                                                                     %>
 
                                                                     <%
+                                                                        System.out.print("QWERTY");
                                                                         if (date.compareTo(plan.getImplementedDate()) != 0) { // NEW DATE, change currDate
                                                                             date = plan.getImplementedDate();
                                                                             dateChanged = true;
                                                                             System.out.print("Date changed!");
                                                                         }
+                                                                        System.out.print("HELOOO!!");
                                                                     %>
 
                                                                     <%if (firstInstance || dateChanged) {%>
                                                                     <li class="time-label">
                                                                         <span class="bg-green">
                                                                             <%out.print(f.format(date));%>
+                                                                            <%System.out.print("EWEWEWEW");%>
                                                                         </span>
                                                                     </li>
                                                                     <%firstInstance = false;%>
@@ -997,12 +1004,6 @@
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="row">
-                                                                                        <div class="col-xs-4">
-                                                                                            <div class="form-group">
-                                                                                                <label for="">Activity Date</label>
-                                                                                                <input style='border-left: none; border-right: none; border-top: none; background: none;' type="text" class="form-control" value="<%out.print(f.format(activity.getActivityDate()));%>" disabled>
-                                                                                            </div>
-                                                                                        </div>
                                                                                         <div class="col-xs-2">
                                                                                             <div class="form-group">
                                                                                                 <label for="">No. of Participants</label>
@@ -1071,7 +1072,7 @@
                                                                             <!--                                            /.modal-content -->
                                                                         </div>
                                                                     </div>
-                                                                    <%}}%>
+                                                                    <%}}}%>
                                                                 </ul>
 
                                                             </div>

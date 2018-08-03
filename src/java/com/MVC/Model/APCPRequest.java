@@ -347,6 +347,24 @@ public class APCPRequest {
         }
         return val;
     }
+    
+    public double getTotalAmountForDisbursement() {
+        double val = 0;
+        double val2 = 0;
+        double val3 = 0;
+        APCPRequestDAO dao = new APCPRequestDAO();
+        this.releases = dao.getAllAPCPReleasesByRequest(this.requestID);
+        this.disbursements = dao.getAllDisbursementsByRequest(this.requestID);
+        for (APCPRelease release : this.releases) {
+            val += release.getReleaseAmount();
+        }
+        for(Disbursement d : this.disbursements){
+            val2 += d.getDisbursedAmount();
+        }
+        
+        val3 = val - val2;
+        return val3;
+    }
 
     public double getYearlyReleaseAmountPerRequest() {
         double val = 0;
@@ -504,15 +522,55 @@ public class APCPRequest {
         return false;
     }
 
-    public boolean checkIfRequestIsOnTrack(Date date) {
+    public boolean checkIfRequestIsOnTrack() {
 
-        if (getDateDiff(date) < 5) {
-            return true;
+        int difference = 0;
+        
+        if (this.requestStatus == 0) {
+
+            difference = getDateDiff(this.getDateRequested());
+
+            if (difference < 5) {
+                return true;
+            }
+
+        } else if (this.requestStatus == 1) {
+            difference = getDateDiff(this.getDateRequested());
+
+            if (difference < 5) {
+                return true;
+            }
+        } else if (this.requestStatus == 2) {
+
+            difference = getDateDiff(this.getDateRequested(), this.getDateCleared());
+
+            if (difference < 5) {
+                return true;
+            }
+        } else if (this.requestStatus == 3) {
+
+            difference = getDateDiff(this.getDateCleared(), this.getDateEndorsed());
+
+            if (difference < 5) {
+                return true;
+            }
+        } else if (this.requestStatus == 4) {
+
+            difference = getDateDiff(this.getDateEndorsed(), this.getDateApproved());
+
+            if (difference < 10) {
+                return true;
+            }
         }
         return false;
     }
 
     public int getDateDiff(Date date1) {
+        long diffInMillies = System.currentTimeMillis() - date1.getTime();
+        return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
+    public int getDateDiff(Date date1, Date date2) {
         long diffInMillies = System.currentTimeMillis() - date1.getTime();
         return (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }

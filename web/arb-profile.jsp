@@ -150,7 +150,8 @@
                                             <b>Land Area</b> <a class="pull-right"><%out.print(arb.getLandArea());%> Hectares</a>
                                         </li>
                                         <li class="list-group-item">
-                                            <%if (arb.getDependents().size() > 0) {%>
+                                            <%arb.setDependents(arbDAO.getAllARBDependents(arb.getArbID()));
+                                                if (arb.getDependents().size() > 0) {%>
                                             <b>Dependents</b> <a class="pull-right" data-toggle="modal" data-target="#dependents"><%=arb.getDependents().size()%></a>
                                             <%} else {%>
                                             <b>Dependents</b> <a class="pull-right">N/A</a>
@@ -417,6 +418,7 @@
 
                                     <p>
                                         <%
+                                            arb.setCurrentCrops(arbDAO.getAllARBCurrentCrops(arb.getArbID()));
                                             for (Crop c : arb.getCurrentCrops()) {
                                         %>
                                         <span class="label label-success"><%=c.getCropTypeDesc()%></span>
@@ -441,7 +443,9 @@
                                                             boolean firstInstance99 = true;
                                                             Date date99 = null;
                                                         %>
-                                                        <%for (Crop c : arb.getCrops()) {%>
+                                                        <%
+                                                            arb.setCrops(arbDAO.getAllARBCrops(arb.getArbID()));
+                                                            for (Crop c : arb.getCrops()) {%>
 
                                                         <li class="time-label">
                                                             <span class="bg-aqua">
@@ -982,7 +986,7 @@
                                                                                     for (Evaluation evalArb : apcpEvaluations) {
                                                                                 %>
                                                                                 <tr>
-                                                                                    <td><a href="ViewARB?id=<%out.print(arb.getArbID());%>"> <%out.print(evalArb.getEvaluationDTN());%> </a></td>
+                                                                                    <td><%out.print(evalArb.getEvaluationDTN());%></td>
                                                                                     <td><%out.print(evalArb.getRating());%></td>
                                                                                     <td><%out.print(evalArb.getEvaluationDate());%></td>
                                                                                     <td><%out.print(evalArb.getEvaluationStartDate() + "-" + evalArb.getEvaluationEndDate());%></td>
@@ -1038,7 +1042,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <%if ((Integer) session.getAttribute("userType") == 2) {%>
+                                                            <%if ((Integer) session.getAttribute("userType") == 8) {%>
                                                             <div class="box-footer">
                                                                 <button id="addEval" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation-capdev">Add Evaluation</button>
                                                             </div>
@@ -1124,7 +1128,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <%if ((Integer) session.getAttribute("userType") == 2) {%>
+                                                            <%if ((Integer) session.getAttribute("userType") == 2 || (Integer) session.getAttribute("userType") == 8) {%>
                                                             <div class="box-footer">
                                                                 <button id="addEval" class="btn btn-primary pull-right" data-toggle="modal" data-target="#add-evaluation-arb">Add Evaluation</button>
                                                             </div>
@@ -1236,7 +1240,7 @@
                     if (x < max_fields) { //max input box allowed
                         x++; //text box increment
                         $('#count').val(x);
-                        $(wrapper).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="">Crop</label><select name="cropType" class="form-control select2" id=""><%for(Crop c : allCrops){%><option value="<%=c.getCropType()%>"><%out.print(c.getCropTypeDesc());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label for=""></label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="startDate" class="form-control pull-right"></div></div></div><div class="col-xs-4"><div class="form-group"><label for=""></label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="endDate" class="form-control pull-right"></div></div></div></div>');
+                        $(wrapper).append('<div class="row"><div class="col-xs-4"><div class="form-group"><label for="">Crop</label><select name="cropType" class="form-control select2" id=""><%for(Crop c : allCrops){%><option value="<%=c.getCropType()%>"><%out.print(c.getCropTypeDesc());%></option><%}%></select></div></div><div class="col-xs-4"><div class="form-group"><label for="">Start Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="startDate" class="form-control pull-right"></div></div></div><div class="col-xs-4"><div class="form-group"><label for="">End Date</label><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="date" name="endDate" class="form-control pull-right"></div></div></div></div>');
                         $('.select2').select2();
                     }
                 });

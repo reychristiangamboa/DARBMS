@@ -61,7 +61,7 @@
                 ArrayList<Province> provincesRegion = addressDAO.getAllProvOfficesRegion((Integer) session.getAttribute("regOfficeCode"));
                 ArrayList<CityMun> cityMunList = new ArrayList();
 
-                
+                ArrayList<APCPRequest> allRequests = new ArrayList();
                 ArrayList<APCPRequest> requestedRequests = new ArrayList();
                 ArrayList<APCPRequest> clearedRequests = new ArrayList();
                 ArrayList<APCPRequest> endorsedRequests = new ArrayList();
@@ -75,34 +75,37 @@
                     ArrayList<ARBO> arboListProvince = arboDAO.getAllARBOsByProvince((Integer) session.getAttribute("provOfficeCode"));
                     ArrayList<ARB> arbListProvince = arbDAO.getAllARBsOfARBOs(arboListProvince);
                     cityMunList = addressDAO.getAllCityMuns(arboListProvince.get(0).getArboProvince());
-                    requestedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(1, (Integer) session.getAttribute("provOfficeCode"));
-                    clearedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(2, (Integer) session.getAttribute("provOfficeCode"));
-                    endorsedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(3, (Integer) session.getAttribute("provOfficeCode"));
-                    approvedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(4, (Integer) session.getAttribute("provOfficeCode"));
-                    releasedRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(5, (Integer) session.getAttribute("provOfficeCode"));
-                    forReleaseRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(6, (Integer) session.getAttribute("provOfficeCode"));
-                    incompleteRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(8, (Integer) session.getAttribute("provOfficeCode"));
-                    forConduitApprovalRequests = apcpRequestDAO.getAllProvincialRequestsByStatus(0, (Integer) session.getAttribute("provOfficeCode"));
+                    allRequests = apcpRequestDAO.getAllProvincialRequests((Integer) session.getAttribute("provOfficeCode"));
+                    requestedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,1);
+                    clearedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,2);
+                    endorsedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,3);
+                    approvedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,4);
+                    releasedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,5);
+                    forReleaseRequests = apcpRequestDAO.getFilteredByStatus(allRequests,6);
+                    incompleteRequests = apcpRequestDAO.getFilteredByStatus(allRequests,8);
+                    forConduitApprovalRequests = apcpRequestDAO.getFilteredByStatus(allRequests,0);
                 } else if(userType == 4){
                     ArrayList<ARBO> arboListRegion = arboDAO.getAllARBOsByRegion((Integer) session.getAttribute("regOfficeCode"));
                     ArrayList<ARB> arbListRegion = arbDAO.getAllARBsOfARBOs(arboListRegion);
-                    requestedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(1, (Integer) session.getAttribute("regOfficeCode"));
-                    clearedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(2, (Integer) session.getAttribute("regOfficeCode"));
-                    endorsedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(3, (Integer) session.getAttribute("regOfficeCode"));
-                    approvedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(4, (Integer) session.getAttribute("regOfficeCode"));
-                    releasedRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(5, (Integer) session.getAttribute("regOfficeCode"));
-                    forReleaseRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(6, (Integer) session.getAttribute("regOfficeCode"));
-                    incompleteRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(8, (Integer) session.getAttribute("regOfficeCode"));
-                    forConduitApprovalRequests = apcpRequestDAO.getAllRegionalRequestsByStatus(0, (Integer) session.getAttribute("regOfficeCode"));
+                    allRequests = apcpRequestDAO.getAllRegionalRequests((Integer) session.getAttribute("regOfficeCode"));
+                    requestedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,1);
+                    clearedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,2);
+                    endorsedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,3);
+                    approvedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,4);
+                    releasedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,5);
+                    forReleaseRequests = apcpRequestDAO.getFilteredByStatus(allRequests,6);
+                    incompleteRequests = apcpRequestDAO.getFilteredByStatus(allRequests,8);
+                    forConduitApprovalRequests = apcpRequestDAO.getFilteredByStatus(allRequests,0);
                 } else if (userType == 5){
-                    releasedRequests = apcpRequestDAO.getAllRequestsByStatus(5);
-                    forReleaseRequests = apcpRequestDAO.getAllRequestsByStatus(6);
-                    approvedRequests = apcpRequestDAO.getAllRequestsByStatus(4);
-                    endorsedRequests = apcpRequestDAO.getAllRequestsByStatus(3);
-                    clearedRequests = apcpRequestDAO.getAllRequestsByStatus(2);
-                    requestedRequests = apcpRequestDAO.getAllRequestsByStatus(1);
-                    incompleteRequests = apcpRequestDAO.getAllRequestsByStatus(8);
-                    forConduitApprovalRequests = apcpRequestDAO.getAllRequestsByStatus(0);
+                    allRequests = apcpRequestDAO.getAllRequests();
+                    requestedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,1);
+                    clearedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,2);
+                    endorsedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,3);
+                    approvedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,4);
+                    releasedRequests = apcpRequestDAO.getFilteredByStatus(allRequests,5);
+                    forReleaseRequests = apcpRequestDAO.getFilteredByStatus(allRequests,6);
+                    incompleteRequests = apcpRequestDAO.getFilteredByStatus(allRequests,8);
+                    forConduitApprovalRequests = apcpRequestDAO.getFilteredByStatus(allRequests,0);
                 }
                 
                 if(request.getAttribute("requested") != null){
@@ -126,7 +129,11 @@
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <h1>
+                        <%if((Integer)session.getAttribute("userType") == 7){%>
+                        <strong><i class="fa fa-clipboard"></i> Create CAPDEV Proposal</strong> 
+                        <%}else{%>
                         <strong><i class="fa fa-file-text-o"></i> Agrarian Production Credit Program Requests</strong> 
+                        <%}%>
                     </h1>
                 </section>
 

@@ -228,6 +228,30 @@
                                 </form>
                             </div>
                         </div>
+                        <%}else if((Integer)session.getAttribute("userType") == 4){%>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <form id="drillDownGenderForm">
+                                    <input type="hidden" name="filterBy" value="All">
+                                    <div class="row no-print">
+                                        <div class="col-xs-4">
+                                            <div class="form-group">
+                                                <label for="actName">Type</label>
+                                                <select name="type" id="type" class="form-control select2">
+                                                    <option value="1">Average Days Unsettled</option>
+                                                    <option value="2">Average Participation Rate</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row no-print">
+                                        <button type="submit" onclick="form.action = 'FilterARBODashboard'" class="btn btn-success pull-right"><i class="fa fa-filter margin-r-5"></i> Filter</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         <%}%>
                     </section>
 
@@ -236,109 +260,165 @@
                         <div class="row invoice-info">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <div class="box-body">
-                                                <canvas id="chartCanvas"></canvas>
-                                                <div class="row text-center">
-                                                    <a class="btn btn-submit" data-toggle="modal" data-target="#modalPie">View More</a>
-                                                </div>
-                                                <div class="modal fade" id="modalPie">
-                                                    <div class="modal-dialog modal-lg">
-                                                        <%if(type == 1){ // AVE. DAYS UNSETTLED%>
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span></button>
-                                                                <h4 class="modal-title">ARBO: Credit Standing</h4>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="row">
-                                                                    <div class="col-xs-12">
-                                                                        <table class="table table-striped table-bordered export">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>ARBO</th>
-                                                                                    <th>Average Days Unsettled</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <%
-                                                                                    for(ARBO arbo : allArboList){
-                                                                                        arbo.setRequestList(apcpRequestDAO.getAllARBORequests(arbo.getArboID()));
-                                                                                %>
-                                                                                <tr>
-                                                                                    <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                                                    <td><%out.print(df.format(apcpRequestDAO.getAverageDaysUnsettled(arbo.getRequestList())));%></td>
-                                                                                </tr>
-                                                                                <%}%>
-                                                                            </tbody>
-                                                                            <tfoot>
-                                                                                <tr>
-                                                                                    <th>ARBO</th>
-                                                                                    <th>Average Days Unsettled</th>
-                                                                                </tr>
-                                                                            </tfoot>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                            </div>
-                                                        </div>
-                                                        <%}else if(type == 2){%>
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span></button>
-                                                                <h4 class="modal-title">ARBO: Participation Rate</h4>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="row">
-                                                                    <div class="col-xs-12">
-                                                                        <table class="table table-striped table-bordered export">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>ARBO</th>
-                                                                                    <th>Average Participation Rate</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <%
-                                                                                    for(ARBO arbo : allArboList){
-                                                                                        arbo.setArbList(arbDAO.getAllARBsARBO(arbo.getArboID()));
-                                                                                %>
-                                                                                <tr>
-                                                                                    <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
-                                                                                    <td><%out.print(df.format(capdevDAO.getMeanAverageAttendanceRateARBO(arbo.getArbList())));%></td>
-                                                                                </tr>
-                                                                                <%}%>
-                                                                            </tbody>
-                                                                            <tfoot>
-                                                                                <tr>
-                                                                                    <th>ARBO</th>
-                                                                                    <th>Average Participation Rate</th>
-                                                                                </tr>
-                                                                            </tfoot>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                                            </div>
-                                                        </div>
-                                                        <%}%>
+                                    <div class="box-body">
+                                        <canvas id="chartCanvas"></canvas>
+                                        <div class="row text-center no-print">
+                                            <a class="btn btn-submit" data-toggle="modal" data-target="#modalPie">View More</a>
+                                        </div>
+                                        <div class="modal fade" id="modalPie">
+                                            <div class="modal-dialog modal-lg">
+                                                <%if(type == 1){ // AVE. DAYS UNSETTLED%>
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span></button>
+                                                        <h4 class="modal-title">ARBO: Credit Standing</h4>
                                                     </div>
-                                                    <!-- /.modal-dialog -->
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-xs-12">
+                                                                <table class="table table-striped table-bordered export">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>ARBO</th>
+                                                                            <th>Average Days Unsettled</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <%
+                                                                            for(ARBO arbo : allArboList){
+                                                                                arbo.setRequestList(apcpRequestDAO.getAllARBORequests(arbo.getArboID()));
+                                                                        %>
+                                                                        <tr>
+                                                                            <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                                            <td><%out.print(df.format(apcpRequestDAO.getAverageDaysUnsettled(arbo.getRequestList())));%></td>
+                                                                        </tr>
+                                                                        <%}%>
+                                                                    </tbody>
+                                                                    <tfoot>
+                                                                        <tr>
+                                                                            <th>ARBO</th>
+                                                                            <th>Average Days Unsettled</th>
+                                                                        </tr>
+                                                                    </tfoot>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                    </div>
                                                 </div>
+                                                <%}else if(type == 2){%>
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span></button>
+                                                        <h4 class="modal-title">ARBO: Participation Rate</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-xs-12">
+                                                                <table class="table table-striped table-bordered export">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>ARBO</th>
+                                                                            <th>Average Participation Rate</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <%
+                                                                            for(ARBO arbo : allArboList){
+                                                                                arbo.setArbList(arbDAO.getAllARBsARBO(arbo.getArboID()));
+                                                                        %>
+                                                                        <tr>
+                                                                            <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                                            <td><%out.print(df.format(capdevDAO.getMeanAverageAttendanceRateARBO(arbo.getArbList())));%></td>
+                                                                        </tr>
+                                                                        <%}%>
+                                                                    </tbody>
+                                                                    <tfoot>
+                                                                        <tr>
+                                                                            <th>ARBO</th>
+                                                                            <th>Average Participation Rate</th>
+                                                                        </tr>
+                                                                    </tfoot>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                                <%}%>
                                             </div>
+                                            <!-- /.modal-dialog -->
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <hr>
+                            <div class="row">
+                                <div class="col-xs-12">
+
+                                    <%if(type == 1){ // AVE. DAYS UNSETTLED%>
+                                    <table class="table table-striped table-bordered export">
+                                        <thead>
+                                            <tr>
+                                                <th>ARBO</th>
+                                                <th>Average Days Unsettled</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <%
+                                                for(ARBO arbo : allArboList){
+                                                    arbo.setRequestList(apcpRequestDAO.getAllARBORequests(arbo.getArboID()));
+                                            %>
+                                            <tr>
+                                                <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(df.format(apcpRequestDAO.getAverageDaysUnsettled(arbo.getRequestList())));%></td>
+                                            </tr>
+                                            <%}%>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ARBO</th>
+                                                <th>Average Days Unsettled</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+
+                                    <%}else if(type == 2){%>
+                                    <table class="table table-striped table-bordered export">
+                                        <thead>
+                                            <tr>
+                                                <th>ARBO</th>
+                                                <th>Average Participation Rate</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <%
+                                                for(ARBO arbo : allArboList){
+                                                    arbo.setArbList(arbDAO.getAllARBsARBO(arbo.getArboID()));
+                                            %>
+                                            <tr>
+                                                <td><a target="_blank" rel="noopener noreferrer" href="ViewARBO?id=<%out.print(arbo.getArboID());%>"><%out.print(arbo.getArboName());%></a></td>
+                                                <td><%out.print(df.format(capdevDAO.getMeanAverageAttendanceRateARBO(arbo.getArbList())));%></td>
+                                            </tr>
+                                            <%}%>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ARBO</th>
+                                                <th>Average Participation Rate</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    <%}%>
+
+                                </div>
+                            </div>
                         </div>
                         <div class="row no-print">
                             <div class="col-xs-12">

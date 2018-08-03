@@ -7,11 +7,13 @@ package com.MVC.Controller;
 
 import com.MVC.DAO.ARBODAO;
 import com.MVC.DAO.CAPDEVDAO;
+import com.MVC.DAO.UserDAO;
 import com.MVC.Model.APCPRequest;
 import com.MVC.Model.ARBO;
 import com.MVC.Model.CAPDEVActivity;
 import com.MVC.Model.CAPDEVPlan;
 import com.MVC.Model.CalendarEvent;
+import com.MVC.Model.User;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -37,6 +39,8 @@ public class ARBOPlans extends HttpServlet {
         int arboID = Integer.parseInt(request.getParameter("id"));
         ARBODAO dao = new ARBODAO();
         ARBO arbo = dao.getARBOByID(arboID);
+        CAPDEVDAO capdevDAO = new CAPDEVDAO();
+        UserDAO userDAO = new UserDAO();
 
         ArrayList<CAPDEVPlan> arboPlans = new ArrayList();
 
@@ -57,8 +61,10 @@ public class ARBOPlans extends HttpServlet {
 
         for (CAPDEVPlan plan : arboPlans) {
             if (plan.getPlanStatus() == 1 || plan.getPlanStatus() == 2 || plan.getPlanStatus() == 4) {
+                User u = userDAO.searchUser(plan.getAssignedTo());
+                plan.setActivities(capdevDAO.getCAPDEVPlanActivities(plan.getPlanID()));
                 for (CAPDEVActivity activity : plan.getActivities()) {
-
+                    
                     id = plan.getPlanID() + "" + activity.getActivityID();
 
                     CalendarEvent e = new CalendarEvent();
@@ -66,7 +72,7 @@ public class ARBOPlans extends HttpServlet {
                     e.setId(activity.getActivityID());
 
                     e.setTitle(plan.getPlanDTN() + ": " + activity.getActivityName());
-                    e.setDescription(activity.getActivityDesc());
+                    e.setDescription("Assigned To: " + u.getFullName());
 
                     e.setStart(f.format(plan.getPlanDate()));
                     e.setColor(GREEN);

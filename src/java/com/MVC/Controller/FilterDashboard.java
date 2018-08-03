@@ -166,6 +166,7 @@ public class FilterDashboard extends BaseServlet {
             provOffices.add(p);
         }
         
+        request.setAttribute("filterBy", filterBy);
         request.setAttribute("filtered", filtered);
         request.setAttribute("filteredRequests", filteredRequests);
         request.setAttribute("filteredPlans", filteredPlans);
