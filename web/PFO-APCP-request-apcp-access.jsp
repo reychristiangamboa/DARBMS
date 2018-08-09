@@ -183,7 +183,7 @@
                                     </div>
                                     <div class="col-xs-3">
                                         <div class="form-group">
-                                            <label for="">Loan Duration (Months)</label>
+                                            <label id="labelLoanDuration">Loan Duration (12 - 36 Months)</label>
                                             <input id="minDuration" type="number" class="form-control" value="12" max="36" name="loanTermDuration" />
                                         </div>
                                     </div>
@@ -370,33 +370,34 @@
 
                 $('#loanTerm').on('change', function () {
                     if (this.value == 1) {
+                        $('#labelLoanDuration').html('Loan Duration (12 - 36 Months)');
                         $('#minDuration').val('12');
                         $('#minDuration').attr({
                             "min": 12,
                             "max": 36
                         });
                     } else if (this.value == 2) {
+                        $('#labelLoanDuration').html('Loan Duration (36 - 84 Months)');
                         $('#minDuration').val('36');
                         $('#minDuration').attr({
                             "min": 36,
                             "max": 84
                         });
                     } else if (this.value == 3) {
+                        $('#labelLoanDuration').html('Loan Duration (12 - 36 Months)');
                         $('#minDuration').val('12');
                         $('#minDuration').attr({
                             "min": 12,
                             "max": 36
                         });
                     } else if (this.value == 4) {
+                        $('#labelLoanDuration').html('Loan Duration (12 - 60 Months)');
                         $('#minDuration').val('12');
                         $('#minDuration').attr({
                             "min": 12,
                             "max": 60
                         });
                     }
-
-                    var max = $('#maxDuration').attr('min');
-                    $('#maxDuration').val(max);
                 });
             <%
                     int optionalConduitCount = 0;

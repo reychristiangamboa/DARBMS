@@ -166,6 +166,7 @@
                                                                     <th>Action</th>
                                                                     <th>ARB</th>
                                                                     <th>Crops</th>
+                                                                    <th>Missing Crop</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -174,6 +175,7 @@
                                                                     <td><input type="checkbox" name="arbID" value="<%out.print(arb.getArbID());%>"></td>
                                                                     <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
                                                                     <td><%out.print(arb.printAllCrops());%></td>
+                                                                    <td><%out.print(apcp.getLoanReason().getLoanReasonDesc().replace("Production",""));%></td>
                                                                 </tr>
                                                                 <%}%>
                                                             </tbody>
@@ -336,6 +338,7 @@
                                                                     <th>ARB</th>
                                                                     <th>Disbursement Amount</th>
                                                                     <th>Total Released Amount</th>
+                                                                    <th>Threshold</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -346,6 +349,8 @@
                                                                     <td><a target="_blank" rel="noopener noreferrer" href="ViewARB?id=<%out.print(arb.getArbID());%>"><%out.print(arb.getFLName());%></a></td>
                                                                     <td><%out.print(currency.format(d.getDisbursedAmount()));%></td>
                                                                     <td><%out.print(currency.format(d.getTotalReleasedAmount()));%></td>
+                                                                    <% double threshold = d.getTotalReleasedAmount()/2; %>
+                                                                    <td><%out.print(currency.format(threshold));%></td>
                                                                 </tr>
 
                                                             </tbody>
@@ -354,7 +359,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <%--<button type="submit" onclick="form.action = 'ReviseAttendance?activityID=<%out.print(activity.getActivityID());%>'" class="btn btn-danger pull-right">Check Attendance</button>--%>
+                                                
                                             </div>
                                         </form>
                                     </div>

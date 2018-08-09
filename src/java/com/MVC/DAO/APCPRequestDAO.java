@@ -1980,7 +1980,7 @@ public class APCPRequestDAO {
             con.setAutoCommit(false);
             String query = "SELECT * FROM `dar-bms`.ref_loanReason r "
                     + "LEFT JOIN `dar-bms`.ref_apcpType a ON r.apcpType=a.apcpType "
-                    + "WHERE r.apcpType=? OR r.apcpType IS NULL";
+                    + "WHERE r.apcpType=? OR r.apcpType IS NULL ORDER BY r.loanReasonDesc";
             PreparedStatement p = con.prepareStatement(query);
             p.setInt(1, apcpType);
             ResultSet rs = p.executeQuery();

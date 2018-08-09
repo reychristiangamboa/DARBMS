@@ -17,6 +17,7 @@ public class CalendarEvent {
     private String description;
     private String start;
     private String end;
+    private String url;
     private String color;
 
     public int getId() {
@@ -57,6 +58,14 @@ public class CalendarEvent {
 
     public void setEnd(String end) {
         this.end = end;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getColor() {

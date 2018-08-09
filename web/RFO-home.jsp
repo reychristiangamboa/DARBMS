@@ -9,23 +9,8 @@
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
             <%@include file="jspf/regional-field-officer-sidebar.jspf"%>
-
-            <div class="content-wrapper">
-                <!-- Content Header (Page header) -->
-                <section class="content-header">
-                    <h1>
-
-                        <strong><i class="fa fa-dashboard"></i> Dashboard</strong> 
-                        <small><%out.print((String) session.getAttribute("regOfficeDesc"));%></small>
-
-                    </h1>
-
-                </section>
-
-                <!-- Main content -->
-                <section class="content">
-
-                    <%
+            
+            <%
                     if(request.getAttribute("filtered") != null){
                         arboListProvince = (ArrayList<ARBO>)request.getAttribute("filtered");
                     }
@@ -75,7 +60,36 @@
                         }
                         
                     }
-                    %>
+            %>
+
+            <div class="content-wrapper">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <h1>
+
+                        <strong><i class="fa fa-dashboard"></i> Dashboard</strong> 
+                        <small>
+                        <%if(request.getAttribute("filterBy") != null){%>
+                        <%if(((String)request.getAttribute("filterBy")).equals("provinces")){%>
+                        <%for(Province prov : provOffices2){%>
+                        <%out.print(prov.getProvDesc() + " ");%>
+                        <%}%>
+                        <%}else if(((String)request.getAttribute("filterBy")).equals("All")){%>
+                        <%out.print((String) session.getAttribute("regOfficeDesc"));%>
+                        <%}%>
+                        <%}else{%>
+                        <%out.print((String) session.getAttribute("regOfficeDesc"));%>
+                        <%}%>
+                        </small>
+
+                    </h1>
+
+                </section>
+
+                <!-- Main content -->
+                <section class="content">
+
+                    
 
                     <div class="row">
                         <div class="col-xs-6">

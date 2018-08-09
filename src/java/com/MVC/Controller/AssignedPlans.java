@@ -56,7 +56,7 @@ public class AssignedPlans extends HttpServlet {
                 
                 e.setTitle(plan.getPlanDTN() + ": " + activity.getActivityName());
                 e.setDescription(activity.getActivityDesc());
-                
+                e.setUrl("MonitorCAPDEVAttendance?planID="+plan.getPlanID() );
                 e.setStart(f.format(plan.getPlanDate()));
                 e.setColor(GREEN);
                 

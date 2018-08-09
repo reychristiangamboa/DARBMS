@@ -224,7 +224,7 @@
                                     <p class="text-muted"><%out.print(currency.format(dao4.getTotalPastDueAmount(arbo.getRequestList())));%></p>
                                     <hr>
                                     <strong><i class="fa fa-briefcase margin-r-5"></i> Average Days Unsettled</strong>
-                                    <p class="text-muted"><%out.print(dao4.getAverageDaysUnsettled(arbo.getRequestList()));%></p>
+                                    <p class="text-muted"><%out.print(df.format(dao4.getAverageDaysUnsettled(arbo.getRequestList())));%></p>
                                 </div>
                             </div>
                             <div class="box box-primary">

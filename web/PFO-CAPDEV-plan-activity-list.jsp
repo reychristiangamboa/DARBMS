@@ -108,7 +108,7 @@
                                                             </div>
 
                                                             <%for(CAPDEVActivity act : plan.getActivities()){%>
-                                                            
+
                                                             <div class="modal fade" id="activityModal<%out.print(act.getActivityID());%>">
                                                                 <div class="modal-dialog">
                                                                     <div class="modal-content">
@@ -119,7 +119,10 @@
                                                                         </div>
                                                                         <div class="modal-body">
                                                                             <label>Participants</label>
-
+                                                                            <div class="pull-right">
+                                                                                <input type="checkbox" id="checkAll<%out.print(act.getActivityID());%>" />
+                                                                                Check All
+                                                                            </div>
                                                                             <table class="table table-bordered table-striped modTable">
                                                                                 <thead>
                                                                                     <tr>
@@ -185,8 +188,14 @@
             <!-- /.content-wrapper -->
         </div>
         <%@include file="jspf/footer.jspf" %>
-        <script>
-
+        <script type="text/javascript">
+            $(document).ready(function () {
+            <%for(CAPDEVActivity act : plan.getActivities()){%>
+                $('#checkAll<%out.print(act.getActivityID());%>').click(function () {
+                    $('#activityModal<%out.print(act.getActivityID());%> input:checkbox').not(this).prop('checked', this.checked);
+                });
+            <%}%>
+            });
         </script>
 
     </body>

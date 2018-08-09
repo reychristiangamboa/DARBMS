@@ -52,13 +52,22 @@
                             <div class="btn-group">
                                 <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Add Activity <span class="caret"></span></button>
                                 <ul id="optional-list" class="dropdown-menu" role="menu">
+                                    <%if(request.getAttribute("pastDueID") != null){%>
                                     <%for(CAPDEVActivity c : categories){%>
-                                    <%if(req.getIsNewAccessingRequest() > 0 && c.getNewAccessingCategories()){ %>
-                                    <li><a class="optional-document" data-documentID="<%out.print(c.getActivityCategory());%>" data-documentDesc="<%out.print(c.getActivityCategoryDesc());%>"><%out.print(c.getActivityCategoryDesc());%></a></li>
+                                        <%if(c.getActivityCategory() == 4){%>
+                                            <li><a class="optional-document" data-documentID="<%out.print(c.getActivityCategory());%>" data-documentDesc="<%out.print(c.getActivityCategoryDesc());%>"><%out.print(c.getActivityCategoryDesc());%></a></li>
+                                        <%}%>
+                                    <%}%>
+                                    <%}else{%>
+                                    <%for(CAPDEVActivity c : categories){%>
+                                        <%if(req.getIsNewAccessingRequest() > 0 && c.getNewAccessingCategories()){ %>
+                                            <li><a class="optional-document" data-documentID="<%out.print(c.getActivityCategory());%>" data-documentDesc="<%out.print(c.getActivityCategoryDesc());%>"><%out.print(c.getActivityCategoryDesc());%></a></li>
                                         <%}else if(req.getIsNewAccessingRequest() == 0 && c.getExistingCategories()){%>
-                                    <li><a class="optional-document" data-documentID="<%out.print(c.getActivityCategory());%>" data-documentDesc="<%out.print(c.getActivityCategoryDesc());%>"><%out.print(c.getActivityCategoryDesc());%></a></li>
+                                            <li><a class="optional-document" data-documentID="<%out.print(c.getActivityCategory());%>" data-documentDesc="<%out.print(c.getActivityCategoryDesc());%>"><%out.print(c.getActivityCategoryDesc());%></a></li>
                                         <%}%>
-                                        <%}%>
+                                    <%}%>
+                                    <%}%>
+                                    
                                 </ul>
                             </div>
                         </center>
@@ -104,24 +113,6 @@
                         <%}%>
                         <%}else if(req.getRequestStatus() == 4){ // APPROVED %>
                         <%if(act.getActivityType() == 3){ // Pre-Release ONLY %>
-                        <div class="row">
-                            <div class="col-xs-4">
-                                <div class="form-group">
-                                    <label for="Category">Category</label>
-                                    <input type="text" class="form-control" value="<%out.print(act.getActivityCategoryDesc());%>" disabled/>
-                                </div>
-                            </div>
-                            <div class="col-xs-6">
-                                <div class="form-group">
-                                    <label for="Activity">Activity</label>
-                                    <input type="hidden" name="activities[]" value="<%out.print(act.getActivityType());%>" />
-                                    <input type="text" class="form-control" value="<%out.print(act.getActivityName());%>" disabled />
-                                </div>
-                            </div>
-                        </div>    
-                        <%}%>
-                        <%}else if(req.getRequestStatus() == 5){ // RELEASED %>
-                        <%if(act.getActivityCategory() == 4){ // PAST DUE PLANS %>
                         <div class="row">
                             <div class="col-xs-4">
                                 <div class="form-group">

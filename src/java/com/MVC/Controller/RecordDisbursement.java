@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  *
@@ -38,6 +40,8 @@ public class RecordDisbursement extends BaseServlet {
 
         HttpSession session = request.getSession();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Locale pinoy = new Locale("fil", "PH");
+        NumberFormat currency = NumberFormat.getCurrencyInstance(pinoy);
 
         APCPRequestDAO dao = new APCPRequestDAO();
         IssueDAO issueDAO = new IssueDAO();
@@ -65,7 +69,7 @@ public class RecordDisbursement extends BaseServlet {
 
         if (finalVal > finalLimit) {
             request.setAttribute("requestID", Integer.parseInt(request.getParameter("requestID")));
-            request.setAttribute("errMessage", "Disbursement amount (Php " + finalVal + ") exceeds Release amount (Php " + finalLimit + "). Try again.");
+            request.setAttribute("errMessage", "Disbursement amount (Php " + currency.format(finalVal) + ") exceeds Release amount (Php " + currency.format(finalLimit) + "). Try again.");
             request.getRequestDispatcher("monitor-release.jsp").forward(request, response);
         } else {
 
@@ -97,9 +101,9 @@ public class RecordDisbursement extends BaseServlet {
             }
 
             if (checkSingleARBDisbursement(arbIDs, req, Double.parseDouble(request.getParameter("disbursementAmount")))) {
-                
+
                 double threshold = (req.getTotalReleasedAmountPerRequest() - getTotalDisbursement2(req.getDisbursements())) * .5;
-                
+
                 request.setAttribute("errMessage", "Disbursement amount surpassed the threshold (Php " + lol + " )! An issue has been raised.");
 
                 Issue i = new Issue();
@@ -166,7 +170,7 @@ public class RecordDisbursement extends BaseServlet {
 
         return total;
     }
-    
+
     public double getTotalDisbursement2(ArrayList<Disbursement> list) {
 
         double total = 0;

@@ -9,23 +9,8 @@
 
             <%@include file="jspf/field-officer-navbar.jspf"%>
             <%@include file="jspf/central-sidebar.jspf"%>
-
-            <div class="content-wrapper">
-                <!-- Content Header (Page header) -->
-                <section class="content-header">
-                    <h1>
-
-                        <strong><i class="fa fa-dashboard"></i> Dashboard</strong> 
-                        <small>Central Office</small>
-
-                    </h1>
-
-                </section>
-
-                <!-- Main content -->
-                <section class="content">
-
-                    <%
+            
+            <%
                     if(request.getAttribute("filtered") != null){
                         arboList = (ArrayList<ARBO>)request.getAttribute("filtered");
                     }
@@ -82,11 +67,40 @@
                         }
                         
                     }
+            %>
+
+            <div class="content-wrapper">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <h1>
+
+                        <strong><i class="fa fa-dashboard"></i> Dashboard</strong>
+                        <small>
+                        <%if(request.getAttribute("filterBy") != null){%>
+                        <%if(((String)request.getAttribute("filterBy")).equals("regions")){%>
+                        <%for(Region r : perRegionList){%>
+                        <%out.print(r.getRegDesc() + " ");%>
+                        <%}%>
+                        <%}else if(((String)request.getAttribute("filterBy")).equals("provinces")){%>
+                        <%for(Province prov : provOfficeList2){%>
+                        <%out.print(prov.getProvDesc() + " ");%>
+                        <%}%>
+                        <%}else if(((String)request.getAttribute("filterBy")).equals("All")){%>
+                        Central Office
+                        <%}%>
+                        <%}else{%>
+                        Central Office
+                        <%}%>
+                        </small>
+
+                    </h1>
+
+                </section>
+
+                <!-- Main content -->
+                <section class="content">
+
                     
-//                    if(request.getAttribute("provOffices") != null){
-//                        
-//                    }
-                    %>
 
                     <div class="row">
                         <div class="col-xs-6">
